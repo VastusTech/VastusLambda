@@ -1,6 +1,7 @@
 package databaseOperations;
 
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -9,6 +10,8 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.transactions.Transaction;
 import com.amazonaws.services.dynamodbv2.transactions.TransactionManager;
+import databaseObjects.DatabaseObject;
+import databaseObjects.DatabaseObjectBuilder;
 
 import java.util.*;
 
@@ -23,7 +26,7 @@ public class DynamoDBHandler {
         // AmazonDynamoDBClient client2 = new AmazonDynamoDBAsyncClient();
         //AmazonDynamoDB client = new DynamoDB(AmazonDynamoDBClientBuilder.standard().withEndpointConfiguration(new
                 // AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-1")).build());
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.defaultClient();
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 
         long waitTimeSeconds = 10 * 60;
 
@@ -61,6 +64,11 @@ public class DynamoDBHandler {
                     try {
                         transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
                                 (databaseAction.item).withAttributeUpdates(databaseAction.updateItem));
+
+                        Map<String, AttributeValueUpdate> markerUpdate = new HashMap<>();
+                        markerUpdate.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
+                        transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
+                                (databaseAction.item).withAttributeUpdates(markerUpdate));
                     }
                     catch (Exception e) {
                         System.out.println("Error updating the item in the database");
@@ -73,6 +81,11 @@ public class DynamoDBHandler {
                         transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
                                 (databaseAction.item).withAttributeUpdates(databaseAction.updateItem)
                                 .withConditionExpression(databaseAction.conditionalExpression));
+
+                        Map<String, AttributeValueUpdate> markerUpdate = new HashMap<>();
+                        markerUpdate.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
+                        transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
+                                (databaseAction.item).withAttributeUpdates(markerUpdate));
                     }
                     catch (ConditionalCheckFailedException ce) {
                         // TODO Implement this!
@@ -116,6 +129,35 @@ public class DynamoDBHandler {
         transaction.commit();
         transaction.delete();
         return true;
+    }
+
+    public <T extends DatabaseObject> T readItem(Map<String, AttributeValue> key) {
+        Transaction transaction = txManager.newTransaction();
+        GetItemResult result;
+
+        try {
+            result = transaction.getItem(new GetItemRequest().withTableName(tableName).withKey(key));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        try {
+            return (T)DatabaseObjectBuilder.build(result.getItem());
+        }
+        catch (ClassCastException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public <T extends DatabaseObject> T usernameQuery(String username) {
+        return null;
+    }
+
+    public List<Map<String, AttributeValue>> getAll(String itemType) {
+        return null;
     }
 
     // TODO This just shows you what to use for some things
