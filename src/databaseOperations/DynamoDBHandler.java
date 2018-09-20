@@ -6,7 +6,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.transactions.Transaction;
 import com.amazonaws.services.dynamodbv2.transactions.TransactionManager;
@@ -15,9 +16,12 @@ import databaseObjects.DatabaseObjectBuilder;
 
 import java.util.*;
 
+// TODO ALl of these classes should throw specific exceptions (Maybe that we define?)
 public class DynamoDBHandler {
     String tableName;
     TransactionManager txManager;
+    AmazonDynamoDB client;
+    Table table;
 
     public DynamoDBHandler(String tableName) {
         this.tableName = tableName;
@@ -26,7 +30,7 @@ public class DynamoDBHandler {
         // AmazonDynamoDBClient client2 = new AmazonDynamoDBAsyncClient();
         //AmazonDynamoDB client = new DynamoDB(AmazonDynamoDBClientBuilder.standard().withEndpointConfiguration(new
                 // AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-1")).build());
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
+        client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 
         long waitTimeSeconds = 10 * 60;
 
@@ -39,6 +43,8 @@ public class DynamoDBHandler {
         }
 
         txManager = new TransactionManager(client, "Transactions", "TransactionImages");
+
+        table = new Table(client, tableName);
     }
 
     // TODO Initialize txManager in here instead and make it static?
@@ -131,33 +137,106 @@ public class DynamoDBHandler {
         return true;
     }
 
-    public <T extends DatabaseObject> T readItem(Map<String, AttributeValue> key) {
-        Transaction transaction = txManager.newTransaction();
-        GetItemResult result;
+//    public <T extends DatabaseObject> T readItem(Map<String, AttributeValue> key) {
+//        Transaction transaction = txManager.newTransaction();
+//        GetItemResult result;
+//
+//        try {
+//            result = transaction.getItem(new GetItemRequest().withTableName(tableName).withKey(key));
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//
+//        try {
+//            return (T)DatabaseObjectBuilder.build(result.getItem());
+//        }
+//        catch (ClassCastException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
+    public <T extends DatabaseObject> T readItem(Map<String, AttributeValue> key) {
         try {
-            result = transaction.getItem(new GetItemRequest().withTableName(tableName).withKey(key));
+            String id = key.get("id").getS();
+            String itemType = key.get("item_type").getS();
+            Item item = table.getItem("item_type", itemType, "id", id);
+            return (T)DatabaseObjectBuilder.build((Map<String, AttributeValue>)item);
         }
         catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    // TODO Way to differentiate between no user showed up and error?
+    // TODO YES by throwing an exception!
+    public <T extends DatabaseObject> T usernameQuery(String username, String itemType) {
+        Index index = table.getIndex("item_type-username-index");
+
+        HashMap<String, String> nameMap = new HashMap<>();
+        nameMap.put("#usr", "username");
+        nameMap.put("#type", "item_type");
+
+        HashMap<String, Object> valueMap = new HashMap<>();
+        valueMap.put(":usr", username);
+        valueMap.put(":type", itemType);
+
+        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type AND #usr = :usr")
+                .withNameMap(nameMap).withValueMap(valueMap);
 
         try {
-            return (T)DatabaseObjectBuilder.build(result.getItem());
+            ItemCollection<QueryOutcome> items = index.query(querySpec);
+            Iterator<Item> iterator = items.iterator();
+            int i = 0;
+            if (!iterator.hasNext()) {
+                // This means that nothing showed up in the query,
+
+            }
+            while (iterator.hasNext()) {
+                if (i > 0) {
+                    // This means that the query came up with more than one result
+                }
+                Item item = iterator.next();
+                item.asMap();
+                i++;
+            }
         }
-        catch (ClassCastException e) {
+        catch (Exception e) {
+
+        }
+
+
+        return null;
+    }
+
+    // TODO We usually don't want to send out a null variable without throwing an exception
+    public <T extends DatabaseObject> List<T> getAll(String itemType) {
+        HashMap<String, String> nameMap = new HashMap<>();
+        nameMap.put("#type", "item_type");
+
+        HashMap<String, Object> valueMap = new HashMap<>();
+        valueMap.put(":type", itemType);
+
+        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type").withNameMap(nameMap)
+                .withValueMap(valueMap);
+
+        try {
+            ItemCollection<QueryOutcome> items = table.query(querySpec);
+            Iterator<Item> iterator = items.iterator();
+            List<T> allList = new ArrayList<>();
+            while (iterator.hasNext()) {
+                Item item = iterator.next();
+                allList.add((T)DatabaseObjectBuilder.build((Map<String, AttributeValue>)item));
+            }
+            return allList;
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public <T extends DatabaseObject> T usernameQuery(String username) {
-        return null;
-    }
-
-    public List<Map<String, AttributeValue>> getAll(String itemType) {
-        return null;
     }
 
     // TODO This just shows you what to use for some things
