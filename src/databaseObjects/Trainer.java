@@ -5,8 +5,11 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import java.util.Map;
 
 public class Trainer extends User {
+    String gym;
+
     Trainer(Map<String, AttributeValue> item) {
         super(item);
         // TODO Set the variables
+
     }
 }
