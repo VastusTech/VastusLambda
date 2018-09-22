@@ -1,7 +1,7 @@
 package lambdaFunctionHandlers.requestObjects;
 
 public class CreateWorkoutRequest {
-    public String timeInterval;
+    public String time;
     public String trainerID;
     public String[] clientIDs;
     public String gymID;
@@ -9,8 +9,8 @@ public class CreateWorkoutRequest {
     public String intensity;
     public String price;
 
-    public CreateWorkoutRequest(String timeInterval, String trainerID, String[] clientIDs, String gymID, String sticker, String intensity, String price) {
-        this.timeInterval = timeInterval;
+    public CreateWorkoutRequest(String time, String trainerID, String[] clientIDs, String gymID, String sticker, String intensity, String price) {
+        this.time = time;
         this.trainerID = trainerID;
         this.clientIDs = clientIDs;
         this.gymID = gymID;
@@ -21,13 +21,12 @@ public class CreateWorkoutRequest {
 
     public CreateWorkoutRequest() {}
 
-    public String getTimeInterval() {
-
-        return timeInterval;
+    public String getTime() {
+        return time;
     }
 
-    public void setTimeInterval(String timeInterval) {
-        this.timeInterval = timeInterval;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getTrainerID() {
