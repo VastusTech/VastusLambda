@@ -2,7 +2,6 @@ package databaseObjects;
 
 import Logic.Constants;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -14,6 +13,9 @@ public class TimeInterval {
     public String isotime;
     public String fromiso;
     public String toiso;
+
+    public DateTime fromDateTime;
+    public DateTime toDateTime;
 
     public int year, month, day;
     public int fromHour, fromMinute, toHour, toMinute;
@@ -28,29 +30,22 @@ public class TimeInterval {
 
     // TODO Create new exceptions for this class?
     public TimeInterval(String isotime) throws Exception {
-        try {
-            String[] isotimes = isotime.split("_");
-            if (isotimes.length != 2) {
-                // TODO Error
-            }
-            else {
-                this.isotime = isotime;
-                this.fromiso = isotimes[0];
-                this.toiso = isotimes[1];
+        String[] isotimes = isotime.split("_");
+        if (isotimes.length == 2) {
+            this.isotime = isotime;
+            this.fromiso = isotimes[0];
+            this.toiso = isotimes[1];
 
-                DateTime fromDateTime = new DateTime(this.fromiso);
-                DateTime toDateTime = new DateTime(this.toiso);
+            fromDateTime = new DateTime(this.fromiso);
+            toDateTime = new DateTime(this.toiso);
 
-                this.year = fromDateTime.getYear();
-                this.month = fromDateTime.getMonthOfYear();
-                this.day = fromDateTime.getDayOfMonth();
+            this.year = fromDateTime.getYear();
+            this.month = fromDateTime.getMonthOfYear();
+            this.day = fromDateTime.getDayOfMonth();
 
-                // TimeIntervals have to be on the same day
-                if (!(year == toDateTime.getYear() && month == toDateTime.getMonthOfYear() &&
-                        day == toDateTime.getDayOfMonth())) {
-                    // TODO Error
-                }
-
+            // TimeIntervals have to be on the same day
+            if (year == toDateTime.getYear() && month == toDateTime.getMonthOfYear() &&
+                    day == toDateTime.getDayOfMonth()) {
                 this.fromHour = fromDateTime.getHourOfDay();
                 this.fromMinute = fromDateTime.getMinuteOfHour();
                 this.fromTotalMinute = fromDateTime.getMinuteOfDay();
@@ -78,18 +73,25 @@ public class TimeInterval {
                     i++;
                 }
 
+                // Check for forbidden timeInterval states
+                // From to to has to be positive
+                if (fromTotalMinute >= toTotalMinute) {
+                    throw new Exception("From time is at or after the to time");
+                }
+
+                // The time section needs to be a multiple of the time section
+                int timeSection = Constants.workoutShortestTimeSectionInterval;
+                if (fromTotalMinute % timeSection != 0 || toTotalMinute % timeSection != 0) {
+                    throw new Exception("Time is offset by an irregular amount");
+                }
+            }
+            else {
+                throw new Exception("Times need to be on the same day!");
             }
         }
-        // We probably don't want just an overarching try catch
-        catch (Exception e) {
-            // TODO ERROR
+        else {
+            throw new Exception("Incorrectly Formatted ISO 8601 date string inputted: Separation Error");
         }
-
-        // dateFormat.parse()
-//        TimeZone tz = TimeZone.getTimeZone("UTC");
-//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
-//        df.setTimeZone(tz);
-//        String nowAsISO = df.format(new Date());
     }
 
     public TimeInterval(String[] stringTimeArray) throws Exception {
@@ -99,19 +101,24 @@ public class TimeInterval {
 
         this.stringTimeArray = stringTimeArray;
 
-        this.year = Integer.parseInt(stringTimeArray[0]);
-        this.month = Integer.parseInt(stringTimeArray[1]);
-        this.day = Integer.parseInt(stringTimeArray[2]);
-        this.fromHour = Integer.parseInt(stringTimeArray[3]);
-        this.fromMinute = Integer.parseInt(stringTimeArray[4]);
-        this.toHour = Integer.parseInt(stringTimeArray[5]);
-        this.toMinute = Integer.parseInt(stringTimeArray[6]);
+        try {
+            this.year = Integer.parseInt(stringTimeArray[0]);
+            this.month = Integer.parseInt(stringTimeArray[1]);
+            this.day = Integer.parseInt(stringTimeArray[2]);
+            this.fromHour = Integer.parseInt(stringTimeArray[3]);
+            this.fromMinute = Integer.parseInt(stringTimeArray[4]);
+            this.toHour = Integer.parseInt(stringTimeArray[5]);
+            this.toMinute = Integer.parseInt(stringTimeArray[6]);
+        }
+        catch (Exception e) {
+            throw new Exception("One of the strings were improperly formatted");
+        }
 
         this.fromTotalMinute = fromHour * 60 + fromMinute;
         this.toTotalMinute = toHour * 60 + toMinute;
 
-        DateTime fromDateTime = new DateTime(year, month, day, fromHour, fromMinute);
-        DateTime toDateTime = new DateTime(year, month, day, toHour, toMinute);
+        fromDateTime = new DateTime(year, month, day, fromHour, fromMinute);
+        toDateTime = new DateTime(year, month, day, toHour, toMinute);
 
         DateTimeFormatter dtf = ISODateTimeFormat.dateTimeNoMillis();
 
@@ -119,6 +126,15 @@ public class TimeInterval {
         this.toiso = dtf.print(toDateTime);
 
         this.isotime = fromiso + "_" + toiso;
+
+        if (fromTotalMinute >= toTotalMinute) {
+            throw new Exception("From time is at or after the to time");
+        }
+
+        int timeSection = Constants.workoutShortestTimeSectionInterval;
+        if (fromTotalMinute % timeSection != 0 || toTotalMinute % timeSection != 0) {
+            throw new Exception("Time is offset by an irregular amount");
+        }
     }
 
     public List<TimeInterval> potentialWorkoutTimes(TimeInterval timeInterval, int[] potentialWorkoutLengths) {
@@ -208,15 +224,28 @@ public class TimeInterval {
     }
 
     public Boolean intersects(TimeInterval timeInterval) {
+        if (isSameDay(timeInterval)) {
+            // Is there an overlap in the times?
+            int intersectFromTotalMinute = Integer.max(this.fromTotalMinute, timeInterval.fromTotalMinute);
+            int intersectToTotalMinute = Integer.min(this.toTotalMinute, timeInterval.toTotalMinute);
+            if (intersectFromTotalMinute < intersectToTotalMinute) {
+                return true;
+            }
+        }
         return false;
     }
 
     public Boolean encompasses(TimeInterval timeInterval) {
+        if (isSameDay(timeInterval)) {
+            if (this.fromTotalMinute <= timeInterval.fromTotalMinute && this.toTotalMinute >= timeInterval.toTotalMinute) {
+                return true;
+            }
+        }
         return false;
     }
 
     public Boolean hasAlreadyStarted() {
-        return false;
+        return fromDateTime.isAfterNow();
     }
 
     static public String[] getFromToHourMinute(int fromTotalMinute, int toTotalMinute) {
