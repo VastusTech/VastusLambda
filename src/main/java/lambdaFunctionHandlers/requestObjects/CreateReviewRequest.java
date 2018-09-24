@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+// TODO Optional parameters at the get go?
 public class CreateReviewRequest {
     public String byID;
     public String aboutID;

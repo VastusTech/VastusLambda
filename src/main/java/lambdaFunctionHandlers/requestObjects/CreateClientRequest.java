@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+// TODO Optional parameters at the get go?
 public class CreateClientRequest {
     public String name;
     public String gender;

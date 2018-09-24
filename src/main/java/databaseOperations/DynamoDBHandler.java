@@ -13,6 +13,7 @@ import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.transactions.Transaction;
 import com.amazonaws.services.dynamodbv2.transactions.TransactionManager;
 import main.java.databaseObjects.*;
+import org.joda.time.DateTime;
 
 import java.util.*;
 
@@ -69,6 +70,7 @@ public class DynamoDBHandler {
                         // Get the ID!
                         String id = getNewID(databaseAction.item.get("item_type").getS());
                         databaseAction.item.put("id", new AttributeValue(id));
+                        databaseAction.item.put("time_created", new AttributeValue(new DateTime().toString()));
                         transaction.putItem(new PutItemRequest().withTableName(tableName).withItem(databaseAction.item));
                         returnString = id;
                     }
