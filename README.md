@@ -1,3 +1,12 @@
+# If you just want the jar
+
+Just do this command
+```bash
+$ mvn package
+```
+
+Then in the target folder, it should be there. (Not the shaded or original jar).
+
 # How to maven this big boi
 
 So when you're packaging this guy, there's a few things you need to worry about while trying to make sure that 
