@@ -1,9 +1,13 @@
 package main.java.Logic;
 
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
+
 public class Constants {
     // TODO THIS GETS IT FROM THE ENVIRONMENTAL VARIABLES FROM AWS LAMBDA (with encryption ;))
     // TODO PUT THESE: workoutShortestTimeSectionInterval, idLength, numPrefix, databaseTableName, storageBucketName,
     // TODO timeoutSeconds, userPoolName, userPoolID, userPoolClientID, userPoolSecretKey, nullAttributeValue
+
+    public static LambdaLogger logger;
     public static int workoutShortestTimeSectionInterval = Integer.parseInt(System.getenv
             ("workoutShortestTimeSectionInterval"));
 
