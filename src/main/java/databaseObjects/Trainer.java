@@ -28,6 +28,7 @@ public class Trainer extends User {
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
+        item.put("item_type", new AttributeValue("Trainer"));
         item.put("gymID", new AttributeValue(Constants.nullAttributeValue));
 //        item.put("available_times", new AttributeValue(new ArrayList<>()));
         item.put("available_times", null);

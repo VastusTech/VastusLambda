@@ -31,6 +31,7 @@ public class Gym extends User {
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
+        item.put("item_type", new AttributeValue("Gym"));
         item.put("address", new AttributeValue(Constants.nullAttributeValue));
 //        item.put("trainerIDs", new AttributeValue(new ArrayList<>()));
 //        item.put("weekly_hours", new AttributeValue(new ArrayList<>()));

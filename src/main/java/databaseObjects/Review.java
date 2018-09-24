@@ -31,6 +31,7 @@ public class Review extends DatabaseObject {
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
+        item.put("item_type", new AttributeValue("Review"));
         item.put("byID", new AttributeValue(Constants.nullAttributeValue));
         item.put("aboutID", new AttributeValue(Constants.nullAttributeValue));
         item.put("friendliness_rating", new AttributeValue("-1.0"));

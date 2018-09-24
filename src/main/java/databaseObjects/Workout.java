@@ -36,6 +36,7 @@ public class Workout extends DatabaseObject {
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
+        item.put("item_type", new AttributeValue("Workout"));
         item.put("time", new AttributeValue(Constants.nullAttributeValue));
         item.put("trainerID", new AttributeValue(Constants.nullAttributeValue));
 //        item.put("clientIDs", new AttributeValue(new ArrayList<>()));

@@ -21,6 +21,7 @@ public class Client extends User {
         Map<String, AttributeValue> item = User.getEmptyItem();
 //        item.put("friends", new AttributeValue(new ArrayList<>()));
 //        item.put("friend_requests", new AttributeValue(new ArrayList<>()));
+        item.put("item_type", new AttributeValue("Client"));
         item.put("friends", null);
         item.put("friend_requests", null);
         return item;
