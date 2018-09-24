@@ -7,6 +7,14 @@ $ mvn package
 
 Then in the target folder, it should be there. (Not the shaded or original jar).
 
+# How to put it into AWS Lambda
+
+You just go to the lambda console, make a function, and say I want a new function.
+For the function code, you create this jar then you upload to lambda with "Java 8" as runtime and 
+"lambdaFunctionHandlers.LambdaFunctionHandler::handleFunction" as the handler.
+
+Then you save and test it however you see fit. (Make sure the roles are correct for DynamoDB actions).
+
 # How to maven this big boi
 
 So when you're packaging this guy, there's a few things you need to worry about while trying to make sure that 
