@@ -7,16 +7,16 @@ public class CreateTrainerRequest {
     public String email;
     public String username;
     public String gymID;
-    public String bio;
+    // public String bio;
 
-    public CreateTrainerRequest(String name, String gender, String birthday, String email, String username, String gymID, String bio) {
+    public CreateTrainerRequest(String name, String gender, String birthday, String email, String username, String gymID) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.email = email;
         this.username = username;
         this.gymID = gymID;
-        this.bio = bio;
+        // this.bio = bio;
     }
 
     public CreateTrainerRequest() {}
@@ -70,12 +70,11 @@ public class CreateTrainerRequest {
         this.gymID = gymID;
     }
 
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
+//    public String getBio() {
+//        return bio;
+//    }
+//
+//    public void setBio(String bio) {
+//        this.bio = bio;
+//    }
 }

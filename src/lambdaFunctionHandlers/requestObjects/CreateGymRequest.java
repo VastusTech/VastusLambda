@@ -6,21 +6,27 @@ public class CreateGymRequest {
     public String username;
     public String foundingDay;
     public String address;
-    public String bio;
+    public String[] weeklyHours;
+    public String sessionCapacity;
+    public String gymType;
+    public String paymentSplit;
 
-    public CreateGymRequest(String name, String email, String username, String foundingDay, String address, String bio) {
+    public CreateGymRequest(String name, String email, String username, String foundingDay, String address, String[]
+            weeklyHours, String sessionCapacity, String gymType, String paymentSplit) {
         this.name = name;
         this.email = email;
         this.username = username;
         this.foundingDay = foundingDay;
         this.address = address;
-        this.bio = bio;
+        this.weeklyHours = weeklyHours;
+        this.sessionCapacity = sessionCapacity;
+        this.gymType = gymType;
+        this.paymentSplit = paymentSplit;
     }
 
     public CreateGymRequest() {}
 
     public String getName() {
-
         return name;
     }
 
@@ -60,11 +66,35 @@ public class CreateGymRequest {
         this.address = address;
     }
 
-    public String getBio() {
-        return bio;
+    public String[] getWeeklyHours() {
+        return weeklyHours;
     }
 
-    public void setBio(String bio) {
-        this.bio = bio;
+    public void setWeeklyHours(String[] weeklyHours) {
+        this.weeklyHours = weeklyHours;
+    }
+
+    public String getSessionCapacity() {
+        return sessionCapacity;
+    }
+
+    public void setSessionCapacity(String sessionCapacity) {
+        this.sessionCapacity = sessionCapacity;
+    }
+
+    public String getGymType() {
+        return gymType;
+    }
+
+    public void setGymType(String gymType) {
+        this.gymType = gymType;
+    }
+
+    public String getPaymentSplit() {
+        return paymentSplit;
+    }
+
+    public void setPaymentSplit(String paymentSplit) {
+        this.paymentSplit = paymentSplit;
     }
 }

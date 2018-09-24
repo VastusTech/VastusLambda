@@ -1,6 +1,6 @@
 package databaseOperations;
 
-public enum DBAction {
+enum DBAction {
     CREATE,
     UPDATE,
     UPDATESAFE,

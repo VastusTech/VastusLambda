@@ -4,12 +4,14 @@ public class CreateWorkoutRequest {
     public String time;
     public String trainerID;
     public String[] clientIDs;
+    public String capacity;
     public String gymID;
     public String sticker;
     public String intensity;
     public String price;
 
-    public CreateWorkoutRequest(String time, String trainerID, String[] clientIDs, String gymID, String sticker, String intensity, String price) {
+    public CreateWorkoutRequest(String time, String trainerID, String[] clientIDs, String capacity, String gymID, String
+            sticker, String intensity, String price) {
         this.time = time;
         this.trainerID = trainerID;
         this.clientIDs = clientIDs;
@@ -45,6 +47,14 @@ public class CreateWorkoutRequest {
         this.clientIDs = clientIDs;
     }
 
+    public String getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(String capacity) {
+        this.capacity = capacity;
+    }
+
     public String getGymID() {
         return gymID;
     }
@@ -76,5 +86,4 @@ public class CreateWorkoutRequest {
     public void setPrice(String price) {
         this.price = price;
     }
-
 }

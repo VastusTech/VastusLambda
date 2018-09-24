@@ -3,7 +3,7 @@ package Logic;
 public class Constants {
     // TODO THIS GETS IT FROM THE ENVIRONMENTAL VARIABLES FROM AWS LAMBDA (with encryption ;))
     // TODO PUT THESE: workoutShortestTimeSectionInterval, idLength, numPrefix, databaseTableName, storageBucketName,
-    // TODO timeoutSeconds, userPoolName, userPoolID, userPoolClientID, userPoolSecretKey
+    // TODO timeoutSeconds, userPoolName, userPoolID, userPoolClientID, userPoolSecretKey, nullAttributeValue
     public static int workoutShortestTimeSectionInterval = Integer.parseInt(System.getenv
             ("workoutShortestTimeSectionInterval"));
 
@@ -23,4 +23,6 @@ public class Constants {
     public static String userPoolID = System.getenv("userPoolID");
     public static String userPoolClientID = System.getenv("userPoolClientID");
     public static String userPoolSecretKey = System.getenv("userPoolSecretKey");
+
+    public static String nullAttributeValue = System.getenv("nullAttributeValue");
 }

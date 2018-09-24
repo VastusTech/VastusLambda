@@ -1,6 +1,9 @@
 package databaseObjects;
 
+import Logic.Constants;
+import Logic.ItemType;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import lambdaFunctionHandlers.responseObjects.ObjectResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,5 +74,30 @@ abstract public class DatabaseObject {
         // You have to also put it into the item
         attributes.put(key, value);
         item.put(key, value);
+    }
+
+    abstract public ObjectResponse getResponse();
+
+    static Map<String, AttributeValue> getEmptyItem() {
+        Map<String, AttributeValue> item = new HashMap<>();
+        item.put("id", new AttributeValue("null"));
+        item.put("item_type", new AttributeValue("null"));
+        item.put("time_created", new AttributeValue("null"));
+        item.put("marker", new AttributeValue().withN("0"));
+        return item;
+    }
+
+    public static String getItemType(String id) {
+        String prefix = id.substring(0, Constants.numPrefix);
+        ItemType[] itemTypes = ItemType.values();
+
+        for (ItemType itemType : itemTypes) {
+            String type = itemType.name();
+            if (prefix.equals(type.substring(0, Constants.numPrefix))) {
+                return type;
+            }
+        }
+
+        return null;
     }
 }

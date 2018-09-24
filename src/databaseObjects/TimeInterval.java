@@ -18,6 +18,7 @@ public class TimeInterval {
     public DateTime toDateTime;
 
     public int year, month, day;
+    public int weekday;
     public int fromHour, fromMinute, toHour, toMinute;
 
     // These are just 60 * Hour + Minute
@@ -42,6 +43,7 @@ public class TimeInterval {
             this.year = fromDateTime.getYear();
             this.month = fromDateTime.getMonthOfYear();
             this.day = fromDateTime.getDayOfMonth();
+            this.weekday = fromDateTime.getDayOfWeek();
 
             // TimeIntervals have to be on the same day
             if (year == toDateTime.getYear() && month == toDateTime.getMonthOfYear() &&
@@ -120,6 +122,8 @@ public class TimeInterval {
         fromDateTime = new DateTime(year, month, day, fromHour, fromMinute);
         toDateTime = new DateTime(year, month, day, toHour, toMinute);
 
+        this.weekday = fromDateTime.getDayOfWeek();
+
         DateTimeFormatter dtf = ISODateTimeFormat.dateTimeNoMillis();
 
         this.fromiso = dtf.print(fromDateTime);
@@ -135,6 +139,15 @@ public class TimeInterval {
         if (fromTotalMinute % timeSection != 0 || toTotalMinute % timeSection != 0) {
             throw new Exception("Time is offset by an irregular amount");
         }
+    }
+
+    public static List<TimeInterval> getTimeIntervals(List<String> times) throws Exception {
+        List<TimeInterval> timeIntervals = new ArrayList<>();
+        for (String isotime : times) {
+            TimeInterval timeInterval = new TimeInterval(isotime);
+            timeIntervals.add(timeInterval);
+        }
+        return timeIntervals;
     }
 
     public List<TimeInterval> potentialWorkoutTimes(TimeInterval timeInterval, int[] potentialWorkoutLengths) {
@@ -244,6 +257,38 @@ public class TimeInterval {
         return false;
     }
 
+    /**
+     * This function finds whether the time interval intersects the other, given that `this` is a WEEKLY TIME.
+     * This means that instead of checking `isSameDay` we are checking `isSameWeekday`. Then finding if it intersects.
+     * @return Whether the time interval intersects this weekly time
+     */
+    public Boolean weeklyIntersects(TimeInterval timeInterval) {
+        if (this.weekday == timeInterval.weekday) {
+            // Is there an overlap in the times?
+            int intersectFromTotalMinute = Integer.max(this.fromTotalMinute, timeInterval.fromTotalMinute);
+            int intersectToTotalMinute = Integer.min(this.toTotalMinute, timeInterval.toTotalMinute);
+            if (intersectFromTotalMinute < intersectToTotalMinute) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * This function finds whether the time interval encompasses the other, given that `this` is a WEEKLY TIME.
+     * This means that instead of checking `isSameDay` we are checking `isSameWeekday`. Then finding if it is
+     * encompassed.
+     * @return Whether the time interval intersects this weekly time
+     */
+    public Boolean weeklyEncompasses(TimeInterval timeInterval) {
+        if (this.weekday == timeInterval.weekday) {
+            if (this.fromTotalMinute <= timeInterval.fromTotalMinute && this.toTotalMinute >= timeInterval.toTotalMinute) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Boolean hasAlreadyStarted() {
         return fromDateTime.isAfterNow();
     }
@@ -280,5 +325,10 @@ public class TimeInterval {
         else {
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return isotime;
     }
 }

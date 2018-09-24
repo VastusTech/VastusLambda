@@ -1,4 +1,4 @@
 package lambdaFunctionHandlers.gymFunctionHandlers;
 
-public class GymUsernameQuery {
+public class DeleteGym {
 }

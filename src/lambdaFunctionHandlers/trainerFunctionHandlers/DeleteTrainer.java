@@ -1,4 +1,4 @@
 package lambdaFunctionHandlers.trainerFunctionHandlers;
 
-public class TrainerUsernameQuery {
+public class DeleteTrainer {
 }

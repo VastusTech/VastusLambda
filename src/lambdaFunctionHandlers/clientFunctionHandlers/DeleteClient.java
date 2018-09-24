@@ -1,4 +1,4 @@
 package lambdaFunctionHandlers.clientFunctionHandlers;
 
-public class ClientUsernameQuery {
+public class DeleteClient {
 }
