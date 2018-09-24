@@ -10,7 +10,9 @@ public class CreateDatabaseAction extends DatabaseAction {
         this.item = item;
 
         // Unused variables
-        this.updateItem = null;
+        this.updateAction = null;
+        this.updateAttributeName = null;
+        this.updateAttribute = null;
         this.checkHandler = null;
     }
 }

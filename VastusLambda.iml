@@ -8,12 +8,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="junit:junit:4.12" level="project" />
     <orderEntry type="library" name="amazon-dynamodb-transactions-1.1.2" level="project" />
-    <orderEntry type="library" name="junit-4.10" level="project" />
+    <orderEntry type="library" name="com.amazonaws:aws-java-sdk-dynamodb:1.11.414" level="project" />
+    <orderEntry type="library" name="com.amazonaws:aws-java-sdk-core:1.11.414" level="project" />
     <orderEntry type="library" name="com.amazonaws:aws-lambda-java-core:1.2.0" level="project" />
-    <orderEntry type="library" name="com.amazonaws:aws-lambda-java-events:2.2.2" level="project" />
-    <orderEntry type="library" name="com.amazonaws:aws-java-sdk-core:1.11.410" level="project" />
-    <orderEntry type="library" name="com.amazonaws:aws-java-sdk-dynamodb:1.11.410" level="project" />
-    <orderEntry type="library" name="com.amazonaws:aws-java-sdk-s3:1.11.410" level="project" />
   </component>
 </module>
