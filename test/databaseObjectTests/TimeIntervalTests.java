@@ -2,7 +2,7 @@ package databaseObjectTests;
 
 import static org.junit.Assert.assertEquals;
 
-import databaseObjects.TimeInterval;
+import main.java.databaseObjects.TimeInterval;
 
 import org.junit.Test;
 

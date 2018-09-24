@@ -11,7 +11,7 @@ Then in the target folder, it should be there. (Not the shaded or original jar).
 
 You just go to the lambda console, make a function, and say I want a new function.
 For the function code, you create this jar then you upload to lambda with "Java 8" as runtime and 
-"lambdaFunctionHandlers.LambdaFunctionHandler::handleFunction" as the handler.
+"main.java.lambdaFunctionHandlers.LambdaFunctionHandler::handleFunction" as the handler.
 
 Then you save and test it however you see fit. (Make sure the roles are correct for DynamoDB actions).
 
