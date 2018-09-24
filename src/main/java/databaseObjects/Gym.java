@@ -32,9 +32,12 @@ public class Gym extends User {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("address", new AttributeValue(Constants.nullAttributeValue));
-        item.put("trainerIDs", new AttributeValue(new ArrayList<>()));
-        item.put("weekly_hours", new AttributeValue(new ArrayList<>()));
-        item.put("vacation_times", new AttributeValue(new ArrayList<>()));
+//        item.put("trainerIDs", new AttributeValue(new ArrayList<>()));
+//        item.put("weekly_hours", new AttributeValue(new ArrayList<>()));
+//        item.put("vacation_times", new AttributeValue(new ArrayList<>()));
+        item.put("trainerIDs", null);
+        item.put("weekly_hours", null);
+        item.put("vacation_times", null);
         item.put("session_capacity", new AttributeValue(Constants.nullAttributeValue));
         item.put("gym_type", new AttributeValue("independent"));
         item.put("payment_split", new AttributeValue(Constants.nullAttributeValue));

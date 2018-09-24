@@ -38,12 +38,14 @@ public class Workout extends DatabaseObject {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("time", new AttributeValue(Constants.nullAttributeValue));
         item.put("trainerID", new AttributeValue(Constants.nullAttributeValue));
-        item.put("clientIDs", new AttributeValue(new ArrayList<>()));
+//        item.put("clientIDs", new AttributeValue(new ArrayList<>()));
+        item.put("clientIDs", null);
         item.put("capacity", new AttributeValue(Constants.nullAttributeValue));
         item.put("gymID", new AttributeValue(Constants.nullAttributeValue));
         item.put("sticker", new AttributeValue(Constants.nullAttributeValue));
         item.put("intensity", new AttributeValue(Constants.nullAttributeValue));
-        item.put("missing_reviews", new AttributeValue(new ArrayList<>()));
+//        item.put("missing_reviews", new AttributeValue(new ArrayList<>()));
+        item.put("missing_reviews", null);
         item.put("price", new AttributeValue(Constants.nullAttributeValue));
         return item;
     }
