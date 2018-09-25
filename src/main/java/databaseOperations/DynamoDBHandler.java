@@ -86,16 +86,15 @@ public class DynamoDBHandler {
                         Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, returnString);
 
                         // This is the updating marker statement
-                        Map<String, AttributeValueUpdate> markerUpdate = new HashMap<>();
-                        markerUpdate.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
+                        updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
 
-                        // This updates the object
+                        // This updates the object and the marker
                         transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
                                 (databaseAction.item).withAttributeUpdates(updateItem));
 
                         // This updates the marker
-                        transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
-                                (databaseAction.item).withAttributeUpdates(markerUpdate));
+                        //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
+                                //(databaseAction.item).withAttributeUpdates(markerUpdate));
                     }
                     catch (Exception e) {
                         transaction.rollback();
@@ -110,9 +109,6 @@ public class DynamoDBHandler {
                         key.put("item_type", databaseAction.item.get("item_type"));
                         key.put("id", databaseAction.item.get("id"));
 
-                        // This is the marker update statement
-                        Map<String, AttributeValueUpdate> markerUpdate = new HashMap<>();
-                        markerUpdate.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
 
                         // This is the marker conditional statement
                         String conditionalExpression = "#mark = :mark";
@@ -122,6 +118,9 @@ public class DynamoDBHandler {
 
                         // This is the actual update item statement
                         Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, returnString);
+
+                        // This is the marker update statement
+                        updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
 
                         // We loop until we successfully update the item without the item being updated meanwhile
                         boolean ifFinished = false;
@@ -135,15 +134,15 @@ public class DynamoDBHandler {
                                 conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
                                 try {
-                                    // Try to update the item with the conditional check
+                                    // Try to update the item and the marker with the conditional check
                                     transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
                                             (databaseAction.item).withAttributeUpdates(updateItem)
                                             .withConditionExpression(conditionalExpression).withExpressionAttributeNames
                                                     (conditionalExpressionNames).withExpressionAttributeValues(conditionalExpressionValues));
 
                                     // Update the marker afterwards
-                                    transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
-                                            (databaseAction.item).withAttributeUpdates(markerUpdate));
+                                    //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
+                                            //(databaseAction.item).withAttributeUpdates(markerUpdate));
 
                                     // This exits the loop
                                     ifFinished = true;
