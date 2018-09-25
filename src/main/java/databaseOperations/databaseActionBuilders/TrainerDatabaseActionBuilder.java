@@ -1,7 +1,6 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.sun.istack.internal.NotNull;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseObjects.Trainer;
@@ -14,7 +13,7 @@ import java.util.Map;
 public class TrainerDatabaseActionBuilder {
     final static private String itemType = "Trainer";
 
-    public static DatabaseAction create(@NotNull CreateTrainerRequest createTrainerRequest) {
+    public static DatabaseAction create(CreateTrainerRequest createTrainerRequest) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Trainer.getEmptyItem();
         item.put("name", new AttributeValue(createTrainerRequest.name));

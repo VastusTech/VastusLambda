@@ -14,7 +14,7 @@ public class WorkoutDatabaseActionBuilder {
     final static private String itemType = "Workout";
 
     public static DatabaseAction create(CreateWorkoutRequest createWorkoutRequest) {
-        // TODO Make sure null values don't mess things up
+        // Handle the setting of the items
         Map<String, AttributeValue> item = Workout.getEmptyItem();
         item.put("time", new AttributeValue(createWorkoutRequest.time));
         item.put("trainerID", new AttributeValue(createWorkoutRequest.trainerID));

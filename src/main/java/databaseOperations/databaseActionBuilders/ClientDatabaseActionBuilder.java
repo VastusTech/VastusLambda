@@ -1,7 +1,6 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.sun.istack.internal.NotNull;
 import main.java.databaseObjects.Client;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.TimeInterval;
@@ -14,7 +13,7 @@ import java.util.Map;
 public class ClientDatabaseActionBuilder {
     final static private String itemType = "Client";
 
-    public static DatabaseAction create(@NotNull CreateClientRequest createClientRequest) {
+    public static DatabaseAction create(CreateClientRequest createClientRequest) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Client.getEmptyItem();
         item.put("name", new AttributeValue(createClientRequest.name));

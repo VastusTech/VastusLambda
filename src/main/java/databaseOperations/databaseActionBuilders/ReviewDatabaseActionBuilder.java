@@ -15,7 +15,7 @@ public class ReviewDatabaseActionBuilder {
     final static private String itemType = "Review";
 
     public static DatabaseAction create(CreateReviewRequest createReviewRequest) {
-        // TODO Make sure null values aren't problematic :p
+        // Handle the setting of the items
         Map<String, AttributeValue> item = Review.getEmptyItem();
         item.put("byID", new AttributeValue(createReviewRequest.byID));
         item.put("aboutID", new AttributeValue(createReviewRequest.aboutID));

@@ -1,7 +1,6 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.sun.istack.internal.NotNull;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.Gym;
 import main.java.databaseObjects.TimeInterval;
@@ -15,9 +14,8 @@ import java.util.Map;
 public class GymDatabaseActionBuilder {
     final static private String itemType = "Gym";
 
-    public static DatabaseAction create(@NotNull CreateGymRequest createGymRequest) {
+    public static DatabaseAction create(CreateGymRequest createGymRequest) {
         // Handle the setting of the items!
-        // TODO Make sure that the null values aren't too too problematic
         Map<String, AttributeValue> item = Gym.getEmptyItem();
         item.put("name", new AttributeValue(createGymRequest.name));
         item.put("birthday", new AttributeValue(createGymRequest.foundingDay));
