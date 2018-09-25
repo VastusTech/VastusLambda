@@ -2,24 +2,24 @@ package main.java.lambdaFunctionHandlers;
 
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
-import main.java.databaseObjects.*;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.*;
-import main.java.lambdaFunctionHandlers.clientFunctionHandlers.*;
-import main.java.lambdaFunctionHandlers.gymFunctionHandlers.*;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateClient;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateGym;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.*;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.readHandlers.*;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.ClientAddFriends;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.ClientAddToWorkout;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.GymAddVacationTimes;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.TrainerAddAvailableTimes;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers.*;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.requestObjects.*;
 import main.java.lambdaFunctionHandlers.responseObjects.*;
-import main.java.lambdaFunctionHandlers.reviewFunctionHandlers.CreateReview;
-import main.java.lambdaFunctionHandlers.reviewFunctionHandlers.DeleteReview;
-import main.java.lambdaFunctionHandlers.reviewFunctionHandlers.ReadReviewsByID;
-import main.java.lambdaFunctionHandlers.trainerFunctionHandlers.CreateTrainer;
-import main.java.lambdaFunctionHandlers.trainerFunctionHandlers.DeleteTrainer;
-import main.java.lambdaFunctionHandlers.trainerFunctionHandlers.ReadTrainersByID;
-import main.java.lambdaFunctionHandlers.trainerFunctionHandlers.ReadTrainersByUsername;
-import main.java.lambdaFunctionHandlers.workoutFunctionHandlers.CreateWorkout;
-import main.java.lambdaFunctionHandlers.workoutFunctionHandlers.DeleteWorkout;
-import main.java.lambdaFunctionHandlers.workoutFunctionHandlers.ReadWorkoutsByID;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateReview;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateTrainer;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateWorkout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +51,7 @@ public class LambdaRequest {
     }
 
     private enum AttributeName {
+        // User ===========================
         name,
         gender,
         birthday,
@@ -68,14 +69,17 @@ public class LambdaRequest {
         effectivenessRating,
         reliabilityRating,
         bio,
+        // Client ==========================
         friends,
         friendRequests,
+        // Trainer =========================
         gymID,
         availableTimes,
         workoutSticker,
         preferredIntensity,
         workoutCapacity,
         workoutPrice,
+        // Gym =============================
         address,
         trainerIDs,
         weeklyHours,
@@ -83,6 +87,7 @@ public class LambdaRequest {
         sessionCapacity,
         gymType,
         paymentSplit,
+        // Workout =========================
         time,
         trainerID,
         clientIDs,
@@ -91,6 +96,7 @@ public class LambdaRequest {
         intensity,
         missingReviews,
         price,
+        // Review ==========================
         byID,
         aboutID,
         description
@@ -387,255 +393,145 @@ public class LambdaRequest {
 
     public void handleUpdateSet(String id) throws Exception {
         // switch all attributes, then if necessary, item type
-        List<DatabaseAction> databaseActions = new ArrayList<>();
+        List<DatabaseAction> databaseActions;
+
+        if (attributeValues.length != 1 && !attributeName.equals("weeklyHours")) {
+            throw new Exception("For updating " + attributeName + " on " + itemType + "attributeValues must be only 1" +
+                    " item long!");
+        }
+        else if (attributeValues.length == 0 && attributeName.equals("weeklyHours")) {
+            // DynamoDB can't handle empty string sets
+            attributeValues = null;
+        }
 
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case name:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(UserDatabaseActionBuilder.updateName(id, itemType, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = UserUpdateName.getActions(id, itemType, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case gender:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(UserDatabaseActionBuilder.updateGender(id, itemType,
-                                    attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = UserUpdateGender.getActions(id, itemType, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case birthday:
                     if (itemType.equals("Client") || itemType.equals("Trainer")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(UserDatabaseActionBuilder.updateBirthday(id, itemType, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = UserUpdateBirthday.getActions(id, itemType, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case foundingDay:
                     if (itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(GymDatabaseActionBuilder.updateFoundingDay(id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = GymUpdateFoundingDay.getActions(id, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case email:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(UserDatabaseActionBuilder.updateEmail(id, itemType, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = UserUpdateEmail.getActions(id, itemType, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case profileImagePath:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(UserDatabaseActionBuilder.updateProfileImagePath(id, itemType, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = UserUpdateProfileImagePath.getActions(id, itemType, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case bio:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(UserDatabaseActionBuilder.updateBio(id, itemType, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = UserUpdateBio.getActions(id, itemType, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case workoutSticker:
                     if (itemType.equals("Trainer")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(TrainerDatabaseActionBuilder.updateWorkoutSticker(id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = TrainerUpdateWorkoutSticker.getActions(id, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case preferredIntensity:
                     if (itemType.equals("Trainer")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(TrainerDatabaseActionBuilder.updatePreferredIntensity(id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = TrainerUpdatePreferredIntensity.getActions(id, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case workoutCapacity:
                     if (itemType.equals("Trainer")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(TrainerDatabaseActionBuilder.updateWorkoutCapacity(id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
-
+                        databaseActions = TrainerUpdateWorkoutCapacity.getActions(id, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case workoutPrice:
                     if (itemType.equals("Trainer")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(TrainerDatabaseActionBuilder.updateWorkoutPrice(id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = TrainerUpdateWorkoutPrice.getActions(id, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case address:
                     if (itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(GymDatabaseActionBuilder.updateAddress(id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = GymUpdateAddress.getActions(id, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case weeklyHours:
                     if (itemType.equals("Gym")) {
-                        if (attributeValues.length > 0) {
-                            // TODO We probably need to cancel any workouts that
-                            // TODO THIS SHOULD BE ADDRESSED VERY SOON
-                            databaseActions.add(GymDatabaseActionBuilder.updateWeeklyHours(id, attributeValues));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be at least 1 long!");
-                        }
+                        databaseActions = GymUpdateWeeklyHours.getActions(id, attributeValues);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case sessionCapacity:
                     if (itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            // Should we worry about already scheduled workouts? Nah.
-                            databaseActions.add(GymDatabaseActionBuilder.updateSessionCapacity(id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = GymUpdateSessionCapacity.getActions(id, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case gymType:
                     if (itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            // TODO Set payment split to DEFAULT for whatever it's going into
-                            databaseActions.add(GymDatabaseActionBuilder.updateGymType(id, attributeValues[0]));
-                            databaseActions.add(GymDatabaseActionBuilder.updatePaymentSplit(id, Constants.nullAttributeValue));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = GymUpdateGymType.getActions(id, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 case paymentSplit:
                     if (itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(GymDatabaseActionBuilder.updatePaymentSplit(id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = GymUpdatePaymentSplit.getActions(id, attributeValues[0]);
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-                                itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
                 default:
@@ -658,14 +554,7 @@ public class LambdaRequest {
                 case scheduledWorkouts:
                     if (itemType.equals("Client")) {
                         if (attributeValues.length == 1) {
-                            // Workout dependencies
-                            databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(id,
-                                    attributeValues[0], false));
-                            // Add to workout's clients
-                            databaseActions.add(WorkoutDatabaseActionBuilder.updateAddClientID(attributeValues[0], id));
-                            // Add to workout's missingReviews
-                            databaseActions.add(WorkoutDatabaseActionBuilder.updateAddMissingReview
-                                    (attributeValues[0], id));
+                            databaseActions = ClientAddToWorkout.getActions(id, attributeValues[0]);
                         }
                         else {
                             throw new Exception("For updating " + attributeName + " on " + itemType +
@@ -679,17 +568,7 @@ public class LambdaRequest {
                     break;
                 case friends:
                     if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            // Mututal friends
-                            databaseActions.add(ClientDatabaseActionBuilder.updateAddFriend(id, attributeValues[0],
-                                    true));
-                            databaseActions.add(ClientDatabaseActionBuilder.updateAddFriend(attributeValues[0], id,
-                                    false));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = ClientAddFriends.getActions(id, attributeValues);
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -719,14 +598,7 @@ public class LambdaRequest {
                     break;
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(TrainerDatabaseActionBuilder.updateAddAvailableTime(id,
-                                    attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = TrainerAddAvailableTimes.getActions(id, attributeValues);
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -735,15 +607,7 @@ public class LambdaRequest {
                     break;
                 case vacationTimes:
                     if (itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            // TODO Cancel workouts if it's applicable
-                            // TODO This will need to be addressed SOOON!
-                            databaseActions.add(GymDatabaseActionBuilder.updateAddVacationTime(id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = GymAddVacationTimes.getActions(id, attributeValues);
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -784,16 +648,7 @@ public class LambdaRequest {
                     break;
                 case friends:
                     if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            // Mutual Friend loss
-                            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriend(id,
-                                    attributeValues[0]));
-                            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriend(attributeValues[0], id));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = ClientRemoveFriends.getActions(id, attributeValues);
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -802,14 +657,7 @@ public class LambdaRequest {
                     break;
                 case friendRequests:
                     if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriendRequest(id,
-                                    attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = ClientRemoveFriendRequests.getActions(id, attributeValues);
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -818,14 +666,7 @@ public class LambdaRequest {
                     break;
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveAvailableTime(id,
-                                    attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = TrainerRemoveAvailableTimes.getActions(id, attributeValues);
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -834,14 +675,7 @@ public class LambdaRequest {
                     break;
                 case vacationTimes:
                     if (itemType.equals("Gym")) {
-                        if (attributeValues.length == 1) {
-                            databaseActions.add(GymDatabaseActionBuilder.updateRemoveVacationTime(id,
-                                    attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActions = GymRemoveVacationTimes.getActions(id, attributeValues);
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +

@@ -1,12 +1,11 @@
 package main.java;
 
+import org.joda.time.DateTime;
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-enum Ay {
-    LMAO
-}
 public class Main {
     public static void main(String[] args) {
         // This throws an error
@@ -22,8 +21,11 @@ public class Main {
         // }
         // System.out.println(stringArray);
         // System.out.println("Hello World!");
-        int bound = (int)Math.pow(10, 9);
-        System.out.println(bound);
-        System.out.println((new Random()).nextInt(bound));
+//        int bound = (int)Math.pow(10, 9);
+//        System.out.println(bound);
+//        System.out.println((new Random()).nextInt(bound));
+        String birthday = "1998-10-05";
+        DateTime dateTime = new DateTime(birthday);
+        System.out.println(dateTime.getDayOfWeek());
     }
 }

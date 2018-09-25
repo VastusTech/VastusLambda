@@ -271,7 +271,7 @@ public class DynamoDBHandler {
     }
 
     static public String generateRandomID(String itemType) {
-        String prefix = itemType.substring(0, Constants.numPrefix);
+        String prefix = itemType.substring(0, Constants.numPrefix).toUpperCase();
         int numDigits = Constants.idLength - Constants.numPrefix;
 
         Random random = new Random();
