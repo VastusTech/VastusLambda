@@ -1,5 +1,6 @@
 package main.java.databaseObjects;
 
+import com.amazonaws.services.dynamodbv2.document.Item;
 import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
@@ -18,15 +19,15 @@ public class Review extends DatabaseObject {
     public float overallRating;
     public String description;
 
-    Review(Map<String, AttributeValue> item) {
+    Review(Item item) throws Exception {
         super(item);
-        this.byID = item.get("byID").getS();
-        this.aboutID = item.get("aboutID").getS();
-        this.friendlinessRating = Float.parseFloat(item.get("friendliness_rating").getS());
-        this.effectivenessRating = Float.parseFloat(item.get("effectiveness_rating").getS());
-        this.reliabilityRating = Float.parseFloat(item.get("reliability_rating").getS());
+        this.byID = item.getString("byID");
+        this.aboutID = item.getString("aboutID");
+        this.friendlinessRating = Float.parseFloat(item.getString("friendliness_rating"));
+        this.effectivenessRating = Float.parseFloat(item.getString("effectiveness_rating"));
+        this.reliabilityRating = Float.parseFloat(item.getString("reliability_rating"));
         this.overallRating = (friendlinessRating + effectivenessRating + reliabilityRating) / 3.0f;
-        this.description = item.get("description").getS();
+        this.description = item.getString("description");
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

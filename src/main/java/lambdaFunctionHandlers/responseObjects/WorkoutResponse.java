@@ -3,16 +3,16 @@ package main.java.lambdaFunctionHandlers.responseObjects;
 import main.java.databaseObjects.Workout;
 
 public class WorkoutResponse extends ObjectResponse {
-    private String itemType = "Workout";
-    private String time;
-    private String trainerID;
-    private String[] clientIDs;
-    private String capacity;
-    private String gymID;
-    private String sticker;
-    private String intensity;
-    private String[] missingReviews;
-    private String price;
+    public String itemType = "Workout";
+    public String time;
+    public String trainerID;
+    public String[] clientIDs;
+    public String capacity;
+    public String gymID;
+    public String sticker;
+    public String intensity;
+    public String[] missingReviews;
+    public String price;
 
     public WorkoutResponse(Workout workout) {
         super(workout.id);

@@ -6,6 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class TimeInterval {
@@ -141,7 +142,7 @@ public class TimeInterval {
         }
     }
 
-    public static List<TimeInterval> getTimeIntervals(List<String> times) throws Exception {
+    public static List<TimeInterval> getTimeIntervals(Collection<String> times) throws Exception {
         List<TimeInterval> timeIntervals = new ArrayList<>();
         for (String isotime : times) {
             TimeInterval timeInterval = new TimeInterval(isotime);

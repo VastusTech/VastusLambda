@@ -7,30 +7,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrainerResponse extends ObjectResponse {
-    private String itemType = "Trainer";
-    private String name;
-    private String gender;
-    private String birthday;
-    private String email;
-    private String username;
-    private String profileImagePath;
-    private String[] scheduledWorkouts;
-    private String[] completedWorkouts;
-    private String[] scheduledWorkoutTimes;
-    private String[] completedWorkoutTimes;
-    private String[] reviewsBy;
-    private String[] reviewsAbout;
-    private String friendlinessRating;
-    private String effectivenessRating;
-    private String reliabilityRating;
-    private String bio;
+    public String itemType = "Trainer";
+    public String name;
+    public String gender;
+    public String birthday;
+    public String email;
+    public String username;
+    public String profileImagePath;
+    public String[] scheduledWorkouts;
+    public String[] completedWorkouts;
+    public String[] scheduledWorkoutTimes;
+    public String[] completedWorkoutTimes;
+    public String[] reviewsBy;
+    public String[] reviewsAbout;
+    public String friendlinessRating;
+    public String effectivenessRating;
+    public String reliabilityRating;
+    public String bio;
 
-    private String gymID;
-    private String[] availableTimes;
-    private String workoutSticker;
-    private String preferredIntensity;
-    private String workoutCapacity;
-    private String workoutPrice;
+    public String gymID;
+    public String[] availableTimes;
+    public String workoutSticker;
+    public String preferredIntensity;
+    public String workoutCapacity;
+    public String workoutPrice;
 
     public TrainerResponse(Trainer trainer) {
         super(trainer.id);

@@ -7,26 +7,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientResponse extends ObjectResponse {
-    private String itemType = "Client";
-    private String name;
-    private String gender;
-    private String birthday;
-    private String email;
-    private String username;
-    private String profileImagePath;
-    private String[] scheduledWorkouts;
-    private String[] completedWorkouts;
-    private String[] scheduledWorkoutTimes;
-    private String[] completedWorkoutTimes;
-    private String[] reviewsBy;
-    private String[] reviewsAbout;
-    private String friendlinessRating;
-    private String effectivenessRating;
-    private String reliabilityRating;
-    private String bio;
+    public String itemType = "Client";
+    public String name;
+    public String gender;
+    public String birthday;
+    public String email;
+    public String username;
+    public String profileImagePath;
+    public String[] scheduledWorkouts;
+    public String[] completedWorkouts;
+    public String[] scheduledWorkoutTimes;
+    public String[] completedWorkoutTimes;
+    public String[] reviewsBy;
+    public String[] reviewsAbout;
+    public String friendlinessRating;
+    public String effectivenessRating;
+    public String reliabilityRating;
+    public String bio;
 
-    private String[] friends;
-    private String[] friendRequests;
+    public String[] friends;
+    public String[] friendRequests;
 
     public ClientResponse(Client client) {
         super(client.id);

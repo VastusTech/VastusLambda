@@ -1,5 +1,6 @@
 package main.java.databaseObjects;
 
+import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.lambdaFunctionHandlers.responseObjects.ClientResponse;
@@ -11,13 +12,13 @@ public class Client extends User {
     public Set<String> friends;
     public Set<String> friendRequests;
 
-    Client(Map<String, AttributeValue> item) throws Exception {
+    Client(Item item) throws Exception {
         super(item);
-        AttributeValue friends = item.get("friends");
-        if (friends != null) { this.friends = new HashSet<>(friends.getSS()); }
+        Set<String> friends = item.getStringSet("friends");
+        if (friends != null) { this.friends = friends; }
         else { this.friends = new HashSet<>(); }
-        AttributeValue friendRequests = item.get("friend_requests");
-        if (friendRequests != null) { this.friendRequests = new HashSet<>(friendRequests.getSS()); }
+        Set<String> friendRequests = item.getStringSet("friend_requests");
+        if (friendRequests != null) { this.friendRequests = friendRequests; }
         else { this.friendRequests = new HashSet<>(); }
     }
 

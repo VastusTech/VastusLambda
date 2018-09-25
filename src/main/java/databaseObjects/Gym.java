@@ -1,5 +1,6 @@
 package main.java.databaseObjects;
 
+import com.amazonaws.services.dynamodbv2.document.Item;
 import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
@@ -18,21 +19,21 @@ public class Gym extends User {
     public String gymType;
     public float paymentSplit;
 
-    Gym(Map<String, AttributeValue> item) throws Exception {
+    Gym(Item item) throws Exception {
         super(item);
-        this.address = item.get("address").getS();
-        AttributeValue trainerIDs = item.get("trainerIDs");
-        if (trainerIDs != null) { this.trainerIDs = new HashSet<>(trainerIDs.getSS()); }
+        this.address = item.getString("address");
+        Set<String> trainerIDs = item.getStringSet("trainerIDs");
+        if (trainerIDs != null) { this.trainerIDs = trainerIDs; }
         else { this.trainerIDs = new HashSet<>(); }
-        AttributeValue weeklyHours = item.get("weekly_hours");
-        if (weeklyHours != null) { this.weeklyHours = TimeInterval.getTimeIntervals(weeklyHours.getSS()); }
+        Set<String> weeklyHours = item.getStringSet("weekly_hours");
+        if (weeklyHours != null) { this.weeklyHours = TimeInterval.getTimeIntervals(weeklyHours); }
         else { this.weeklyHours = new ArrayList<>(); }
-        AttributeValue vacationTimes = item.get("vacation_times");
-        if (vacationTimes != null) { this.vacationTimes = TimeInterval.getTimeIntervals(vacationTimes.getSS()); }
+        Set<String> vacationTimes = item.getStringSet("vacation_times");
+        if (vacationTimes != null) { this.vacationTimes = TimeInterval.getTimeIntervals(vacationTimes); }
         else { this.vacationTimes = new ArrayList<>(); }
-        this.sessionCapacity = Integer.parseInt(item.get("session_capacity").getS());
-        this.gymType = item.get("gym_type").getS();
-        this.paymentSplit = Float.parseFloat(item.get("payment_split").getS());
+        this.sessionCapacity = Integer.parseInt(item.getString("session_capacity"));
+        this.gymType = item.getString("gym_type");
+        this.paymentSplit = Float.parseFloat(item.getString("payment_split"));
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

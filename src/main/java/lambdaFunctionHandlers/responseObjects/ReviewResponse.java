@@ -3,13 +3,13 @@ package main.java.lambdaFunctionHandlers.responseObjects;
 import main.java.databaseObjects.Review;
 
 public class ReviewResponse extends ObjectResponse {
-    private String itemType = "Review";
-    private String byID;
-    private String aboutID;
-    private String friendlinessRating;
-    private String effectivenessRating;
-    private String reliabilityRating;
-    private String description;
+    public String itemType = "Review";
+    public String byID;
+    public String aboutID;
+    public String friendlinessRating;
+    public String effectivenessRating;
+    public String reliabilityRating;
+    public String description;
 
     public ReviewResponse(Review review) {
         super(review.id);

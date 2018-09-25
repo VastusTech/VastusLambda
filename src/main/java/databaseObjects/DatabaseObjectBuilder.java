@@ -1,12 +1,10 @@
 package main.java.databaseObjects;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-
-import java.util.Map;
+import com.amazonaws.services.dynamodbv2.document.Item;
 
 public interface DatabaseObjectBuilder {
-    static DatabaseObject build(Map<String, AttributeValue> item) throws Exception {
-        String itemType = item.get("item_type").getS();
+    static DatabaseObject build(Item item) throws Exception {
+        String itemType = (String)item.get("item_type");
         switch (itemType) {
             case "Client":
                 return new Client(item);

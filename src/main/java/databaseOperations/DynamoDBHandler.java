@@ -289,7 +289,7 @@ public class DynamoDBHandler {
             String id = key.get("id").getS();
             String itemType = key.get("item_type").getS();
             Item item = table.getItem("item_type", itemType, "id", id);
-            return (T)DatabaseObjectBuilder.build((Map<String, AttributeValue>)item);
+            return (T)DatabaseObjectBuilder.build(item);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -313,27 +313,32 @@ public class DynamoDBHandler {
         QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type AND #usr = :usr")
                 .withNameMap(nameMap).withValueMap(valueMap);
 
+        Item resultItem = null;
+
         try {
             ItemCollection<QueryOutcome> items = index.query(querySpec);
             Iterator<Item> iterator = items.iterator();
             int i = 0;
             if (!iterator.hasNext()) {
                 // This means that nothing showed up in the query,
-
+                return null;
             }
             while (iterator.hasNext()) {
                 if (i > 0) {
                     // This means that the query came up with more than one result
+                    throw new Exception("More than one item has " + username + " as their username!!!!");
                 }
-                Item item = iterator.next();
-                item.asMap();
+                resultItem = iterator.next();
                 i++;
             }
         }
         catch (Exception e) {
-
+            throw new Exception("Error while username querying. Error: " + e.getLocalizedMessage());
         }
 
+        if (resultItem != null) {
+            return (T)DatabaseObjectBuilder.build(resultItem);
+        }
 
         return null;
     }
@@ -354,7 +359,7 @@ public class DynamoDBHandler {
         List<T> allList = new ArrayList<>();
         while (iterator.hasNext()) {
             Item item = iterator.next();
-            allList.add((T)DatabaseObjectBuilder.build((Map<String, AttributeValue>)item));
+            allList.add((T)DatabaseObjectBuilder.build(item));
         }
 
         return allList;
