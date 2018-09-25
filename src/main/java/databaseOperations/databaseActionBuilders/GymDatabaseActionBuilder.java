@@ -153,7 +153,7 @@ public class GymDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateAddress(String id, String address) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "address", new AttributeValue(address), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "address", new AttributeValue(address), false, "PUT");
     }
 
     public static DatabaseAction updateAddTrainerID(String id, String trainerID, boolean ifWithCreate) throws Exception {
@@ -172,7 +172,7 @@ public class GymDatabaseActionBuilder {
 
     public static DatabaseAction updateWeeklyHours(String id, String[] weeklyHours) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "weekly_hours", new AttributeValue(Arrays.asList(weeklyHours)),
-                false, "SET");
+                false, "PUT");
     }
 
 //    public static DatabaseAction updateAddWeeklyHour(String id, String weeklyHour) throws Exception {
@@ -194,15 +194,15 @@ public class GymDatabaseActionBuilder {
 
     public static DatabaseAction updateSessionCapacity(String id, String sessionCapacity) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "session_capacity", new AttributeValue(sessionCapacity), false,
-                "SET");
+                "PUT");
     }
 
     public static DatabaseAction updateGymType(String id, String gymType) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "gym_type", new AttributeValue(gymType), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "gym_type", new AttributeValue(gymType), false, "PUT");
     }
 
     public static DatabaseAction updatePaymentSplit(String id, String paymentSplit) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "payment_split", new AttributeValue(paymentSplit), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "payment_split", new AttributeValue(paymentSplit), false, "PUT");
     }
 
     public static DatabaseAction delete(String id) {

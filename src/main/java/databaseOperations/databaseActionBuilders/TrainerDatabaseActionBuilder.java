@@ -166,20 +166,20 @@ public class TrainerDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateWorkoutSticker(String id, String sticker) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workout_sticker", new AttributeValue(sticker), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "workout_sticker", new AttributeValue(sticker), false, "PUT");
     }
 
     public static DatabaseAction updatePreferredIntensity(String id, String intensity) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "preferred_intensity", new AttributeValue(intensity), false,
-                "SET");
+                "PUT");
     }
 
     public static DatabaseAction updateWorkoutCapacity(String id, String capacity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workout_capacity", new AttributeValue(capacity), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "workout_capacity", new AttributeValue(capacity), false, "PUT");
     }
 
     public static DatabaseAction updateWorkoutPrice(String id, String price) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workout_price", new AttributeValue(price), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "workout_price", new AttributeValue(price), false, "PUT");
     }
 
     public static DatabaseAction delete(String id) {

@@ -8,25 +8,25 @@ import main.java.databaseOperations.UpdateDatabaseAction;
 
 public class UserDatabaseActionBuilder {
     public static DatabaseAction updateName(String id, String itemType, String name) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "name", new AttributeValue(name), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "name", new AttributeValue(name), false, "PUT");
     }
 
     public static DatabaseAction updateGender(String id, String itemType, String gender) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "gender", new AttributeValue(gender), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "gender", new AttributeValue(gender), false, "PUT");
     }
 
     public static DatabaseAction updateBirthday(String id, String itemType, String birthday) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "birthday", new AttributeValue(birthday), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "birthday", new AttributeValue(birthday), false, "PUT");
     }
 
     public static DatabaseAction updateEmail(String id, String itemType, String email) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "email", new AttributeValue(email), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "email", new AttributeValue(email), false, "PUT");
     }
 
     public static DatabaseAction updateProfileImagePath(String id, String itemType, String profileImagePath) throws
             Exception {
         return new UpdateDatabaseAction(id, itemType, "profile_image_path", new AttributeValue(profileImagePath),
-                false, "SET");
+                false, "PUT");
     }
 
     public static DatabaseAction updateAddScheduledWorkout(String id, String itemType, String workoutID, boolean
@@ -111,18 +111,18 @@ public class UserDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateFriendlinessRating(String id, String itemType, String rating) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "friendliness_rating", new AttributeValue(rating), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "friendliness_rating", new AttributeValue(rating), false, "PUT");
     }
 
     public static DatabaseAction updateEffectivenessRating(String id, String itemType, String rating) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "effectiveness_rating", new AttributeValue(rating), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "effectiveness_rating", new AttributeValue(rating), false, "PUT");
     }
 
     public static DatabaseAction updateReliabilityRating(String id, String itemType, String rating) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "reliability_rating", new AttributeValue(rating), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "reliability_rating", new AttributeValue(rating), false, "PUT");
     }
 
     public static DatabaseAction updateBio(String id, String itemType, String bio) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "bio", new AttributeValue(bio), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "bio", new AttributeValue(bio), false, "PUT");
     }
 }
