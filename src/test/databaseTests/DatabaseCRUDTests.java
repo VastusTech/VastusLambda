@@ -1,4 +1,4 @@
-package databaseTests;
+package test.databaseTests;
 
 public class DatabaseCRUDTests {
 

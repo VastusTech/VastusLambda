@@ -82,26 +82,18 @@ public class DynamoDBHandler {
                     break;
                 case UPDATE:
                     try {
-                        Map<String, AttributeValueUpdate> updateItem = new HashMap<>();
-                        if (databaseAction.ifWithCreate) {
-                            if (returnString == null) {
-                                throw new Exception("The Create statement needs to be first while updating!");
-                            }
-                            else {
-                                updateItem.put(databaseAction.updateAttributeName, new AttributeValueUpdate(new
-                                        AttributeValue(returnString), databaseAction.updateAction));
-                            }
-                        }
-                        else {
-                            updateItem.put(databaseAction.updateAttributeName, new AttributeValueUpdate
-                                    (databaseAction.updateAttribute, databaseAction.updateAction));
-                        }
+                        // This is the actual update item statement
+                        Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, returnString);
 
+                        // This is the updating marker statement
+                        Map<String, AttributeValueUpdate> markerUpdate = new HashMap<>();
+                        markerUpdate.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
+
+                        // This updates the object
                         transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
                                 (databaseAction.item).withAttributeUpdates(updateItem));
 
-                        Map<String, AttributeValueUpdate> markerUpdate = new HashMap<>();
-                        markerUpdate.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
+                        // This updates the marker
                         transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
                                 (databaseAction.item).withAttributeUpdates(markerUpdate));
                     }
@@ -113,60 +105,57 @@ public class DynamoDBHandler {
                     break;
                 case UPDATESAFE:
                     try {
-                        boolean ifFinished = false;
-                        // TODO Check error?
-                        String id = databaseAction.item.get("id").getS();
-                        String itemType = databaseAction.item.get("item_type").getS();
+                        // This is the key for getting the item
                         Map<String, AttributeValue> key = new HashMap<>();
-                        key.put("item_type", new AttributeValue(itemType));
-                        key.put("id", new AttributeValue(id));
+                        key.put("item_type", databaseAction.item.get("item_type"));
+                        key.put("id", databaseAction.item.get("id"));
 
+                        // This is the marker update statement
+                        Map<String, AttributeValueUpdate> markerUpdate = new HashMap<>();
+                        markerUpdate.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
+
+                        // This is the marker conditional statement
                         String conditionalExpression = "#mark = :mark";
                         Map<String, String> conditionalExpressionNames = new HashMap<>();
                         conditionalExpressionNames.put("#mark", "marker");
                         Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
 
-                        Map<String, AttributeValueUpdate> updateItem = new HashMap<>();
-                        if (databaseAction.ifWithCreate) {
-                            if (returnString == null) {
-                                throw new Exception("The Create statement needs to be first while updating!");
-                            }
-                            else {
-                                updateItem.put(databaseAction.updateAttributeName, new AttributeValueUpdate(new
-                                        AttributeValue(returnString), databaseAction.updateAction));
-                            }
-                        }
-                        else {
-                            updateItem.put(databaseAction.updateAttributeName, new AttributeValueUpdate
-                                    (databaseAction.updateAttribute, databaseAction.updateAction));
-                        }
+                        // This is the actual update item statement
+                        Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, returnString);
 
+                        // We loop until we successfully update the item without the item being updated meanwhile
+                        boolean ifFinished = false;
                         while (!ifFinished) {
                             // Read and check the expression
                             DatabaseObject object = readItem(key);
 
                             // Use the checkHandler
                             if (databaseAction.checkHandler.isViable(object)) {
+                                // Put the newly read marker value into the conditional statement
                                 conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
                                 try {
+                                    // Try to update the item with the conditional check
                                     transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
                                             (databaseAction.item).withAttributeUpdates(updateItem)
                                             .withConditionExpression(conditionalExpression).withExpressionAttributeNames
                                                     (conditionalExpressionNames).withExpressionAttributeValues(conditionalExpressionValues));
 
-                                    Map<String, AttributeValueUpdate> markerUpdate = new HashMap<>();
-                                    markerUpdate.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
+                                    // Update the marker afterwards
                                     transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
                                             (databaseAction.item).withAttributeUpdates(markerUpdate));
+
+                                    // This exits the loop
                                     ifFinished = true;
                                 } catch (ConditionalCheckFailedException ce) {
+                                    // This means that the item was changed while we were trying to update it
                                     // Keep checking and trying again!
-                                    // TODO I might not need this catch because of the lower one?
-                                } catch (Exception e) {
-                                    transaction.rollback();
-                                    throw new Exception("Error while trying to update an item in the database");
                                 }
+                            }
+                            else {
+                                // TODO How to pass in a more helpful message?
+                                // If the object is no longer viable, then we need to throw an exception and exit
+                                throw new Exception("The item failed the checkHandler, cannot do that process!");
                             }
                         }
                     }
@@ -178,6 +167,7 @@ public class DynamoDBHandler {
                     break;
                 case DELETE:
                     try {
+                        // Delete the item
                         transaction.deleteItem(new DeleteItemRequest().withTableName(tableName).withKey
                                 (databaseAction.item));
                     }
@@ -187,20 +177,58 @@ public class DynamoDBHandler {
                                 .getLocalizedMessage());
                     }
                     break;
-                case DELETESAFE:
-                    // TODO IS THERE A REASON TO ACTUALLY IMPLEMENT THIS?
-//                    try {
-//                        transaction.deleteItem(new DeleteItemRequest().withTableName(tableName).withKey
-//                                (databaseAction.item).withConditionExpression(databaseAction.conditionalExpression));
-//                    }
-//                    catch (ConditionalCheckFailedException ce) {
-//                        // TODO Implement this!
-//                        // This means that the app needs to try again
-//                    }
-//                    catch (Exception e) {
-//                        transaction.rollback();
-//                        throw new Exception("Error while deleting an item in the database");
-//                    }
+                case DELETECONDITIONAL:
+                    // Delete conditional essentially will use a checkHandler for the situation, but will only fail
+                    // itself if it fails that checkHandler, it won't rollback the entire transaction.
+
+                    try {
+                        // This allows us to get the key
+                        Map<String, AttributeValue> key = new HashMap<>();
+                        key.put("item_type", databaseAction.item.get("item_type"));
+                        key.put("id", databaseAction.item.get("id"));
+
+                        // This is the marker conditional statement
+                        String conditionalExpression = "#mark = :mark";
+                        Map<String, String> conditionalExpressionNames = new HashMap<>();
+                        conditionalExpressionNames.put("#mark", "marker");
+                        Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
+
+                        boolean ifFinished = false;
+                        while (!ifFinished) {
+                            DatabaseObject object = readItem(key);
+                            // Perform the checkHandler check
+                            if (databaseAction.checkHandler.isViable(object)) {
+                                conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
+
+                                try {
+                                    // try to delete the item
+                                    transaction.deleteItem(new DeleteItemRequest().withTableName(tableName).withKey
+                                            (databaseAction.item).withConditionExpression(conditionalExpression)
+                                            .withExpressionAttributeNames(conditionalExpressionNames)
+                                            .withExpressionAttributeValues(conditionalExpressionValues));
+
+                                    ifFinished = true;
+                                    // the process was successful.
+                                }
+                                // If the marker conditional statement fails, repeat
+                                catch (ConditionalCheckFailedException ce) {
+                                    // This means that the item was changed and we need to try it again
+                                }
+                            }
+                            else {
+                                // This means that the process was not successful, but because this is a delete
+                                // conditional, we will simply just keep going, as this means that the item no longer
+                                // needs to be deleted.
+                                ifFinished = true;
+                            }
+                        }
+                    }
+                    catch (Exception e) {
+                        // Else if there is another failure, rollback everything
+                        transaction.rollback();
+                        throw new Exception("Error while trying to conditionally delete an item. Error: " + e
+                                .getLocalizedMessage());
+                    }
                     break;
             }
         }
@@ -209,6 +237,25 @@ public class DynamoDBHandler {
         transaction.commit();
         transaction.delete();
         return returnString;
+    }
+
+    private Map<String, AttributeValueUpdate> getUpdateItem(DatabaseAction databaseAction,
+                                                            String returnString) throws Exception {
+        Map<String, AttributeValueUpdate> updateItem = new HashMap<>();
+        if (databaseAction.ifWithCreate) {
+            if (returnString == null) {
+                throw new Exception("The Create statement needs to be first while updating!");
+            }
+            else {
+                updateItem.put(databaseAction.updateAttributeName, new AttributeValueUpdate(new
+                        AttributeValue(returnString), databaseAction.updateAction));
+            }
+        }
+        else {
+            updateItem.put(databaseAction.updateAttributeName, new AttributeValueUpdate
+                    (databaseAction.updateAttribute, databaseAction.updateAction));
+        }
+        return updateItem;
     }
 
     public String getNewID(String itemType) throws Exception {

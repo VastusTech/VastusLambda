@@ -2,28 +2,40 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 
 // TODO Optional parameters at the get go?
 public class CreateTrainerRequest {
+    // Required
     public String name;
     public String gender;
     public String birthday;
     public String email;
     public String username;
     public String gymID;
-    // public String bio;
+    public String workoutSticker;
+    public String preferredIntensity;
 
-    public CreateTrainerRequest(String name, String gender, String birthday, String email, String username, String gymID) {
+    // Optional
+    public String bio;
+    public String workoutCapacity;
+    public String workoutPrice;
+
+    public CreateTrainerRequest(String name, String gender, String birthday, String email, String username, String
+            gymID, String workoutSticker, String preferredIntensity, String bio, String workoutCapacity, String
+            workoutPrice) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.email = email;
         this.username = username;
         this.gymID = gymID;
-        // this.bio = bio;
+        this.workoutSticker = workoutSticker;
+        this.preferredIntensity = preferredIntensity;
+        this.bio = bio;
+        this.workoutCapacity = workoutCapacity;
+        this.workoutPrice = workoutPrice;
     }
 
     public CreateTrainerRequest() {}
 
     public String getName() {
-
         return name;
     }
 
@@ -71,11 +83,43 @@ public class CreateTrainerRequest {
         this.gymID = gymID;
     }
 
-//    public String getBio() {
-//        return bio;
-//    }
-//
-//    public void setBio(String bio) {
-//        this.bio = bio;
-//    }
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getWorkoutSticker() {
+        return workoutSticker;
+    }
+
+    public void setWorkoutSticker(String workoutSticker) {
+        this.workoutSticker = workoutSticker;
+    }
+
+    public String getPreferredIntensity() {
+        return preferredIntensity;
+    }
+
+    public void setPreferredIntensity(String preferredIntensity) {
+        this.preferredIntensity = preferredIntensity;
+    }
+
+    public String getWorkoutCapacity() {
+        return workoutCapacity;
+    }
+
+    public void setWorkoutCapacity(String workoutCapacity) {
+        this.workoutCapacity = workoutCapacity;
+    }
+
+    public String getWorkoutPrice() {
+        return workoutPrice;
+    }
+
+    public void setWorkoutPrice(String workoutPrice) {
+        this.workoutPrice = workoutPrice;
+    }
 }

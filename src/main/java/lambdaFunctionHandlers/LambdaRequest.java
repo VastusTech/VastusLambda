@@ -2,18 +2,27 @@ package main.java.lambdaFunctionHandlers;
 
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseObjects.*;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.*;
+import main.java.lambdaFunctionHandlers.clientFunctionHandlers.*;
+import main.java.lambdaFunctionHandlers.gymFunctionHandlers.*;
 import main.java.lambdaFunctionHandlers.requestObjects.*;
 import main.java.lambdaFunctionHandlers.responseObjects.*;
+import main.java.lambdaFunctionHandlers.reviewFunctionHandlers.CreateReview;
+import main.java.lambdaFunctionHandlers.reviewFunctionHandlers.DeleteReview;
+import main.java.lambdaFunctionHandlers.reviewFunctionHandlers.ReadReviewsByID;
+import main.java.lambdaFunctionHandlers.trainerFunctionHandlers.CreateTrainer;
+import main.java.lambdaFunctionHandlers.trainerFunctionHandlers.DeleteTrainer;
+import main.java.lambdaFunctionHandlers.trainerFunctionHandlers.ReadTrainersByID;
+import main.java.lambdaFunctionHandlers.trainerFunctionHandlers.ReadTrainersByUsername;
+import main.java.lambdaFunctionHandlers.workoutFunctionHandlers.CreateWorkout;
+import main.java.lambdaFunctionHandlers.workoutFunctionHandlers.DeleteWorkout;
+import main.java.lambdaFunctionHandlers.workoutFunctionHandlers.ReadWorkoutsByID;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 // TODO MAKE SURE THAT ALL THE CONSTRUCTORS AND SETTERS/GETTERS ARE IN HERE
@@ -240,16 +249,14 @@ public class LambdaRequest {
                         throw new Exception("Specify Action: \"" + specifyAction + "\" not recognized for action \"" +
                                 action + "\" on itemType \"" + itemType + "\" !");
                     }
-
+                default:
+                    throw new Exception("Item type: " + itemType + " recognized but not handled?");
             }
 
         }
         catch (IllegalArgumentException e) {
             throw new Exception("Action: \"" + action + "\" not recognized!");
         }
-
-        // TODO HOW WOULD IT GET HERE????
-        return null;
     }
 
     private void checkInputs() throws Exception {
@@ -301,219 +308,50 @@ public class LambdaRequest {
         }
     }
 
-    // TODO WE MIGHT WANT TO PUT THESE CASES INTO FUNCTIONS (FUNCTION HANDLERS?)
-    public String handleCreate() throws Exception {
-        List<DatabaseAction> databaseActions = new ArrayList<>();
-
+    private String handleCreate() throws Exception {
         try {
+            // TODO Check the permissions for these guys
             switch (ItemType.valueOf(itemType)) {
                 case Client:
-                    if (createClientRequest != null) {
-                        // Create client
-                        databaseActions.add(ClientDatabaseActionBuilder.create(createClientRequest));
-                    }
-                    else {
-                        throw new Exception("createClientRequest not initialized for CREATE statement!");
-                    }
-                    break;
+                    return CreateClient.handle(createClientRequest);
                 case Trainer:
-                    if (createTrainerRequest != null) {
-                        // Create trainer (with createTrainerRequest)
-                        databaseActions.add(TrainerDatabaseActionBuilder.create(createTrainerRequest));
-                        // Add to gym (with gymID and true for fromCreate
-                        databaseActions.add(GymDatabaseActionBuilder.updateAddTrainerID(createTrainerRequest.gymID,
-                                null, true));
-                    }
-                    else {
-                        throw new Exception("createTrainerRequest not initialized for CREATE statement!");
-                    }
-                    break;
+                    return CreateTrainer.handle(createTrainerRequest);
                 case Gym:
-                    if (createGymRequest != null) {
-                        // Create Gym
-                        databaseActions.add(GymDatabaseActionBuilder.create(createGymRequest));
-                    }
-                    else {
-                        throw new Exception("createGymRequest not initialized for CREATE statement!");
-                    }
-                    break;
+                    return CreateGym.handle(createGymRequest);
                 case Workout:
-                    if (createWorkoutRequest != null) {
-                        // Create Workout
-                        databaseActions.add(WorkoutDatabaseActionBuilder.create(createWorkoutRequest));
-                        // Add to clients' scheduled workouts
-                        // Add to clients' scheduled workout times
-                        for (String clientID : createWorkoutRequest.clientIDs) {
-                            databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(clientID, null,
-                                    true));
-                            databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledWorkoutTime(clientID,
-                                    createWorkoutRequest.time));
-                        }
-                        // Add to trainer's scheduled workouts
-                        // Add to trainer's scheduled workout times
-                        databaseActions.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkout
-                                (createWorkoutRequest.trainerID, null, true));
-                        databaseActions.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkoutTime
-                                (createWorkoutRequest.trainerID, createWorkoutRequest.time));
-                        // Add to gym's scheduled workouts
-                        // Add to gym's scheduled workout times
-                        databaseActions.add(GymDatabaseActionBuilder.updateAddScheduledWorkout
-                                (createWorkoutRequest.gymID, null, true));
-                        databaseActions.add(GymDatabaseActionBuilder.updateAddScheduledWorkoutTime
-                                (createWorkoutRequest.gymID, createWorkoutRequest.time));
-                    }
-                    else {
-                        throw new Exception("createWorkoutRequest not initialized for CREATE statement!");
-                    }
-                    break;
+                    return CreateWorkout.handle(createWorkoutRequest);
                 case Review:
-                    if (createReviewRequest != null) {
-                        // Create Review
-                        databaseActions.add(ReviewDatabaseActionBuilder.create(createReviewRequest));
-                        // Add to by's reviews by
-                        String byID = createReviewRequest.byID;
-                        String byItemType = DatabaseObject.getItemType(byID);
-                        if (byItemType == null) {
-                            throw new Exception("Review ByID is invalid!");
-                        }
-                        databaseActions.add(UserDatabaseActionBuilder.updateAddReviewBy(createReviewRequest.byID,
-                                byItemType, null ,true));
-                        // Add to about's reviews about
-                        String aboutID = createReviewRequest.aboutID;
-                        String aboutItemType = DatabaseObject.getItemType(aboutID);
-                        if (aboutItemType == null) {
-                            throw new Exception("Review AboutID is invalid!");
-                        }
-                        databaseActions.add(UserDatabaseActionBuilder.updateAddReviewAbout(aboutID, aboutItemType,
-                                null, true));
-                        // Calculate about's ratings
-                        Map<String, AttributeValue> aboutKey = new HashMap<>();
-                        aboutKey.put("item_type", new AttributeValue(aboutItemType));
-                        aboutKey.put("id", new AttributeValue(aboutID));
-                        User user = DynamoDBHandler.getInstance().readItem(aboutKey);
-                        float friendlinessRating = Float.parseFloat(createReviewRequest.friendlinessRating);
-                        float effectivenessRating = Float.parseFloat(createReviewRequest.effectivenessRating);
-                        float reliabilityRating = Float.parseFloat(createReviewRequest.reliabilityRating);
-                        int numReviews = user.reviewsAbout.size();
-
-                        // Basically it finds the "sum" of the ratings, using the current rating and the number of
-                        // reviews. Then, it adds our rating value to it, then divides it by numReviews + 1.
-                        float newFriendlinessRating = ((numReviews * user.friendlinessRating) +
-                                friendlinessRating) / (numReviews + 1);
-                        float newEffectivenessRating = ((numReviews * user.effectivenessRating) +
-                                effectivenessRating) / (numReviews + 1);
-                        float newReliabilityRating = ((numReviews * user.reliabilityRating) +
-                                reliabilityRating) / (numReviews + 1);
-
-                        // Updates the about item
-                        databaseActions.add(UserDatabaseActionBuilder.updateFriendlinessRating(aboutID,
-                                aboutItemType, Float.toString(newFriendlinessRating)));
-                        databaseActions.add(UserDatabaseActionBuilder.updateEffectivenessRating(aboutID,
-                                aboutItemType, Float.toString(newEffectivenessRating)));
-                        databaseActions.add(UserDatabaseActionBuilder.updateReliabilityRating(aboutID,
-                                aboutItemType, Float.toString(newReliabilityRating)));
-                    }
-                    else {
-                        throw new Exception("createReviewRequest not initialized for CREATE statement!");
-                    }
-                    break;
+                    // Send a null for surveyWorkoutID because we're not creating it for a survey
+                    return CreateReview.handle(createReviewRequest, null);
+                default:
+                    throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
         }
         catch (IllegalArgumentException e) {
             throw new Exception("Item Type: \"" + itemType + "\" not recognized!");
         }
-
-        return DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
     }
 
     private String handleSurveyCreate(String workoutID) throws Exception {
-        if (createReviewRequest != null) {
-            List<DatabaseAction> databaseActions = new ArrayList<>();
-            // Create Review
-            databaseActions.add(ReviewDatabaseActionBuilder.create(createReviewRequest));
-            // Add to by's reviews by
-            String byID = createReviewRequest.byID;
-            String byItemType = DatabaseObject.getItemType(byID);
-            if (byItemType == null) {
-                throw new Exception("Review ByID is invalid!");
-            }
-            databaseActions.add(UserDatabaseActionBuilder.updateAddReviewBy(createReviewRequest.byID,
-                    byItemType, null ,true));
-            // Add to about's reviews about
-            String aboutID = createReviewRequest.aboutID;
-            String aboutItemType = DatabaseObject.getItemType(aboutID);
-            if (aboutItemType == null) {
-                throw new Exception("Review AboutID is invalid!");
-            }
-            databaseActions.add(UserDatabaseActionBuilder.updateAddReviewAbout(aboutID, aboutItemType,
-                    null, true));
-            // Calculate about's ratings
-            Map<String, AttributeValue> aboutKey = new HashMap<>();
-            aboutKey.put("item_type", new AttributeValue(aboutItemType));
-            aboutKey.put("id", new AttributeValue(aboutID));
-            User user = DynamoDBHandler.getInstance().readItem(aboutKey);
-            float friendlinessRating = Float.parseFloat(createReviewRequest.friendlinessRating);
-            float effectivenessRating = Float.parseFloat(createReviewRequest.effectivenessRating);
-            float reliabilityRating = Float.parseFloat(createReviewRequest.reliabilityRating);
-            int numReviews = user.reviewsAbout.size();
-
-            // Basically it finds the "sum" of the ratings, using the current rating and the number of
-            // reviews. Then, it adds our rating value to it, then divides it by numReviews + 1.
-            float newFriendlinessRating = ((numReviews * user.friendlinessRating) +
-                    friendlinessRating) / (numReviews + 1);
-            float newEffectivenessRating = ((numReviews * user.effectivenessRating) +
-                    effectivenessRating) / (numReviews + 1);
-            float newReliabilityRating = ((numReviews * user.reliabilityRating) +
-                    reliabilityRating) / (numReviews + 1);
-
-            // Updates the about item
-            databaseActions.add(UserDatabaseActionBuilder.updateFriendlinessRating(aboutID,
-                    aboutItemType, Float.toString(newFriendlinessRating)));
-            databaseActions.add(UserDatabaseActionBuilder.updateEffectivenessRating(aboutID,
-                    aboutItemType, Float.toString(newEffectivenessRating)));
-            databaseActions.add(UserDatabaseActionBuilder.updateReliabilityRating(aboutID,
-                    aboutItemType, Float.toString(newReliabilityRating)));
-
-            // Remove id from Workout's missing reviews
-            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, byID, true));
-            return DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
-        }
-        else {
-            throw new Exception("createReviewRequest not initialized for CREATE statement!");
-        }
+        return CreateReview.handle(createReviewRequest, workoutID);
     }
 
     private List<ObjectResponse> handleIDRead(String[] ids) throws Exception {
         try {
-            List<ObjectResponse> objectResponses = new ArrayList<>();
             switch (ItemType.valueOf(itemType)) {
                 case Client:
-                    for (String id : ids) {
-                        objectResponses.add(new ClientResponse(Client.readClient(id)));
-                    }
-                    break;
+                    return ReadClientsByID.handle(ids);
                 case Trainer:
-                    for (String id : ids) {
-                        objectResponses.add(new TrainerResponse(Trainer.readTrainer(id)));
-                    }
-                    break;
+                    return ReadTrainersByID.handle(ids);
                 case Gym:
-                    for (String id : ids) {
-                        objectResponses.add(new GymResponse(Gym.readGym(id)));
-                    }
-                    break;
+                    return ReadGymsByID.handle(ids);
                 case Workout:
-                    for (String id : ids) {
-                        objectResponses.add(new WorkoutResponse(Workout.readWorkout(id)));
-                    }
-                    break;
+                    return ReadWorkoutsByID.handle(ids);
                 case Review:
-                    for (String id : ids) {
-                        objectResponses.add(new ReviewResponse(Review.readReview(id)));
-                    }
-                    break;
+                    return ReadReviewsByID.handle(ids);
+                default:
+                    throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
-            return objectResponses;
         }
         catch (IllegalArgumentException e) {
             throw new Exception("Item Type: \"" + itemType + "\" not recognized!");
@@ -522,42 +360,29 @@ public class LambdaRequest {
 
     private List<ObjectResponse> handleUsernameRead(String[] usernames) throws Exception {
         try {
-            List<ObjectResponse> objectResponses = new ArrayList<>();
             switch (ItemType.valueOf(itemType)) {
                 case Client:
-                    for (String username : usernames) {
-                        objectResponses.add(new ClientResponse(Client.queryClient(username)));
-                    }
-                    break;
+                    return ReadClientsByUsername.handle(usernames);
                 case Trainer:
-                    for (String username : usernames) {
-                        objectResponses.add(new TrainerResponse(Trainer.queryTrainer(username)));
-                    }
-                    break;
+                    return ReadTrainersByUsername.handle(usernames);
                 case Gym:
-                    for (String username : usernames) {
-                        objectResponses.add(new GymResponse(Gym.queryGym(username)));
-                    }
-                    break;
+                    return ReadGymsByUsername.handle(usernames);
                 case Workout:
                     throw new Exception("Can't query a workout by a username!");
                 case Review:
                     throw new Exception("Can't query a review by a username!");
+                default:
+                    throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
-            return objectResponses;
         }
         catch (IllegalArgumentException e) {
             throw new Exception("Item Type: \"" + itemType + "\" not recognized!");
         }
     }
 
-    public List<ObjectResponse> handleGetAll() throws Exception {
+    private List<ObjectResponse> handleGetAll() throws Exception {
         // Already Checked, so go to town
-        List<ObjectResponse> objectResponses = new ArrayList<>();
-        for (DatabaseObject databaseObject : DynamoDBHandler.getInstance().getAll(itemType)) {
-            objectResponses.add(databaseObject.getResponse());
-        }
-        return objectResponses;
+        return ReadAllGyms.handle();
     }
 
     public void handleUpdateSet(String id) throws Exception {
@@ -642,22 +467,6 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-//                case username:
-//                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-//                        if (attributeValues.length == 1) {
-//                            databaseActions.add(UserDatabaseActionBuilder.updateUser(id, itemType, attributeValues[0]));
-//                        }
-//                        else {
-//                            throw new Exception("For updating " + attributeName + " on " + itemType +
-//                                    "attributeValues must be only 1 long!");
-//                        }
-//
-//                    }
-//                    else {
-//                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-//                                itemType + "!");
-//                    }
-//                    break;
                 case profileImagePath:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
                         if (attributeValues.length == 1) {
@@ -688,23 +497,6 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-//                case gymID:
-//                    if (itemType.equals("Trainer")) {
-//                        if (attributeValues.length == 1) {
-//                            databaseActions.add(TrainerDatabaseActionBuilder.updateBirthday(id, itemType,
-//                                    attributeValues[0]));
-//                        }
-//                        else {
-//                            throw new Exception("For updating " + attributeName + " on " + itemType +
-//                                    "attributeValues must be only 1 long!");
-//                        }
-//
-//                    }
-//                    else {
-//                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-//                                itemType + "!");
-//                    }
-//                    break;
                 case workoutSticker:
                     if (itemType.equals("Trainer")) {
                         if (attributeValues.length == 1) {
@@ -885,16 +677,6 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-//                case scheduledWorkoutTimes:
-//                    break;
-//                case completedWorkouts:
-//                    break;
-//                case completedWorkoutTimes:
-//                    break;
-//                case reviewsBy:
-//                    break;
-//                case reviewsAbout:
-//                    break;
                 case friends:
                     if (itemType.equals("Client")) {
                         if (attributeValues.length == 1) {
@@ -951,15 +733,6 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-//                case trainerIDs:
-//                    if (itemType.equals("Gym")) {
-//
-//                    }
-//                    else {
-//                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-//                                itemType + "!");
-//                    }
-//                    break;
                 case vacationTimes:
                     if (itemType.equals("Gym")) {
                         if (attributeValues.length == 1) {
@@ -977,24 +750,6 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-//                case clientIDs:
-//                    if (itemType.equals("Workout")) {
-//
-//                    }
-//                    else {
-//                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-//                                itemType + "!");
-//                    }
-//                    break;
-//                case missingReviews:
-//                    if (itemType.equals("Workout")) {
-//
-//                    }
-//                    else {
-//                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
-//                                itemType + "!");
-//                    }
-//                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEADD operation on " + attributeName + "!");
             }
@@ -1015,17 +770,7 @@ public class LambdaRequest {
                 case scheduledWorkouts:
                     if (itemType.equals("Client")) {
                         if (attributeValues.length == 1) {
-                            // TODO This should also have the potential to delete the workout!!!!!
-                            // Workout Dependencies
-                            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledWorkout(id,
-                                    attributeValues[0]));
-                            // Update workout clients
-                            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClientID(attributeValues[0],
-                                    id));
-                            // Update workout missing reviews
-                            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview
-                                    (attributeValues[0], id, false));
-
+                            databaseActions = ClientRemoveFromWorkout.getActions(id, attributeValues[0]);
                         }
                         else {
                             throw new Exception("For updating " + attributeName + " on " + itemType +
@@ -1037,16 +782,6 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-//                case scheduledWorkoutTimes:
-//                    break;
-//                case completedWorkouts:
-//                    break;
-//                case completedWorkoutTimes:
-//                    break;
-//                case reviewsBy:
-//                    break;
-//                case reviewsAbout:
-//                    break;
                 case friends:
                     if (itemType.equals("Client")) {
                         if (attributeValues.length == 1) {
@@ -1097,8 +832,6 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-//                case trainerIDs:
-//                    break;
                 case vacationTimes:
                     if (itemType.equals("Gym")) {
                         if (attributeValues.length == 1) {
@@ -1115,10 +848,6 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-//                case clientIDs:
-//                    break;
-//                case missingReviews:
-//                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEREMOVE operation on " + attributeName + "!");
             }
@@ -1131,49 +860,33 @@ public class LambdaRequest {
     }
 
     public void handleDelete(String id) throws Exception {
+        List<DatabaseAction> databaseActions;
         try {
             switch (ItemType.valueOf(itemType)) {
-                // TODO MAKE SURE THESE PEOPLE ARE ALLOWED TO DO THIS (Workout and Review)
-                // TODO THIS WILL BE WAY EASIER ONCE I MAKE FUNCTIONS FOR EACH ACTION
                 case Client:
-                    Client client = Client.readClient(id);
-                    // Remove reviews from reviews by and reviews about
-                    // Remove from all scheduled workouts and completed workouts
-                        // Also remove from missing reviews in the workouts
-                    // TODO This should also be able to delete the workout potentially?
-                    // Delete the Client
+                    databaseActions = DeleteClient.getActions(id);
                     break;
                 case Trainer:
-                    // Remove all reviews in reviews by and reviews about
-                    // Remove all workouts in scheduled workouts and completed workouts (Cancel them)
-                    // Remove all workout times in scheduled workout times and completed workout times
-                    // Remove from gym's trainers field
-                    // Delete the Trainer
+                    databaseActions = DeleteTrainer.getActions(id);
                     break;
                 case Gym:
-                    // TODO THIS IS PROBLEMATIC
-                    // TODO SEE IF WE CAN GO INTO AWS COGNITO AND DELETE USERS FROM A USER POOL FOR THIS
-                    // Remove all reviews in reviews by and reviews about
-                    // Remove all workouts
-                    // Remove all trainers in trainers
+                    databaseActions = DeleteGym.getActions(id);
                     break;
+                // TODO MAKE SURE THESE PEOPLE ARE ALLOWED TO DO THIS (Workout and Review)
                 case Workout:
-                    // TODO REFUNDS IF IT'S IN SCHEDULED WORKOUTS
-                    // Remove from clients' scheduled workouts and completed workouts
-                    // Remove clients' scheduled workout times and  completed workout times
-                    // remove from trainer's scheduled and completed workouts
-                    // remove from trainer's scheduled and completed workout times
-                    // Remove from gym's scheduled and completed workout times
+                    databaseActions = DeleteWorkout.getActions(id);
                     break;
                 case Review:
-                    // Remove from reviews about field
-                    // Remove from reviews about field
+                    databaseActions = DeleteReview.getActions(id);
                     break;
+                default:
+                    throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
         }
         catch (IllegalArgumentException e) {
             throw new Exception("Item Type: \"" + itemType + "\" not recognized!");
         }
+        DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
     }
 
     public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String

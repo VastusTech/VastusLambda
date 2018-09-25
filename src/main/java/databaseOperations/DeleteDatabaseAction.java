@@ -11,15 +11,19 @@ public class DeleteDatabaseAction extends DatabaseAction {
 
         // Unused variables
         this.checkHandler = null;
+        this.updateAction = null;
+        this.updateAttribute = null;
+        this.updateAttributeName = null;
     }
 
-//    public DeleteDatabaseAction(Map<String, AttributeValue> key, String conditionalExpression, CheckHandler checkHandler) {
-//        this.action = DBAction.DELETESAFE;
-//        this.item = key;
-//        this.conditionalExpression = conditionalExpression;
-//        this.checkHandler = checkHandler;
-//
-//        // Unused variables
-//        this.updateItem = null;
-//    }
+    public DeleteDatabaseAction(Map<String, AttributeValue> key, CheckHandler checkHandler) {
+        this.action = DBAction.DELETECONDITIONAL;
+        this.item = key;
+        this.checkHandler = checkHandler;
+
+        // Unused variables
+        this.updateAction = null;
+        this.updateAttribute = null;
+        this.updateAttributeName = null;
+    }
 }

@@ -2,24 +2,28 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 
 // TODO Optional parameters at the get go?
 public class CreateClientRequest {
+    // Required
     public String name;
     public String gender;
     public String birthday;
     public String email;
     public String username;
 
-    public CreateClientRequest(String name, String gender, String birthday, String email, String username) {
+    // Optional
+    public String bio;
+
+    public CreateClientRequest(String name, String gender, String birthday, String email, String username, String bio) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.email = email;
         this.username = username;
+        this.bio = bio;
     }
 
     public CreateClientRequest() {}
 
     public String getName() {
-
         return name;
     }
 
@@ -57,5 +61,13 @@ public class CreateClientRequest {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

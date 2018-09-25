@@ -1,6 +1,7 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.sun.istack.internal.NotNull;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.Gym;
 import main.java.databaseObjects.TimeInterval;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class GymDatabaseActionBuilder {
     final static private String itemType = "Gym";
 
-    public static DatabaseAction create(CreateGymRequest createGymRequest) {
+    public static DatabaseAction create(@NotNull CreateGymRequest createGymRequest) {
         // Handle the setting of the items!
         // TODO Make sure that the null values aren't too too problematic
         Map<String, AttributeValue> item = Gym.getEmptyItem();
@@ -23,10 +24,13 @@ public class GymDatabaseActionBuilder {
         item.put("email", new AttributeValue(createGymRequest.email));
         item.put("username", new AttributeValue(createGymRequest.username));
         item.put("address", new AttributeValue(createGymRequest.address));
-        item.put("weekly_hours", new AttributeValue(Arrays.asList(createGymRequest.weeklyHours)));
         item.put("session_capacity", new AttributeValue(createGymRequest.sessionCapacity));
-        item.put("gym_type", new AttributeValue(createGymRequest.gymType));
-        item.put("payment_split", new AttributeValue(createGymRequest.paymentSplit));
+        if (createGymRequest.weeklyHours != null) { item.put("weekly_hours", new AttributeValue(Arrays.asList
+                (createGymRequest.weeklyHours))); }
+        if (createGymRequest.gymType != null) { item.put("gym_type",
+                new AttributeValue(createGymRequest.gymType)); }
+        if (createGymRequest.paymentSplit != null) { item.put("payment_split",
+                new AttributeValue(createGymRequest.paymentSplit)); }
         return new CreateDatabaseAction(item);
     }
 

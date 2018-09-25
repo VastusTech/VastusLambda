@@ -21,9 +21,15 @@ public class Gym extends User {
     Gym(Map<String, AttributeValue> item) throws Exception {
         super(item);
         this.address = item.get("address").getS();
-        this.trainerIDs = new HashSet<>(item.get("trainerIDs").getSS());
-        this.weeklyHours = TimeInterval.getTimeIntervals(item.get("weekly_hours").getSS());
-        this.vacationTimes = TimeInterval.getTimeIntervals(item.get("vacation_times").getSS());
+        AttributeValue trainerIDs = item.get("trainerIDs");
+        if (trainerIDs != null) { this.trainerIDs = new HashSet<>(trainerIDs.getSS()); }
+        else { this.trainerIDs = new HashSet<>(); }
+        AttributeValue weeklyHours = item.get("weekly_hours");
+        if (weeklyHours != null) { this.weeklyHours = TimeInterval.getTimeIntervals(weeklyHours.getSS()); }
+        else { this.weeklyHours = new ArrayList<>(); }
+        AttributeValue vacationTimes = item.get("vacation_times");
+        if (vacationTimes != null) { this.vacationTimes = TimeInterval.getTimeIntervals(vacationTimes.getSS()); }
+        else { this.vacationTimes = new ArrayList<>(); }
         this.sessionCapacity = Integer.parseInt(item.get("session_capacity").getS());
         this.gymType = item.get("gym_type").getS();
         this.paymentSplit = Float.parseFloat(item.get("payment_split").getS());
@@ -33,9 +39,6 @@ public class Gym extends User {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("item_type", new AttributeValue("Gym"));
         item.put("address", new AttributeValue(Constants.nullAttributeValue));
-//        item.put("trainerIDs", new AttributeValue(new ArrayList<>()));
-//        item.put("weekly_hours", new AttributeValue(new ArrayList<>()));
-//        item.put("vacation_times", new AttributeValue(new ArrayList<>()));
         item.put("trainerIDs", null);
         item.put("weekly_hours", null);
         item.put("vacation_times", null);
@@ -50,6 +53,7 @@ public class Gym extends User {
         return new GymResponse(this);
     }
 
+    // TODO Implement cache system here again?
     public static Gym readGym(String id) throws Exception {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue("Gym"));

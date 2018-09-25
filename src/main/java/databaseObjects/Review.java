@@ -46,6 +46,7 @@ public class Review extends DatabaseObject {
         return new ReviewResponse(this);
     }
 
+    // TODO Implement cache system here again?
     public static Review readReview(String id) throws Exception {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue("Review"));

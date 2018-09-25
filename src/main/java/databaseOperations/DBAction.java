@@ -5,5 +5,5 @@ enum DBAction {
     UPDATE,
     UPDATESAFE,
     DELETE,
-    DELETESAFE
+    DELETECONDITIONAL
 }

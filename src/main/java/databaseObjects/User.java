@@ -3,7 +3,6 @@ package main.java.databaseObjects;
 import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.Years;
 
 import java.util.*;
@@ -37,12 +36,24 @@ abstract public class User extends DatabaseObject{
         this.email = item.get("email").getS();
         this.username = item.get("username").getS();
         this.profileImagePath = item.get("profile_image_path").getS();
-        this.scheduledWorkouts = new HashSet<>(item.get("scheduled_workouts").getSS());
-        this.completedWorkouts = new HashSet<>(item.get("completed_workouts").getSS());
-        this.scheduledWorkoutTimes = TimeInterval.getTimeIntervals(item.get("scheduled_workout_times").getSS());
-        this.completedWorkoutTimes = TimeInterval.getTimeIntervals(item.get("completed_workout_times").getSS());
-        this.reviewsBy = new HashSet<>(item.get("reviews_by").getSS());
-        this.reviewsAbout = new HashSet<>(item.get("reviews_about").getSS());
+        AttributeValue scheduledWorkouts = item.get("scheduled_workouts");
+        if (scheduledWorkouts != null) { this.scheduledWorkouts = new HashSet<>(scheduledWorkouts.getSS()); }
+        else { this.scheduledWorkouts = new HashSet<>(); }
+        AttributeValue completedWorkouts = item.get("completed_workouts");
+        if (completedWorkouts != null) { this.completedWorkouts = new HashSet<>(completedWorkouts.getSS()); }
+        else { this.completedWorkouts = new HashSet<>(); }
+        AttributeValue scheduledWorkoutTimes = item.get("scheduled_workout_times");
+        if (scheduledWorkoutTimes != null) { this.scheduledWorkoutTimes = TimeInterval.getTimeIntervals(scheduledWorkoutTimes.getSS()); }
+        else { this.scheduledWorkoutTimes = new ArrayList<>(); }
+        AttributeValue completedWorkoutTimes = item.get("completed_workout_times");
+        if (completedWorkoutTimes != null) { this.completedWorkoutTimes = TimeInterval.getTimeIntervals(completedWorkoutTimes.getSS()); }
+        else { this.completedWorkoutTimes = new ArrayList<>(); }
+        AttributeValue reviewsBy = item.get("reviews_by");
+        if (reviewsBy != null) { this.reviewsBy = new HashSet<>(reviewsBy.getSS()); }
+        else { this.reviewsBy = new HashSet<>(); }
+        AttributeValue reviewsAbout = item.get("reviews_about");
+        if (reviewsAbout != null) { this.reviewsAbout = new HashSet<>(reviewsAbout.getSS()); }
+        else { this.reviewsAbout = new HashSet<>(); }
         this.friendlinessRating = Float.parseFloat(item.get("friendliness_rating").getS());
         this.effectivenessRating = Float.parseFloat(item.get("effectiveness_rating").getS());
         this.reliabilityRating = Float.parseFloat(item.get("reliability_rating").getS());
@@ -64,21 +75,15 @@ abstract public class User extends DatabaseObject{
         item.put("email", new AttributeValue(Constants.nullAttributeValue));
         item.put("username", new AttributeValue(Constants.nullAttributeValue));
         item.put("profile_image_path", new AttributeValue(Constants.nullAttributeValue));
-//        item.put("scheduled_workouts", new AttributeValue(new ArrayList<>()));
-//        item.put("completed_workouts", new AttributeValue(new ArrayList<>()));
-//        item.put("scheduled_workout_times", new AttributeValue(new ArrayList<>()));
-//        item.put("completed_workout_times", new AttributeValue(new ArrayList<>()));
-//        item.put("reviews_by", new AttributeValue(new ArrayList<>()));
-//        item.put("reviews_about", new AttributeValue(new ArrayList<>()));
         item.put("scheduled_workouts", null);
         item.put("completed_workouts", null);
         item.put("scheduled_workout_times", null);
         item.put("completed_workout_times", null);
         item.put("reviews_by", null);
         item.put("reviews_about", null);
-        item.put("friendliness_rating", new AttributeValue("-1.0"));
-        item.put("effectiveness_rating", new AttributeValue("-1.0"));
-        item.put("reliability_rating", new AttributeValue("-1.0"));
+        item.put("friendliness_rating", new AttributeValue("0.0"));
+        item.put("effectiveness_rating", new AttributeValue("0.0"));
+        item.put("reliability_rating", new AttributeValue("0.0"));
         item.put("bio", new AttributeValue(Constants.nullAttributeValue));
         return item;
     }

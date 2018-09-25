@@ -25,12 +25,16 @@ public class Workout extends DatabaseObject {
         super(item);
         this.time = new TimeInterval(item.get("time").getS());
         this.trainerID = item.get("trainerID").getS();
-        this.clientIDs = new HashSet<>(item.get("clientIDs").getSS());
+        AttributeValue clientIDs = item.get("clientIDs");
+        if (clientIDs != null) { this.clientIDs = new HashSet<>(clientIDs.getSS()); }
+        else { this.clientIDs = new HashSet<>(); }
         this.capacity = Integer.parseInt(item.get("capacity").getS());
         this.gymID = item.get("gymID").getS();
         this.sticker = item.get("sticker").getS();
         this.intensity = item.get("intensity").getS();
-        this.missingReviews = new HashSet<>(item.get("missing_reviews").getSS());
+        AttributeValue missingReviews = item.get("missing_reviews");
+        if (missingReviews != null) { this.missingReviews = new HashSet<>(missingReviews.getSS()); }
+        else { this.missingReviews = new HashSet<>(); }
         this.price = Integer.parseInt(item.get("price").getS());
     }
 
@@ -56,6 +60,7 @@ public class Workout extends DatabaseObject {
         return new WorkoutResponse(this);
     }
 
+    // TODO Implement cache system here again?
     public static Workout readWorkout(String id) throws Exception {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue("Workout"));

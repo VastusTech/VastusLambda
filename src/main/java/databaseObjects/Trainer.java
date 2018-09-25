@@ -19,7 +19,9 @@ public class Trainer extends User {
     Trainer(Map<String, AttributeValue> item) throws Exception {
         super(item);
         this.gymID = item.get("gymID").getS();
-        this.availableTimes = TimeInterval.getTimeIntervals(item.get("available_times").getSS());
+        AttributeValue availableTimes = item.get("available_times");
+        if (availableTimes != null) { this.availableTimes = TimeInterval.getTimeIntervals(availableTimes.getSS()); }
+        else { this.availableTimes = new ArrayList<>(); }
         this.workoutSticker = item.get("workout_sticker").getS();
         this.preferredIntensity = item.get("preferred_intensity").getS();
         this.workoutCapacity = Integer.parseInt(item.get("workout_capacity").getS());
@@ -30,7 +32,6 @@ public class Trainer extends User {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("item_type", new AttributeValue("Trainer"));
         item.put("gymID", new AttributeValue(Constants.nullAttributeValue));
-//        item.put("available_times", new AttributeValue(new ArrayList<>()));
         item.put("available_times", null);
         item.put("workout_sticker", new AttributeValue(Constants.nullAttributeValue));
         item.put("preferred_intensity", new AttributeValue(Constants.nullAttributeValue));
@@ -44,6 +45,7 @@ public class Trainer extends User {
         return new TrainerResponse(this);
     }
 
+    // TODO Implement cache system here again?
     public static Trainer readTrainer(String id) throws Exception {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue("Trainer"));

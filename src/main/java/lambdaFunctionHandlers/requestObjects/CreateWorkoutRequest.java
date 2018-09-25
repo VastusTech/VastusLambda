@@ -1,7 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-// TODO Optional parameters at the get go?
 public class CreateWorkoutRequest {
+    // Required
     public String time;
     public String trainerID;
     public String[] clientIDs;

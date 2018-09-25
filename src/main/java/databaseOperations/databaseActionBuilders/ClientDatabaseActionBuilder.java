@@ -1,6 +1,7 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.sun.istack.internal.NotNull;
 import main.java.databaseObjects.Client;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.TimeInterval;
@@ -13,15 +14,15 @@ import java.util.Map;
 public class ClientDatabaseActionBuilder {
     final static private String itemType = "Client";
 
-    public static DatabaseAction create(CreateClientRequest createClientRequest) {
+    public static DatabaseAction create(@NotNull CreateClientRequest createClientRequest) {
         // Handle the setting of the items!
-        // TODO Make sure that the null values aren't too too problematic
         Map<String, AttributeValue> item = Client.getEmptyItem();
         item.put("name", new AttributeValue(createClientRequest.name));
         item.put("gender", new AttributeValue(createClientRequest.gender));
         item.put("birthday", new AttributeValue(createClientRequest.birthday));
         item.put("email", new AttributeValue(createClientRequest.email));
         item.put("username", new AttributeValue(createClientRequest.username));
+        if (createClientRequest.bio != null) { item.put("bio", new AttributeValue(createClientRequest.bio)); }
         return new CreateDatabaseAction(item);
     }
 

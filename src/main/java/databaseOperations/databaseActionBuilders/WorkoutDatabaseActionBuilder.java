@@ -100,4 +100,17 @@ public class WorkoutDatabaseActionBuilder {
         key.put("id", new AttributeValue(id));
         return new DeleteDatabaseAction(key);
     }
+
+    public static DatabaseAction deleteIfEmpty(String id) {
+        Map<String, AttributeValue> key = new HashMap<>();
+        key.put("item_type", new AttributeValue("Workout"));
+        key.put("id", new AttributeValue(id));
+        return new DeleteDatabaseAction(key, new CheckHandler() {
+            @Override
+            public boolean isViable(DatabaseObject newObject) throws Exception {
+                // We only want to delete this object if it is currently empty!
+                return ((Workout)newObject).clientIDs.size() == 0;
+            }
+        });
+    }
 }

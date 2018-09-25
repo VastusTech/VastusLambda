@@ -13,14 +13,16 @@ public class Client extends User {
 
     Client(Map<String, AttributeValue> item) throws Exception {
         super(item);
-        this.friends = new HashSet<>(item.get("friends").getSS());
-        this.friendRequests = new HashSet<>(item.get("friend_requests").getSS());
+        AttributeValue friends = item.get("friends");
+        if (friends != null) { this.friends = new HashSet<>(friends.getSS()); }
+        else { this.friends = new HashSet<>(); }
+        AttributeValue friendRequests = item.get("friend_requests");
+        if (friendRequests != null) { this.friendRequests = new HashSet<>(friendRequests.getSS()); }
+        else { this.friendRequests = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
-//        item.put("friends", new AttributeValue(new ArrayList<>()));
-//        item.put("friend_requests", new AttributeValue(new ArrayList<>()));
         item.put("item_type", new AttributeValue("Client"));
         item.put("friends", null);
         item.put("friend_requests", null);
@@ -32,6 +34,7 @@ public class Client extends User {
         return new ClientResponse(this);
     }
 
+    // TODO Implement cache system here again?
     public static Client readClient(String id) throws Exception {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue("Client"));

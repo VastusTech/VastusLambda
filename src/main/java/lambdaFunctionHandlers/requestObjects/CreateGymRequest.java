@@ -2,15 +2,18 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 
 // TODO Optional parameters at the get go?
 public class CreateGymRequest {
+    // Required
     public String name;
     public String email;
     public String username;
     public String foundingDay;
     public String address;
-    public String[] weeklyHours;
     public String sessionCapacity;
+
+    // Optional
     public String gymType;
     public String paymentSplit;
+    public String[] weeklyHours;
 
     public CreateGymRequest(String name, String email, String username, String foundingDay, String address, String[]
             weeklyHours, String sessionCapacity, String gymType, String paymentSplit) {

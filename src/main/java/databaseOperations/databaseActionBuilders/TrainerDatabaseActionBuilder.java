@@ -1,6 +1,7 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.sun.istack.internal.NotNull;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseObjects.Trainer;
@@ -13,9 +14,8 @@ import java.util.Map;
 public class TrainerDatabaseActionBuilder {
     final static private String itemType = "Trainer";
 
-    public static DatabaseAction create(CreateTrainerRequest createTrainerRequest) {
+    public static DatabaseAction create(@NotNull CreateTrainerRequest createTrainerRequest) {
         // Handle the setting of the items!
-        // TODO Make sure that the null values aren't too too problematic
         Map<String, AttributeValue> item = Trainer.getEmptyItem();
         item.put("name", new AttributeValue(createTrainerRequest.name));
         item.put("gender", new AttributeValue(createTrainerRequest.gender));
@@ -23,6 +23,13 @@ public class TrainerDatabaseActionBuilder {
         item.put("email", new AttributeValue(createTrainerRequest.email));
         item.put("username", new AttributeValue(createTrainerRequest.username));
         item.put("gymID", new AttributeValue(createTrainerRequest.gymID));
+        item.put("workout_sticker", new AttributeValue(createTrainerRequest.workoutSticker));
+        item.put("preferred_intensity", new AttributeValue(createTrainerRequest.preferredIntensity));
+        if (createTrainerRequest.bio != null) { item.put("bio", new AttributeValue(createTrainerRequest.bio)); }
+        if (createTrainerRequest.workoutCapacity != null) { item.put("workout_capacity", new AttributeValue
+                (createTrainerRequest.workoutCapacity)); }
+        if (createTrainerRequest.workoutPrice != null) { item.put("workout_price", new AttributeValue
+                (createTrainerRequest.workoutPrice)); }
         return new CreateDatabaseAction(item);
     }
 
