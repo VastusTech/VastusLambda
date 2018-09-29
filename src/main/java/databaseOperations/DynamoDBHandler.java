@@ -67,6 +67,9 @@ public class DynamoDBHandler {
                         String id = getNewID(databaseAction.item.get("item_type").getS());
                         databaseAction.item.put("id", new AttributeValue(id));
                         databaseAction.item.put("time_created", new AttributeValue(new DateTime().toString()));
+
+                        Constants.debugLog("Creating item with item: " + databaseAction.item);
+
                         transaction.putItem(new PutItemRequest().withTableName(tableName).withItem(databaseAction.item));
                         returnString = id;
                     }
@@ -280,7 +283,7 @@ public class DynamoDBHandler {
         }
     }
 
-    public String getNewID(String itemType) {
+    public String getNewID(String itemType) throws Exception {
         String id = null;
         boolean ifFound = false;
         while (!ifFound) {

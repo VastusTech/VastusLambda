@@ -23,6 +23,7 @@ public class Party extends Event {
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = Event.getEmptyItem();
+        item.put("item_type", new AttributeValue("Party"));
         item.put("title", new AttributeValue("untitled"));
         item.put("description", new AttributeValue("Put your description here!"));
         return item;

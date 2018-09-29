@@ -27,6 +27,7 @@ public class Challenge extends Event {
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = Event.getEmptyItem();
+        item.put("item_type", new AttributeValue("Challenge"));
         item.put("title", new AttributeValue("untitled"));
         item.put("description", new AttributeValue("Put your description here."));
         item.put("goal", new AttributeValue("Put your goal here."));
