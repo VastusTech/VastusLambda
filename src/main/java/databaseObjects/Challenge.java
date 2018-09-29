@@ -12,6 +12,7 @@ import java.util.Map;
 public class Challenge extends Event {
     public String title;
     public String description;
+    public String address;
     public String goal;
     public int difficulty;
 
@@ -19,6 +20,7 @@ public class Challenge extends Event {
         super(item);
         this.title = item.getString("title");
         this.description = item.getString("description");
+        this.address = item.getString("address");
         this.goal = item.getString("goal");
         this.difficulty = Integer.parseInt(item.getString("difficulty"));
     }

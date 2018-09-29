@@ -12,11 +12,13 @@ import java.util.Map;
 public class Party extends Event {
     public String title;
     public String description;
+    public String address;
 
     public Party(Item item) throws Exception {
         super(item);
         this.title = item.getString("title");
         this.description = item.getString("description");
+        this.address = item.getString("address");
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

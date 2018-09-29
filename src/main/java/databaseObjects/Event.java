@@ -13,7 +13,6 @@ abstract public class Event extends DatabaseObject {
     public Set<String> memberIDs;
     public int capacity;
     public String access;
-    public String address;
 
     public Event(Item item) throws Exception {
         super(item);
@@ -23,7 +22,6 @@ abstract public class Event extends DatabaseObject {
         if (this.memberIDs == null) { this.memberIDs = new HashSet<>(); }
         this.capacity = Integer.parseInt(item.getString("capacity"));
         this.access = item.getString("access");
-        this.address = item.getString("address");
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

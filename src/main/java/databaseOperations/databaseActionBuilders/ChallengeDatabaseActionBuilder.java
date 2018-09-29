@@ -33,6 +33,22 @@ public class ChallengeDatabaseActionBuilder {
         return new CreateDatabaseAction(item);
     }
 
+    public static DatabaseAction updateTitle(String id, String title) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "title", new AttributeValue(title), false, "PUT");
+    }
+
+    public static DatabaseAction updateDescription(String id, String description) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "description", new AttributeValue(description), false, "PUT");
+    }
+
+    public static DatabaseAction updateAddress(String id, String address) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "address", new AttributeValue(address), false, "PUT");
+    }
+
+    public static DatabaseAction updateGoal(String id, String goal) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "goal", new AttributeValue(goal), false, "PUT");
+    }
+
     public static DatabaseAction updateAddMemberID(String id, String clientID) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "memberIDs", new AttributeValue(clientID), false, "ADD", new
                 CheckHandler() {
