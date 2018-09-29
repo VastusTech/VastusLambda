@@ -53,7 +53,12 @@ public class UpdateDatabaseAction extends DatabaseAction {
                 }
             } else {
                 if (attributeValue.getS().equals("")) {
-                    throw new Exception("The attributeValue is not allowed to be an empty string!!!!");
+                    // throw new Exception("The attributeValue is not allowed to be an empty string!!!!");
+                    attributeValue = null;
+                }
+
+                if (attributeValue.getSS().size() == 0) {
+                    attributeValue = null;
                 }
 
                 if (attributeValue.getS() != null && (action.equals("ADD") || action.equals("REMOVE"))) {
