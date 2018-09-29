@@ -837,7 +837,10 @@ public class LambdaRequest {
     }
 
     public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String
-            attributeName, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest, CreateReviewRequest createReviewRequest) {
+            attributeName, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest
+            createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
+                         CreateReviewRequest createReviewRequest, CreatePartyRequest createPartyRequest,
+                         CreateChallengeRequest createChallengeRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -850,6 +853,8 @@ public class LambdaRequest {
         this.createGymRequest = createGymRequest;
         this.createWorkoutRequest = createWorkoutRequest;
         this.createReviewRequest = createReviewRequest;
+        this.createPartyRequest = createPartyRequest;
+        this.createChallengeRequest = createChallengeRequest;
     }
 
     public LambdaRequest() {}
@@ -950,4 +955,19 @@ public class LambdaRequest {
         this.createReviewRequest = createReviewRequest;
     }
 
+    public CreatePartyRequest getCreatePartyRequest() {
+        return createPartyRequest;
+    }
+
+    public void setCreatePartyRequest(CreatePartyRequest createPartyRequest) {
+        this.createPartyRequest = createPartyRequest;
+    }
+
+    public CreateChallengeRequest getCreateChallengeRequest() {
+        return createChallengeRequest;
+    }
+
+    public void setCreateChallengeRequest(CreateChallengeRequest createChallengeRequest) {
+        this.createChallengeRequest = createChallengeRequest;
+    }
 }

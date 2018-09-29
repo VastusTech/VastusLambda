@@ -43,11 +43,9 @@ public class Gym extends User {
         // item.put("weekly_hours", null);
         // item.put("vacation_times", null);
         // TODO Put a default session capacity and a default payment split
-        // item.put("session_capacity", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("session_capacity", null);
+        item.put("session_capacity", new AttributeValue("10"));
         item.put("gym_type", new AttributeValue("independent"));
-        // item.put("payment_split", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("payment_split", null);
+        item.put("payment_split", new AttributeValue("50"));
         return item;
     }
 
