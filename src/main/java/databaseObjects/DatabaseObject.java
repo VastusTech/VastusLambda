@@ -90,7 +90,7 @@ abstract public class DatabaseObject {
 
         for (ItemType itemType : itemTypes) {
             String type = itemType.name();
-            if (prefix.equals(type.substring(0, Constants.numPrefix))) {
+            if (prefix.equals(type.substring(0, Constants.numPrefix).toUpperCase())) {
                 return type;
             }
         }
