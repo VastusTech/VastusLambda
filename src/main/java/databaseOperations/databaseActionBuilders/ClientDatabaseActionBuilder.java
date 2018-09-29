@@ -73,7 +73,7 @@ public class ClientDatabaseActionBuilder {
                 for (TimeInterval clientTimeInterval : client.scheduledTimes) {
                     if (timeInterval.intersects(clientTimeInterval)) {
                         // If it is intersecting with another time interval, then we can't place it!
-                        return "That workout is intersecting with an existing workout in the Client!";
+                        return "That is intersecting with the client's existing schedule!";
                     }
                 }
                 return null;
