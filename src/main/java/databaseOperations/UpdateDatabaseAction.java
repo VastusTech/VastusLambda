@@ -52,12 +52,8 @@ public class UpdateDatabaseAction extends DatabaseAction {
                     throw new Exception("INTERNAL ERROR: Don't set the attributeValue and ask it to add the id");
                 }
             } else {
-                if (attributeValue.getS().equals("")) {
-                    // throw new Exception("The attributeValue is not allowed to be an empty string!!!!");
-                    attributeValue = null;
-                }
-
-                if (attributeValue.getSS().size() == 0) {
+                if ((attributeValue.getS() != null && attributeValue.getS().equals("")) || (attributeValue.getSS() !=
+                        null && attributeValue.getSS().size() == 0)) {
                     attributeValue = null;
                 }
 
