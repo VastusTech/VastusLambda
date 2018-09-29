@@ -39,7 +39,7 @@ abstract public class User extends DatabaseObject{
         this.scheduledWorkouts = item.getStringSet("scheduled_workouts");
         if (scheduledWorkouts == null) { this.scheduledWorkouts = new HashSet<>(); }
         this.completedWorkouts = item.getStringSet("completed_workouts");
-        if (completedWorkouts != null) { this.completedWorkouts = new HashSet<>(); }
+        if (completedWorkouts == null) { this.completedWorkouts = new HashSet<>(); }
         Set<String> scheduledTimes = item.getStringSet("scheduled_times");
         if (scheduledTimes != null) { this.scheduledTimes = TimeInterval.getTimeIntervals(scheduledTimes); }
         else { this.scheduledTimes = new ArrayList<>(); }

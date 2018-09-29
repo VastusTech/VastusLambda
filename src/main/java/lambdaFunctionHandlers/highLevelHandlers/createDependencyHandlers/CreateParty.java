@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
@@ -14,7 +15,10 @@ public class CreateParty {
                     .capacity != null && createPartyRequest.address != null && createPartyRequest.title != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
+                // Check to see if the request features are well formed (i.e invalid date)
+                new TimeInterval(createPartyRequest.time);
+                Integer.parseInt(createPartyRequest.capacity);
+
                 databaseActionCompiler.add(PartyDatabaseActionBuilder.create(createPartyRequest));
 
                 // Add to the owner scheduled parties and scheduled times

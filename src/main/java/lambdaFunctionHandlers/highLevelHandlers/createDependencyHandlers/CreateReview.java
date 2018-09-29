@@ -22,8 +22,6 @@ public class CreateReview {
                     createReviewRequest.reliabilityRating != null && createReviewRequest.description != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
-
                 // Create Review
                 databaseActionCompiler.add(ReviewDatabaseActionBuilder.create(createReviewRequest));
 

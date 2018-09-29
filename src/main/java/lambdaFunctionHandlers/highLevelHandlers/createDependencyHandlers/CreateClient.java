@@ -5,6 +5,7 @@ import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateClientRequest;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,9 @@ public class CreateClient {
                     .birthday != null && createClientRequest.email != null && createClientRequest.username != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
+                // Check to see if the request features are well formed (i.e not invalid date or time)
+                new DateTime(createClientRequest.birthday);
+
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.create(createClientRequest));
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());

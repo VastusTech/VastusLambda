@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
@@ -22,7 +23,11 @@ public class CreateWorkout {
 
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
+                // Check to see if the request features are well formed (i.e invalid date)
+                new TimeInterval(createWorkoutRequest.time);
+                Integer.parseInt(createWorkoutRequest.capacity);
+                Integer.parseInt(createWorkoutRequest.intensity);
+                Float.parseFloat(createWorkoutRequest.price);
 
                 // Create Workout
                 databaseActionCompiler.add(WorkoutDatabaseActionBuilder.create(createWorkoutRequest));

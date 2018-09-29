@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
@@ -15,7 +16,10 @@ public class CreateChallenge {
                     null && createChallengeRequest.goal != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
+                // Check to see if the request features are well formed (i.e not empty string or invalid date)
+                new TimeInterval(createChallengeRequest.time);
+                Integer.parseInt(createChallengeRequest.capacity);
+
                 databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest));
 
                 // Update owners fields

@@ -6,6 +6,7 @@ import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateTrainerRequest;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,12 @@ public class CreateTrainer {
                 // Create the database action list for the transaction to complete
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
+                // Check to see if the request features are well formed (i.e not empty string or invalid date)
+                new DateTime(createTrainerRequest.birthday);
+                Integer.parseInt(createTrainerRequest.preferredIntensity);
+                if (createTrainerRequest.workoutPrice != null) { Integer.parseInt(createTrainerRequest.workoutPrice); }
+                if (createTrainerRequest.workoutCapacity != null) { Integer.parseInt(createTrainerRequest
+                        .workoutCapacity); }
 
                 // Create trainer (with createTrainerRequest)
                 databaseActionCompiler.add(TrainerDatabaseActionBuilder.create(createTrainerRequest));
