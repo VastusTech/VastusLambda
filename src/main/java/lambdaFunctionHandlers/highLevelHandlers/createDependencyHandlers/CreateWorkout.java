@@ -32,7 +32,7 @@ public class CreateWorkout {
                 for (String clientID : createWorkoutRequest.clientIDs) {
                     databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(clientID, null,
                             true));
-                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledWorkoutTime(clientID,
+                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(clientID,
                             createWorkoutRequest.time));
                 }
 
@@ -40,14 +40,14 @@ public class CreateWorkout {
                 // Add to trainer's scheduled workout times
                 databaseActionCompiler.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkout
                         (createWorkoutRequest.trainerID, null, true));
-                databaseActionCompiler.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkoutTime
+                databaseActionCompiler.add(TrainerDatabaseActionBuilder.updateAddScheduledTime
                         (createWorkoutRequest.trainerID, createWorkoutRequest.time));
 
                 // Add to gym's scheduled workouts
                 // Add to gym's scheduled workout times
                 databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledWorkout
                         (createWorkoutRequest.gymID, null, true));
-                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledWorkoutTime
+                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledTime
                         (createWorkoutRequest.gymID, createWorkoutRequest.time));
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());

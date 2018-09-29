@@ -16,8 +16,7 @@ public class TrainerResponse extends ObjectResponse {
     public String profileImagePath;
     public String[] scheduledWorkouts;
     public String[] completedWorkouts;
-    public String[] scheduledWorkoutTimes;
-    public String[] completedWorkoutTimes;
+    public String[] scheduledTimes;
     public String[] reviewsBy;
     public String[] reviewsAbout;
     public String friendlinessRating;
@@ -42,16 +41,11 @@ public class TrainerResponse extends ObjectResponse {
         this.profileImagePath = trainer.profileImagePath;
         this.scheduledWorkouts = trainer.scheduledWorkouts.toArray(new String[]{});
         this.completedWorkouts = trainer.completedWorkouts.toArray(new String[]{});
-        List<String> scheduledWorkoutTimes = new ArrayList<>();
-        for (TimeInterval timeInterval : trainer.scheduledWorkoutTimes) {
-            scheduledWorkoutTimes.add(timeInterval.toString());
+        List<String> scheduledTimes = new ArrayList<>();
+        for (TimeInterval timeInterval : trainer.scheduledTimes) {
+            scheduledTimes.add(timeInterval.toString());
         }
-        this.scheduledWorkoutTimes = scheduledWorkoutTimes.toArray(new String[]{});
-        List<String> completedWorkoutTimes = new ArrayList<>();
-        for (TimeInterval timeInterval : trainer.completedWorkoutTimes) {
-            completedWorkoutTimes.add(timeInterval.toString());
-        }
-        this.completedWorkoutTimes = completedWorkoutTimes.toArray(new String[]{});
+        this.scheduledTimes = scheduledTimes.toArray(new String[]{});
         this.reviewsBy = trainer.reviewsBy.toArray(new String[]{});
         this.reviewsAbout = trainer.reviewsAbout.toArray(new String[]{});
         this.friendlinessRating = Float.toString(trainer.friendlinessRating);

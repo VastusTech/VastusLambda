@@ -25,19 +25,15 @@ public class DeleteWorkout {
         // remove from trainer's scheduled and completed workouts
         // remove from trainer's scheduled and completed workout times
         databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.trainerID, workoutID));
-        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveScheduledWorkoutTime(workout.trainerID, workout
+        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveScheduledTime(workout.trainerID, workout
                 .time.toString()));
         databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.trainerID, workoutID));
-        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveCompletedWorkoutTime(workout.trainerID, workout
-                .time.toString()));
 
         // Remove from gym's scheduled and completed workout times
         databaseActions.add(GymDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.gymID, workoutID));
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveScheduledWorkoutTime(workout.gymID, workout
+        databaseActions.add(GymDatabaseActionBuilder.updateRemoveScheduledTime(workout.gymID, workout
                 .time.toString()));
         databaseActions.add(GymDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.gymID, workoutID));
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveCompletedWorkoutTime(workout.gymID, workout
-                .time.toString()));
 
         return databaseActions;
     }
