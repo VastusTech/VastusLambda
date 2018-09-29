@@ -5,5 +5,7 @@ public enum ItemType {
     Trainer,
     Gym,
     Workout,
-    Review
+    Review,
+    Party,
+    Challenge
 }

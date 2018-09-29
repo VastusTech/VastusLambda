@@ -16,8 +16,7 @@ public class ClientResponse extends ObjectResponse {
     public String profileImagePath;
     public String[] scheduledWorkouts;
     public String[] completedWorkouts;
-    public String[] scheduledWorkoutTimes;
-    public String[] completedWorkoutTimes;
+    public String[] scheduledTimes;
     public String[] reviewsBy;
     public String[] reviewsAbout;
     public String friendlinessRating;
@@ -27,6 +26,11 @@ public class ClientResponse extends ObjectResponse {
 
     public String[] friends;
     public String[] friendRequests;
+    public String challengesWon;
+    public String[] scheduledParties;
+    public String[] completedParties;
+    public String[] scheduledChallenges;
+    public String[] completedChallenges;
 
     public ClientResponse(Client client) {
         super(client.id);
@@ -38,16 +42,11 @@ public class ClientResponse extends ObjectResponse {
         this.profileImagePath = client.profileImagePath;
         this.scheduledWorkouts = client.scheduledWorkouts.toArray(new String[]{});
         this.completedWorkouts = client.completedWorkouts.toArray(new String[]{});
-        List<String> scheduledWorkoutTimes = new ArrayList<>();
-        for (TimeInterval timeInterval : client.scheduledWorkoutTimes) {
-            scheduledWorkoutTimes.add(timeInterval.toString());
+        List<String> scheduledTimes = new ArrayList<>();
+        for (TimeInterval timeInterval : client.scheduledTimes) {
+            scheduledTimes.add(timeInterval.toString());
         }
-        this.scheduledWorkoutTimes = scheduledWorkoutTimes.toArray(new String[]{});
-        List<String> completedWorkoutTimes = new ArrayList<>();
-        for (TimeInterval timeInterval : client.completedWorkoutTimes) {
-            completedWorkoutTimes.add(timeInterval.toString());
-        }
-        this.completedWorkoutTimes = completedWorkoutTimes.toArray(new String[]{});
+        this.scheduledTimes = scheduledTimes.toArray(new String[]{});
         this.reviewsBy = client.reviewsBy.toArray(new String[]{});
         this.reviewsAbout = client.reviewsAbout.toArray(new String[]{});
         this.friendlinessRating = Float.toString(client.friendlinessRating);
@@ -56,5 +55,10 @@ public class ClientResponse extends ObjectResponse {
         this.bio = client.bio;
         this.friends = client.friends.toArray(new String[]{});
         this.friendRequests = client.friendRequests.toArray(new String[]{});
+        this.challengesWon = Integer.toString(client.challengesWon);
+        this.scheduledParties = client.scheduledParties.toArray(new String[]{});
+        this.completedParties = client.completedParties.toArray(new String[]{});
+        this.scheduledChallenges = client.scheduledChallenges.toArray(new String[]{});
+        this.completedChallenges = client.completedChallenges.toArray(new String[]{});
     }
 }

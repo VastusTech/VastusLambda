@@ -39,10 +39,15 @@ public class WorkoutDatabaseActionBuilder {
     public static DatabaseAction updateAddClientID(String id, String clientID) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "clientIDs", new AttributeValue(clientID), false, "ADD", new CheckHandler() {
             @Override
-            public boolean isViable(DatabaseObject newObject) throws Exception {
+            public String isViable(DatabaseObject newObject) throws Exception {
                 // The capacity for the workout must not be filled up yet.
                 Workout workout = (Workout)newObject;
-                return (workout.capacity > workout.clientIDs.size());
+                if (workout.capacity > workout.clientIDs.size()) {
+                    return null;
+                }
+                else {
+                    return "That workout is already filled up!";
+                }
             }
         });
     }
@@ -79,8 +84,13 @@ public class WorkoutDatabaseActionBuilder {
                     "REMOVE", new CheckHandler() {
                 @Override
                 // You can't do a review if the workout hasn't started yet!!!
-                public boolean isViable(DatabaseObject newObject) throws Exception {
-                    return ((Workout) newObject).time.hasAlreadyStarted();
+                public String isViable(DatabaseObject newObject) throws Exception {
+                    if (((Workout) newObject).time.hasAlreadyStarted()) {
+                        return null;
+                    }
+                    else {
+                        return "Time for the workout hasn't started yet, you can't complete a review yet!";
+                    }
                 }
             });
         }
@@ -107,9 +117,14 @@ public class WorkoutDatabaseActionBuilder {
         key.put("id", new AttributeValue(id));
         return new DeleteDatabaseAction(key, new CheckHandler() {
             @Override
-            public boolean isViable(DatabaseObject newObject) throws Exception {
+            public String isViable(DatabaseObject newObject) throws Exception {
                 // We only want to delete this object if it is currently empty!
-                return ((Workout)newObject).clientIDs.size() == 0;
+                if (((Workout)newObject).clientIDs.size() == 0) {
+                    return null;
+                }
+                else {
+                    return "Can't delete the workout because it's not empty yet....";
+                }
             }
         });
     }

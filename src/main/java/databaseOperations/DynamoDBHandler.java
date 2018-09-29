@@ -131,7 +131,8 @@ public class DynamoDBHandler {
                             DatabaseObject object = readItem(key);
 
                             // Use the checkHandler
-                            if (databaseAction.checkHandler.isViable(object)) {
+                            String errorMessage = databaseAction.checkHandler.isViable(object);
+                            if (errorMessage == null) {
                                 // Put the newly read marker value into the conditional statement
                                 conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
@@ -157,9 +158,8 @@ public class DynamoDBHandler {
                                 }
                             }
                             else {
-                                // TODO How to pass in a more helpful message?
                                 // If the object is no longer viable, then we need to throw an exception and exit
-                                throw new Exception("The item failed the checkHandler, cannot do that process!");
+                                throw new Exception("The item failed the checkHandler: " + errorMessage);
                             }
                         }
                     }
@@ -201,7 +201,8 @@ public class DynamoDBHandler {
                         while (!ifFinished) {
                             DatabaseObject object = readItem(key);
                             // Perform the checkHandler check
-                            if (databaseAction.checkHandler.isViable(object)) {
+                            String errorMessage = databaseAction.checkHandler.isViable(object);
+                            if (errorMessage == null) {
                                 conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
                                 try {
@@ -227,6 +228,7 @@ public class DynamoDBHandler {
                                 // This means that the process was not successful, but because this is a delete
                                 // conditional, we will simply just keep going, as this means that the item no longer
                                 // needs to be deleted.
+                                Constants.debugLog("Couldn't delete from condition: " + errorMessage);
                                 ifFinished = true;
                             }
                         }
@@ -278,7 +280,7 @@ public class DynamoDBHandler {
         }
     }
 
-    public String getNewID(String itemType) throws Exception {
+    public String getNewID(String itemType) {
         String id = null;
         boolean ifFound = false;
         while (!ifFound) {

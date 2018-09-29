@@ -18,7 +18,7 @@ public class ClientRemoveFromWorkout {
 
         // We delete the workout from ourselves
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledWorkout(clientID, workoutID));
-        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledWorkoutTime(clientID, workout.time
+        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(clientID, workout.time
                 .toString()));
 
         // And we delete ourselves from the workout

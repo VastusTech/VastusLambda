@@ -20,9 +20,8 @@ public class Gym extends User {
     Gym(Item item) throws Exception {
         super(item);
         this.address = item.getString("address");
-        Set<String> trainerIDs = item.getStringSet("trainerIDs");
-        if (trainerIDs != null) { this.trainerIDs = trainerIDs; }
-        else { this.trainerIDs = new HashSet<>(); }
+        this.trainerIDs = item.getStringSet("trainerIDs");
+        if (trainerIDs == null) { this.trainerIDs = new HashSet<>(); }
         Set<String> weeklyHours = item.getStringSet("weekly_hours");
         if (weeklyHours != null) { this.weeklyHours = TimeInterval.getTimeIntervals(weeklyHours); }
         else { this.weeklyHours = new ArrayList<>(); }
@@ -40,14 +39,15 @@ public class Gym extends User {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("item_type", new AttributeValue("Gym"));
         // item.put("address", new AttributeValue(Constants.nullAttributeValue));
-        item.put("trainerIDs", null);
-        item.put("weekly_hours", null);
-        item.put("vacation_times", null);
+        // item.put("trainerIDs", null);
+        // item.put("weekly_hours", null);
+        // item.put("vacation_times", null);
+        // TODO Put a default session capacity and a default payment split
         // item.put("session_capacity", new AttributeValue(Constants.nullAttributeValue));
-        item.put("session_capacity", null);
+        // item.put("session_capacity", null);
         item.put("gym_type", new AttributeValue("independent"));
         // item.put("payment_split", new AttributeValue(Constants.nullAttributeValue));
-        item.put("payment_split", null);
+        // item.put("payment_split", null);
         return item;
     }
 

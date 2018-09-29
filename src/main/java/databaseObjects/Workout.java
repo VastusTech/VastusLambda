@@ -26,16 +26,14 @@ public class Workout extends DatabaseObject {
         super(item);
         this.time = new TimeInterval(item.getString("time"));
         this.trainerID = item.getString("trainerID");
-        Set<String> clientIDs = item.getStringSet("clientIDs");
-        if (clientIDs != null) { this.clientIDs = clientIDs; }
-        else { this.clientIDs = new HashSet<>(); }
+        this.clientIDs = item.getStringSet("clientIDs");
+        if (clientIDs == null) { this.clientIDs = new HashSet<>(); }
         this.capacity = Integer.parseInt(item.getString("capacity"));
         this.gymID = item.getString("gymID");
         this.sticker = item.getString("sticker");
         this.intensity = item.getString("intensity");
-        Set<String> missingReviews = item.getStringSet("missing_reviews");
-        if (missingReviews != null) { this.missingReviews = missingReviews; }
-        else { this.missingReviews = new HashSet<>(); }
+        this.missingReviews = item.getStringSet("missing_reviews");
+        if (missingReviews == null) { this.missingReviews = new HashSet<>(); }
         this.price = Integer.parseInt(item.getString("price"));
     }
 
@@ -43,23 +41,23 @@ public class Workout extends DatabaseObject {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Workout"));
         // item.put("time", new AttributeValue(Constants.nullAttributeValue));
-        item.put("time", null);
+        // item.put("time", null);
         // item.put("trainerID", new AttributeValue(Constants.nullAttributeValue));
-        item.put("trainerID", null);
+        // item.put("trainerID", null);
         // item.put("clientIDs", new AttributeValue(new ArrayList<>()));
-        item.put("clientIDs", null);
+        // item.put("clientIDs", null);
         // item.put("capacity", new AttributeValue(Constants.nullAttributeValue));
-        item.put("capacity", null);
+        item.put("capacity", new AttributeValue("4"));
         // item.put("gymID", new AttributeValue(Constants.nullAttributeValue));
-        item.put("gymID", null);
+        // item.put("gymID", null);
         // item.put("sticker", new AttributeValue(Constants.nullAttributeValue));
-        item.put("sticker", null);
+        // item.put("sticker", null);
         // item.put("intensity", new AttributeValue(Constants.nullAttributeValue));
-        item.put("intensity", null);
+        // item.put("intensity", null);
 //        item.put("missing_reviews", new AttributeValue(new ArrayList<>()));
-        item.put("missing_reviews", null);
+        // item.put("missing_reviews", null);
         // item.put("price", new AttributeValue(Constants.nullAttributeValue));
-        item.put("price", null);
+        item.put("price", new AttributeValue("80"));
         return item;
     }
 

@@ -66,58 +66,50 @@ public class GymDatabaseActionBuilder {
         return UserDatabaseActionBuilder.updateRemoveCompletedWorkout(id, itemType, workoutID);
     }
 
-    public static DatabaseAction updateAddScheduledWorkoutTime(String id, String workoutTime) throws Exception {
-        TimeInterval workoutTimeInterval = new TimeInterval(workoutTime);
-        return UserDatabaseActionBuilder.updateAddScheduledWorkoutTime(id, itemType, workoutTime, new CheckHandler() {
+    public static DatabaseAction updateAddScheduledTime(String id, String time) throws Exception {
+        TimeInterval timeInterval = new TimeInterval(time);
+        return UserDatabaseActionBuilder.updateAddScheduledTime(id, itemType, time, new CheckHandler() {
             @Override
-            public boolean isViable(DatabaseObject newObject) throws Exception {
+            public String isViable(DatabaseObject newObject) throws Exception {
                 // This is to check whether any times conflict
                 Gym gym = (Gym)newObject;
 
                 // Check every time section to see if it's too filled for the gym space.
-                for (TimeInterval timeSection : workoutTimeInterval.getAllTimeSections()) {
+                for (TimeInterval timeSection : timeInterval.getAllTimeSections()) {
                     int numWorkouts = 0;
-                    for (TimeInterval gymWorkoutTime : gym.scheduledWorkoutTimes) {
-                        if (timeSection.intersects(gymWorkoutTime)) {
+                    for (TimeInterval gymTime : gym.scheduledTimes) {
+                        if (timeSection.intersects(gymTime)) {
                             numWorkouts++;
                         }
                     }
 
                     // If the number of workouts is at (or above lol) the capacity, then you can't add another one
                     if (numWorkouts >= gym.sessionCapacity) {
-                        return false;
+                        return "Gym is already at capacity for that time!";
                     }
                 }
 
                 // Has to be during the weekly time
                 for (TimeInterval weeklyTime : gym.weeklyHours) {
-                    if (weeklyTime.weeklyEncompasses(workoutTimeInterval)) {
+                    if (weeklyTime.weeklyEncompasses(timeInterval)) {
                         // Then make sure that it isn't during a vacation time
                         for (TimeInterval vacationTime : gym.vacationTimes) {
-                            if (vacationTime.intersects(workoutTimeInterval)) {
-                                return false;
+                            if (vacationTime.intersects(timeInterval)) {
+                                return "That workout is during one of the gym's vacation times!";
                             }
                         }
 
-                        return true;
+                        return null;
                     }
                 }
 
-                return false;
+                return "That workout isn't during the gym's open hours!";
             }
         });
     }
 
-    public static DatabaseAction updateRemoveScheduledWorkoutTime(String id, String workoutTime) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveScheduledWorkoutTime(id, itemType, workoutTime);
-    }
-
-    public static DatabaseAction updateAddCompletedWorkoutTime(String id, String workoutTime) throws Exception {
-        return UserDatabaseActionBuilder.updateAddCompletedWorkoutTime(id, itemType, workoutTime);
-    }
-
-    public static DatabaseAction updateRemoveCompletedWorkoutTime(String id, String workoutTime) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveCompletedWorkoutTime(id, itemType, workoutTime);
+    public static DatabaseAction updateRemoveScheduledTime(String id, String time) throws Exception {
+        return UserDatabaseActionBuilder.updateRemoveScheduledTime(id, itemType, time);
     }
 
     public static DatabaseAction updateAddReviewBy(String id, String reviewID, boolean ifWithCreate) throws Exception {

@@ -18,7 +18,7 @@ public class ClientAddToWorkout {
         databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(clientID,
                 workoutID, false));
         // Add to client's scheduled workout times
-        databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledWorkoutTime(clientID, workout.time.toString
+        databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledTime(clientID, workout.time.toString
                 ()));
         // Add to workout's clients
         databaseActions.add(WorkoutDatabaseActionBuilder.updateAddClientID(workoutID, clientID));

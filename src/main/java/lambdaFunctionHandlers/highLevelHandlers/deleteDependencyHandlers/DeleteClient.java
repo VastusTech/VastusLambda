@@ -2,7 +2,9 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandl
 
 import main.java.databaseObjects.Client;
 import main.java.databaseOperations.DatabaseAction;
+import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.PartyDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteReview;
 
@@ -35,6 +37,16 @@ public class DeleteClient {
         for (String workoutID: client.completedWorkouts) {
             databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClientID(workoutID, clientID));
             databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
+        }
+
+        // Also remove from scheduled parties
+        for (String partyID : client.scheduledParties) {
+            databaseActions.add(PartyDatabaseActionBuilder.updateRemoveMemberID(partyID, clientID));
+        }
+
+        // Also remove from scheduled challenges
+        for (String challengeID : client.scheduledChallenges) {
+            databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMemberID(challengeID, clientID));
         }
 
         // Delete the Client

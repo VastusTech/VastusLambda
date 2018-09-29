@@ -56,26 +56,15 @@ public class UserDatabaseActionBuilder {
                 "REMOVE");
     }
 
-    public static DatabaseAction updateAddScheduledWorkoutTime(String id, String itemType, String workoutTime,
+    public static DatabaseAction updateAddScheduledTime(String id, String itemType, String time,
                                                                CheckHandler checkHandler) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "scheduled_workout_times", new AttributeValue(workoutTime),
+        return new UpdateDatabaseAction(id, itemType, "scheduled_times", new AttributeValue(time),
                 false, "ADD", checkHandler);
     }
 
-    public static DatabaseAction updateRemoveScheduledWorkoutTime(String id, String itemType, String workoutTime)
+    public static DatabaseAction updateRemoveScheduledTime(String id, String itemType, String time)
             throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "scheduled_workout_times", new AttributeValue(workoutTime),
-                false, "REMOVE");
-    }
-
-    public static DatabaseAction updateAddCompletedWorkoutTime(String id, String itemType, String workoutTime) throws
-            Exception {
-        return null;
-    }
-
-    public static DatabaseAction updateRemoveCompletedWorkoutTime(String id, String itemType, String workoutTime)
-            throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "completed_workout_times", new AttributeValue(workoutTime),
+        return new UpdateDatabaseAction(id, itemType, "scheduled_times", new AttributeValue(time),
                 false, "REMOVE");
     }
 

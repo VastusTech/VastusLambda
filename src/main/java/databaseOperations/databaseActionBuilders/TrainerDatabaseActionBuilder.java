@@ -71,41 +71,34 @@ public class TrainerDatabaseActionBuilder {
         return UserDatabaseActionBuilder.updateRemoveCompletedWorkout(id, itemType, workoutID);
     }
 
-    public static DatabaseAction updateAddScheduledWorkoutTime(String id, String workoutTime) throws Exception {
-        TimeInterval workoutTimeInterval = new TimeInterval(workoutTime);
-        return UserDatabaseActionBuilder.updateAddScheduledWorkoutTime(id, itemType, workoutTime, new CheckHandler() {
+    public static DatabaseAction updateAddScheduledTime(String id, String time) throws Exception {
+        TimeInterval timeInterval = new TimeInterval(time);
+        return UserDatabaseActionBuilder.updateAddScheduledTime(id, itemType, time, new CheckHandler() {
             @Override
-            public boolean isViable(DatabaseObject newObject) throws Exception {
+            // TODO SHOULD THIS BE JUST DURING SCHEDULING WOKROUTS OR ALWAYS FOR AVAILABLE TIMES?
+            public String isViable(DatabaseObject newObject) throws Exception {
                 // This is to check whether any times conflict
                 Trainer trainer = (Trainer)newObject;
                 // Is it during one of the trainer's available times?
                 for (TimeInterval availableTime : trainer.availableTimes) {
-                    if (availableTime.encompasses(workoutTimeInterval)) {
+                    if (availableTime.encompasses(timeInterval)) {
                         // Then, is it conflicting with another one of their workouts?
-                        for (TimeInterval trainerWorkoutTime : trainer.scheduledWorkoutTimes) {
-                            if (trainerWorkoutTime.intersects(workoutTimeInterval)) {
-                                return false;
+                        for (TimeInterval trainerTime : trainer.scheduledTimes) {
+                            if (trainerTime.intersects(timeInterval)) {
+                                return "The scheduled time intersects with the trainer's existing schedule!";
                             }
                         }
 
-                        return true;
+                        return null;
                     }
                 }
-                return true;
+                return "That time is not during any of the trainer's available times!";
             }
         });
     }
 
-    public static DatabaseAction updateRemoveScheduledWorkoutTime(String id, String workoutTime) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveScheduledWorkoutTime(id, itemType, workoutTime);
-    }
-
-    public static DatabaseAction updateAddCompletedWorkoutTime(String id, String workoutTime) throws Exception {
-        return UserDatabaseActionBuilder.updateAddCompletedWorkoutTime(id, itemType, workoutTime);
-    }
-
-    public static DatabaseAction updateRemoveCompletedWorkoutTime(String id, String workoutTime) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveCompletedWorkoutTime(id, itemType, workoutTime);
+    public static DatabaseAction updateRemoveScheduledTime(String id, String time) throws Exception {
+        return UserDatabaseActionBuilder.updateRemoveScheduledTime(id, itemType, time);
     }
 
     public static DatabaseAction updateAddReviewBy(String id, String reviewID, boolean ifWithCreate) throws Exception {
@@ -155,16 +148,17 @@ public class TrainerDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "available_times", new AttributeValue(Arrays.asList
                 (availableTimes)), false, "REMOVE", new CheckHandler() {
             @Override
-            public boolean isViable(DatabaseObject newObject) throws Exception {
+            public String isViable(DatabaseObject newObject) throws Exception {
                 Trainer trainer = (Trainer)newObject;
-                for (TimeInterval workoutTime : trainer.scheduledWorkoutTimes) {
+                for (TimeInterval time : trainer.scheduledTimes) {
                     for (TimeInterval availableTimeInterval : availableTimeIntervals) {
-                        if (availableTimeInterval.intersects(workoutTime)) {
-                            return false;
+                        if (availableTimeInterval.intersects(time)) {
+                            return "Trainer already has something scheduled for that time, cannot remove available " +
+                                    "time!";
                         }
                     }
                 }
-                return true;
+                return null;
             }
         });
     }

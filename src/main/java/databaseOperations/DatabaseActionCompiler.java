@@ -103,9 +103,9 @@ public class DatabaseActionCompiler {
             updateUpdateItem(intoDatabaseAction.updateItem, fromDatabaseAction.updateItem);
             intoDatabaseAction.checkHandler = new CheckHandler() {
                 @Override
-                public boolean isViable(DatabaseObject newObject) throws Exception {
-                    return intoDatabaseAction.checkHandler.isViable(newObject) && fromDatabaseAction.checkHandler
-                            .isViable(newObject);
+                public String isViable(DatabaseObject newObject) throws Exception {
+                    return intoDatabaseAction.checkHandler.isViable(newObject) + " OR " + fromDatabaseAction
+                            .checkHandler.isViable(newObject);
                 }
             };
         }

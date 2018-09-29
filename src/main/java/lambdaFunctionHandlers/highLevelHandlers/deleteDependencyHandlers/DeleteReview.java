@@ -25,6 +25,6 @@ public class DeleteReview {
         // Delete the review
         databaseActions.add(ReviewDatabaseActionBuilder.delete(reviewID));
 
-        return getActions(reviewID);
+        return databaseActions;
     }
 }

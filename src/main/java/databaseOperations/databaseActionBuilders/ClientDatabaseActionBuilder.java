@@ -63,34 +63,26 @@ public class ClientDatabaseActionBuilder {
         return UserDatabaseActionBuilder.updateRemoveCompletedWorkout(id, itemType, workoutID);
     }
 
-    public static DatabaseAction updateAddScheduledWorkoutTime(String id, String workoutTime) throws Exception {
-        TimeInterval workoutTimeInterval = new TimeInterval(workoutTime);
-        return UserDatabaseActionBuilder.updateAddScheduledWorkoutTime(id, itemType, workoutTime, new CheckHandler() {
+    public static DatabaseAction updateAddScheduledTime(String id, String time) throws Exception {
+        TimeInterval timeInterval = new TimeInterval(time);
+        return UserDatabaseActionBuilder.updateAddScheduledTime(id, itemType, time, new CheckHandler() {
             @Override
-            public boolean isViable(DatabaseObject newObject) throws Exception {
+            public String isViable(DatabaseObject newObject) throws Exception {
                 // This is to check whether any times conflict
                 Client client = (Client)newObject;
-                for (TimeInterval clientWorkoutTimeInterval : client.scheduledWorkoutTimes) {
-                    if (workoutTimeInterval.intersects(clientWorkoutTimeInterval)) {
+                for (TimeInterval clientTimeInterval : client.scheduledTimes) {
+                    if (timeInterval.intersects(clientTimeInterval)) {
                         // If it is intersecting with another time interval, then we can't place it!
-                        return false;
+                        return "That workout is intersecting with an existing workout in the Client!";
                     }
                 }
-                return true;
+                return null;
             }
         });
     }
 
-    public static DatabaseAction updateRemoveScheduledWorkoutTime(String id, String workoutTime) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveScheduledWorkoutTime(id, itemType, workoutTime);
-    }
-
-    public static DatabaseAction updateAddCompletedWorkoutTime(String id, String workoutTime) throws Exception {
-        return UserDatabaseActionBuilder.updateAddCompletedWorkoutTime(id, itemType, workoutTime);
-    }
-
-    public static DatabaseAction updateRemoveCompletedWorkoutTime(String id, String workoutTime) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveCompletedWorkoutTime(id, itemType, workoutTime);
+    public static DatabaseAction updateRemoveScheduledTime(String id, String time) throws Exception {
+        return UserDatabaseActionBuilder.updateRemoveScheduledTime(id, itemType, time);
     }
 
     public static DatabaseAction updateAddReviewBy(String id, String reviewID, boolean ifWithCreate) throws Exception {
@@ -132,13 +124,13 @@ public class ClientDatabaseActionBuilder {
             return new UpdateDatabaseAction(id, itemType, "friends", new AttributeValue(Arrays.asList(friendIDs)),
                     false, "ADD", new CheckHandler() {
                 @Override
-                public boolean isViable(DatabaseObject newObject) throws Exception {
+                public String isViable(DatabaseObject newObject) throws Exception {
                     for (String friendID : friendIDs) {
                         if (!((Client) newObject).friendRequests.contains(friendID)) {
-                            return false;
+                            return "Add friend was not in the client's friend requests!";
                         }
                     }
-                    return true;
+                    return null;
                 }
             });
         }
@@ -161,6 +153,32 @@ public class ClientDatabaseActionBuilder {
     public static DatabaseAction updateRemoveFriendRequests(String id, String[] friendIDs) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "friend_requests", new AttributeValue(Arrays.asList(friendIDs)),
                 false, "REMOVE");
+    }
+
+    public static DatabaseAction updateChallengesWon(String id, String challengesWon) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "challenges_won", new AttributeValue(challengesWon), false,
+                "PUT");
+    }
+
+    public static DatabaseAction updateAddScheduledParty(String id, String partyID, boolean ifWithCreate) throws
+            Exception {
+        return new UpdateDatabaseAction(id, itemType, "scheduled_parties", new AttributeValue(partyID), ifWithCreate, "ADD");
+    }
+
+    public static DatabaseAction updateRemoveScheduledParty(String id, String partyID) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "scheduled_parties", new AttributeValue(partyID), false,
+                "REMOVE");
+    }
+
+    public static DatabaseAction updateAddScheduledChallenge(String id, String challengeID, boolean ifWithCreate)
+            throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "scheduled_challenges", new AttributeValue(challengeID), ifWithCreate,
+                "ADD");
+    }
+
+    public static DatabaseAction updateRemoveScheduledChallenge(String id, String challengeID) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "scheduled_parties", new AttributeValue(challengeID), false,
+                "REMOVE");
     }
 
     public static DatabaseAction delete(String id) {

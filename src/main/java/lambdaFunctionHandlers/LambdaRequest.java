@@ -6,8 +6,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.*;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateClient;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateGym;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.readHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.*;
@@ -15,9 +14,6 @@ import main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependency
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.requestObjects.*;
 import main.java.lambdaFunctionHandlers.responseObjects.*;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateReview;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateTrainer;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateWorkout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +34,8 @@ public class LambdaRequest {
     private CreateGymRequest createGymRequest;
     private CreateWorkoutRequest createWorkoutRequest;
     private CreateReviewRequest createReviewRequest;
+    private CreatePartyRequest createPartyRequest;
+    private CreateChallengeRequest createChallengeRequest;
 
     private enum Action {
         CREATE,
@@ -97,7 +95,10 @@ public class LambdaRequest {
         // Review ==========================
         byID,
         aboutID,
-        description
+        description,
+        // Party ===========================
+        title,
+        memberIDs
     }
 
     // This is where the inputs are handled!
@@ -307,6 +308,14 @@ public class LambdaRequest {
                 numCreateRequest++;
                 Constants.debugLog("Has a create review request!\n");
             }
+            if (createPartyRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create party request!\n");
+            }
+            if (createChallengeRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create challenge request!\n");
+            }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
@@ -332,6 +341,10 @@ public class LambdaRequest {
                 case Review:
                     // Send a null for surveyWorkoutID because we're not creating it for a survey
                     return CreateReview.handle(createReviewRequest, null);
+                case Party:
+                    return CreateParty.handle(createPartyRequest);
+                case Challenge:
+                    return CreateChallenge.handle(createChallengeRequest);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -358,6 +371,10 @@ public class LambdaRequest {
                     return ReadWorkoutsByID.handle(ids);
                 case Review:
                     return ReadReviewsByID.handle(ids);
+                case Party:
+                    return ReadPartiesByID.handle(ids);
+                case Challenge:
+                    return ReadChallengesByID.handle(ids);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }

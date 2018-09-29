@@ -11,22 +11,31 @@ import java.util.*;
 public class Client extends User {
     public Set<String> friends;
     public Set<String> friendRequests;
+    public int challengesWon;
+    public Set<String> scheduledParties;
+    public Set<String> scheduledChallenges;
+    public Set<String> completedParties;
+    public Set<String> completedChallenges;
 
     Client(Item item) throws Exception {
         super(item);
-        Set<String> friends = item.getStringSet("friends");
-        if (friends != null) { this.friends = friends; }
-        else { this.friends = new HashSet<>(); }
-        Set<String> friendRequests = item.getStringSet("friend_requests");
-        if (friendRequests != null) { this.friendRequests = friendRequests; }
-        else { this.friendRequests = new HashSet<>(); }
+        this.friends = item.getStringSet("friends");
+        if (friends == null) { this.friends = new HashSet<>(); }
+        this.friendRequests = item.getStringSet("friend_requests");
+        if (friendRequests == null) { this.friendRequests = new HashSet<>(); }
+        this.scheduledParties = item.getStringSet("scheduled_parties");
+        if (scheduledParties == null) { this.scheduledParties = new HashSet<>(); }
+        this.scheduledChallenges = item.getStringSet("scheduled_challenges");
+        if (scheduledChallenges == null) { this.scheduledChallenges = new HashSet<>(); }
+        this.completedParties = item.getStringSet("completed_parties");
+        if (completedParties == null) { this.completedParties = new HashSet<>(); }
+        this.completedChallenges = item.getStringSet("completed_challenges");
+        if (completedChallenges == null) { this.completedChallenges = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("item_type", new AttributeValue("Client"));
-        item.put("friends", null);
-        item.put("friend_requests", null);
         return item;
     }
 
