@@ -162,7 +162,13 @@ public class ClientDatabaseActionBuilder {
 
     public static DatabaseAction updateAddScheduledParty(String id, String partyID, boolean ifWithCreate) throws
             Exception {
-        return new UpdateDatabaseAction(id, itemType, "scheduled_parties", new AttributeValue(partyID), ifWithCreate, "ADD");
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "scheduled_parties", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "scheduled_parties", new AttributeValue(partyID), false,
+                    "ADD");
+        }
     }
 
     public static DatabaseAction updateRemoveScheduledParty(String id, String partyID) throws Exception {
@@ -172,12 +178,17 @@ public class ClientDatabaseActionBuilder {
 
     public static DatabaseAction updateAddScheduledChallenge(String id, String challengeID, boolean ifWithCreate)
             throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "scheduled_challenges", new AttributeValue(challengeID), ifWithCreate,
-                "ADD");
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "scheduled_challenges", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "scheduled_challenges", new AttributeValue(challengeID),
+                    true, "ADD");
+        }
     }
 
     public static DatabaseAction updateRemoveScheduledChallenge(String id, String challengeID) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "scheduled_parties", new AttributeValue(challengeID), false,
+        return new UpdateDatabaseAction(id, itemType, "scheduled_challenges", new AttributeValue(challengeID), false,
                 "REMOVE");
     }
 
