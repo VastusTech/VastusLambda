@@ -23,16 +23,15 @@ public class DatabaseActionCompiler {
     }
 
     public void add(DatabaseAction databaseAction) throws Exception {
-        String id = "";
-        boolean ifCreate = false;
-        if (databaseAction.action == DBAction.CREATE) {
+        String id;
+        if (databaseAction.action != DBAction.CREATE) {
             id = databaseAction.item.get("id").getS();
         }
         else {
-            ifCreate = true;
+            id = "create";
         }
 
-        if (databaseActionMap.containsKey(id) || ifCreate) {
+        if (databaseActionMap.containsKey(id)) {
             // Combine the two database actions
             DatabaseAction existingDatabaseAction = databaseActionMap.get(id);
             DBAction existingAction = existingDatabaseAction.action;

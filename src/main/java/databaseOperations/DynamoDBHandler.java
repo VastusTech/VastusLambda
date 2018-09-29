@@ -138,9 +138,12 @@ public class DynamoDBHandler {
                                 try {
                                     // Try to update the item and the marker with the conditional check
                                     transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
-                                            (databaseAction.item).withAttributeUpdates(updateItem)
+                                            (databaseAction.item).withAttributeUpdates(updateItem));
+
+                                            /* TRANSACTIONS CONDITIONS NOT SUPPORTED
                                             .withConditionExpression(conditionalExpression).withExpressionAttributeNames
                                                     (conditionalExpressionNames).withExpressionAttributeValues(conditionalExpressionValues));
+                                             */
 
                                     // Update the marker afterwards
                                     //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
@@ -204,9 +207,13 @@ public class DynamoDBHandler {
                                 try {
                                     // try to delete the item
                                     transaction.deleteItem(new DeleteItemRequest().withTableName(tableName).withKey
-                                            (databaseAction.item).withConditionExpression(conditionalExpression)
+                                            (databaseAction.item));
+
+                                            /* CONDITIONS NOT SUPPORTED
+                                            .withConditionExpression(conditionalExpression)
                                             .withExpressionAttributeNames(conditionalExpressionNames)
                                             .withExpressionAttributeValues(conditionalExpressionValues));
+                                            */
 
                                     ifFinished = true;
                                     // the process was successful.
