@@ -11,13 +11,12 @@ public class TrainerRemoveAvailableTimes {
     public static List<DatabaseAction> getActions(String trainerID, String[] availableTimes) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        // TODO Get all the actions for this process
+        // Get all the actions for this process
         for (String availableTime : availableTimes) {
             // Check the time
             new TimeInterval(availableTime);
-
-            databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveAvailableTime(trainerID, availableTime));
         }
+        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveAvailableTimes(trainerID, availableTimes));
 
         return databaseActions;
     }

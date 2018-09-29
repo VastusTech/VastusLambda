@@ -1,6 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import main.java.databaseOperations.DatabaseAction;
+import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
@@ -18,18 +19,18 @@ public class CreateTrainer {
                     && createTrainerRequest.gymID != null && createTrainerRequest.workoutSticker != null &&
                     createTrainerRequest.preferredIntensity != null) {
                 // Create the database action list for the transaction to complete
-                List<DatabaseAction> databaseActions = new ArrayList<>();
+                DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
 
                 // Create trainer (with createTrainerRequest)
-                databaseActions.add(TrainerDatabaseActionBuilder.create(createTrainerRequest));
+                databaseActionCompiler.add(TrainerDatabaseActionBuilder.create(createTrainerRequest));
 
                 // Add to gym (with gymID and true for fromCreate
-                databaseActions.add(GymDatabaseActionBuilder.updateAddTrainerID(createTrainerRequest.gymID,
+                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddTrainerID(createTrainerRequest.gymID,
                         null, true));
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
             }
             else {
                 throw new Exception("Required fields missing in createTrainerRequest!");

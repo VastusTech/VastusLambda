@@ -1,11 +1,8 @@
 package main.java.databaseOperations;
 
 import main.java.Logic.Constants;
-import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
@@ -57,7 +54,6 @@ public class DynamoDBHandler {
      */
 
     // Returns the ID if it's applicable
-    // TODO Make sure that there are no more than 1 create action in the list
     public String attemptTransaction(List<DatabaseAction> databaseActions) throws Exception {
         // Marker retry implemented
         Transaction transaction = txManager.newTransaction();
@@ -87,6 +83,12 @@ public class DynamoDBHandler {
 
                         // This is the updating marker statement
                         updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
+
+                        Constants.debugLog("Update statement -------------------------");
+                        for (Map.Entry<String, AttributeValueUpdate> entry : updateItem.entrySet()) {
+                            Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
+                                    .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
+                        }
 
                         // This updates the object and the marker
                         transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
@@ -240,21 +242,33 @@ public class DynamoDBHandler {
 
     private Map<String, AttributeValueUpdate> getUpdateItem(DatabaseAction databaseAction,
                                                             String returnString) throws Exception {
-        Map<String, AttributeValueUpdate> updateItem = new HashMap<>();
         if (databaseAction.ifWithCreate) {
             if (returnString == null) {
                 throw new Exception("The Create statement needs to be first while updating!");
             }
             else {
-                updateItem.put(databaseAction.updateAttributeName, new AttributeValueUpdate(new
-                        AttributeValue(returnString), databaseAction.updateAction));
+                List<String> stringList = new ArrayList<>();
+                stringList.add(returnString);
+                for (AttributeValueUpdate valueUpdate: databaseAction.updateItem.values()) {
+                    // For each one that uses the id, switch it to the return string
+                    if (valueUpdate.getAction().equals("PUT")) {
+                        if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("id")) {
+                            valueUpdate.setValue(new AttributeValue(returnString));
+                        }
+                    }
+                    else if (valueUpdate.getAction().equals("ADD") || valueUpdate.getAction().equals("REMOVE")) {
+                        if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("id")) {
+                            valueUpdate.setValue(new AttributeValue(stringList));
+                        }
+                    }
+                }
+
+                return databaseAction.updateItem;
             }
         }
         else {
-            updateItem.put(databaseAction.updateAttributeName, new AttributeValueUpdate
-                    (databaseAction.updateAttribute, databaseAction.updateAction));
+            return databaseAction.updateItem;
         }
-        return updateItem;
     }
 
     public String getNewID(String itemType) throws Exception {
@@ -285,16 +299,13 @@ public class DynamoDBHandler {
     }
 
     public <T extends DatabaseObject> T readItem(Map<String, AttributeValue> key) throws Exception {
-        try {
-            String id = key.get("id").getS();
-            String itemType = key.get("item_type").getS();
-            Item item = table.getItem("item_type", itemType, "id", id);
-            return (T)DatabaseObjectBuilder.build(item);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        String id = key.get("id").getS();
+        String itemType = key.get("item_type").getS();
+        Constants.debugLog("Read item: id = " + id + ", item_type = " + itemType + "!");
+        Item item = table.getItem("item_type", itemType, "id", id);
+        Constants.debugLog("Got past the table.getItem statement...");
+        DatabaseObject object = DatabaseObjectBuilder.build(item);
+        return (T)object;
     }
 
     // TODO Way to differentiate between no user showed up and error?

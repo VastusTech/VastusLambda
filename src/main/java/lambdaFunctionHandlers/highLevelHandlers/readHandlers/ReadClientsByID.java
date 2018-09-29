@@ -13,7 +13,7 @@ public class ReadClientsByID {
         List<ObjectResponse> clientResponses = new ArrayList<>();
         for (String id : clientIDs) {
             Client client = Client.readClient(id);
-            Constants.logger.log("client id: " + client.id + "\n");
+            Constants.debugLog("Read client id: " + client.id + "\n");
             ClientResponse clientResponse = new ClientResponse(client);
             clientResponses.add(clientResponse);
             // clientResponses.add(new ClientResponse(Client.readClient(id)));

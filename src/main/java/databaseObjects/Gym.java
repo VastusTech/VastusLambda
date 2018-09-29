@@ -1,12 +1,10 @@
 package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
-import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.lambdaFunctionHandlers.responseObjects.GymResponse;
 import main.java.lambdaFunctionHandlers.responseObjects.ObjectResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.TrainerResponse;
 
 import java.util.*;
 
@@ -31,21 +29,25 @@ public class Gym extends User {
         Set<String> vacationTimes = item.getStringSet("vacation_times");
         if (vacationTimes != null) { this.vacationTimes = TimeInterval.getTimeIntervals(vacationTimes); }
         else { this.vacationTimes = new ArrayList<>(); }
-        this.sessionCapacity = Integer.parseInt(item.getString("session_capacity"));
+        String sessionCapacity = item.getString("session_capacity");
+        if (sessionCapacity != null) { this.sessionCapacity = Integer.parseInt(sessionCapacity); }
         this.gymType = item.getString("gym_type");
-        this.paymentSplit = Float.parseFloat(item.getString("payment_split"));
+        String paymentSplit = item.getString("payment_split");
+        if (paymentSplit != null) { this.paymentSplit = Float.parseFloat(paymentSplit); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("item_type", new AttributeValue("Gym"));
-        item.put("address", new AttributeValue(Constants.nullAttributeValue));
+        // item.put("address", new AttributeValue(Constants.nullAttributeValue));
         item.put("trainerIDs", null);
         item.put("weekly_hours", null);
         item.put("vacation_times", null);
-        item.put("session_capacity", new AttributeValue(Constants.nullAttributeValue));
+        // item.put("session_capacity", new AttributeValue(Constants.nullAttributeValue));
+        item.put("session_capacity", null);
         item.put("gym_type", new AttributeValue("independent"));
-        item.put("payment_split", new AttributeValue(Constants.nullAttributeValue));
+        // item.put("payment_split", new AttributeValue(Constants.nullAttributeValue));
+        item.put("payment_split", null);
         return item;
     }
 

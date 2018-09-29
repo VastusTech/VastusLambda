@@ -33,12 +33,15 @@ public class Review extends DatabaseObject {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Review"));
-        item.put("byID", new AttributeValue(Constants.nullAttributeValue));
-        item.put("aboutID", new AttributeValue(Constants.nullAttributeValue));
+        // item.put("byID", new AttributeValue(Constants.nullAttributeValue));
+        item.put("byID", null);
+        // item.put("aboutID", new AttributeValue(Constants.nullAttributeValue));
+        item.put("aboutID", null);
         item.put("friendliness_rating", new AttributeValue("-1.0"));
         item.put("effectiveness_rating", new AttributeValue("-1.0"));
         item.put("reliability_rating", new AttributeValue("-1.0"));
-        item.put("description", new AttributeValue(Constants.nullAttributeValue));
+        // item.put("description", new AttributeValue(Constants.nullAttributeValue));
+        item.put("description", null);
         return item;
     }
 

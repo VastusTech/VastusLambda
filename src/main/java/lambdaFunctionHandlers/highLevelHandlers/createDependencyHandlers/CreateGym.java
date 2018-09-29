@@ -1,6 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import main.java.databaseOperations.DatabaseAction;
+import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateGymRequest;
@@ -14,16 +15,15 @@ public class CreateGym {
             if (createGymRequest.name != null && createGymRequest.foundingDay != null && createGymRequest.email !=
                     null && createGymRequest.username != null && createGymRequest.address != null && createGymRequest
                     .sessionCapacity != null) {
-
-                List<DatabaseAction> databaseActions = new ArrayList<>();
+                DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
 
                 // Create Gym
-                databaseActions.add(GymDatabaseActionBuilder.create(createGymRequest));
+                databaseActionCompiler.add(GymDatabaseActionBuilder.create(createGymRequest));
 
                 // Do the transaction and return the ID afterwards
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
             }
             else {
                 throw new Exception("createGymRequest is missing required fields!");

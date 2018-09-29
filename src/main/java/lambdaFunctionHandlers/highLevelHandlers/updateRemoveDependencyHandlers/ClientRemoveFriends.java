@@ -11,10 +11,11 @@ public class ClientRemoveFriends {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
         // Get all the actions for this process
+        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriends(clientID, friendIDs));
+
         for (String friendID : friendIDs) {
             // Mutual Friendship Removal
-            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriend(clientID, friendID));
-            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriend(friendID, clientID));
+            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriends(friendID, new String[]{clientID}));
         }
 
         return databaseActions;

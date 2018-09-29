@@ -14,9 +14,10 @@ public class CreateGymRequest {
     public String gymType;
     public String paymentSplit;
     public String[] weeklyHours;
+    public String bio;
 
-    public CreateGymRequest(String name, String email, String username, String foundingDay, String address, String[]
-            weeklyHours, String sessionCapacity, String gymType, String paymentSplit) {
+    public CreateGymRequest(String name, String email, String username, String foundingDay, String bio, String address,
+                            String[] weeklyHours, String sessionCapacity, String gymType, String paymentSplit) {
         this.name = name;
         this.email = email;
         this.username = username;
@@ -60,6 +61,14 @@ public class CreateGymRequest {
 
     public void setFoundingDay(String foundingDay) {
         this.foundingDay = foundingDay;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public String getAddress() {

@@ -10,11 +10,11 @@ public class ClientAddFriends {
     public static List<DatabaseAction> getActions(String clientID, String[] friendIDs) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        databaseActions.add(ClientDatabaseActionBuilder.updateAddFriends(clientID, friendIDs, true));
         // Get all the actions for this process
         for (String friendID : friendIDs) {
             // Mutual friendships
-            databaseActions.add(ClientDatabaseActionBuilder.updateAddFriend(clientID, friendID, true));
-            databaseActions.add(ClientDatabaseActionBuilder.updateAddFriend(friendID, clientID, false));
+            databaseActions.add(ClientDatabaseActionBuilder.updateAddFriends(friendID, new String[]{clientID}, false));
         }
 
         return databaseActions;

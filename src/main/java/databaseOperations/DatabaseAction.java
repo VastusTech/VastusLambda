@@ -11,9 +11,11 @@ public abstract class DatabaseAction {
     Map<String, AttributeValue> item;
 
     // These should only be used for UPDATE and UPDATESAFE main.java.databaseOperations.DBAction's
-    String updateAttributeName;
-    AttributeValue updateAttribute;
-    String updateAction;
+    // String updateAttributeName;
+    // AttributeValue updateAttribute;
+    // String updateAction;
+
+    Map<String, AttributeValueUpdate> updateItem;
 
     // This should only be used for SAFE methods
     CheckHandler checkHandler;

@@ -1,19 +1,18 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import main.java.Logic.Constants;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseAction;
+import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ReviewDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateReviewRequest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CreateReview {
     public static String handle(CreateReviewRequest createReviewRequest, String surveyWorkoutID) throws Exception {
@@ -21,12 +20,12 @@ public class CreateReview {
             if (createReviewRequest.byID != null && createReviewRequest.aboutID != null && createReviewRequest
                     .friendlinessRating != null && createReviewRequest.effectivenessRating != null &&
                     createReviewRequest.reliabilityRating != null && createReviewRequest.description != null) {
-                List<DatabaseAction> databaseActions = new ArrayList<>();
+                DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
 
                 // Create Review
-                databaseActions.add(ReviewDatabaseActionBuilder.create(createReviewRequest));
+                databaseActionCompiler.add(ReviewDatabaseActionBuilder.create(createReviewRequest));
 
                 // Add to by's reviews by
                 String byID = createReviewRequest.byID;
@@ -34,16 +33,18 @@ public class CreateReview {
                 if (byItemType == null) {
                     throw new Exception("Review ByID is invalid!");
                 }
-                databaseActions.add(UserDatabaseActionBuilder.updateAddReviewBy(createReviewRequest.byID,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddReviewBy(createReviewRequest.byID,
                         byItemType, null, true));
 
                 // Add to about's reviews about
                 String aboutID = createReviewRequest.aboutID;
+                Constants.debugLog(aboutID);
                 String aboutItemType = DatabaseObject.getItemType(aboutID);
+                Constants.debugLog(aboutItemType);
                 if (aboutItemType == null) {
                     throw new Exception("Review AboutID is invalid!");
                 }
-                databaseActions.add(UserDatabaseActionBuilder.updateAddReviewAbout(aboutID, aboutItemType,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddReviewAbout(aboutID, aboutItemType,
                         null, true));
 
                 // Calculate about's ratings
@@ -54,7 +55,8 @@ public class CreateReview {
                 float friendlinessRating = Float.parseFloat(createReviewRequest.friendlinessRating);
                 float effectivenessRating = Float.parseFloat(createReviewRequest.effectivenessRating);
                 float reliabilityRating = Float.parseFloat(createReviewRequest.reliabilityRating);
-                int numReviews = user.reviewsAbout.size();
+                Set<String> reviewsAbout = user.reviewsAbout;
+                int numReviews = reviewsAbout.size();
 
                 // Basically it finds the "sum" of the ratings, using the current rating and the number of
                 // reviews. Then, it adds our rating value to it, then divides it by numReviews + 1.
@@ -66,19 +68,20 @@ public class CreateReview {
                         reliabilityRating) / (numReviews + 1);
 
                 // Updates the about item
-                databaseActions.add(UserDatabaseActionBuilder.updateFriendlinessRating(aboutID,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateFriendlinessRating(aboutID,
                         aboutItemType, Float.toString(newFriendlinessRating)));
-                databaseActions.add(UserDatabaseActionBuilder.updateEffectivenessRating(aboutID,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateEffectivenessRating(aboutID,
                         aboutItemType, Float.toString(newEffectivenessRating)));
-                databaseActions.add(UserDatabaseActionBuilder.updateReliabilityRating(aboutID,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateReliabilityRating(aboutID,
                         aboutItemType, Float.toString(newReliabilityRating)));
 
                 if (surveyWorkoutID != null) {
                     // TODO THIS SHOULD ALSO MOVE THE WORKOUT FROM SCHEDULED TO COMPLETED
-                    databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(surveyWorkoutID, byID, true));
+                    databaseActionCompiler.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(surveyWorkoutID, byID,
+                            true));
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
             }
             else {
                 throw new Exception("createReviewRequest is missing required fields!");

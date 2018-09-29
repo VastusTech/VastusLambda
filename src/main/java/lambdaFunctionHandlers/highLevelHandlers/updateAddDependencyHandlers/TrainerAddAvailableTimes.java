@@ -15,9 +15,9 @@ public class TrainerAddAvailableTimes {
         for (String availableTime : availableTimes) {
             // Check the time
             new TimeInterval(availableTime);
-
-            databaseActions.add(TrainerDatabaseActionBuilder.updateAddAvailableTime(trainerID, availableTime));
         }
+
+        databaseActions.add(TrainerDatabaseActionBuilder.updateAddAvailableTimes(trainerID, availableTimes));
 
         return databaseActions;
     }

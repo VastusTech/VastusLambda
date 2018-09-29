@@ -7,7 +7,9 @@ import main.java.databaseObjects.Trainer;
 import main.java.databaseOperations.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateTrainerRequest;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TrainerDatabaseActionBuilder {
@@ -143,21 +145,23 @@ public class TrainerDatabaseActionBuilder {
 //        return new UpdateDatabaseAction();
 //    }
 
-    public static DatabaseAction updateAddAvailableTime(String id, String availableTime) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "available_times", new AttributeValue(availableTime), false,
-                "ADD");
+    public static DatabaseAction updateAddAvailableTimes(String id, String[] availableTimes) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "available_times", new AttributeValue(Arrays.asList
+                (availableTimes)), false, "ADD");
     }
 
-    public static DatabaseAction updateRemoveAvailableTime(String id, String availableTime) throws Exception {
-        TimeInterval availableTimeInterval = new TimeInterval(availableTime);
-        return new UpdateDatabaseAction(id, itemType, "available_times", new AttributeValue(availableTime), false,
-                "REMOVE", new CheckHandler() {
+    public static DatabaseAction updateRemoveAvailableTimes(String id, String[] availableTimes) throws Exception {
+        List<TimeInterval> availableTimeIntervals = TimeInterval.getTimeIntervals(Arrays.asList(availableTimes));
+        return new UpdateDatabaseAction(id, itemType, "available_times", new AttributeValue(Arrays.asList
+                (availableTimes)), false, "REMOVE", new CheckHandler() {
             @Override
             public boolean isViable(DatabaseObject newObject) throws Exception {
                 Trainer trainer = (Trainer)newObject;
                 for (TimeInterval workoutTime : trainer.scheduledWorkoutTimes) {
-                    if (availableTimeInterval.intersects(workoutTime)) {
-                        return false;
+                    for (TimeInterval availableTimeInterval : availableTimeIntervals) {
+                        if (availableTimeInterval.intersects(workoutTime)) {
+                            return false;
+                        }
                     }
                 }
                 return true;

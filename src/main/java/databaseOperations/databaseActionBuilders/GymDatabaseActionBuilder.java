@@ -23,6 +23,7 @@ public class GymDatabaseActionBuilder {
         item.put("username", new AttributeValue(createGymRequest.username));
         item.put("address", new AttributeValue(createGymRequest.address));
         item.put("session_capacity", new AttributeValue(createGymRequest.sessionCapacity));
+        if (createGymRequest.bio != null) { item.put("bio", new AttributeValue(createGymRequest.bio)); }
         if (createGymRequest.weeklyHours != null) { item.put("weekly_hours", new AttributeValue(Arrays.asList
                 (createGymRequest.weeklyHours))); }
         if (createGymRequest.gymType != null) { item.put("gym_type",
@@ -183,13 +184,14 @@ public class GymDatabaseActionBuilder {
 //        return new UpdateDatabaseAction(id, itemType, "weekly_hours", new AttributeValue(weeklyHour), false, "REMOVE");
 //    }
 
-    public static DatabaseAction updateAddVacationTime(String id, String vacationTime) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "vacation_times", new AttributeValue(vacationTime), false, "ADD");
+    public static DatabaseAction updateAddVacationTimes(String id, String[] vacationTimes) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "vacation_times", new AttributeValue(Arrays.asList
+                (vacationTimes)), false, "ADD");
     }
 
-    public static DatabaseAction updateRemoveVacationTime(String id, String vacationTime) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "vacation_times", new AttributeValue(vacationTime), false,
-                "REMOVE");
+    public static DatabaseAction updateRemoveVacationTimes(String id, String[] vacationTimes) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "vacation_times", new AttributeValue(Arrays.asList
+                (vacationTimes)), false, "REMOVE");
     }
 
     public static DatabaseAction updateSessionCapacity(String id, String sessionCapacity) throws Exception {

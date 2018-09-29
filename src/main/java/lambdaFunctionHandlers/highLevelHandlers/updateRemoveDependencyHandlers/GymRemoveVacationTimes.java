@@ -15,9 +15,9 @@ public class GymRemoveVacationTimes {
         for (String vacationTime : vacationTimes) {
             // Check the time
             new TimeInterval(vacationTime);
-
-            databaseActions.add(GymDatabaseActionBuilder.updateRemoveVacationTime(gymID, vacationTime));
         }
+
+        databaseActions.add(GymDatabaseActionBuilder.updateRemoveVacationTimes(gymID, vacationTimes));
 
         return databaseActions;
     }

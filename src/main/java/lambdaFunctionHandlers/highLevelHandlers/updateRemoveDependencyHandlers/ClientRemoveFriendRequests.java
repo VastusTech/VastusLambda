@@ -11,9 +11,7 @@ public class ClientRemoveFriendRequests {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
         // Get all the actions for this process
-        for (String friendID : friendIDs) {
-            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriendRequest(clientID, friendID));
-        }
+        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriendRequests(clientID, friendIDs));
 
         return databaseActions;
     }

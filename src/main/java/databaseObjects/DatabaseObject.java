@@ -74,9 +74,12 @@ abstract public class DatabaseObject {
 
     static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = new HashMap<>();
-        item.put("id", new AttributeValue("null"));
-        item.put("item_type", new AttributeValue("null"));
-        item.put("time_created", new AttributeValue("null"));
+        // item.put("id", new AttributeValue("null"));
+        item.put("id", null);
+        // item.put("item_type", new AttributeValue("null"));
+        item.put("item_type", null);
+        // item.put("time_created", new AttributeValue("null"));
+        item.put("time_created", null);
         item.put("marker", new AttributeValue().withN("0"));
         return item;
     }

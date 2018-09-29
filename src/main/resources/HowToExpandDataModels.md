@@ -31,6 +31,12 @@ required, but with a check if it is not).
 * go into ClientResponse.java and add the definition and the setting in the constructor (as a String or String[]).
 * Finally, go into LambdaRequest.java, add the attribute name into the AttributeName enum, and then include it in the
  proper 
+ 
+ #### The Choices involved
+ * Decide the name and type of the java object
+ * Decide the name and type of the database object
+ * Whether or not it is necessary for creation
+ * Add a checkHandler if necessary
 
 ## Creating a new item type
 

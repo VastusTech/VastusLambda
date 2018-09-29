@@ -3,16 +3,14 @@ package main.java.lambdaFunctionHandlers;
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseOperations.DatabaseAction;
+import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateClient;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateGym;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.readHandlers.*;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.ClientAddFriends;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.ClientAddToWorkout;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.GymAddVacationTimes;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.TrainerAddAvailableTimes;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.requestObjects.*;
@@ -261,7 +259,7 @@ public class LambdaRequest {
 
         }
         catch (IllegalArgumentException e) {
-            throw new Exception("Action: \"" + action + "\" not recognized!");
+            throw new Exception("Action: \"" + action + "\" not recognized! Error: " + e.getLocalizedMessage());
         }
     }
 
@@ -289,20 +287,25 @@ public class LambdaRequest {
                 }
             }
             int numCreateRequest = 0;
-            if (createReviewRequest != null) {
+            if (createClientRequest != null) {
                 numCreateRequest++;
+                Constants.debugLog("Has a create client request!\n");
             }
             if (createTrainerRequest != null) {
                 numCreateRequest++;
+                Constants.debugLog("Has a create trainer request!\n");
             }
             if (createGymRequest != null) {
                 numCreateRequest++;
+                Constants.debugLog("Has a create gym request!\n");
             }
             if (createWorkoutRequest != null) {
                 numCreateRequest++;
+                Constants.debugLog("Has a create workout request!\n");
             }
             if (createReviewRequest != null) {
                 numCreateRequest++;
+                Constants.debugLog("Has a create review request!\n");
             }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
@@ -334,7 +337,7 @@ public class LambdaRequest {
             }
         }
         catch (IllegalArgumentException e) {
-            throw new Exception("Item Type: \"" + itemType + "\" not recognized!");
+            throw new Exception("Item Type: " + itemType + " not recognized! Error: " + e.getLocalizedMessage());
         }
     }
 
@@ -360,7 +363,7 @@ public class LambdaRequest {
             }
         }
         catch (IllegalArgumentException e) {
-            throw new Exception("Item Type: \"" + itemType + "\" not recognized!");
+            throw new Exception("Item Type: " + itemType + " not recognized! Error: " + e.getLocalizedMessage());
         }
     }
 
@@ -382,7 +385,7 @@ public class LambdaRequest {
             }
         }
         catch (IllegalArgumentException e) {
-            throw new Exception("Item Type: \"" + itemType + "\" not recognized!");
+            throw new Exception("Item Type: " + itemType + " not recognized! Error: " + e.getLocalizedMessage());
         }
     }
 
@@ -393,7 +396,7 @@ public class LambdaRequest {
 
     public void handleUpdateSet(String id) throws Exception {
         // switch all attributes, then if necessary, item type
-        List<DatabaseAction> databaseActions;
+        DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         if (attributeValues.length != 1 && !attributeName.equals("weeklyHours")) {
             throw new Exception("For updating " + attributeName + " on " + itemType + "attributeValues must be only 1" +
@@ -408,7 +411,7 @@ public class LambdaRequest {
             switch (AttributeName.valueOf(attributeName)) {
                 case name:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        databaseActions = UserUpdateName.getActions(id, itemType, attributeValues[0]);
+                        databaseActionCompiler.addAll(UserUpdateName.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -416,7 +419,7 @@ public class LambdaRequest {
                     break;
                 case gender:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        databaseActions = UserUpdateGender.getActions(id, itemType, attributeValues[0]);
+                        databaseActionCompiler.addAll(UserUpdateGender.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -424,7 +427,7 @@ public class LambdaRequest {
                     break;
                 case birthday:
                     if (itemType.equals("Client") || itemType.equals("Trainer")) {
-                        databaseActions = UserUpdateBirthday.getActions(id, itemType, attributeValues[0]);
+                        databaseActionCompiler.addAll(UserUpdateBirthday.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -432,7 +435,7 @@ public class LambdaRequest {
                     break;
                 case foundingDay:
                     if (itemType.equals("Gym")) {
-                        databaseActions = GymUpdateFoundingDay.getActions(id, attributeValues[0]);
+                        databaseActionCompiler.addAll(GymUpdateFoundingDay.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -440,7 +443,7 @@ public class LambdaRequest {
                     break;
                 case email:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        databaseActions = UserUpdateEmail.getActions(id, itemType, attributeValues[0]);
+                        databaseActionCompiler.addAll(UserUpdateEmail.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -448,7 +451,8 @@ public class LambdaRequest {
                     break;
                 case profileImagePath:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        databaseActions = UserUpdateProfileImagePath.getActions(id, itemType, attributeValues[0]);
+                        databaseActionCompiler.addAll(UserUpdateProfileImagePath.getActions(id, itemType,
+                                attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -456,7 +460,7 @@ public class LambdaRequest {
                     break;
                 case bio:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        databaseActions = UserUpdateBio.getActions(id, itemType, attributeValues[0]);
+                        databaseActionCompiler.addAll(UserUpdateBio.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -464,7 +468,7 @@ public class LambdaRequest {
                     break;
                 case workoutSticker:
                     if (itemType.equals("Trainer")) {
-                        databaseActions = TrainerUpdateWorkoutSticker.getActions(id, attributeValues[0]);
+                        databaseActionCompiler.addAll(TrainerUpdateWorkoutSticker.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -472,7 +476,8 @@ public class LambdaRequest {
                     break;
                 case preferredIntensity:
                     if (itemType.equals("Trainer")) {
-                        databaseActions = TrainerUpdatePreferredIntensity.getActions(id, attributeValues[0]);
+                        databaseActionCompiler.addAll(TrainerUpdatePreferredIntensity.getActions(id,
+                                attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -480,7 +485,7 @@ public class LambdaRequest {
                     break;
                 case workoutCapacity:
                     if (itemType.equals("Trainer")) {
-                        databaseActions = TrainerUpdateWorkoutCapacity.getActions(id, attributeValues[0]);
+                        databaseActionCompiler.addAll(TrainerUpdateWorkoutCapacity.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -488,7 +493,7 @@ public class LambdaRequest {
                     break;
                 case workoutPrice:
                     if (itemType.equals("Trainer")) {
-                        databaseActions = TrainerUpdateWorkoutPrice.getActions(id, attributeValues[0]);
+                        databaseActionCompiler.addAll(TrainerUpdateWorkoutPrice.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -496,7 +501,7 @@ public class LambdaRequest {
                     break;
                 case address:
                     if (itemType.equals("Gym")) {
-                        databaseActions = GymUpdateAddress.getActions(id, attributeValues[0]);
+                        databaseActionCompiler.addAll(GymUpdateAddress.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -504,7 +509,7 @@ public class LambdaRequest {
                     break;
                 case weeklyHours:
                     if (itemType.equals("Gym")) {
-                        databaseActions = GymUpdateWeeklyHours.getActions(id, attributeValues);
+                        databaseActionCompiler.addAll(GymUpdateWeeklyHours.getActions(id, attributeValues));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -512,7 +517,7 @@ public class LambdaRequest {
                     break;
                 case sessionCapacity:
                     if (itemType.equals("Gym")) {
-                        databaseActions = GymUpdateSessionCapacity.getActions(id, attributeValues[0]);
+                        databaseActionCompiler.addAll(GymUpdateSessionCapacity.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -520,7 +525,7 @@ public class LambdaRequest {
                     break;
                 case gymType:
                     if (itemType.equals("Gym")) {
-                        databaseActions = GymUpdateGymType.getActions(id, attributeValues[0]);
+                        databaseActionCompiler.addAll(GymUpdateGymType.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -528,7 +533,7 @@ public class LambdaRequest {
                     break;
                 case paymentSplit:
                     if (itemType.equals("Gym")) {
-                        databaseActions = GymUpdatePaymentSplit.getActions(id, attributeValues[0]);
+                        databaseActionCompiler.addAll(GymUpdatePaymentSplit.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
@@ -539,22 +544,22 @@ public class LambdaRequest {
             }
         }
         catch (IllegalArgumentException e) {
-            throw new Exception("AttributeName: " + attributeName + " not recognized!");
+            throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
+        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
     }
 
     public void handleUpdateAdd(String id) throws Exception {
         // switch all attributes, then if necessary, item type
-        List<DatabaseAction> databaseActions = new ArrayList<>();
+        DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case scheduledWorkouts:
                     if (itemType.equals("Client")) {
                         if (attributeValues.length == 1) {
-                            databaseActions = ClientAddToWorkout.getActions(id, attributeValues[0]);
+                            databaseActionCompiler.addAll(ClientAddToWorkout.getActions(id, attributeValues[0]));
                         }
                         else {
                             throw new Exception("For updating " + attributeName + " on " + itemType +
@@ -568,7 +573,7 @@ public class LambdaRequest {
                     break;
                 case friends:
                     if (itemType.equals("Client")) {
-                        databaseActions = ClientAddFriends.getActions(id, attributeValues);
+                        databaseActionCompiler.addAll(ClientAddFriends.getActions(id, attributeValues));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -577,19 +582,7 @@ public class LambdaRequest {
                     break;
                 case friendRequests:
                     if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            if (!fromID.equals(attributeValues[0])) {
-                                databaseActions.add(ClientDatabaseActionBuilder.updateAddFriendRequest(id,
-                                        attributeValues[0]));
-                            }
-                            else {
-                                throw new Exception("He tried to make himself his own friend! The absolute madlad.");
-                            }
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActionCompiler.addAll(ClientAddFriendRequests.getActions(id, attributeValues));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -598,7 +591,7 @@ public class LambdaRequest {
                     break;
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
-                        databaseActions = TrainerAddAvailableTimes.getActions(id, attributeValues);
+                        databaseActionCompiler.addAll(TrainerAddAvailableTimes.getActions(id, attributeValues));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -607,7 +600,7 @@ public class LambdaRequest {
                     break;
                 case vacationTimes:
                     if (itemType.equals("Gym")) {
-                        databaseActions = GymAddVacationTimes.getActions(id, attributeValues);
+                        databaseActionCompiler.addAll(GymAddVacationTimes.getActions(id, attributeValues));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -619,22 +612,22 @@ public class LambdaRequest {
             }
         }
         catch (IllegalArgumentException e) {
-            throw new Exception("AttributeName: " + attributeName + " not recognized!");
+            throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
+        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
     }
 
     public void handleUpdateRemove(String id) throws Exception {
         // switch all attributes, then if necessary, item type
-        List<DatabaseAction> databaseActions = new ArrayList<>();
+        DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case scheduledWorkouts:
                     if (itemType.equals("Client")) {
                         if (attributeValues.length == 1) {
-                            databaseActions = ClientRemoveFromWorkout.getActions(id, attributeValues[0]);
+                            databaseActionCompiler.addAll(ClientRemoveFromWorkout.getActions(id, attributeValues[0]));
                         }
                         else {
                             throw new Exception("For updating " + attributeName + " on " + itemType +
@@ -648,7 +641,7 @@ public class LambdaRequest {
                     break;
                 case friends:
                     if (itemType.equals("Client")) {
-                        databaseActions = ClientRemoveFriends.getActions(id, attributeValues);
+                        databaseActionCompiler.addAll(ClientRemoveFriends.getActions(id, attributeValues));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -657,7 +650,7 @@ public class LambdaRequest {
                     break;
                 case friendRequests:
                     if (itemType.equals("Client")) {
-                        databaseActions = ClientRemoveFriendRequests.getActions(id, attributeValues);
+                        databaseActionCompiler.addAll(ClientRemoveFriendRequests.getActions(id, attributeValues));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -666,7 +659,7 @@ public class LambdaRequest {
                     break;
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
-                        databaseActions = TrainerRemoveAvailableTimes.getActions(id, attributeValues);
+                        databaseActionCompiler.addAll(TrainerRemoveAvailableTimes.getActions(id, attributeValues));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -675,7 +668,7 @@ public class LambdaRequest {
                     break;
                 case vacationTimes:
                     if (itemType.equals("Gym")) {
-                        databaseActions = GymRemoveVacationTimes.getActions(id, attributeValues);
+                        databaseActionCompiler.addAll(GymRemoveVacationTimes.getActions(id, attributeValues));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
@@ -687,40 +680,41 @@ public class LambdaRequest {
             }
         }
         catch (IllegalArgumentException e) {
-            throw new Exception("AttributeName: " + attributeName + " not recognized!");
+            throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
+        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
     }
 
     public void handleDelete(String id) throws Exception {
-        List<DatabaseAction> databaseActions;
+        DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
+
         try {
             switch (ItemType.valueOf(itemType)) {
                 case Client:
-                    databaseActions = DeleteClient.getActions(id);
+                    databaseActionCompiler.addAll(DeleteClient.getActions(id));
                     break;
                 case Trainer:
-                    databaseActions = DeleteTrainer.getActions(id);
+                    databaseActionCompiler.addAll(DeleteTrainer.getActions(id));
                     break;
                 case Gym:
-                    databaseActions = DeleteGym.getActions(id);
+                    databaseActionCompiler.addAll(DeleteGym.getActions(id));
                     break;
                 // TODO MAKE SURE THESE PEOPLE ARE ALLOWED TO DO THIS (Workout and Review)
                 case Workout:
-                    databaseActions = DeleteWorkout.getActions(id);
+                    databaseActionCompiler.addAll(DeleteWorkout.getActions(id));
                     break;
                 case Review:
-                    databaseActions = DeleteReview.getActions(id);
+                    databaseActionCompiler.addAll(DeleteReview.getActions(id));
                     break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
         }
         catch (IllegalArgumentException e) {
-            throw new Exception("Item Type: \"" + itemType + "\" not recognized!");
+            throw new Exception("Item Type: \"" + itemType + "\" not recognized! Error: " + e.getLocalizedMessage());
         }
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
+        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
     }
 
     public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String

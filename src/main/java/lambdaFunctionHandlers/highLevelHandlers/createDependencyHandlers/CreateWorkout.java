@@ -1,6 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import main.java.databaseOperations.DatabaseAction;
+import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
@@ -19,37 +20,37 @@ public class CreateWorkout {
                     && createWorkoutRequest.sticker != null && createWorkoutRequest.intensity != null &&
                     createWorkoutRequest.price != null) {
 
-                List<DatabaseAction> databaseActions = new ArrayList<>();
+                DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // TODO Check to see if the request features are well formed (i.e not empty string or invalid date)
 
                 // Create Workout
-                databaseActions.add(WorkoutDatabaseActionBuilder.create(createWorkoutRequest));
+                databaseActionCompiler.add(WorkoutDatabaseActionBuilder.create(createWorkoutRequest));
 
                 // Add to clients' scheduled workouts
                 // Add to clients' scheduled workout times
                 for (String clientID : createWorkoutRequest.clientIDs) {
-                    databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(clientID, null,
+                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(clientID, null,
                             true));
-                    databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledWorkoutTime(clientID,
+                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledWorkoutTime(clientID,
                             createWorkoutRequest.time));
                 }
 
                 // Add to trainer's scheduled workouts
                 // Add to trainer's scheduled workout times
-                databaseActions.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkout
+                databaseActionCompiler.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkout
                         (createWorkoutRequest.trainerID, null, true));
-                databaseActions.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkoutTime
+                databaseActionCompiler.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkoutTime
                         (createWorkoutRequest.trainerID, createWorkoutRequest.time));
 
                 // Add to gym's scheduled workouts
                 // Add to gym's scheduled workout times
-                databaseActions.add(GymDatabaseActionBuilder.updateAddScheduledWorkout
+                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledWorkout
                         (createWorkoutRequest.gymID, null, true));
-                databaseActions.add(GymDatabaseActionBuilder.updateAddScheduledWorkoutTime
+                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledWorkoutTime
                         (createWorkoutRequest.gymID, createWorkoutRequest.time));
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActions);
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
             }
             else {
                 throw new Exception("createWorkoutRequest is missing required fields!");

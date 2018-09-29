@@ -7,7 +7,9 @@ public class Constants {
     // TODO PUT THESE: workoutShortestTimeSectionInterval, idLength, numPrefix, databaseTableName, storageBucketName,
     // TODO timeoutSeconds, userPoolName, userPoolID, userPoolClientID, userPoolSecretKey, nullAttributeValue
 
-    public static LambdaLogger logger;
+    private static LambdaLogger logger;
+    private static boolean ifDebug = Boolean.parseBoolean(System.getenv("ifDebug"));
+
     public static int workoutShortestTimeSectionInterval = Integer.parseInt(System.getenv
             ("workoutShortestTimeSectionInterval"));
 
@@ -28,5 +30,20 @@ public class Constants {
     public static String userPoolClientID = System.getenv("userPoolClientID");
     public static String userPoolSecretKey = System.getenv("userPoolSecretKey");
 
-    public static String nullAttributeValue = System.getenv("nullAttributeValue");
+    // public static String nullAttributeValue = System.getenv("nullAttributeValue");
+
+    public static void debugLog(String message) {
+        if (ifDebug) {
+            if (message != null) {
+                Constants.logger.log(message + "\n");
+            }
+            else {
+                Constants.logger.log("Tried to log a null message!\n");
+            }
+        }
+    }
+
+    public static void setLogger(LambdaLogger logger) {
+        Constants.logger = logger;
+    }
 }

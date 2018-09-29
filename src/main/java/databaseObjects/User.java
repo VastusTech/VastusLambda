@@ -70,12 +70,18 @@ abstract public class User extends DatabaseObject{
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
-        item.put("name", new AttributeValue(Constants.nullAttributeValue));
-        item.put("gender", new AttributeValue(Constants.nullAttributeValue));
-        item.put("birthday", new AttributeValue(Constants.nullAttributeValue));
-        item.put("email", new AttributeValue(Constants.nullAttributeValue));
-        item.put("username", new AttributeValue(Constants.nullAttributeValue));
-        item.put("profile_image_path", new AttributeValue(Constants.nullAttributeValue));
+        // item.put("name", new AttributeValue(Constants.nullAttributeValue));
+        item.put("name", null);
+        // item.put("gender", new AttributeValue(Constants.nullAttributeValue));
+        item.put("gender", null);
+        // item.put("birthday", new AttributeValue(Constants.nullAttributeValue));
+        item.put("birthday", null);
+        // item.put("email", new AttributeValue(Constants.nullAttributeValue));
+        item.put("email", null);
+        // item.put("username", new AttributeValue(Constants.nullAttributeValue));
+        item.put("username", null);
+        // item.put("profile_image_path", new AttributeValue(Constants.nullAttributeValue));
+        item.put("profile_image_path", null);
         item.put("scheduled_workouts", null);
         item.put("completed_workouts", null);
         item.put("scheduled_workout_times", null);
@@ -85,7 +91,8 @@ abstract public class User extends DatabaseObject{
         item.put("friendliness_rating", new AttributeValue("0.0"));
         item.put("effectiveness_rating", new AttributeValue("0.0"));
         item.put("reliability_rating", new AttributeValue("0.0"));
-        item.put("bio", new AttributeValue(Constants.nullAttributeValue));
+        // item.put("bio", new AttributeValue(Constants.nullAttributeValue));
+        item.put("bio", null);
         return item;
     }
 }

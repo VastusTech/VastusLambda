@@ -32,10 +32,13 @@ public class Trainer extends User {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("item_type", new AttributeValue("Trainer"));
-        item.put("gymID", new AttributeValue(Constants.nullAttributeValue));
+        // item.put("gymID", new AttributeValue(Constants.nullAttributeValue));
+        item.put("gymID", null);
         item.put("available_times", null);
-        item.put("workout_sticker", new AttributeValue(Constants.nullAttributeValue));
-        item.put("preferred_intensity", new AttributeValue(Constants.nullAttributeValue));
+        // item.put("workout_sticker", new AttributeValue(Constants.nullAttributeValue));
+        item.put("workout_sticker", null);
+        // item.put("preferred_intensity", new AttributeValue(Constants.nullAttributeValue));
+        item.put("preferred_intensity", null);
         item.put("workout_capacity", new AttributeValue("4"));
         item.put("workout_price", new AttributeValue("80"));
         return item;
