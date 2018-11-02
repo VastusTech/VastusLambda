@@ -2,7 +2,7 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 
 public class CreatePartyRequest {
     // Required
-    public String ownerID;
+    public String owner;
     public String time;
     public String capacity;
     public String address;
@@ -10,28 +10,28 @@ public class CreatePartyRequest {
 
     // Optional
     public String description;
-    public String[] memberIDs;
+    public String[] members;
     public String access;
 
-    public CreatePartyRequest(String ownerID, String time, String capacity, String address, String title, String description, String[] memberIDs, String access) {
-        this.ownerID = ownerID;
+    public CreatePartyRequest(String owner, String time, String capacity, String address, String title, String description, String[] members, String access) {
+        this.owner = owner;
         this.time = time;
         this.capacity = capacity;
         this.address = address;
         this.title = title;
         this.description = description;
-        this.memberIDs = memberIDs;
+        this.members = members;
         this.access = access;
     }
 
     public CreatePartyRequest() {}
 
-    public String getOwnerID() {
-        return ownerID;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setOwnerID(String ownerID) {
-        this.ownerID = ownerID;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getTime() {
@@ -74,12 +74,12 @@ public class CreatePartyRequest {
         this.description = description;
     }
 
-    public String[] getMemberIDs() {
-        return memberIDs;
+    public String[] getMembers() {
+        return members;
     }
 
-    public void setMemberIDs(String[] memberIDs) {
-        this.memberIDs = memberIDs;
+    public void setMembers(String[] members) {
+        this.members = members;
     }
 
     public String getAccess() {

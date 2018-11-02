@@ -140,7 +140,7 @@ public class DatabaseActionCompiler {
                     intoItem.put(attributeName, newAttributeValue);
                 }
             }
-            else if (action.equals("REMOVE")) {
+            else if (action.equals("DELETE")) {
                 // Remove it
                 AttributeValue intoAttributeValue = intoItem.get(attributeName);
                 if (intoAttributeValue != null) {
@@ -171,7 +171,7 @@ public class DatabaseActionCompiler {
                     throw new Exception("INTERNAL ERROR: attempting to overwrite an ADD update in a multi-facted " +
                             "update");
                 }
-                else if (action.equals("REMOVE")) {
+                else if (action.equals("DELETE")) {
                     throw new Exception("INTERNAL ERROR: attempting to overwrite a REMOVE update in a multi-facted " +
                             "update");
                 }

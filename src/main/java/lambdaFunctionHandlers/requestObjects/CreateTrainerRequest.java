@@ -8,7 +8,7 @@ public class CreateTrainerRequest {
     public String birthday;
     public String email;
     public String username;
-    public String gymID;
+    public String gym;
     public String workoutSticker;
     public String preferredIntensity;
 
@@ -18,14 +18,14 @@ public class CreateTrainerRequest {
     public String workoutPrice;
 
     public CreateTrainerRequest(String name, String gender, String birthday, String email, String username, String
-            gymID, String workoutSticker, String preferredIntensity, String bio, String workoutCapacity, String
+            gym, String workoutSticker, String preferredIntensity, String bio, String workoutCapacity, String
             workoutPrice) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.email = email;
         this.username = username;
-        this.gymID = gymID;
+        this.gym = gym;
         this.workoutSticker = workoutSticker;
         this.preferredIntensity = preferredIntensity;
         this.bio = bio;
@@ -75,12 +75,12 @@ public class CreateTrainerRequest {
         this.username = username;
     }
 
-    public String getGymID() {
-        return gymID;
+    public String getGym() {
+        return gym;
     }
 
-    public void setGymID(String gymID) {
-        this.gymID = gymID;
+    public void setGym(String gym) {
+        this.gym = gym;
     }
 
     public String getBio() {

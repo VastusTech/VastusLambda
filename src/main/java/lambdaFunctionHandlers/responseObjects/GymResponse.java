@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GymResponse extends ObjectResponse {
-    public String itemType = "Gym";
+    public String item_type = "Gym";
     public String name;
     public String foundingDay;
     public String email;

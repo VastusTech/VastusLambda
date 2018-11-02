@@ -21,15 +21,15 @@ public class Client extends User {
         super(item);
         this.friends = item.getStringSet("friends");
         if (friends == null) { this.friends = new HashSet<>(); }
-        this.friendRequests = item.getStringSet("friend_requests");
+        this.friendRequests = item.getStringSet("friendRequests");
         if (friendRequests == null) { this.friendRequests = new HashSet<>(); }
-        this.scheduledParties = item.getStringSet("scheduled_parties");
+        this.scheduledParties = item.getStringSet("scheduledParties");
         if (scheduledParties == null) { this.scheduledParties = new HashSet<>(); }
-        this.scheduledChallenges = item.getStringSet("scheduled_challenges");
+        this.scheduledChallenges = item.getStringSet("scheduledChallenges");
         if (scheduledChallenges == null) { this.scheduledChallenges = new HashSet<>(); }
-        this.completedParties = item.getStringSet("completed_parties");
+        this.completedParties = item.getStringSet("completedParties");
         if (completedParties == null) { this.completedParties = new HashSet<>(); }
-        this.completedChallenges = item.getStringSet("completed_challenges");
+        this.completedChallenges = item.getStringSet("completedChallenges");
         if (completedChallenges == null) { this.completedChallenges = new HashSet<>(); }
     }
 

@@ -20,18 +20,18 @@ public class Gym extends User {
     Gym(Item item) throws Exception {
         super(item);
         this.address = item.getString("address");
-        this.trainerIDs = item.getStringSet("trainerIDs");
+        this.trainerIDs = item.getStringSet("trainers");
         if (trainerIDs == null) { this.trainerIDs = new HashSet<>(); }
-        Set<String> weeklyHours = item.getStringSet("weekly_hours");
+        Set<String> weeklyHours = item.getStringSet("weeklyHours");
         if (weeklyHours != null) { this.weeklyHours = TimeInterval.getTimeIntervals(weeklyHours); }
         else { this.weeklyHours = new ArrayList<>(); }
-        Set<String> vacationTimes = item.getStringSet("vacation_times");
+        Set<String> vacationTimes = item.getStringSet("vacationTimes");
         if (vacationTimes != null) { this.vacationTimes = TimeInterval.getTimeIntervals(vacationTimes); }
         else { this.vacationTimes = new ArrayList<>(); }
-        String sessionCapacity = item.getString("session_capacity");
+        String sessionCapacity = item.getString("sessionCapacity");
         if (sessionCapacity != null) { this.sessionCapacity = Integer.parseInt(sessionCapacity); }
-        this.gymType = item.getString("gym_type");
-        String paymentSplit = item.getString("payment_split");
+        this.gymType = item.getString("gymType");
+        String paymentSplit = item.getString("paymentSplit");
         if (paymentSplit != null) { this.paymentSplit = Float.parseFloat(paymentSplit); }
     }
 
@@ -43,9 +43,9 @@ public class Gym extends User {
         // item.put("weekly_hours", null);
         // item.put("vacation_times", null);
         // TODO Put a default session capacity and a default payment split
-        item.put("session_capacity", new AttributeValue("10"));
-        item.put("gym_type", new AttributeValue("independent"));
-        item.put("payment_split", new AttributeValue("50"));
+        item.put("sessionCapacity", new AttributeValue("10"));
+        item.put("gymType", new AttributeValue("independent"));
+        item.put("paymentSplit", new AttributeValue("50"));
         return item;
     }
 

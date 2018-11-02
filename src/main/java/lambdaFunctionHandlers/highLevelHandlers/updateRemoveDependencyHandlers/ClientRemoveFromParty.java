@@ -20,7 +20,7 @@ public class ClientRemoveFromParty {
                 .toString()));
 
         // And we delete ourselves from the workout
-        databaseActions.add(PartyDatabaseActionBuilder.updateRemoveMemberID(partyID, clientID));
+        databaseActions.add(PartyDatabaseActionBuilder.updateRemoveMember(partyID, clientID));
 
         return databaseActions;
     }

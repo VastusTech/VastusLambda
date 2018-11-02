@@ -17,7 +17,7 @@ import java.util.*;
 public class CreateReview {
     public static String handle(CreateReviewRequest createReviewRequest, String surveyWorkoutID) throws Exception {
         if (createReviewRequest != null) {
-            if (createReviewRequest.byID != null && createReviewRequest.aboutID != null && createReviewRequest
+            if (createReviewRequest.by != null && createReviewRequest.about != null && createReviewRequest
                     .friendlinessRating != null && createReviewRequest.effectivenessRating != null &&
                     createReviewRequest.reliabilityRating != null && createReviewRequest.description != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
@@ -26,29 +26,27 @@ public class CreateReview {
                 databaseActionCompiler.add(ReviewDatabaseActionBuilder.create(createReviewRequest));
 
                 // Add to by's reviews by
-                String byID = createReviewRequest.byID;
+                String byID = createReviewRequest.by;
                 String byItemType = DatabaseObject.getItemType(byID);
                 if (byItemType == null) {
-                    throw new Exception("Review ByID is invalid!");
+                    throw new Exception("Review By is invalid!");
                 }
-                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddReviewBy(createReviewRequest.byID,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddReviewBy(createReviewRequest.by,
                         byItemType, null, true));
 
                 // Add to about's reviews about
-                String aboutID = createReviewRequest.aboutID;
-                Constants.debugLog(aboutID);
-                String aboutItemType = DatabaseObject.getItemType(aboutID);
-                Constants.debugLog(aboutItemType);
+                String about = createReviewRequest.about;
+                String aboutItemType = DatabaseObject.getItemType(about);
                 if (aboutItemType == null) {
                     throw new Exception("Review AboutID is invalid!");
                 }
-                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddReviewAbout(aboutID, aboutItemType,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddReviewAbout(about, aboutItemType,
                         null, true));
 
                 // Calculate about's ratings
                 Map<String, AttributeValue> aboutKey = new HashMap<>();
                 aboutKey.put("item_type", new AttributeValue(aboutItemType));
-                aboutKey.put("id", new AttributeValue(aboutID));
+                aboutKey.put("id", new AttributeValue(about));
                 User user = DynamoDBHandler.getInstance().readItem(aboutKey);
                 float friendlinessRating = Float.parseFloat(createReviewRequest.friendlinessRating);
                 float effectivenessRating = Float.parseFloat(createReviewRequest.effectivenessRating);
@@ -66,11 +64,11 @@ public class CreateReview {
                         reliabilityRating) / (numReviews + 1);
 
                 // Updates the about item
-                databaseActionCompiler.add(UserDatabaseActionBuilder.updateFriendlinessRating(aboutID,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateFriendlinessRating(about,
                         aboutItemType, Float.toString(newFriendlinessRating)));
-                databaseActionCompiler.add(UserDatabaseActionBuilder.updateEffectivenessRating(aboutID,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateEffectivenessRating(about,
                         aboutItemType, Float.toString(newEffectivenessRating)));
-                databaseActionCompiler.add(UserDatabaseActionBuilder.updateReliabilityRating(aboutID,
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateReliabilityRating(about,
                         aboutItemType, Float.toString(newReliabilityRating)));
 
                 if (surveyWorkoutID != null) {

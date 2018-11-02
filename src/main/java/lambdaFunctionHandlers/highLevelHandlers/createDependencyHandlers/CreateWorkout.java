@@ -16,8 +16,8 @@ import java.util.List;
 public class CreateWorkout {
     public static String handle(CreateWorkoutRequest createWorkoutRequest) throws Exception {
         if (createWorkoutRequest != null) {
-            if (createWorkoutRequest.time != null && createWorkoutRequest.trainerID != null && createWorkoutRequest
-                    .clientIDs != null && createWorkoutRequest.gymID != null && createWorkoutRequest.capacity != null
+            if (createWorkoutRequest.time != null && createWorkoutRequest.trainer != null && createWorkoutRequest
+                    .clients != null && createWorkoutRequest.gym != null && createWorkoutRequest.capacity != null
                     && createWorkoutRequest.sticker != null && createWorkoutRequest.intensity != null &&
                     createWorkoutRequest.price != null) {
 
@@ -34,26 +34,26 @@ public class CreateWorkout {
 
                 // Add to clients' scheduled workouts
                 // Add to clients' scheduled workout times
-                for (String clientID : createWorkoutRequest.clientIDs) {
-                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(clientID, null,
+                for (String client : createWorkoutRequest.clients) {
+                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(client, null,
                             true));
-                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(clientID,
+                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(client,
                             createWorkoutRequest.time));
                 }
 
                 // Add to trainer's scheduled workouts
                 // Add to trainer's scheduled workout times
                 databaseActionCompiler.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkout
-                        (createWorkoutRequest.trainerID, null, true));
+                        (createWorkoutRequest.trainer, null, true));
                 databaseActionCompiler.add(TrainerDatabaseActionBuilder.updateAddScheduledTime
-                        (createWorkoutRequest.trainerID, createWorkoutRequest.time));
+                        (createWorkoutRequest.trainer, createWorkoutRequest.time));
 
                 // Add to gym's scheduled workouts
                 // Add to gym's scheduled workout times
                 databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledWorkout
-                        (createWorkoutRequest.gymID, null, true));
+                        (createWorkoutRequest.gym, null, true));
                 databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledTime
-                        (createWorkoutRequest.gymID, createWorkoutRequest.time));
+                        (createWorkoutRequest.gym, createWorkoutRequest.time));
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
             }

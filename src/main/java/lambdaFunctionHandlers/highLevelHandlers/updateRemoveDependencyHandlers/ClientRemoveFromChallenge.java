@@ -20,7 +20,7 @@ public class ClientRemoveFromChallenge {
                 .toString()));
 
         // And we delete ourselves from the workout
-        databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMemberID(challengeID, clientID));
+        databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMember(challengeID, clientID));
 
         return databaseActions;
     }

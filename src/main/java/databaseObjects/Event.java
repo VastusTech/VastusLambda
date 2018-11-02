@@ -8,18 +8,18 @@ import java.util.Map;
 import java.util.Set;
 
 abstract public class Event extends DatabaseObject {
-    public String ownerID;
+    public String owner;
     public TimeInterval time;
-    public Set<String> memberIDs;
+    public Set<String> members;
     public int capacity;
     public String access;
 
     public Event(Item item) throws Exception {
         super(item);
-        this.ownerID = item.getString("ownerID");
+        this.owner = item.getString("owner");
         this.time = new TimeInterval(item.getString("time"));
-        this.memberIDs = item.getStringSet("memberIDs");
-        if (this.memberIDs == null) { this.memberIDs = new HashSet<>(); }
+        this.members = item.getStringSet("members");
+        if (this.members == null) { this.members = new HashSet<>(); }
         this.capacity = Integer.parseInt(item.getString("capacity"));
         this.access = item.getString("access");
     }

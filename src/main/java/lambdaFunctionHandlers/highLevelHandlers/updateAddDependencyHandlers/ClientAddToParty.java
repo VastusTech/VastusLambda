@@ -22,7 +22,7 @@ public class ClientAddToParty {
         databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledTime(clientID, party.time.toString
                 ()));
         // Add to workout's clients
-        databaseActions.add(PartyDatabaseActionBuilder.updateAddMemberID(partyID, clientID));
+        databaseActions.add(PartyDatabaseActionBuilder.updateAddMember(partyID, clientID));
 
         return databaseActions;
     }

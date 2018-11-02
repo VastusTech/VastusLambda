@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientResponse extends ObjectResponse {
-    public String itemType = "Client";
+    public String item_type = "Client";
     public String name;
     public String gender;
     public String birthday;

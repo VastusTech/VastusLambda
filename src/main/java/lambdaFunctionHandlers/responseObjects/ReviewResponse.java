@@ -3,9 +3,9 @@ package main.java.lambdaFunctionHandlers.responseObjects;
 import main.java.databaseObjects.Review;
 
 public class ReviewResponse extends ObjectResponse {
-    public String itemType = "Review";
-    public String byID;
-    public String aboutID;
+    public String item_type = "Review";
+    public String by;
+    public String about;
     public String friendlinessRating;
     public String effectivenessRating;
     public String reliabilityRating;
@@ -13,8 +13,8 @@ public class ReviewResponse extends ObjectResponse {
 
     public ReviewResponse(Review review) {
         super(review.id);
-        this.byID = review.byID;
-        this.aboutID = review.aboutID;
+        this.by = review.by;
+        this.about = review.about;
         this.friendlinessRating = Float.toString(review.friendlinessRating);
         this.effectivenessRating = Float.toString(review.effectivenessRating);
         this.reliabilityRating = Float.toString(review.reliabilityRating);

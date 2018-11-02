@@ -44,7 +44,7 @@ abstract public class DatabaseObject {
         this.itemType = item.getString("item_type");
         // TODO Surely there must be a better way to do this? Test if you just getString?
         this.marker = Integer.toString(item.getNumber("marker").intValueExact());
-        this.timeCreated = item.getString("time_created");
+        this.timeCreated = item.getString("timeCreated");
 
 //        this.item = new HashMap<>();
 //        this.key = new HashMap<>();
@@ -79,7 +79,7 @@ abstract public class DatabaseObject {
         // item.put("item_type", new AttributeValue("null"));
         item.put("item_type", null);
         // item.put("time_created", new AttributeValue("null"));
-        item.put("time_created", null);
+        item.put("timeCreated", null);
         item.put("marker", new AttributeValue().withN("0"));
         return item;
     }

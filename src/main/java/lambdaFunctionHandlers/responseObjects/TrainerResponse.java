@@ -24,7 +24,7 @@ public class TrainerResponse extends ObjectResponse {
     public String reliabilityRating;
     public String bio;
 
-    public String gymID;
+    public String gym;
     public String[] availableTimes;
     public String workoutSticker;
     public String preferredIntensity;
@@ -52,7 +52,7 @@ public class TrainerResponse extends ObjectResponse {
         this.effectivenessRating = Float.toString(trainer.effectivenessRating);
         this.reliabilityRating = Float.toString(trainer.reliabilityRating);
         this.bio = trainer.bio;
-        this.gymID = trainer.gymID;
+        this.gym = trainer.gym;
         List<String> availableTimes = new ArrayList<>();
         for (TimeInterval timeInterval : trainer.availableTimes) {
             availableTimes.add(timeInterval.toString());

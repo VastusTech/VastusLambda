@@ -23,13 +23,13 @@ public class TrainerDatabaseActionBuilder {
         item.put("birthday", new AttributeValue(createTrainerRequest.birthday));
         item.put("email", new AttributeValue(createTrainerRequest.email));
         item.put("username", new AttributeValue(createTrainerRequest.username));
-        item.put("gymID", new AttributeValue(createTrainerRequest.gymID));
-        item.put("workout_sticker", new AttributeValue(createTrainerRequest.workoutSticker));
-        item.put("preferred_intensity", new AttributeValue(createTrainerRequest.preferredIntensity));
+        item.put("gym", new AttributeValue(createTrainerRequest.gym));
+        item.put("workoutSticker", new AttributeValue(createTrainerRequest.workoutSticker));
+        item.put("preferredIntensity", new AttributeValue(createTrainerRequest.preferredIntensity));
         if (createTrainerRequest.bio != null) { item.put("bio", new AttributeValue(createTrainerRequest.bio)); }
-        if (createTrainerRequest.workoutCapacity != null) { item.put("workout_capacity", new AttributeValue
+        if (createTrainerRequest.workoutCapacity != null) { item.put("workoutCapacity", new AttributeValue
                 (createTrainerRequest.workoutCapacity)); }
-        if (createTrainerRequest.workoutPrice != null) { item.put("workout_price", new AttributeValue
+        if (createTrainerRequest.workoutPrice != null) { item.put("workoutPrice", new AttributeValue
                 (createTrainerRequest.workoutPrice)); }
         return new CreateDatabaseAction(item);
     }
@@ -54,21 +54,21 @@ public class TrainerDatabaseActionBuilder {
         return UserDatabaseActionBuilder.updateProfileImagePath(id, itemType, profileImagePath);
     }
 
-    public static DatabaseAction updateAddScheduledWorkout(String id, String workoutID, boolean ifWithCreate) throws
+    public static DatabaseAction updateAddScheduledWorkout(String id, String workout, boolean ifWithCreate) throws
             Exception {
-        return UserDatabaseActionBuilder.updateAddScheduledWorkout(id, itemType, workoutID, ifWithCreate);
+        return UserDatabaseActionBuilder.updateAddScheduledWorkout(id, itemType, workout, ifWithCreate);
     }
 
-    public static DatabaseAction updateRemoveScheduledWorkout(String id, String workoutID) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveScheduledWorkout(id, itemType, workoutID);
+    public static DatabaseAction updateRemoveScheduledWorkout(String id, String workout) throws Exception {
+        return UserDatabaseActionBuilder.updateRemoveScheduledWorkout(id, itemType, workout);
     }
 
-    public static DatabaseAction updateAddCompletedWorkout(String id, String workoutID) throws Exception {
-        return UserDatabaseActionBuilder.updateAddCompletedWorkout(id, itemType, workoutID);
+    public static DatabaseAction updateAddCompletedWorkout(String id, String workout) throws Exception {
+        return UserDatabaseActionBuilder.updateAddCompletedWorkout(id, itemType, workout);
     }
 
-    public static DatabaseAction updateRemoveCompletedWorkout(String id, String workoutID) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveCompletedWorkout(id, itemType, workoutID);
+    public static DatabaseAction updateRemoveCompletedWorkout(String id, String workout) throws Exception {
+        return UserDatabaseActionBuilder.updateRemoveCompletedWorkout(id, itemType, workout);
     }
 
     public static DatabaseAction updateAddScheduledTime(String id, String time) throws Exception {
@@ -101,21 +101,21 @@ public class TrainerDatabaseActionBuilder {
         return UserDatabaseActionBuilder.updateRemoveScheduledTime(id, itemType, time);
     }
 
-    public static DatabaseAction updateAddReviewBy(String id, String reviewID, boolean ifWithCreate) throws Exception {
-        return UserDatabaseActionBuilder.updateAddReviewBy(id, itemType, reviewID, ifWithCreate);
+    public static DatabaseAction updateAddReviewBy(String id, String review, boolean ifWithCreate) throws Exception {
+        return UserDatabaseActionBuilder.updateAddReviewBy(id, itemType, review, ifWithCreate);
     }
 
-    public static DatabaseAction updateRemoveReviewBy(String id, String reviewID) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveReviewBy(id, itemType, reviewID);
+    public static DatabaseAction updateRemoveReviewBy(String id, String review) throws Exception {
+        return UserDatabaseActionBuilder.updateRemoveReviewBy(id, itemType, review);
     }
 
-    public static DatabaseAction updateAddReviewAbout(String id, String reviewID, boolean ifWithCreate) throws
+    public static DatabaseAction updateAddReviewAbout(String id, String review, boolean ifWithCreate) throws
             Exception {
-        return UserDatabaseActionBuilder.updateAddReviewAbout(id, itemType, reviewID, ifWithCreate);
+        return UserDatabaseActionBuilder.updateAddReviewAbout(id, itemType, review, ifWithCreate);
     }
 
-    public static DatabaseAction updateRemoveReviewAbout(String id, String reviewID) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveReviewAbout(id, itemType, reviewID);
+    public static DatabaseAction updateRemoveReviewAbout(String id, String review) throws Exception {
+        return UserDatabaseActionBuilder.updateRemoveReviewAbout(id, itemType, review);
     }
 
     public static DatabaseAction updateFriendlinessRating(String id, String rating) throws Exception {
@@ -139,14 +139,14 @@ public class TrainerDatabaseActionBuilder {
 //    }
 
     public static DatabaseAction updateAddAvailableTimes(String id, String[] availableTimes) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "available_times", new AttributeValue(Arrays.asList
+        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(Arrays.asList
                 (availableTimes)), false, "ADD");
     }
 
     public static DatabaseAction updateRemoveAvailableTimes(String id, String[] availableTimes) throws Exception {
         List<TimeInterval> availableTimeIntervals = TimeInterval.getTimeIntervals(Arrays.asList(availableTimes));
-        return new UpdateDatabaseAction(id, itemType, "available_times", new AttributeValue(Arrays.asList
-                (availableTimes)), false, "REMOVE", new CheckHandler() {
+        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(Arrays.asList
+                (availableTimes)), false, "DELETE", new CheckHandler() {
             @Override
             public String isViable(DatabaseObject newObject) throws Exception {
                 Trainer trainer = (Trainer)newObject;
@@ -164,20 +164,20 @@ public class TrainerDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateWorkoutSticker(String id, String sticker) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workout_sticker", new AttributeValue(sticker), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "workoutSticker", new AttributeValue(sticker), false, "PUT");
     }
 
     public static DatabaseAction updatePreferredIntensity(String id, String intensity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "preferred_intensity", new AttributeValue(intensity), false,
+        return new UpdateDatabaseAction(id, itemType, "preferredIntensity", new AttributeValue(intensity), false,
                 "PUT");
     }
 
     public static DatabaseAction updateWorkoutCapacity(String id, String capacity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workout_capacity", new AttributeValue(capacity), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "workoutCapacity", new AttributeValue(capacity), false, "PUT");
     }
 
     public static DatabaseAction updateWorkoutPrice(String id, String price) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workout_price", new AttributeValue(price), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "workoutPrice", new AttributeValue(price), false, "PUT");
     }
 
     public static DatabaseAction delete(String id) {

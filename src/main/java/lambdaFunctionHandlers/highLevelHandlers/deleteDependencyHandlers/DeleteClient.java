@@ -29,24 +29,24 @@ public class DeleteClient {
         // TODO This should also be able to delete the workout potentially?
         // Remove from all scheduled workouts and completed workouts
         for (String workoutID : client.scheduledWorkouts) {
-            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClientID(workoutID, clientID));
+            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
             databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
         }
 
         // Also remove from missing reviews in the workouts
         for (String workoutID: client.completedWorkouts) {
-            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClientID(workoutID, clientID));
+            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
             databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
         }
 
         // Also remove from scheduled parties
         for (String partyID : client.scheduledParties) {
-            databaseActions.add(PartyDatabaseActionBuilder.updateRemoveMemberID(partyID, clientID));
+            databaseActions.add(PartyDatabaseActionBuilder.updateRemoveMember(partyID, clientID));
         }
 
         // Also remove from scheduled challenges
         for (String challengeID : client.scheduledChallenges) {
-            databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMemberID(challengeID, clientID));
+            databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMember(challengeID, clientID));
         }
 
         // Delete the Client

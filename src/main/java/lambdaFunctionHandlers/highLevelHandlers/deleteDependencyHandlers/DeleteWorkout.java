@@ -17,23 +17,23 @@ public class DeleteWorkout {
 
         // Remove from clients' scheduled workouts and completed workouts
         // Remove clients' scheduled workout times and  completed workout times
-        for (String clientID : workout.clientIDs) {
+        for (String client : workout.clients) {
             // This handles refund data automatically
-            databaseActions.addAll(ClientRemoveFromWorkout.getActions(clientID, workoutID));
+            databaseActions.addAll(ClientRemoveFromWorkout.getActions(client, workoutID));
         }
 
         // remove from trainer's scheduled and completed workouts
         // remove from trainer's scheduled and completed workout times
-        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.trainerID, workoutID));
-        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveScheduledTime(workout.trainerID, workout
+        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.trainer, workoutID));
+        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveScheduledTime(workout.trainer, workout
                 .time.toString()));
-        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.trainerID, workoutID));
+        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.trainer, workoutID));
 
         // Remove from gym's scheduled and completed workout times
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.gymID, workoutID));
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveScheduledTime(workout.gymID, workout
+        databaseActions.add(GymDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.gym, workoutID));
+        databaseActions.add(GymDatabaseActionBuilder.updateRemoveScheduledTime(workout.gym, workout
                 .time.toString()));
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.gymID, workoutID));
+        databaseActions.add(GymDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.gym, workoutID));
 
         return databaseActions;
     }

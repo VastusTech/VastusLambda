@@ -22,7 +22,7 @@ public class ClientRemoveFromWorkout {
                 .toString()));
 
         // And we delete ourselves from the workout
-        databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClientID(workoutID, clientID));
+        databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
         databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
 
         // Then we delete the workout only if it is empty

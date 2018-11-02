@@ -11,7 +11,7 @@ public class CreateChallenge {
     public static String handle(CreateChallengeRequest createChallengeRequest) throws Exception {
         if (createChallengeRequest != null) {
             // Create challenge
-            if (createChallengeRequest.ownerID != null && createChallengeRequest.time != null && createChallengeRequest
+            if (createChallengeRequest.owner != null && createChallengeRequest.time != null && createChallengeRequest
                     .capacity != null && createChallengeRequest.address != null && createChallengeRequest.title !=
                     null && createChallengeRequest.goal != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
@@ -24,17 +24,17 @@ public class CreateChallenge {
 
                 // Update owners fields
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledChallenge
-                        (createChallengeRequest.ownerID, null, true));
+                        (createChallengeRequest.owner, null, true));
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(createChallengeRequest
-                        .ownerID, createChallengeRequest.time));
+                        .owner, createChallengeRequest.time));
 
                 // Update each members fields
-                if (createChallengeRequest.memberIDs != null) {
-                    for (String memberID : createChallengeRequest.memberIDs) {
+                if (createChallengeRequest.members != null) {
+                    for (String member : createChallengeRequest.members) {
                         databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledChallenge
-                                (createChallengeRequest.ownerID, null, true));
-                        databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(createChallengeRequest
-                                .ownerID, createChallengeRequest.time));
+                                (member, null, true));
+                        databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime
+                                (member, createChallengeRequest.time));
                     }
                 }
 

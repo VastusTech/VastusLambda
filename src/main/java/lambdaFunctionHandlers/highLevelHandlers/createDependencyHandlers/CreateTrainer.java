@@ -17,7 +17,7 @@ public class CreateTrainer {
             // Check required fields
             if (createTrainerRequest.name != null && createTrainerRequest.gender != null && createTrainerRequest
                     .birthday != null && createTrainerRequest.email != null && createTrainerRequest.username != null
-                    && createTrainerRequest.gymID != null && createTrainerRequest.workoutSticker != null &&
+                    && createTrainerRequest.gym != null && createTrainerRequest.workoutSticker != null &&
                     createTrainerRequest.preferredIntensity != null) {
                 // Create the database action list for the transaction to complete
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
@@ -33,7 +33,7 @@ public class CreateTrainer {
                 databaseActionCompiler.add(TrainerDatabaseActionBuilder.create(createTrainerRequest));
 
                 // Add to gym (with gymID and true for fromCreate
-                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddTrainerID(createTrainerRequest.gymID,
+                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddTrainer(createTrainerRequest.gym,
                         null, true));
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());

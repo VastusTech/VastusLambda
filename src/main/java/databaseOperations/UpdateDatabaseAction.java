@@ -40,7 +40,7 @@ public class UpdateDatabaseAction extends DatabaseAction {
 
     private void initWithErrorCheck(String attributeName, AttributeValue attributeValue, String action) throws Exception {
         if (attributeName != null && (ifWithCreate || attributeValue != null) && action != null) {
-            if (!(action.equals("PUT") || action.equals("ADD") || action.equals("REMOVE"))) {
+            if (!(action.equals("PUT") || action.equals("ADD") || action.equals("DELETE"))) {
                 throw new Exception("Invalid action for updating: " + action + "!");
             }
 
@@ -57,7 +57,7 @@ public class UpdateDatabaseAction extends DatabaseAction {
                     attributeValue = null;
                 }
 
-                if (attributeValue.getS() != null && (action.equals("ADD") || action.equals("REMOVE"))) {
+                if (attributeValue.getS() != null && (action.equals("ADD") || action.equals("DELETE"))) {
                     // This means that the caller is trying to put a single string in the field, let's help them out
                     List<String> stringList = new ArrayList<>();
                     stringList.add(attributeValue.getS());

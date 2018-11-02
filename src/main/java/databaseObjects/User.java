@@ -35,21 +35,21 @@ abstract public class User extends DatabaseObject{
         this.age = getAgeFromBirthday(birthday);
         this.email = item.getString("email");
         this.username = item.getString("username");
-        this.profileImagePath = item.getString("profile_image_path");
-        this.scheduledWorkouts = item.getStringSet("scheduled_workouts");
+        this.profileImagePath = item.getString("profileImagePath");
+        this.scheduledWorkouts = item.getStringSet("scheduledWorkouts");
         if (scheduledWorkouts == null) { this.scheduledWorkouts = new HashSet<>(); }
-        this.completedWorkouts = item.getStringSet("completed_workouts");
+        this.completedWorkouts = item.getStringSet("completedWorkouts");
         if (completedWorkouts == null) { this.completedWorkouts = new HashSet<>(); }
-        Set<String> scheduledTimes = item.getStringSet("scheduled_times");
+        Set<String> scheduledTimes = item.getStringSet("scheduledTimes");
         if (scheduledTimes != null) { this.scheduledTimes = TimeInterval.getTimeIntervals(scheduledTimes); }
         else { this.scheduledTimes = new ArrayList<>(); }
-        this.reviewsBy = item.getStringSet("reviews_by");
+        this.reviewsBy = item.getStringSet("reviewsBy");
         if (reviewsBy == null) { this.reviewsBy = new HashSet<>(); }
-        this.reviewsAbout = item.getStringSet("reviews_about");
+        this.reviewsAbout = item.getStringSet("reviewsAbout");
         if (reviewsAbout == null) { this.reviewsAbout = new HashSet<>(); }
-        this.friendlinessRating = Float.parseFloat(item.getString("friendliness_rating"));
-        this.effectivenessRating = Float.parseFloat(item.getString("effectiveness_rating"));
-        this.reliabilityRating = Float.parseFloat(item.getString("reliability_rating"));
+        this.friendlinessRating = Float.parseFloat(item.getString("friendlinessRating"));
+        this.effectivenessRating = Float.parseFloat(item.getString("effectivenessRating"));
+        this.reliabilityRating = Float.parseFloat(item.getString("reliabilityRating"));
         this.overallRating = (friendlinessRating + effectivenessRating + reliabilityRating) / 3.0f;
         this.bio = item.getString("bio");
     }
@@ -74,15 +74,15 @@ abstract public class User extends DatabaseObject{
         // item.put("username", null);
         // item.put("profile_image_path", new AttributeValue(Constants.nullAttributeValue));
         // TODO Point the default image to a default image in the S3 bucket
-        item.put("profile_image_path", null);
+        // item.put("profile_image_path", null);
         // item.put("scheduled_workouts", null);
         // item.put("completed_workouts", null);
         // item.put("scheduled_times", null);
         // item.put("reviews_by", null);
         // item.put("reviews_about", null);
-        item.put("friendliness_rating", new AttributeValue("0.0"));
-        item.put("effectiveness_rating", new AttributeValue("0.0"));
-        item.put("reliability_rating", new AttributeValue("0.0"));
+        item.put("friendlinessRating", new AttributeValue("0.0"));
+        item.put("effectivenessRating", new AttributeValue("0.0"));
+        item.put("reliabilityRating", new AttributeValue("0.0"));
         // item.put("bio", new AttributeValue(Constants.nullAttributeValue));
         // item.put("bio", null);
         return item;

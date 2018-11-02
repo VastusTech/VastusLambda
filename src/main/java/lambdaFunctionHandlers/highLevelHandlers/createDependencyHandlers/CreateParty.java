@@ -11,7 +11,7 @@ public class CreateParty {
     public static String handle(CreatePartyRequest createPartyRequest) throws Exception {
         if (createPartyRequest != null) {
             // Create party
-            if (createPartyRequest.ownerID != null && createPartyRequest.time != null && createPartyRequest
+            if (createPartyRequest.owner != null && createPartyRequest.time != null && createPartyRequest
                     .capacity != null && createPartyRequest.address != null && createPartyRequest.title != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
@@ -23,16 +23,16 @@ public class CreateParty {
 
                 // Add to the owner scheduled parties and scheduled times
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledParty(createPartyRequest
-                        .ownerID, null, true));
-                databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(createPartyRequest.ownerID,
+                        .owner, null, true));
+                databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(createPartyRequest.owner,
                         createPartyRequest.time));
 
                 // Add to each members scheduled parties and scheduled times
-                if (createPartyRequest.memberIDs != null) {
-                    for (String memberID : createPartyRequest.memberIDs) {
-                        databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledParty(memberID,
+                if (createPartyRequest.members != null) {
+                    for (String member : createPartyRequest.members) {
+                        databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledParty(member,
                                 null, true));
-                        databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(memberID,
+                        databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(member,
                                 createPartyRequest.time));
                     }
                 }

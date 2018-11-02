@@ -2,16 +2,16 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 
 public class CreateReviewRequest {
     // Required
-    public String byID;
-    public String aboutID;
+    public String by;
+    public String about;
     public String friendlinessRating;
     public String effectivenessRating;
     public String reliabilityRating;
     public String description;
 
-    public CreateReviewRequest(String byID, String aboutID, String friendlinessRating, String effectivenessRating, String reliabilityRating, String description) {
-        this.byID = byID;
-        this.aboutID = aboutID;
+    public CreateReviewRequest(String by, String about, String friendlinessRating, String effectivenessRating, String reliabilityRating, String description) {
+        this.by = by;
+        this.about = about;
         this.friendlinessRating = friendlinessRating;
         this.effectivenessRating = effectivenessRating;
         this.reliabilityRating = reliabilityRating;
@@ -20,20 +20,20 @@ public class CreateReviewRequest {
 
     public CreateReviewRequest() {}
 
-    public String getByID() {
-        return byID;
+    public String getBy() {
+        return by;
     }
 
-    public void setByID(String byID) {
-        this.byID = byID;
+    public void setBy(String by) {
+        this.by = by;
     }
 
-    public String getAboutID() {
-        return aboutID;
+    public String getAbout() {
+        return about;
     }
 
-    public void setAboutID(String aboutID) {
-        this.aboutID = aboutID;
+    public void setAbout(String about) {
+        this.about = about;
     }
 
     public String getFriendlinessRating() {

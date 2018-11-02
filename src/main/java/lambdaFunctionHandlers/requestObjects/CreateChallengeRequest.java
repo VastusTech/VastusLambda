@@ -2,7 +2,7 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 
 public class CreateChallengeRequest {
     // Required
-    public String ownerID;
+    public String owner;
     public String time;
     public String capacity;
     public String address;
@@ -12,11 +12,11 @@ public class CreateChallengeRequest {
     // Optional
     public String description;
     public String difficulty;
-    public String[] memberIDs;
+    public String[] members;
     public String access;
 
-    public CreateChallengeRequest(String ownerID, String time, String capacity, String address, String title, String goal, String description, String difficulty, String[] memberIDs, String access) {
-        this.ownerID = ownerID;
+    public CreateChallengeRequest(String owner, String time, String capacity, String address, String title, String goal, String description, String difficulty, String[] members, String access) {
+        this.owner = owner;
         this.time = time;
         this.capacity = capacity;
         this.address = address;
@@ -24,18 +24,18 @@ public class CreateChallengeRequest {
         this.goal = goal;
         this.description = description;
         this.difficulty = difficulty;
-        this.memberIDs = memberIDs;
+        this.members = members;
         this.access = access;
     }
 
     public CreateChallengeRequest() {}
 
-    public String getOwnerID() {
-        return ownerID;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setOwnerID(String ownerID) {
-        this.ownerID = ownerID;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getTime() {
@@ -94,12 +94,12 @@ public class CreateChallengeRequest {
         this.difficulty = difficulty;
     }
 
-    public String[] getMemberIDs() {
-        return memberIDs;
+    public String[] getMembers() {
+        return members;
     }
 
-    public void setMemberIDs(String[] memberIDs) {
-        this.memberIDs = memberIDs;
+    public void setMembers(String[] members) {
+        this.members = members;
     }
 
     public String getAccess() {

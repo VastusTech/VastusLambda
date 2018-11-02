@@ -22,7 +22,7 @@ public class ClientAddToChallenge {
         databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledTime(clientID, challenge.time.toString
                 ()));
         // Add to workout's clients
-        databaseActions.add(ChallengeDatabaseActionBuilder.updateAddMemberID(challengeID, clientID));
+        databaseActions.add(ChallengeDatabaseActionBuilder.updateAddMember(challengeID, clientID));
 
         return databaseActions;
     }

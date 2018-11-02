@@ -16,7 +16,7 @@ public class ChallengeDatabaseActionBuilder {
     public static DatabaseAction create(CreateChallengeRequest createChallengeRequest) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Challenge.getEmptyItem();
-        item.put("ownerID", new AttributeValue(createChallengeRequest.ownerID));
+        item.put("owner", new AttributeValue(createChallengeRequest.owner));
         item.put("time", new AttributeValue(createChallengeRequest.time));
         item.put("capacity", new AttributeValue(createChallengeRequest.capacity));
         item.put("address", new AttributeValue(createChallengeRequest.address));
@@ -26,8 +26,8 @@ public class ChallengeDatabaseActionBuilder {
                 .description)); }
         if (createChallengeRequest.difficulty != null) { item.put("difficulty", new AttributeValue(createChallengeRequest
                 .difficulty)); }
-        if (createChallengeRequest.memberIDs != null) { item.put("description", new AttributeValue
-                (Arrays.asList(createChallengeRequest.memberIDs))); }
+        if (createChallengeRequest.members != null) { item.put("members", new AttributeValue
+                (Arrays.asList(createChallengeRequest.members))); }
         if (createChallengeRequest.access != null) { item.put("access", new AttributeValue(createChallengeRequest
                 .access)); }
         return new CreateDatabaseAction(item);
@@ -49,14 +49,14 @@ public class ChallengeDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "goal", new AttributeValue(goal), false, "PUT");
     }
 
-    public static DatabaseAction updateAddMemberID(String id, String clientID) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "memberIDs", new AttributeValue(clientID), false, "ADD", new
+    public static DatabaseAction updateAddMember(String id, String client) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(client), false, "ADD", new
                 CheckHandler() {
             @Override
             public String isViable(DatabaseObject newObject) throws Exception {
                 // The capacity for the challenge must not be filled up yet.
                 Challenge challenge = (Challenge) newObject;
-                if (challenge.capacity > challenge.memberIDs.size()) {
+                if (challenge.capacity > challenge.members.size()) {
                     return null;
                 }
                 else {
@@ -66,8 +66,8 @@ public class ChallengeDatabaseActionBuilder {
         });
     }
 
-    public static DatabaseAction updateRemoveMemberID(String id, String clientID) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "memberIDs", new AttributeValue(clientID), false, "REMOVE");
+    public static DatabaseAction updateRemoveMember(String id, String client) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(client), false, "DELETE");
     }
 
     public static DatabaseAction delete(String id) {

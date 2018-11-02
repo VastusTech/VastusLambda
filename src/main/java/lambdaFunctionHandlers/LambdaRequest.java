@@ -69,7 +69,7 @@ public class LambdaRequest {
         scheduledParties,
         scheduledChallenges,
         // Trainer =========================
-        gymID,
+        gym,
         availableTimes,
         workoutSticker,
         preferredIntensity,
@@ -77,7 +77,7 @@ public class LambdaRequest {
         workoutPrice,
         // Gym =============================
         address,
-        trainerIDs,
+        trainers,
         weeklyHours,
         vacationTimes,
         sessionCapacity,
@@ -85,20 +85,20 @@ public class LambdaRequest {
         paymentSplit,
         // Workout =========================
         time,
-        trainerID,
-        clientIDs,
+        trainer,
+        clients,
         capacity,
         sticker,
         intensity,
         missingReviews,
         price,
         // Review ==========================
-        byID,
-        aboutID,
+        by,
+        about,
         description,
         // Party ===========================
         title,
-        memberIDs,
+        members,
         // Challenge =======================
         goal,
     }
@@ -115,7 +115,7 @@ public class LambdaRequest {
                     if (specifyAction.equals("ForSurvey") && itemType.equals("Review")) {
                         // Create Review and remove from workout missingReviews
                         if (identifiers.length == 1) {
-                            if (createReviewRequest != null && !fromID.equals(createReviewRequest.byID)) {
+                            if (createReviewRequest != null && !fromID.equals(createReviewRequest.by)) {
                                 throw new Exception("The FromID doesn't have permission to write that review!");
                             }
                             return handleSurveyCreate(identifiers[0]);
@@ -128,7 +128,7 @@ public class LambdaRequest {
                         // Create the item
                         if (identifiers.length == 0) {
                             // TODO Permissions for creating a workout?
-                            if (createReviewRequest != null && !fromID.equals(createReviewRequest.byID)) {
+                            if (createReviewRequest != null && !fromID.equals(createReviewRequest.by)) {
                                 throw new Exception("The FromID doesn't have permission to create that item!");
                             }
                             return handleCreate();
@@ -191,7 +191,7 @@ public class LambdaRequest {
                         // There are a number of things this could be. Some require checking, some require multi-faceted
                         if (identifiers.length == 1) {
                             if ((itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) &&
-                                    !identifiers[0].equals(fromID) && attributeName != null && attributeName.equals
+                                    !identifiers[0].equals(fromID) && attributeName != null && !attributeName.equals
                                     ("friendRequests")) {
                                 throw new Exception("The FromID does not have the permissions to update that object!");
                             }

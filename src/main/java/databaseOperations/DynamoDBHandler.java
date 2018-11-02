@@ -268,7 +268,7 @@ public class DynamoDBHandler {
                             valueUpdate.setValue(new AttributeValue(returnString));
                         }
                     }
-                    else if (valueUpdate.getAction().equals("ADD") || valueUpdate.getAction().equals("REMOVE")) {
+                    else if (valueUpdate.getAction().equals("ADD") || valueUpdate.getAction().equals("DELETE")) {
                         if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("id")) {
                             valueUpdate.setValue(new AttributeValue(stringList));
                         }

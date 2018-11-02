@@ -17,11 +17,11 @@ public class ReviewDatabaseActionBuilder {
     public static DatabaseAction create(CreateReviewRequest createReviewRequest) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Review.getEmptyItem();
-        item.put("byID", new AttributeValue(createReviewRequest.byID));
-        item.put("aboutID", new AttributeValue(createReviewRequest.aboutID));
-        item.put("friendliness_rating", new AttributeValue(createReviewRequest.friendlinessRating));
-        item.put("effectiveness_rating", new AttributeValue(createReviewRequest.effectivenessRating));
-        item.put("reliability_rating", new AttributeValue(createReviewRequest.reliabilityRating));
+        item.put("by", new AttributeValue(createReviewRequest.by));
+        item.put("about", new AttributeValue(createReviewRequest.about));
+        item.put("friendlinessRating", new AttributeValue(createReviewRequest.friendlinessRating));
+        item.put("effectivenessRating", new AttributeValue(createReviewRequest.effectivenessRating));
+        item.put("reliabilityRating", new AttributeValue(createReviewRequest.reliabilityRating));
         item.put("description", new AttributeValue(createReviewRequest.description));
         return new CreateDatabaseAction(item);
     }

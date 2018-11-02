@@ -3,10 +3,10 @@ package main.java.lambdaFunctionHandlers.responseObjects;
 import main.java.databaseObjects.Party;
 
 public class PartyResponse extends ObjectResponse {
-    public String itemType = "Party";
-    public String ownerID;
+    public String item_type = "Party";
+    public String owner;
     public String time;
-    public String[] memberIDs;
+    public String[] members;
     public String capacity;
     public String access;
     public String address;
@@ -16,9 +16,9 @@ public class PartyResponse extends ObjectResponse {
 
     public PartyResponse(Party party) {
         super(party.id);
-        this.ownerID = party.ownerID;
+        this.owner = party.owner;
         this.time = party.time.toString();
-        this.memberIDs = party.memberIDs.toArray(new String[]{});
+        this.members = party.members.toArray(new String[]{});
         this.capacity = Integer.toString(party.capacity);
         this.access = party.access;
         this.address = party.address;

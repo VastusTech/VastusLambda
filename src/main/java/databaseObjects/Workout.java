@@ -13,10 +13,10 @@ import java.util.*;
 
 public class Workout extends DatabaseObject {
     public TimeInterval time;
-    public String trainerID;
-    public Set<String> clientIDs;
+    public String trainer;
+    public Set<String> clients;
     public int capacity;
-    public String gymID;
+    public String gym;
     public String sticker;
     public String intensity;
     public Set<String> missingReviews;
@@ -25,14 +25,14 @@ public class Workout extends DatabaseObject {
     Workout(Item item) throws Exception {
         super(item);
         this.time = new TimeInterval(item.getString("time"));
-        this.trainerID = item.getString("trainerID");
-        this.clientIDs = item.getStringSet("clientIDs");
-        if (clientIDs == null) { this.clientIDs = new HashSet<>(); }
+        this.trainer = item.getString("trainer");
+        this.clients = item.getStringSet("clients");
+        if (clients == null) { this.clients = new HashSet<>(); }
         this.capacity = Integer.parseInt(item.getString("capacity"));
-        this.gymID = item.getString("gymID");
+        this.gym = item.getString("gym");
         this.sticker = item.getString("sticker");
         this.intensity = item.getString("intensity");
-        this.missingReviews = item.getStringSet("missing_reviews");
+        this.missingReviews = item.getStringSet("missingReviews");
         if (missingReviews == null) { this.missingReviews = new HashSet<>(); }
         this.price = Integer.parseInt(item.getString("price"));
     }

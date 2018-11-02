@@ -31,7 +31,7 @@ public class DeleteTrainer {
         }
 
         // Remove from gym's trainers field
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveTrainerID(trainer.gymID, trainerID));
+        databaseActions.add(GymDatabaseActionBuilder.updateRemoveTrainer(trainer.gym, trainerID));
 
         // Delete the Trainer
         databaseActions.add(TrainerDatabaseActionBuilder.delete(trainerID));

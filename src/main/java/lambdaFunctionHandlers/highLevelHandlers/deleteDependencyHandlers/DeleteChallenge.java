@@ -14,12 +14,12 @@ public class DeleteChallenge {
         Challenge challenge = Challenge.readChallenge(challengeID);
 
         // remove from owner's fields
-        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledChallenge(challenge.ownerID, challengeID));
-        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(challenge.ownerID, challenge.time.toString()));
+        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledChallenge(challenge.owner, challengeID));
+        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(challenge.owner, challenge.time.toString()));
         // remove from each member's fields
-        for (String memberID : challenge.memberIDs) {
-            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledChallenge(memberID, challengeID));
-            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(memberID, challenge.time.toString()));
+        for (String member : challenge.members) {
+            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledChallenge(member, challengeID));
+            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(member, challenge.time.toString()));
         }
 
         // Delete the challenge

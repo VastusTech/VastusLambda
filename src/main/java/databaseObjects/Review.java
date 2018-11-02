@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Review extends DatabaseObject {
-    public String byID;
-    public String aboutID;
+    public String by;
+    public String about;
     public float friendlinessRating;
     public float effectivenessRating;
     public float reliabilityRating;
@@ -21,11 +21,11 @@ public class Review extends DatabaseObject {
 
     Review(Item item) throws Exception {
         super(item);
-        this.byID = item.getString("byID");
-        this.aboutID = item.getString("aboutID");
-        this.friendlinessRating = Float.parseFloat(item.getString("friendliness_rating"));
-        this.effectivenessRating = Float.parseFloat(item.getString("effectiveness_rating"));
-        this.reliabilityRating = Float.parseFloat(item.getString("reliability_rating"));
+        this.by = item.getString("by");
+        this.about = item.getString("about");
+        this.friendlinessRating = Float.parseFloat(item.getString("friendlinessRating"));
+        this.effectivenessRating = Float.parseFloat(item.getString("effectivenessRating"));
+        this.reliabilityRating = Float.parseFloat(item.getString("reliabilityRating"));
         this.overallRating = (friendlinessRating + effectivenessRating + reliabilityRating) / 3.0f;
         this.description = item.getString("description");
     }
@@ -37,9 +37,9 @@ public class Review extends DatabaseObject {
         // item.put("byID", null);
         // item.put("aboutID", new AttributeValue(Constants.nullAttributeValue));
         // item.put("aboutID", null);
-        item.put("friendliness_rating", new AttributeValue("0.0"));
-        item.put("effectiveness_rating", new AttributeValue("0.0"));
-        item.put("reliability_rating", new AttributeValue("0.0"));
+        item.put("friendlinessRating", new AttributeValue("0.0"));
+        item.put("effectivenessRating", new AttributeValue("0.0"));
+        item.put("reliabilityRating", new AttributeValue("0.0"));
         // item.put("description", new AttributeValue(Constants.nullAttributeValue));
         // item.put("description", null);
         return item;

@@ -3,20 +3,20 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 public class CreateWorkoutRequest {
     // Required
     public String time;
-    public String trainerID;
-    public String[] clientIDs;
+    public String trainer;
+    public String[] clients;
     public String capacity;
-    public String gymID;
+    public String gym;
     public String sticker;
     public String intensity;
     public String price;
 
-    public CreateWorkoutRequest(String time, String trainerID, String[] clientIDs, String capacity, String gymID, String
+    public CreateWorkoutRequest(String time, String trainer, String[] clients, String capacity, String gym, String
             sticker, String intensity, String price) {
         this.time = time;
-        this.trainerID = trainerID;
-        this.clientIDs = clientIDs;
-        this.gymID = gymID;
+        this.trainer = trainer;
+        this.clients = clients;
+        this.gym = gym;
         this.sticker = sticker;
         this.intensity = intensity;
         this.price = price;
@@ -32,20 +32,20 @@ public class CreateWorkoutRequest {
         this.time = time;
     }
 
-    public String getTrainerID() {
-        return trainerID;
+    public String getTrainer() {
+        return trainer;
     }
 
-    public void setTrainerID(String trainerID) {
-        this.trainerID = trainerID;
+    public void setTrainer(String trainer) {
+        this.trainer = trainer;
     }
 
-    public String[] getClientIDs() {
-        return clientIDs;
+    public String[] getClients() {
+        return clients;
     }
 
-    public void setClientIDs(String[] clientIDs) {
-        this.clientIDs = clientIDs;
+    public void setClients(String[] clients) {
+        this.clients = clients;
     }
 
     public String getCapacity() {
@@ -56,12 +56,12 @@ public class CreateWorkoutRequest {
         this.capacity = capacity;
     }
 
-    public String getGymID() {
-        return gymID;
+    public String getGym() {
+        return gym;
     }
 
-    public void setGymID(String gymID) {
-        this.gymID = gymID;
+    public void setGym(String gym) {
+        this.gym = gym;
     }
 
     public String getSticker() {

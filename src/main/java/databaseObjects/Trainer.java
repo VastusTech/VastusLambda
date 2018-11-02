@@ -10,7 +10,7 @@ import main.java.lambdaFunctionHandlers.responseObjects.TrainerResponse;
 import java.util.*;
 
 public class Trainer extends User {
-    public String gymID;
+    public String gym;
     public List<TimeInterval> availableTimes;
     public String workoutSticker;
     public String preferredIntensity;
@@ -19,28 +19,28 @@ public class Trainer extends User {
 
     Trainer(Item item) throws Exception {
         super(item);
-        this.gymID = item.getString("gymID");
-        Set<String> availableTimes = item.getStringSet("available_times");
+        this.gym = item.getString("gym");
+        Set<String> availableTimes = item.getStringSet("availableTimes");
         if (availableTimes != null) { this.availableTimes = TimeInterval.getTimeIntervals(availableTimes); }
         else { this.availableTimes = new ArrayList<>(); }
-        this.workoutSticker = item.getString("workout_sticker");
-        this.preferredIntensity = item.getString("preferred_intensity");
-        this.workoutCapacity = Integer.parseInt(item.getString("workout_capacity"));
-        this.workoutPrice = Integer.parseInt(item.getString("workout_price"));
+        this.workoutSticker = item.getString("workoutSticker");
+        this.preferredIntensity = item.getString("preferredIntensity");
+        this.workoutCapacity = Integer.parseInt(item.getString("workoutCapacity"));
+        this.workoutPrice = Integer.parseInt(item.getString("workoutPrice"));
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("item_type", new AttributeValue("Trainer"));
         // item.put("gymID", new AttributeValue(Constants.nullAttributeValue));
-        item.put("gymID", null);
-        item.put("available_times", null);
+        item.put("gym", null);
+        item.put("availableTimes", null);
         // item.put("workout_sticker", new AttributeValue(Constants.nullAttributeValue));
-        item.put("workout_sticker", null);
+        item.put("workoutSticker", null);
         // item.put("preferred_intensity", new AttributeValue(Constants.nullAttributeValue));
-        item.put("preferred_intensity", null);
-        item.put("workout_capacity", new AttributeValue("4"));
-        item.put("workout_price", new AttributeValue("80"));
+        item.put("preferredIntensity", null);
+        item.put("workoutCapacity", new AttributeValue("4"));
+        item.put("workoutPrice", new AttributeValue("80"));
         return item;
     }
 

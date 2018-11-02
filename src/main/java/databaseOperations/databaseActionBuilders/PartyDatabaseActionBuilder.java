@@ -16,15 +16,15 @@ public class PartyDatabaseActionBuilder {
     public static DatabaseAction create(CreatePartyRequest createPartyRequest) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Party.getEmptyItem();
-        item.put("ownerID", new AttributeValue(createPartyRequest.ownerID));
+        item.put("owner", new AttributeValue(createPartyRequest.owner));
         item.put("time", new AttributeValue(createPartyRequest.time));
         item.put("capacity", new AttributeValue(createPartyRequest.capacity));
         item.put("address", new AttributeValue(createPartyRequest.address));
         item.put("title", new AttributeValue(createPartyRequest.title));
         if (createPartyRequest.description != null) { item.put("description", new AttributeValue(createPartyRequest
                 .description)); }
-        if (createPartyRequest.memberIDs != null) { item.put("memberIDs", new AttributeValue(Arrays.asList(createPartyRequest
-                .memberIDs))); }
+        if (createPartyRequest.members != null) { item.put("members", new AttributeValue(Arrays.asList(createPartyRequest
+                .members))); }
         if (createPartyRequest.access != null) { item.put("access", new AttributeValue(createPartyRequest
                 .access)); }
         return new CreateDatabaseAction(item);
@@ -42,13 +42,13 @@ public class PartyDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "address", new AttributeValue(address), false, "PUT");
     }
 
-    public static DatabaseAction updateAddMemberID(String id, String clientID) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "memberIDs", new AttributeValue(clientID), false, "ADD", new CheckHandler() {
+    public static DatabaseAction updateAddMember(String id, String client) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(client), false, "ADD", new CheckHandler() {
             @Override
             public String isViable(DatabaseObject newObject) throws Exception {
                 // The capacity for the workout must not be filled up yet.
                 Party party = (Party)newObject;
-                if (party.capacity > party.memberIDs.size()) {
+                if (party.capacity > party.members.size()) {
                     return null;
                 }
                 else {
@@ -58,8 +58,8 @@ public class PartyDatabaseActionBuilder {
         });
     }
 
-    public static DatabaseAction updateRemoveMemberID(String id, String clientID) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "memberIDs", new AttributeValue(clientID), false, "REMOVE");
+    public static DatabaseAction updateRemoveMember(String id, String client) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(client), false, "DELETE");
     }
 
     public static DatabaseAction delete(String id) {
