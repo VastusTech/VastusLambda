@@ -23,6 +23,8 @@ public class CreateChallenge {
                 databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest));
 
                 // Update owners fields
+                databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddOwnedChallenge(createChallengeRequest
+                        .owner, null, true));
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledChallenge
                         (createChallengeRequest.owner, null, true));
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(createChallengeRequest

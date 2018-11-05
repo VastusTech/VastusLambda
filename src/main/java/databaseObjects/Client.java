@@ -16,6 +16,8 @@ public class Client extends User {
     public Set<String> scheduledChallenges;
     public Set<String> completedParties;
     public Set<String> completedChallenges;
+    public Set<String> ownedParties;
+    public Set<String> ownedChallenges;
 
     Client(Item item) throws Exception {
         super(item);
@@ -31,6 +33,10 @@ public class Client extends User {
         if (completedParties == null) { this.completedParties = new HashSet<>(); }
         this.completedChallenges = item.getStringSet("completedChallenges");
         if (completedChallenges == null) { this.completedChallenges = new HashSet<>(); }
+        this.ownedParties = item.getStringSet("ownedParties");
+        if (ownedParties == null) { this.ownedParties = new HashSet<>(); }
+        this.ownedChallenges = item.getStringSet("ownedChallenges");
+        if (ownedChallenges == null) { this.ownedChallenges = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

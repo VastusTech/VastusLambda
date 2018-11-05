@@ -101,6 +101,7 @@ public class LambdaRequest {
         members,
         // Challenge =======================
         goal,
+        winner,
     }
 
     // This is where the inputs are handled!
@@ -598,6 +599,13 @@ public class LambdaRequest {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
                     }
                     break;
+                case winner:
+                    if (itemType.equals("Challenge")) {
+                        databaseActionCompiler.addAll(ChallengeUpdateWinner.getActions(id, attributeValues[0]));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                    }
                 default:
                     throw new Exception("Can't perform an UPDATESET operation on " + attributeName + "!");
             }

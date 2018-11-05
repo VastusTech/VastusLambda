@@ -14,6 +14,7 @@ public class DeleteChallenge {
         Challenge challenge = Challenge.readChallenge(challengeID);
 
         // remove from owner's fields
+        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveOwnedChallenge(challenge.owner, challengeID));
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledChallenge(challenge.owner, challengeID));
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(challenge.owner, challenge.time.toString()));
         // remove from each member's fields

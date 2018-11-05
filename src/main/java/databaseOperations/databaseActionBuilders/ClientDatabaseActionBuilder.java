@@ -171,8 +171,18 @@ public class ClientDatabaseActionBuilder {
         }
     }
 
-    public static DatabaseAction updateRemoveScheduledParty(String id, String partyID) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "scheduledParties", new AttributeValue(partyID), false,
+    public static DatabaseAction updateRemoveScheduledParty(String id, String party) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "scheduledParties", new AttributeValue(party), false,
+                "DELETE");
+    }
+
+    public static DatabaseAction updateAddCompletedParty(String id, String party) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "completedParties", new AttributeValue(party), false,
+                "ADD");
+    }
+
+    public static DatabaseAction updateRemoveCompletedParty(String id, String party) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "completedChallenges", new AttributeValue(party), false,
                 "DELETE");
     }
 
@@ -189,6 +199,36 @@ public class ClientDatabaseActionBuilder {
 
     public static DatabaseAction updateRemoveScheduledChallenge(String id, String challenge) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "scheduledChallenges", new AttributeValue(challenge), false,
+                "DELETE");
+    }
+
+    public static DatabaseAction updateAddCompletedChallenge(String id, String challenge) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "completedChallenges", new AttributeValue(challenge), false,
+                "ADD");
+    }
+
+    public static DatabaseAction updateRemoveCompletedChallenge(String id, String challenge) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "completedChallenges", new AttributeValue(challenge), false,
+                "DELETE");
+    }
+
+    public static DatabaseAction updateAddOwnedParty(String id, String party, boolean ifWithCreate) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "ownedParties", new AttributeValue(party), ifWithCreate,
+                "ADD");
+    }
+
+    public static DatabaseAction updateRemoveOwnedParty(String id, String party) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "ownedChallenges", new AttributeValue(party), false,
+                "DELETE");
+    }
+
+    public static DatabaseAction updateAddOwnedChallenge(String id, String challenge, boolean ifWithCreate) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "ownedChallenges", new AttributeValue(challenge), ifWithCreate,
+                "ADD");
+    }
+
+    public static DatabaseAction updateRemoveOwnedChallenge(String id, String challenge) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "ownedChallenges", new AttributeValue(challenge), false,
                 "DELETE");
     }
 

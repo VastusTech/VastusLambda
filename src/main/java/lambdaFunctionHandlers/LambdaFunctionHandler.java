@@ -11,5 +11,4 @@ public class LambdaFunctionHandler {
         Constants.debugLog(input.toString());
         return new LambdaResponse(input.process());
     }
-
 }

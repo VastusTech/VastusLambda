@@ -15,6 +15,7 @@ public class ChallengeResponse extends ObjectResponse {
     public String description;
     public String goal;
     public String difficulty;
+    public String winner;
 
     public ChallengeResponse(Challenge challenge) {
         super(challenge.id);
@@ -28,5 +29,6 @@ public class ChallengeResponse extends ObjectResponse {
         this.description = challenge.description;
         this.goal = challenge.goal;
         this.difficulty = Integer.toString(challenge.difficulty);
+        this.winner = challenge.winner;
     }
 }

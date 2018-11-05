@@ -21,7 +21,9 @@ public class CreateParty {
 
                 databaseActionCompiler.add(PartyDatabaseActionBuilder.create(createPartyRequest));
 
-                // Add to the owner scheduled parties and scheduled times
+                // Add to the owner owned parties scheduled parties and scheduled times
+                databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddOwnedParty(createPartyRequest.owner,
+                        null, true));
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledParty(createPartyRequest
                         .owner, null, true));
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(createPartyRequest.owner,

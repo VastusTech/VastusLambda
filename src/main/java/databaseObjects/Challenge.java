@@ -15,6 +15,7 @@ public class Challenge extends Event {
     public String address;
     public String goal;
     public int difficulty;
+    public String winner;
 
     public Challenge(Item item) throws Exception {
         super(item);
@@ -23,6 +24,7 @@ public class Challenge extends Event {
         this.address = item.getString("address");
         this.goal = item.getString("goal");
         this.difficulty = Integer.parseInt(item.getString("difficulty"));
+        this.winner = item.getString("winner");
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

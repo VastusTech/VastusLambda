@@ -293,6 +293,9 @@ public class TimeInterval {
     public Boolean hasAlreadyStarted() {
         return fromDateTime.isAfterNow();
     }
+    public Boolean hasAlreadyFinished() {
+        return toDateTime.isAfterNow();
+    }
 
     static public String[] getFromToHourMinute(int fromTotalMinute, int toTotalMinute) {
         int fromHour = fromTotalMinute / 60;

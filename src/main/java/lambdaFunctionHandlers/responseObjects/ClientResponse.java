@@ -29,8 +29,10 @@ public class ClientResponse extends ObjectResponse {
     public String challengesWon;
     public String[] scheduledParties;
     public String[] completedParties;
+    public String[] ownedParties;
     public String[] scheduledChallenges;
     public String[] completedChallenges;
+    public String[] ownedChallenges;
 
     public ClientResponse(Client client) {
         super(client.id);
@@ -58,7 +60,9 @@ public class ClientResponse extends ObjectResponse {
         this.challengesWon = Integer.toString(client.challengesWon);
         this.scheduledParties = client.scheduledParties.toArray(new String[]{});
         this.completedParties = client.completedParties.toArray(new String[]{});
+        this.ownedParties = client.ownedParties.toArray(new String[]{});
         this.scheduledChallenges = client.scheduledChallenges.toArray(new String[]{});
         this.completedChallenges = client.completedChallenges.toArray(new String[]{});
+        this.ownedChallenges = client.ownedChallenges.toArray(new String[]{});
     }
 }

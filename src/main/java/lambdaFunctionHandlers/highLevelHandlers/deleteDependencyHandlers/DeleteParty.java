@@ -14,6 +14,7 @@ public class DeleteParty {
         Party party = Party.readParty(partyID);
 
         // remove from owner's fields
+        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveOwnedParty(party.owner, partyID));
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledParty(party.owner, partyID));
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(party.owner, party.time.toString
                 ()));
