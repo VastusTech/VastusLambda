@@ -155,9 +155,12 @@ public class ClientDatabaseActionBuilder {
                 false, "DELETE");
     }
 
-    public static DatabaseAction updateChallengesWon(String id, String challengesWon) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "challengesWon", new AttributeValue(challengesWon), false,
-                "PUT");
+    public static DatabaseAction updateAddChallengeWon(String id, String challenge) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "challengesWon", new AttributeValue(challenge), false, "ADD");
+    }
+
+    public static DatabaseAction updateRemoveChallengeWon(String id, String challenge) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "challengesWon", new AttributeValue(challenge), false, "DELETE");
     }
 
     public static DatabaseAction updateAddScheduledParty(String id, String party, boolean ifWithCreate) throws

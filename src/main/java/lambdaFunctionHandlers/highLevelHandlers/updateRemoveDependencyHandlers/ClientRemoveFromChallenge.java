@@ -19,7 +19,7 @@ public class ClientRemoveFromChallenge {
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(clientID, challenge.time
                 .toString()));
 
-        // And we delete ourselves from the workout
+        // And we delete ourselves from the challenge
         databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMember(challengeID, clientID));
 
         return databaseActions;

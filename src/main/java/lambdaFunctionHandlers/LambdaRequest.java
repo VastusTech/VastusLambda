@@ -99,6 +99,7 @@ public class LambdaRequest {
         // Party ===========================
         title,
         members,
+        access,
         // Challenge =======================
         goal,
         winner,
@@ -438,7 +439,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(UserUpdateName.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case gender:
@@ -446,7 +447,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(UserUpdateGender.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case birthday:
@@ -454,7 +455,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(UserUpdateBirthday.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case foundingDay:
@@ -462,7 +463,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(GymUpdateFoundingDay.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case email:
@@ -470,7 +471,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(UserUpdateEmail.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case profileImagePath:
@@ -479,7 +480,7 @@ public class LambdaRequest {
                                 attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case bio:
@@ -487,7 +488,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(UserUpdateBio.getActions(id, itemType, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case workoutSticker:
@@ -495,7 +496,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(TrainerUpdateWorkoutSticker.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case preferredIntensity:
@@ -504,7 +505,7 @@ public class LambdaRequest {
                                 attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case workoutCapacity:
@@ -512,7 +513,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(TrainerUpdateWorkoutCapacity.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case workoutPrice:
@@ -520,7 +521,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(TrainerUpdateWorkoutPrice.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case address:
@@ -534,7 +535,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(ChallengeUpdateAddress.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case weeklyHours:
@@ -542,7 +543,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(GymUpdateWeeklyHours.getActions(id, attributeValues));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case sessionCapacity:
@@ -550,7 +551,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(GymUpdateSessionCapacity.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case gymType:
@@ -558,7 +559,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(GymUpdateGymType.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case paymentSplit:
@@ -566,7 +567,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(GymUpdatePaymentSplit.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case title:
@@ -577,7 +578,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(ChallengeUpdateTitle.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case description:
@@ -588,15 +589,25 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(ChallengeUpdateDescription.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
+                case access:
+                    if (itemType.equals("Party")) {
+                        databaseActionCompiler.addAll(PartyUpdateAccess.getActions(id, attributeValues[0]));
+                    }
+                    else if (itemType.equals("Challenge")) {
+                        databaseActionCompiler.addAll(ChallengeUpdateAccess.getActions(id, attributeValues[0]));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
                 case goal:
                     if (itemType.equals("Challenge")) {
                         databaseActionCompiler.addAll(ChallengeUpdateGoal.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case winner:
@@ -604,7 +615,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(ChallengeUpdateWinner.getActions(id, attributeValues[0]));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " + itemType + "!");
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                 default:
                     throw new Exception("Can't perform an UPDATESET operation on " + attributeName + "!");
@@ -634,7 +645,7 @@ public class LambdaRequest {
                         }
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
@@ -643,7 +654,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(ClientAddFriends.getActions(id, attributeValues));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
@@ -652,7 +663,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(ClientAddFriendRequests.getActions(id, attributeValues));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
@@ -661,7 +672,7 @@ public class LambdaRequest {
                         if (itemType.equals("Client") && attributeValues[0].equals("Party")) {
                             databaseActionCompiler.addAll(ClientAddToParty.getActions(id, attributeValues[0]));
                         } else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                     itemType + "!");
                         }
                     }
@@ -675,7 +686,7 @@ public class LambdaRequest {
                         if (itemType.equals("Client") && attributeValues[0].equals("Challenge")) {
                             databaseActionCompiler.addAll(ClientAddToChallenge.getActions(id, attributeValues[0]));
                         } else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                     itemType + "!");
                         }
                     }
@@ -689,7 +700,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(TrainerAddAvailableTimes.getActions(id, attributeValues));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
@@ -698,7 +709,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(GymAddVacationTimes.getActions(id, attributeValues));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
@@ -730,7 +741,7 @@ public class LambdaRequest {
                         }
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
@@ -739,7 +750,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(ClientRemoveFriends.getActions(id, attributeValues));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
@@ -748,7 +759,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(ClientRemoveFriendRequests.getActions(id, attributeValues));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
@@ -757,7 +768,7 @@ public class LambdaRequest {
                         if (itemType.equals("Client") && attributeValues[0].equals("Party")) {
                             databaseActionCompiler.addAll(ClientRemoveFromParty.getActions(id, attributeValues[0]));
                         } else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                     itemType + "!");
                         }
                     }
@@ -771,7 +782,7 @@ public class LambdaRequest {
                         if (itemType.equals("Client") && attributeValues[0].equals("Challenge")) {
                             databaseActionCompiler.addAll(ClientRemoveFromChallenge.getActions(id, attributeValues[0]));
                         } else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                     itemType + "!");
                         }
                     }
@@ -785,7 +796,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(TrainerRemoveAvailableTimes.getActions(id, attributeValues));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
@@ -794,7 +805,7 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(GymRemoveVacationTimes.getActions(id, attributeValues));
                     }
                     else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + "for a " +
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;

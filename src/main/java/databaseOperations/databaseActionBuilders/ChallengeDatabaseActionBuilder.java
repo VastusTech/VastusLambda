@@ -49,6 +49,10 @@ public class ChallengeDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "goal", new AttributeValue(goal), false, "PUT");
     }
 
+    public static DatabaseAction updateAccess(String id, String access) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "access", new AttributeValue(access), false, "PUT");
+    }
+
     public static DatabaseAction updateAddMember(String id, String client) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(client), false, "ADD", new
                 CheckHandler() {

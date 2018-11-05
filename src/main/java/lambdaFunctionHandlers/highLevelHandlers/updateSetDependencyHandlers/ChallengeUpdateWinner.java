@@ -26,10 +26,7 @@ public class ChallengeUpdateWinner {
 
         // Set the winner and update their challenges won
         databaseActions.add(ChallengeDatabaseActionBuilder.updateWinner(challengeID, winner));
-
-        Client winnerClient = Client.readClient(winner);
-        databaseActions.add(ClientDatabaseActionBuilder.updateChallengesWon(winner, Integer.toString(winnerClient
-                .challengesWon + 1)));
+        databaseActions.add(ClientDatabaseActionBuilder.updateAddChallengeWon(winner, challengeID));
 
         //  Finally remove the challenge from everyone's scheduled and into their completed
         for (String clientID : challenge.members) {

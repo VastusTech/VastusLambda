@@ -11,7 +11,7 @@ import java.util.*;
 public class Client extends User {
     public Set<String> friends;
     public Set<String> friendRequests;
-    public int challengesWon;
+    public Set<String> challengesWon;
     public Set<String> scheduledParties;
     public Set<String> scheduledChallenges;
     public Set<String> completedParties;
@@ -25,6 +25,8 @@ public class Client extends User {
         if (friends == null) { this.friends = new HashSet<>(); }
         this.friendRequests = item.getStringSet("friendRequests");
         if (friendRequests == null) { this.friendRequests = new HashSet<>(); }
+        this.challengesWon = item.getStringSet("challengesWon");
+        if (challengesWon == null) { this.challengesWon = new HashSet<>(); }
         this.scheduledParties = item.getStringSet("scheduledParties");
         if (scheduledParties == null) { this.scheduledParties = new HashSet<>(); }
         this.scheduledChallenges = item.getStringSet("scheduledChallenges");

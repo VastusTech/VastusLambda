@@ -49,6 +49,16 @@ public class DeleteClient {
             databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMember(challengeID, clientID));
         }
 
+        // Also remove from completed parties
+        for (String partyID: client.completedParties) {
+            databaseActions.add(PartyDatabaseActionBuilder.updateRemoveMember(partyID, clientID));
+        }
+
+        // Also remove from completed challenges
+        for (String challengeID: client.completedChallenges) {
+            databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMember(challengeID, clientID));
+        }
+
         // Delete the Client
         databaseActions.add(ClientDatabaseActionBuilder.delete(clientID));
 

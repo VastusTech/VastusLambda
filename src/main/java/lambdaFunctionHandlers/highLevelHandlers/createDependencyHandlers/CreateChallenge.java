@@ -20,6 +20,13 @@ public class CreateChallenge {
                 new TimeInterval(createChallengeRequest.time);
                 Integer.parseInt(createChallengeRequest.capacity);
 
+                if (createChallengeRequest.access != null) {
+                    if (!createChallengeRequest.access.equals("public") && !createChallengeRequest.access.equals
+                            ("private")) {
+                        throw new Exception("Create Challenge access must be either \"public\" or \"private\"!");
+                    }
+                }
+
                 databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest));
 
                 // Update owners fields

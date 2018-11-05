@@ -13,6 +13,8 @@ public class DeleteChallenge {
         List<DatabaseAction> databaseActions = new ArrayList<>();
         Challenge challenge = Challenge.readChallenge(challengeID);
 
+        // TODO This is ripe for abuse...
+
         // remove from owner's fields
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveOwnedChallenge(challenge.owner, challengeID));
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledChallenge(challenge.owner, challengeID));
