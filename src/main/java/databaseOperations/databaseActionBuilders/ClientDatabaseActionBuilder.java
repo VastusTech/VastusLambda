@@ -216,8 +216,14 @@ public class ClientDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateAddOwnedParty(String id, String party, boolean ifWithCreate) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "ownedParties", new AttributeValue(party), ifWithCreate,
-                "ADD");
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "ownedParties", null, true,
+                    "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "ownedParties", new AttributeValue(party), false,
+                    "ADD");
+        }
     }
 
     public static DatabaseAction updateRemoveOwnedParty(String id, String party) throws Exception {
@@ -226,8 +232,13 @@ public class ClientDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateAddOwnedChallenge(String id, String challenge, boolean ifWithCreate) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "ownedChallenges", new AttributeValue(challenge), ifWithCreate,
-                "ADD");
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "ownedChallenges", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "ownedChallenges", new AttributeValue(challenge), false,
+                    "ADD");
+        }
     }
 
     public static DatabaseAction updateRemoveOwnedChallenge(String id, String challenge) throws Exception {
