@@ -7,6 +7,9 @@ import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActi
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateChallengeRequest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class CreateChallenge {
     public static String handle(CreateChallengeRequest createChallengeRequest) throws Exception {
         if (createChallengeRequest != null) {
@@ -25,6 +28,15 @@ public class CreateChallenge {
                             ("private")) {
                         throw new Exception("Create Challenge access must be either \"public\" or \"private\"!");
                     }
+                }
+
+                if (createChallengeRequest.members == null) {
+                    createChallengeRequest.members = new String[]{createChallengeRequest.owner};
+                }
+                else {
+                    ArrayList<String> members = new ArrayList<>(Arrays.asList(createChallengeRequest.members));
+                    members.add(createChallengeRequest.owner);
+                    createChallengeRequest.members = members.toArray(new String[]{});
                 }
 
                 databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest));

@@ -117,7 +117,8 @@ public class LambdaRequest {
                     if (specifyAction.equals("ForSurvey") && itemType.equals("Review")) {
                         // Create Review and remove from workout missingReviews
                         if (identifiers.length == 1) {
-                            if (createReviewRequest != null && !fromID.equals(createReviewRequest.by)) {
+                            if (createReviewRequest != null && !fromID.equals(createReviewRequest.by) && !fromID
+                                    .equals("admin")) {
                                 throw new Exception("The FromID doesn't have permission to write that review!");
                             }
                             return handleSurveyCreate(identifiers[0]);
@@ -130,7 +131,8 @@ public class LambdaRequest {
                         // Create the item
                         if (identifiers.length == 0) {
                             // TODO Permissions for creating a workout?
-                            if (createReviewRequest != null && !fromID.equals(createReviewRequest.by)) {
+                            if (createReviewRequest != null && !fromID.equals(createReviewRequest.by) && !fromID
+                                    .equals("admin")) {
                                 throw new Exception("The FromID doesn't have permission to create that item!");
                             }
                             return handleCreate();
@@ -168,7 +170,7 @@ public class LambdaRequest {
                         // There are a number of things this could be. Some require checking, some require multi-faceted
                         if (identifiers.length == 1) {
                             if ((itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) &&
-                                    !identifiers[0].equals(fromID)) {
+                                    !identifiers[0].equals(fromID) && !fromID.equals("admin")) {
                                 throw new Exception("The FromID does not have the permissions to update that object!");
                             }
                             if (attributeName == null || attributeName.equals("") || attributeValues == null) {
@@ -193,7 +195,10 @@ public class LambdaRequest {
                         // There are a number of things this could be. Some require checking, some require multi-faceted
                         if (identifiers.length == 1) {
                             if ((itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) &&
-                                    !identifiers[0].equals(fromID) && attributeName != null && !attributeName.equals
+                                    !identifiers[0].equals(fromID) && !fromID.equals("admin") && attributeName
+                                    != null &&
+                                    !attributeName
+                                    .equals
                                     ("friendRequests")) {
                                 throw new Exception("The FromID does not have the permissions to update that object!");
                             }
@@ -219,7 +224,7 @@ public class LambdaRequest {
                         // There are a number of things this could be. Some require checking, some require multi-faceted
                         if (identifiers.length == 1) {
                             if ((itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) &&
-                                    !identifiers[0].equals(fromID)) {
+                                    !identifiers[0].equals(fromID) && !fromID.equals("admin")) {
                                 throw new Exception("The FromID does not have the permissions to update that object!");
                             }
                             if (attributeName == null || attributeName.equals("") || attributeValues == null) {
@@ -243,7 +248,7 @@ public class LambdaRequest {
                         // Delete the item from the database.
                         if (identifiers.length == 1) {
                             if ((itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) &&
-                                    !identifiers[0].equals(fromID)) {
+                                    !identifiers[0].equals(fromID) && !fromID.equals("admin")) {
                                 throw new Exception("The FromID does not have the permissions to update that object!");
                             }
                             handleDelete(identifiers[0]);
@@ -823,6 +828,7 @@ public class LambdaRequest {
     public void handleDelete(String id) throws Exception {
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
+        //Constants.debugLog("Handling delete actions");
         try {
             switch (ItemType.valueOf(itemType)) {
                 case Client:
@@ -843,8 +849,11 @@ public class LambdaRequest {
                     break;
                 case Party:
                     databaseActionCompiler.addAll(DeleteParty.getActions(id));
+                    break;
                 case Challenge:
+                    //Constants.debugLog("Adding delete challenge actions");
                     databaseActionCompiler.addAll(DeleteChallenge.getActions(id));
+                    break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -852,6 +861,8 @@ public class LambdaRequest {
         catch (IllegalArgumentException e) {
             throw new Exception("Item Type: \"" + itemType + "\" not recognized! Error: " + e.getLocalizedMessage());
         }
+
+        //Constants.debugLog("Attempting the transaction");
         DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
     }
 

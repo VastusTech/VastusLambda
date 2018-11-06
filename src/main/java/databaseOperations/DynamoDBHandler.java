@@ -68,6 +68,15 @@ public class DynamoDBHandler {
                         databaseAction.item.put("id", new AttributeValue(id));
                         databaseAction.item.put("time_created", new AttributeValue(new DateTime().toString()));
 
+                        if (databaseAction.item.containsKey("username")) {
+                            if (this.usernameInDatabase(databaseAction.item.get("username").getS(), databaseAction.item
+                                    .get("item_type").getS())) {
+                                // This means that the database already has this username, we should not do this
+                                throw new Exception("Attempted to put repeat username: " + databaseAction.item.get
+                                        ("username").getS() + " into the database!");
+                            }
+                        }
+
                         Constants.debugLog("Creating item with item: " + databaseAction.item);
 
                         transaction.putItem(new PutItemRequest().withTableName(tableName).withItem(databaseAction.item));
@@ -364,6 +373,21 @@ public class DynamoDBHandler {
         }
 
         return null;
+    }
+
+    private boolean usernameInDatabase(String username, String item_type) {
+        Index index = table.getIndex("item_type-username-index");
+        HashMap<String, String> nameMap = new HashMap<>();
+        nameMap.put("#usr", "username");
+        nameMap.put("#type", "item_type");
+        HashMap<String, Object> valueMap = new HashMap<>();
+        valueMap.put(":usr", username);
+        valueMap.put(":type", item_type);
+        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type AND #usr = :usr")
+                .withNameMap(nameMap).withValueMap(valueMap);
+        index.query(querySpec);
+        ItemCollection<QueryOutcome> items = index.query(querySpec);
+        return (items.getAccumulatedItemCount() > 0);
     }
 
     // TODO We usually don't want to send out a null variable without throwing an exception
