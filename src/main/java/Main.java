@@ -1,6 +1,7 @@
 package main.java;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import main.java.Logic.ItemType;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.UpdateDatabaseAction;
 import org.joda.time.DateTime;
@@ -9,6 +10,8 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+//        ItemType itemType = ItemType.valueOf("Event");
+//        System.out.println(itemType);
         // This throws an error
         // main.java.Ay ay = main.java.Ay.valueOf("LMAONOT");
         // float a = Float.parseFloat("0.0f");

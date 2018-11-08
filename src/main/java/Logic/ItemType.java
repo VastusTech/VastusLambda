@@ -6,7 +6,7 @@ public enum ItemType {
     Gym,
     Workout,
     Review,
-    Event;
+    Event,;
 
     public static String getItemType(String id) {
         String prefix = id.substring(0, Constants.numPrefix);

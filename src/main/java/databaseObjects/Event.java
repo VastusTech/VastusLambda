@@ -45,7 +45,7 @@ public class Event extends DatabaseObject {
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
-        item.put("item_type", new AttributeValue("Challenge"));
+        item.put("item_type", new AttributeValue("Event"));
         item.put("capacity", new AttributeValue("4"));
         item.put("access", new AttributeValue("public"));
         item.put("title", new AttributeValue("untitled"));
