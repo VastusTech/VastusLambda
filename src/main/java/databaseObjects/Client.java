@@ -12,12 +12,9 @@ public class Client extends User {
     public Set<String> friends;
     public Set<String> friendRequests;
     public Set<String> challengesWon;
-    public Set<String> scheduledParties;
-    public Set<String> scheduledChallenges;
-    public Set<String> completedParties;
-    public Set<String> completedChallenges;
-    public Set<String> ownedParties;
-    public Set<String> ownedChallenges;
+    public Set<String> scheduledEvents;
+    public Set<String> completedEvents;
+    public Set<String> ownedEvents;
 
     Client(Item item) throws Exception {
         super(item);
@@ -27,18 +24,12 @@ public class Client extends User {
         if (friendRequests == null) { this.friendRequests = new HashSet<>(); }
         this.challengesWon = item.getStringSet("challengesWon");
         if (challengesWon == null) { this.challengesWon = new HashSet<>(); }
-        this.scheduledParties = item.getStringSet("scheduledParties");
-        if (scheduledParties == null) { this.scheduledParties = new HashSet<>(); }
-        this.scheduledChallenges = item.getStringSet("scheduledChallenges");
-        if (scheduledChallenges == null) { this.scheduledChallenges = new HashSet<>(); }
-        this.completedParties = item.getStringSet("completedParties");
-        if (completedParties == null) { this.completedParties = new HashSet<>(); }
-        this.completedChallenges = item.getStringSet("completedChallenges");
-        if (completedChallenges == null) { this.completedChallenges = new HashSet<>(); }
-        this.ownedParties = item.getStringSet("ownedParties");
-        if (ownedParties == null) { this.ownedParties = new HashSet<>(); }
-        this.ownedChallenges = item.getStringSet("ownedChallenges");
-        if (ownedChallenges == null) { this.ownedChallenges = new HashSet<>(); }
+        this.scheduledEvents = item.getStringSet("scheduledEvents");
+        if (scheduledEvents == null) { this.scheduledEvents = new HashSet<>(); }
+        this.completedEvents = item.getStringSet("completedEvents");
+        if (completedEvents == null) { this.completedEvents = new HashSet<>(); }
+        this.ownedEvents = item.getStringSet("ownedEvents");
+        if (ownedEvents == null) { this.ownedEvents = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

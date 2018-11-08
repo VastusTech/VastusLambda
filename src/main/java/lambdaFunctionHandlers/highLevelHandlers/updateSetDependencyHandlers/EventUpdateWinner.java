@@ -1,20 +1,23 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
-import main.java.databaseObjects.Challenge;
-import main.java.databaseObjects.Client;
+import main.java.databaseObjects.Event;
 import main.java.databaseOperations.DatabaseAction;
-import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChallengeUpdateWinner {
-    public static List<DatabaseAction> getActions(String challengeID, String winner) throws Exception {
+public class EventUpdateWinner {
+    public static List<DatabaseAction> getActions(String eventID, String winner) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
         // Get all the actions for this process
-        Challenge challenge = Challenge.readChallenge(challengeID);
+        Event challenge = Event.readEvent(eventID);
+
+        if (!challenge.ifChallenge) {
+            throw new Exception("To win an event, that event needs to be a challenge!");
+        }
 
         if (!challenge.members.contains(winner)) {
             throw new Exception("Winner must be a member of the challenge!");
@@ -25,14 +28,14 @@ public class ChallengeUpdateWinner {
         }
 
         // Set the winner and update their challenges won
-        databaseActions.add(ChallengeDatabaseActionBuilder.updateWinner(challengeID, winner));
-        databaseActions.add(ClientDatabaseActionBuilder.updateAddChallengeWon(winner, challengeID));
+        databaseActions.add(EventDatabaseActionBuilder.updateWinner(eventID, winner));
+        databaseActions.add(ClientDatabaseActionBuilder.updateAddChallengeWon(winner, eventID));
 
         //  Finally remove the challenge from everyone's scheduled and into their completed
         for (String clientID : challenge.members) {
-            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledChallenge(clientID, challengeID));
+            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledEvent(clientID, eventID));
             databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(clientID, challenge.time.toString()));
-            databaseActions.add(ClientDatabaseActionBuilder.updateAddCompletedChallenge(clientID, challengeID));
+            databaseActions.add(ClientDatabaseActionBuilder.updateAddCompletedEvent(clientID, eventID));
         }
 
         return databaseActions;

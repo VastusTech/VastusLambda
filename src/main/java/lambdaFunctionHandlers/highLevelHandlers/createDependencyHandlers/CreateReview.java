@@ -2,7 +2,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.Logic.Constants;
-import main.java.databaseObjects.DatabaseObject;
+import main.java.Logic.ItemType;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -27,7 +27,7 @@ public class CreateReview {
 
                 // Add to by's reviews by
                 String byID = createReviewRequest.by;
-                String byItemType = DatabaseObject.getItemType(byID);
+                String byItemType = ItemType.getItemType(byID);
                 if (byItemType == null) {
                     throw new Exception("Review By is invalid!");
                 }
@@ -36,7 +36,7 @@ public class CreateReview {
 
                 // Add to about's reviews about
                 String about = createReviewRequest.about;
-                String aboutItemType = DatabaseObject.getItemType(about);
+                String aboutItemType = ItemType.getItemType(about);
                 if (aboutItemType == null) {
                     throw new Exception("Review AboutID is invalid!");
                 }

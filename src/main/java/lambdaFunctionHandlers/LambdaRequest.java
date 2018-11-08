@@ -33,8 +33,7 @@ public class LambdaRequest {
     private CreateGymRequest createGymRequest;
     private CreateWorkoutRequest createWorkoutRequest;
     private CreateReviewRequest createReviewRequest;
-    private CreatePartyRequest createPartyRequest;
-    private CreateChallengeRequest createChallengeRequest;
+    private CreateEventRequest createEventRequest;
 
     private enum Action {
         CREATE,
@@ -66,8 +65,7 @@ public class LambdaRequest {
         // Client ==========================
         friends,
         friendRequests,
-        scheduledParties,
-        scheduledChallenges,
+        scheduledEvents,
         // Trainer =========================
         gym,
         availableTimes,
@@ -96,11 +94,11 @@ public class LambdaRequest {
         by,
         about,
         description,
-        // Party ===========================
+        // Event ===========================
         title,
         members,
         access,
-        // Challenge =======================
+        ifChallenge,
         goal,
         winner,
     }
@@ -317,13 +315,9 @@ public class LambdaRequest {
                 numCreateRequest++;
                 Constants.debugLog("Has a create review request!\n");
             }
-            if (createPartyRequest != null) {
+            if (createEventRequest != null) {
                 numCreateRequest++;
-                Constants.debugLog("Has a create party request!\n");
-            }
-            if (createChallengeRequest != null) {
-                numCreateRequest++;
-                Constants.debugLog("Has a create challenge request!\n");
+                Constants.debugLog("Has a create event request!\n");
             }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
@@ -350,10 +344,8 @@ public class LambdaRequest {
                 case Review:
                     // Send a null for surveyWorkoutID because we're not creating it for a survey
                     return CreateReview.handle(createReviewRequest, null);
-                case Party:
-                    return CreateParty.handle(createPartyRequest);
-                case Challenge:
-                    return CreateChallenge.handle(createChallengeRequest);
+                case Event:
+                    return CreateEvent.handle(createEventRequest);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -380,10 +372,8 @@ public class LambdaRequest {
                     return ReadWorkoutsByID.handle(ids);
                 case Review:
                     return ReadReviewsByID.handle(ids);
-                case Party:
-                    return ReadPartiesByID.handle(ids);
-                case Challenge:
-                    return ReadChallengesByID.handle(ids);
+                case Event:
+                    return ReadEventsByID.handle(ids);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -406,10 +396,8 @@ public class LambdaRequest {
                     throw new Exception("Can't query a workout by a username!");
                 case Review:
                     throw new Exception("Can't query a review by a username!");
-                case Party:
-                    throw new Exception("Can't query a party by a username!");
-                case Challenge:
-                    throw new Exception("Can't query a challenge by a username!");
+                case Event:
+                    throw new Exception("Can't query an event by a username!");
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -533,11 +521,8 @@ public class LambdaRequest {
                     if (itemType.equals("Gym")) {
                         databaseActionCompiler.addAll(GymUpdateAddress.getActions(id, attributeValues[0]));
                     }
-                    else if (itemType.equals("Party")) {
-                        databaseActionCompiler.addAll(PartyUpdateAddress.getActions(id, attributeValues[0]));
-                    }
-                    else if (itemType.equals("Challenge")) {
-                        databaseActionCompiler.addAll(ChallengeUpdateAddress.getActions(id, attributeValues[0]));
+                    else if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventUpdateAddress.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
@@ -576,48 +561,46 @@ public class LambdaRequest {
                     }
                     break;
                 case title:
-                    if (itemType.equals("Party")) {
-                        databaseActionCompiler.addAll(PartyUpdateTitle.getActions(id, attributeValues[0]));
-                    }
-                    else if (itemType.equals("Challenge")) {
-                        databaseActionCompiler.addAll(ChallengeUpdateTitle.getActions(id, attributeValues[0]));
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventUpdateTitle.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case description:
-                    if (itemType.equals("Party")) {
-                        databaseActionCompiler.addAll(PartyUpdateDescription.getActions(id, attributeValues[0]));
-                    }
-                    else if (itemType.equals("Challenge")) {
-                        databaseActionCompiler.addAll(ChallengeUpdateDescription.getActions(id, attributeValues[0]));
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventUpdateDescription.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case access:
-                    if (itemType.equals("Party")) {
-                        databaseActionCompiler.addAll(PartyUpdateAccess.getActions(id, attributeValues[0]));
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventUpdateAccess.getActions(id, attributeValues[0]));
                     }
-                    else if (itemType.equals("Challenge")) {
-                        databaseActionCompiler.addAll(ChallengeUpdateAccess.getActions(id, attributeValues[0]));
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                case ifChallenge:
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventUpdateIfChallenge.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                 case goal:
-                    if (itemType.equals("Challenge")) {
-                        databaseActionCompiler.addAll(ChallengeUpdateGoal.getActions(id, attributeValues[0]));
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventUpdateGoal.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case winner:
-                    if (itemType.equals("Challenge")) {
-                        databaseActionCompiler.addAll(ChallengeUpdateWinner.getActions(id, attributeValues[0]));
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventUpdateWinner.getActions(id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
@@ -672,24 +655,10 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-                case scheduledParties:
+                case scheduledEvents:
                     if (attributeValues.length == 1) {
-                        if (itemType.equals("Client") && attributeValues[0].equals("Party")) {
-                            databaseActionCompiler.addAll(ClientAddToParty.getActions(id, attributeValues[0]));
-                        } else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
-                                    itemType + "!");
-                        }
-                    }
-                    else {
-                        throw new Exception("For updating " + attributeName + " on " + itemType +
-                                "attributeValues must be only 1 long!");
-                    }
-                    break;
-                case scheduledChallenges:
-                    if (attributeValues.length == 1) {
-                        if (itemType.equals("Client") && attributeValues[0].equals("Challenge")) {
-                            databaseActionCompiler.addAll(ClientAddToChallenge.getActions(id, attributeValues[0]));
+                        if (itemType.equals("Client") && ("Event").equals(ItemType.getItemType(attributeValues[0]))) {
+                            databaseActionCompiler.addAll(ClientAddToEvent.getActions(id, attributeValues[0]));
                         } else {
                             throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                     itemType + "!");
@@ -768,24 +737,10 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
-                case scheduledParties:
+                case scheduledEvents:
                     if (attributeValues.length == 1) {
-                        if (itemType.equals("Client") && attributeValues[0].equals("Party")) {
-                            databaseActionCompiler.addAll(ClientRemoveFromParty.getActions(id, attributeValues[0]));
-                        } else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
-                                    itemType + "!");
-                        }
-                    }
-                    else {
-                        throw new Exception("For updating " + attributeName + " on " + itemType +
-                                "attributeValues must be only 1 long!");
-                    }
-                    break;
-                case scheduledChallenges:
-                    if (attributeValues.length == 1) {
-                        if (itemType.equals("Client") && attributeValues[0].equals("Challenge")) {
-                            databaseActionCompiler.addAll(ClientRemoveFromChallenge.getActions(id, attributeValues[0]));
+                        if (itemType.equals("Client") && ("Event").equals(ItemType.getItemType(attributeValues[0]))) {
+                            databaseActionCompiler.addAll(ClientRemoveFromEvent.getActions(id, attributeValues[0]));
                         } else {
                             throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                     itemType + "!");
@@ -847,12 +802,8 @@ public class LambdaRequest {
                 case Review:
                     databaseActionCompiler.addAll(DeleteReview.getActions(id));
                     break;
-                case Party:
-                    databaseActionCompiler.addAll(DeleteParty.getActions(id));
-                    break;
-                case Challenge:
-                    //Constants.debugLog("Adding delete challenge actions");
-                    databaseActionCompiler.addAll(DeleteChallenge.getActions(id));
+                case Event:
+                    databaseActionCompiler.addAll(DeleteEvent.getActions(id));
                     break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
@@ -869,8 +820,7 @@ public class LambdaRequest {
     public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String
             attributeName, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest
             createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
-                         CreateReviewRequest createReviewRequest, CreatePartyRequest createPartyRequest,
-                         CreateChallengeRequest createChallengeRequest) {
+                         CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -883,8 +833,7 @@ public class LambdaRequest {
         this.createGymRequest = createGymRequest;
         this.createWorkoutRequest = createWorkoutRequest;
         this.createReviewRequest = createReviewRequest;
-        this.createPartyRequest = createPartyRequest;
-        this.createChallengeRequest = createChallengeRequest;
+        this.createEventRequest = createEventRequest;
     }
 
     public LambdaRequest() {}
@@ -985,19 +934,11 @@ public class LambdaRequest {
         this.createReviewRequest = createReviewRequest;
     }
 
-    public CreatePartyRequest getCreatePartyRequest() {
-        return createPartyRequest;
+    public CreateEventRequest getCreateEventRequest() {
+        return createEventRequest;
     }
 
-    public void setCreatePartyRequest(CreatePartyRequest createPartyRequest) {
-        this.createPartyRequest = createPartyRequest;
-    }
-
-    public CreateChallengeRequest getCreateChallengeRequest() {
-        return createChallengeRequest;
-    }
-
-    public void setCreateChallengeRequest(CreateChallengeRequest createChallengeRequest) {
-        this.createChallengeRequest = createChallengeRequest;
+    public void setCreateEventRequest(CreateEventRequest createEventRequest) {
+        this.createEventRequest = createEventRequest;
     }
 }

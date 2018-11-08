@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.databaseObjects.DatabaseObject;
+import main.java.Logic.ItemType;
 import main.java.databaseObjects.Review;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ReviewDatabaseActionBuilder;
@@ -15,11 +15,11 @@ public class DeleteReview {
         Review review = Review.readReview(reviewID);
         // Remove from reviews about field
         String by = review.by;
-        String byItemType = DatabaseObject.getItemType(by);
+        String byItemType = ItemType.getItemType(by);
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveReviewBy(by, byItemType, reviewID));
         // Remove from reviews about field
         String about = review.about;
-        String aboutItemType = DatabaseObject.getItemType(about);
+        String aboutItemType = ItemType.getItemType(about);
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveReviewBy(about, aboutItemType, reviewID));
 
         // Delete the review

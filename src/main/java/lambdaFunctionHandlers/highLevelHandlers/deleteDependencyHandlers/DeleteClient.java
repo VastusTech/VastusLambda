@@ -2,9 +2,8 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandl
 
 import main.java.databaseObjects.Client;
 import main.java.databaseOperations.DatabaseAction;
-import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
-import main.java.databaseOperations.databaseActionBuilders.PartyDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteReview;
 
@@ -39,24 +38,14 @@ public class DeleteClient {
             databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
         }
 
-        // Also remove from scheduled parties
-        for (String partyID : client.scheduledParties) {
-            databaseActions.add(PartyDatabaseActionBuilder.updateRemoveMember(partyID, clientID));
+        // Also remove from scheduled events
+        for (String eventID : client.scheduledEvents) {
+            databaseActions.add(EventDatabaseActionBuilder.updateRemoveMember(eventID, clientID));
         }
 
-        // Also remove from scheduled challenges
-        for (String challengeID : client.scheduledChallenges) {
-            databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMember(challengeID, clientID));
-        }
-
-        // Also remove from completed parties
-        for (String partyID: client.completedParties) {
-            databaseActions.add(PartyDatabaseActionBuilder.updateRemoveMember(partyID, clientID));
-        }
-
-        // Also remove from completed challenges
-        for (String challengeID: client.completedChallenges) {
-            databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMember(challengeID, clientID));
+        // Also remove from completed events
+        for (String eventID: client.completedEvents) {
+            databaseActions.add(EventDatabaseActionBuilder.updateRemoveMember(eventID, clientID));
         }
 
         // Delete the Client

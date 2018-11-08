@@ -1,30 +1,39 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreatePartyRequest {
+public class CreateEventRequest {
     // Required
     public String owner;
     public String time;
     public String capacity;
     public String address;
     public String title;
+    public String ifChallenge;
+
+    // Required if ifChallenge
+    public String goal;
 
     // Optional
     public String description;
+    public String difficulty;
     public String[] members;
     public String access;
 
-    public CreatePartyRequest(String owner, String time, String capacity, String address, String title, String description, String[] members, String access) {
+    public CreateEventRequest(String owner, String time, String capacity, String address, String title, String goal,
+        String ifChallenge, String description, String difficulty, String[] members, String access) {
         this.owner = owner;
         this.time = time;
         this.capacity = capacity;
         this.address = address;
         this.title = title;
+        this.goal = goal;
+        this.ifChallenge = ifChallenge;
         this.description = description;
+        this.difficulty = difficulty;
         this.members = members;
         this.access = access;
     }
 
-    public CreatePartyRequest() {}
+    public CreateEventRequest() {}
 
     public String getOwner() {
         return owner;
@@ -66,12 +75,36 @@ public class CreatePartyRequest {
         this.title = title;
     }
 
+    public String getGoal() {
+        return goal;
+    }
+
+    public void setGoal(String goal) {
+        this.goal = goal;
+    }
+
+    public String getIfChallenge() {
+        return ifChallenge;
+    }
+
+    public void setIfChallenge(String ifChallenge) {
+        this.ifChallenge = ifChallenge;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
     }
 
     public String[] getMembers() {
@@ -90,3 +123,4 @@ public class CreatePartyRequest {
         this.access = access;
     }
 }
+

@@ -17,10 +17,8 @@ public interface DatabaseObjectBuilder {
                 return new Workout(item);
             case Review:
                 return new Review(item);
-            case Party:
-                return new Party(item);
-            case Challenge:
-                return new Challenge(item);
+            case Event:
+                return new Event(item);
             default:
                 throw new Exception("The item type is improperly formed");
         }

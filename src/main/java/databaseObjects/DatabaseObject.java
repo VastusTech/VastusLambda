@@ -83,18 +83,4 @@ abstract public class DatabaseObject {
         item.put("marker", new AttributeValue().withN("0"));
         return item;
     }
-
-    public static String getItemType(String id) {
-        String prefix = id.substring(0, Constants.numPrefix);
-        ItemType[] itemTypes = ItemType.values();
-
-        for (ItemType itemType : itemTypes) {
-            String type = itemType.name();
-            if (prefix.equals(type.substring(0, Constants.numPrefix).toUpperCase())) {
-                return type;
-            }
-        }
-
-        return null;
-    }
 }

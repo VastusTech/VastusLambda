@@ -182,7 +182,7 @@ public class TrainerDatabaseActionBuilder {
 
     public static DatabaseAction delete(String id) {
         Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Trainer"));
+        key.put("item_type", new AttributeValue(itemType));
         key.put("id", new AttributeValue(id));
         return new DeleteDatabaseAction(key);
     }

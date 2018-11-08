@@ -106,14 +106,14 @@ public class WorkoutDatabaseActionBuilder {
 
     public static DatabaseAction delete(String id) {
         Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Workout"));
+        key.put("item_type", new AttributeValue(itemType));
         key.put("id", new AttributeValue(id));
         return new DeleteDatabaseAction(key);
     }
 
     public static DatabaseAction deleteIfEmpty(String id) {
         Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Workout"));
+        key.put("item_type", new AttributeValue(itemType));
         key.put("id", new AttributeValue(id));
         return new DeleteDatabaseAction(key, new CheckHandler() {
             @Override

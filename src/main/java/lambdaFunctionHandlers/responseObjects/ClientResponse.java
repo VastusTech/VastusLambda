@@ -27,12 +27,9 @@ public class ClientResponse extends ObjectResponse {
     public String[] friends;
     public String[] friendRequests;
     public String[] challengesWon;
-    public String[] scheduledParties;
-    public String[] completedParties;
-    public String[] ownedParties;
-    public String[] scheduledChallenges;
-    public String[] completedChallenges;
-    public String[] ownedChallenges;
+    public String[] scheduledEvents;
+    public String[] completedEvents;
+    public String[] ownedEvents;
 
     public ClientResponse(Client client) {
         super(client.id);
@@ -58,11 +55,8 @@ public class ClientResponse extends ObjectResponse {
         this.friends = client.friends.toArray(new String[]{});
         this.friendRequests = client.friendRequests.toArray(new String[]{});
         this.challengesWon = client.challengesWon.toArray(new String[]{});
-        this.scheduledParties = client.scheduledParties.toArray(new String[]{});
-        this.completedParties = client.completedParties.toArray(new String[]{});
-        this.ownedParties = client.ownedParties.toArray(new String[]{});
-        this.scheduledChallenges = client.scheduledChallenges.toArray(new String[]{});
-        this.completedChallenges = client.completedChallenges.toArray(new String[]{});
-        this.ownedChallenges = client.ownedChallenges.toArray(new String[]{});
+        this.scheduledEvents = client.scheduledEvents.toArray(new String[]{});
+        this.completedEvents = client.completedEvents.toArray(new String[]{});
+        this.ownedEvents = client.ownedEvents.toArray(new String[]{});
     }
 }

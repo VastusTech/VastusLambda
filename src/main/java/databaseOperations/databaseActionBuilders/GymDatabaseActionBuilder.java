@@ -201,7 +201,7 @@ public class GymDatabaseActionBuilder {
 
     public static DatabaseAction delete(String id) {
         Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Gym"));
+        key.put("item_type", new AttributeValue(itemType));
         key.put("id", new AttributeValue(id));
         return new DeleteDatabaseAction(key);
     }
