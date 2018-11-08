@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
@@ -35,8 +36,10 @@ public class CreateChallenge {
                 }
                 else {
                     ArrayList<String> members = new ArrayList<>(Arrays.asList(createChallengeRequest.members));
-                    members.add(createChallengeRequest.owner);
-                    createChallengeRequest.members = members.toArray(new String[]{});
+                    if (!members.contains(createChallengeRequest.owner)) {
+                        members.add(createChallengeRequest.owner);
+                        createChallengeRequest.members = members.toArray(new String[]{});
+                    }
                 }
 
                 databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest));
@@ -44,14 +47,15 @@ public class CreateChallenge {
                 // Update owners fields
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddOwnedChallenge(createChallengeRequest
                         .owner, null, true));
-                databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledChallenge
-                        (createChallengeRequest.owner, null, true));
-                databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(createChallengeRequest
-                        .owner, createChallengeRequest.time));
+//                databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledChallenge
+//                        (createChallengeRequest.owner, null, true));
+//                databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(createChallengeRequest
+//                        .owner, createChallengeRequest.time));
 
                 // Update each members fields
                 if (createChallengeRequest.members != null) {
                     for (String member : createChallengeRequest.members) {
+                        Constants.debugLog("Member = " + member);
                         databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledChallenge
                                 (member, null, true));
                         databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime
