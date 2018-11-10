@@ -9,23 +9,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteEvent {
-    public static List<DatabaseAction> getActions(String eventID) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String eventID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
         Event event = Event.readEvent(eventID);
 
-        //Constants.debugLog("Getting delete challenge actions");
+        if (!fromID.equals(event.owner) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only delete an event you own!");
+        }
 
         // TODO This is ripe for abuse...
         // TODO Do checking so that a cheeky guy can't just delete a challenge and make it so nobody wins?
 
         // remove from owner's fields
-        //Constants.debugLog("Removing from owner's owned events field");
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveOwnedEvent(event.owner, eventID));
         // remove from each member's fields
-        //Constants.debugLog("Removing from all the members scheduled challenges: members size = " + challenge.members.size());
         for (String member : event.members) {
+            // Remove the scheduled event
             databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledEvent(member, eventID));
+            // Remove the scheduled time
             databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(member, event.time.toString()));
+        }
+        // remove from each invited member's fields
+        for (String invitedMember : event.invitedMembers) {
+            // Remove the invited event
+            databaseActions.add(ClientDatabaseActionBuilder.updateRemoveInvitedEvent(invitedMember, eventID));
         }
 
         // Delete the challenge

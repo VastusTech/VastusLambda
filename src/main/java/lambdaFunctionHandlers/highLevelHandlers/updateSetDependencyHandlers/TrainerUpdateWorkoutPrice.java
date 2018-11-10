@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrainerUpdateWorkoutPrice {
-    public static List<DatabaseAction> getActions(String trainerID, String price) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String trainerID, String price) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        if (!fromID.equals(trainerID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only update a trainer you are!");
+        }
         // Check to see if the price is an int or not
         Integer.parseInt(price);
         // Get all the actions for this process

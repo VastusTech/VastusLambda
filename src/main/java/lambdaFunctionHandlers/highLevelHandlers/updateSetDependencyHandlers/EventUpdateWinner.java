@@ -9,11 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventUpdateWinner {
-    public static List<DatabaseAction> getActions(String eventID, String winner) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String eventID, String winner) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
         // Get all the actions for this process
         Event challenge = Event.readEvent(eventID);
+
+        if (!challenge.owner.equals(fromID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: In order to update an event, you need to be the owner!");
+        }
 
         if (!challenge.ifChallenge) {
             throw new Exception("To win an event, that event needs to be a challenge!");

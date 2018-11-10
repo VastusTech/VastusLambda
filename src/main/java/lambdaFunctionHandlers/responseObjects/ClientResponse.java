@@ -30,6 +30,7 @@ public class ClientResponse extends ObjectResponse {
     public String[] scheduledEvents;
     public String[] completedEvents;
     public String[] ownedEvents;
+    public String[] invitedEvents;
 
     public ClientResponse(Client client) {
         super(client.id);
@@ -58,5 +59,6 @@ public class ClientResponse extends ObjectResponse {
         this.scheduledEvents = client.scheduledEvents.toArray(new String[]{});
         this.completedEvents = client.completedEvents.toArray(new String[]{});
         this.ownedEvents = client.ownedEvents.toArray(new String[]{});
+        this.invitedEvents = client.invitedEvents.toArray(new String[]{});
     }
 }

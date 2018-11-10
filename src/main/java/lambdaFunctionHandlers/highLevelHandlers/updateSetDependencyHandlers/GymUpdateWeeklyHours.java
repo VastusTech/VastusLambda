@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GymUpdateWeeklyHours {
-    public static List<DatabaseAction> getActions(String gymID, String[] weeklyHours) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String gymID, String[] weeklyHours) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        if (!fromID.equals(gymID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only update a gym you own!");
+        }
         // TODO Check if it interferes with current workouts
         // TODO Check that all the times are well formed
         // TODO THIS SHOULD BE ADDRESSED VERY SOON

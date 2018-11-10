@@ -83,6 +83,14 @@ public class EventDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(client), false, "DELETE");
     }
 
+    public static DatabaseAction updateAddInvitedMember(String id, String client) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "invitedMembers", new AttributeValue(client), false, "ADD");
+    }
+
+    public static DatabaseAction updateRemoveInvitedMember(String id, String client) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "invitedMembers", new AttributeValue(client), false, "DELETE");
+    }
+
     public static DatabaseAction updateWinner(String id, String winner) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "winner", new AttributeValue(winner), false, "PUT");
     }

@@ -12,13 +12,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CreateEvent {
-    public static String handle(CreateEventRequest createEventRequest) throws Exception {
+    public static String handle(String fromID, CreateEventRequest createEventRequest) throws Exception {
         if (createEventRequest != null) {
             // Create event
             if (createEventRequest.owner != null && createEventRequest.time != null && createEventRequest
                     .capacity != null && createEventRequest.address != null && createEventRequest.title !=
                     null && createEventRequest.ifChallenge != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
+
+                if (!fromID.equals(createEventRequest.owner) && !fromID.equals("admin")) {
+                    throw new Exception("PERMISSIONS ERROR: You can only create events you're going to own!");
+                }
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)
                 new TimeInterval(createEventRequest.time);

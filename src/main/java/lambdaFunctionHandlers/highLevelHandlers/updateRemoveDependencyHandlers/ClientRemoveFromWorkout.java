@@ -10,11 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientRemoveFromWorkout {
-    public static List<DatabaseAction> getActions(String clientID, String workoutID) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String clientID, String workoutID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        Client client = Client.readClient(clientID);
         Workout workout = Workout.readWorkout(workoutID);
+        Client client = Client.readClient(clientID);
+
+        if (!fromID.equals(clientID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only remove yourself from a workout!");
+        }
 
         // We delete the workout from ourselves
         databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledWorkout(clientID, workoutID));

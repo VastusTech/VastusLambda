@@ -118,40 +118,38 @@ public class ClientDatabaseActionBuilder {
         return UserDatabaseActionBuilder.updateBio(id, itemType, bio);
     }
 
-    public static DatabaseAction updateAddFriends(String id, String[] friends, boolean ifAccepting) throws Exception {
+    public static DatabaseAction updateAddFriend(String id, String friend, boolean ifAccepting) throws Exception {
         // If the person is accepting the request, make sure they actually have the request
         if (ifAccepting) {
-            return new UpdateDatabaseAction(id, itemType, "friends", new AttributeValue(Arrays.asList(friends)),
+            return new UpdateDatabaseAction(id, itemType, "friends", new AttributeValue(friend),
                     false, "ADD", new CheckHandler() {
                 @Override
                 public String isViable(DatabaseObject newObject) throws Exception {
-                    for (String friend : friends) {
-                        if (!((Client) newObject).friendRequests.contains(friend)) {
-                            return "Add friend was not in the client's friend requests!";
-                        }
+                    if (!((Client) newObject).friendRequests.contains(friend)) {
+                        return "Add friend was not in the client's friend requests!";
                     }
                     return null;
                 }
             });
         }
         else {
-            return new UpdateDatabaseAction(id, itemType, "friends", new AttributeValue(Arrays.asList(friends)),
+            return new UpdateDatabaseAction(id, itemType, "friends", new AttributeValue(friend),
                     false, "ADD");
         }
     }
 
-    public static DatabaseAction updateRemoveFriends(String id, String[] friends) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "friends", new AttributeValue(Arrays.asList(friends)),
+    public static DatabaseAction updateRemoveFriend(String id, String friend) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "friends", new AttributeValue(friend),
                 false, "DELETE");
     }
 
-    public static DatabaseAction updateAddFriendRequests(String id, String[] friends) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "friendRequests", new AttributeValue(Arrays.asList(friends)),
+    public static DatabaseAction updateAddFriendRequest(String id, String friend) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "friendRequests", new AttributeValue(friend),
                 false, "ADD");
     }
 
-    public static DatabaseAction updateRemoveFriendRequests(String id, String[] friends) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "friendRequests", new AttributeValue(Arrays.asList(friends)),
+    public static DatabaseAction updateRemoveFriendRequest(String id, String friend) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "friendRequests", new AttributeValue(friend),
                 false, "DELETE");
     }
 
@@ -202,6 +200,14 @@ public class ClientDatabaseActionBuilder {
     public static DatabaseAction updateRemoveOwnedEvent(String id, String event) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "ownedEvents", new AttributeValue(event), false,
                 "DELETE");
+    }
+
+    public static DatabaseAction updateAddInvitedEvent(String id, String event) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "invitedEvents", new AttributeValue(event), false, "ADD");
+    }
+
+    public static DatabaseAction updateRemoveInvitedEvent(String id, String event) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "invitedEvents", new AttributeValue(event), false, "DELETE");
     }
 
     public static DatabaseAction delete(String id) {

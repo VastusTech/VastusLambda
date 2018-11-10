@@ -8,24 +8,21 @@ import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBu
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientAddToEvent {
+public class ClientInviteToEvent {
     public static List<DatabaseAction> getActions(String fromID, String clientID, String eventID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
-
-        if (!fromID.equals(clientID) && !fromID.equals("admin")) {
-            throw new Exception("PERMISSIONS ERROR: You can only add yourself to an event!");
-        }
 
         // Get all the actions for this process
         Event event = Event.readEvent(eventID);
 
-        // Add to client's scheduled events
-        databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledEvent(clientID,
-                eventID, false));
-        // Add to client's scheduled event times
-        databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledTime(clientID, event.time.toString()));
-        // Add to event's clients
-        databaseActions.add(EventDatabaseActionBuilder.updateAddMember(eventID, clientID));
+        if (!event.members.contains(fromID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only invite someone to an event you're a part of!");
+        }
+
+        // Add to client's invited events
+        databaseActions.add(ClientDatabaseActionBuilder.updateAddInvitedEvent(clientID, eventID));
+        // Add to event's invited members
+        databaseActions.add(EventDatabaseActionBuilder.updateAddInvitedMember(eventID, clientID));
 
         return databaseActions;
     }

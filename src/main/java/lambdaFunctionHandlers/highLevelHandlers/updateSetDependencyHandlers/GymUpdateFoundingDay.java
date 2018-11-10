@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GymUpdateFoundingDay {
-    public static List<DatabaseAction> getActions(String gymID, String foundingDay) throws Exception {
-        return UserUpdateBirthday.getActions(gymID, "Gym", foundingDay);
+    public static List<DatabaseAction> getActions(String fromID, String gymID, String foundingDay) throws Exception {
+        if (!fromID.equals(gymID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only update a gym you own!");
+        }
+        return UserUpdateBirthday.getActions(fromID, gymID, "Gym", foundingDay);
     }
 }

@@ -8,11 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventUpdateDifficulty {
-    public static List<DatabaseAction> getActions(String eventID, String difficulty) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String eventID, String difficulty) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        Event event = Event.readEvent(eventID);
+        if (!fromID.equals(event.owner) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only update an event that you own!");
+        }
+
         // Test to see if we can actually do this
-        if (!Event.readEvent(eventID).ifChallenge) {
+        if (!event.ifChallenge) {
             throw new Exception("The event needs to be a challenge to do this!");
         }
 

@@ -15,12 +15,16 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateReviewRequest;
 import java.util.*;
 
 public class CreateReview {
-    public static String handle(CreateReviewRequest createReviewRequest, String surveyWorkoutID) throws Exception {
+    public static String handle(String fromID, CreateReviewRequest createReviewRequest, String surveyWorkoutID) throws Exception {
         if (createReviewRequest != null) {
             if (createReviewRequest.by != null && createReviewRequest.about != null && createReviewRequest
                     .friendlinessRating != null && createReviewRequest.effectivenessRating != null &&
                     createReviewRequest.reliabilityRating != null && createReviewRequest.description != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
+
+                if (!fromID.equals(createReviewRequest.by) && !fromID.equals("admin")) {
+                    throw new Exception("PERMISSIONS ERROR: You can only create reviews you have authored!");
+                }
 
                 // Create Review
                 databaseActionCompiler.add(ReviewDatabaseActionBuilder.create(createReviewRequest));

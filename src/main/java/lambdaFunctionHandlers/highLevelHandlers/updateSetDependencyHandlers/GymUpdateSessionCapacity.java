@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GymUpdateSessionCapacity {
-    public static List<DatabaseAction> getActions(String gymID, String sessionCapacity) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String gymID, String sessionCapacity) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        if (!fromID.equals(gymID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only update a gym you own!");
+        }
         // Check to see if the sessionCapacity is valid
         if (Integer.parseInt(sessionCapacity) < 0) {
             throw new Exception("Session capacity must be a positive integer!");

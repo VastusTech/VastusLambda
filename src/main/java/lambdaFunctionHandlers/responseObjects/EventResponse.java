@@ -7,6 +7,7 @@ public class EventResponse extends ObjectResponse {
     public String owner;
     public String time;
     public String[] members;
+    public String[] invitedMembers;
     public String capacity;
     public String access;
     public String address;
@@ -23,6 +24,7 @@ public class EventResponse extends ObjectResponse {
         this.owner = event.owner;
         this.time = event.time.toString();
         this.members = event.members.toArray(new String[]{});
+        this.invitedMembers = event.invitedMembers.toArray(new String[]{});
         this.capacity = Integer.toString(event.capacity);
         this.access = event.access;
         this.address = event.address;

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateTrainer {
-    public static String handle(CreateTrainerRequest createTrainerRequest) throws Exception {
+    public static String handle(String fromID, CreateTrainerRequest createTrainerRequest) throws Exception {
         if (createTrainerRequest != null) {
             // Check required fields
             if (createTrainerRequest.name != null && createTrainerRequest.gender != null && createTrainerRequest

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateGym {
-    public static String handle(CreateGymRequest createGymRequest) throws Exception {
+    public static String handle(String fromID, CreateGymRequest createGymRequest) throws Exception {
         if (createGymRequest != null) {
             if (createGymRequest.name != null && createGymRequest.foundingDay != null && createGymRequest.email !=
                     null && createGymRequest.username != null && createGymRequest.address != null && createGymRequest

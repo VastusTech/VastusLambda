@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrainerUpdatePreferredIntensity {
-    public static List<DatabaseAction> getActions(String trainerID, String intensity) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String trainerID, String intensity) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        if (!fromID.equals(trainerID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only update a trainer you are!");
+        }
         int intIntensity = Integer.parseInt(intensity);
         if (intIntensity < 1 || intIntensity > 3) {
             throw new Exception("Intensity must be \"1\", \"2\", or \"3\"!");

@@ -15,6 +15,7 @@ public class Client extends User {
     public Set<String> scheduledEvents;
     public Set<String> completedEvents;
     public Set<String> ownedEvents;
+    public Set<String> invitedEvents;
 
     Client(Item item) throws Exception {
         super(item);
@@ -30,6 +31,8 @@ public class Client extends User {
         if (completedEvents == null) { this.completedEvents = new HashSet<>(); }
         this.ownedEvents = item.getStringSet("ownedEvents");
         if (ownedEvents == null) { this.ownedEvents = new HashSet<>(); }
+        this.invitedEvents = item.getStringSet("invitedEvents");
+        if (invitedEvents == null) { this.invitedEvents = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

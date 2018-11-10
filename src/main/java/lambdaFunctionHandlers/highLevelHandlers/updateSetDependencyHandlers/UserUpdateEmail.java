@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserUpdateEmail {
-    public static List<DatabaseAction> getActions(String userID, String itemType, String email) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String email) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        if (!fromID.equals(userID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only update a user you are!");
+        }
         // Get all the actions for this process
         databaseActions.add(UserDatabaseActionBuilder.updateEmail(userID, itemType, email));
 

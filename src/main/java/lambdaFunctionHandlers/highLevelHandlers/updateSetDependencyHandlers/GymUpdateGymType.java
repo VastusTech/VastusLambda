@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GymUpdateGymType {
-    public static List<DatabaseAction> getActions(String gymID, String gymType) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String gymID, String gymType) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        if (!fromID.equals(gymID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only update a gym you own!");
+        }
         // TODO Check to see if gymType is well formed
 
         // Get all the actions for this process

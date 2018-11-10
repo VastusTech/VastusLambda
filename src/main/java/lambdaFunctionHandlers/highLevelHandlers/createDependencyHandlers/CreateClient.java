@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateClient {
-    public static String handle(CreateClientRequest createClientRequest) throws Exception {
+    public static String handle(String fromID, CreateClientRequest createClientRequest) throws Exception {
         if (createClientRequest != null) {
             // Create client
             if (createClientRequest.name != null && createClientRequest.gender != null && createClientRequest

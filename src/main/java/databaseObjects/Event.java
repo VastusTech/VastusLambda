@@ -18,6 +18,7 @@ public class Event extends DatabaseObject {
     public String owner;
     public TimeInterval time;
     public Set<String> members;
+    public Set<String> invitedMembers;
     public int capacity;
     public String access;
     public boolean ifChallenge;
@@ -32,6 +33,8 @@ public class Event extends DatabaseObject {
         this.time = new TimeInterval(item.getString("time"));
         this.members = item.getStringSet("members");
         if (this.members == null) { this.members = new HashSet<>(); }
+        this.invitedMembers = item.getStringSet("invitedMembers");
+        if (this.invitedMembers == null) { this.invitedMembers = new HashSet<>(); }
         this.capacity = Integer.parseInt(item.getString("capacity"));
         this.access = item.getString("access");
         this.title = item.getString("title");

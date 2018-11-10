@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientAddToWorkout {
-    public static List<DatabaseAction> getActions(String clientID, String workoutID) throws Exception {
+    public static List<DatabaseAction> getActions(String fromID, String clientID, String workoutID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
+
+        if (!fromID.equals(clientID) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only add yourself to a workout!");
+        }
 
         // Get all the actions for this process
         Workout workout = Workout.readWorkout(workoutID);

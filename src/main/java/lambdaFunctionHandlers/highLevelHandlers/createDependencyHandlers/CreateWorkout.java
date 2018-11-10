@@ -11,17 +11,21 @@ import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseAction
 import main.java.lambdaFunctionHandlers.requestObjects.CreateWorkoutRequest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CreateWorkout {
-    public static String handle(CreateWorkoutRequest createWorkoutRequest) throws Exception {
+    public static String handle(String fromID, CreateWorkoutRequest createWorkoutRequest) throws Exception {
         if (createWorkoutRequest != null) {
             if (createWorkoutRequest.time != null && createWorkoutRequest.trainer != null && createWorkoutRequest
                     .clients != null && createWorkoutRequest.gym != null && createWorkoutRequest.capacity != null
                     && createWorkoutRequest.sticker != null && createWorkoutRequest.intensity != null &&
                     createWorkoutRequest.price != null) {
-
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
+
+                if (!Arrays.asList(createWorkoutRequest.clients).contains(fromID) && !fromID.equals("admin")) {
+                    throw new Exception("PERMISSIONS ERROR: You can only create a workout you'll be a part of!");
+                }
 
                 // Check to see if the request features are well formed (i.e invalid date)
                 new TimeInterval(createWorkoutRequest.time);
