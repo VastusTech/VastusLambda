@@ -663,6 +663,7 @@ public class LambdaRequest {
                         throw new Exception("For updating " + attributeName + " on " + itemType +
                                 "attributeValues must be only 1 long!");
                     }
+                    break;
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
                         databaseActionCompiler.addAll(TrainerAddAvailableTimes.getActions(fromID, id, attributeValues));
