@@ -14,6 +14,10 @@ public class ClientAddFriendRequest {
             throw new Exception("PERMISSIONS ERROR: You can only send friend requests for yourself!");
         }
 
+        if (clientID.equals(friendID)) {
+            throw new Exception("You can't add yourself as a friend!");
+        }
+
         // Add the friend request to the person you want to befriend
         databaseActions.add(ClientDatabaseActionBuilder.updateAddFriendRequest(clientID, friendID));
 

@@ -145,7 +145,15 @@ public class ClientDatabaseActionBuilder {
 
     public static DatabaseAction updateAddFriendRequest(String id, String friend) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "friendRequests", new AttributeValue(friend),
-                false, "ADD");
+                false, "ADD", new CheckHandler() {
+            @Override
+            public String isViable(DatabaseObject newObject) throws Exception {
+                if (((Client) newObject).friends.contains(friend)) {
+                    return "That person already has that friend request as a friend!";
+                }
+                return null;
+            }
+        });
     }
 
     public static DatabaseAction updateRemoveFriendRequest(String id, String friend) throws Exception {

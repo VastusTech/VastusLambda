@@ -5,11 +5,13 @@ import main.java.Logic.ItemType;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.UpdateDatabaseAction;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+        // System.out.println(new DateTime().toString());
 //        ItemType itemType = ItemType.valueOf("Event");
 //        System.out.println(itemType);
         // This throws an error

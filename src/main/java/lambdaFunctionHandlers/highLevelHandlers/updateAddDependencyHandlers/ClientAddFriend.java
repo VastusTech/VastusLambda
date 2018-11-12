@@ -20,6 +20,8 @@ public class ClientAddFriend {
         // Mutual friendships
         databaseActions.add(ClientDatabaseActionBuilder.updateAddFriend(friendID, clientID, false));
 
+        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveFriendRequest(clientID, friendID));
+
         return databaseActions;
     }
 }
