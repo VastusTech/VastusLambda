@@ -31,6 +31,7 @@ public class LambdaRequest {
     private CreateWorkoutRequest createWorkoutRequest;
     private CreateReviewRequest createReviewRequest;
     private CreateEventRequest createEventRequest;
+    private CreateInviteRequest createInviteRequest;
 
     private enum Action {
         CREATE,
@@ -59,11 +60,15 @@ public class LambdaRequest {
         effectivenessRating,
         reliabilityRating,
         bio,
-        // Client ==========================
         friends,
         friendRequests,
         scheduledEvents,
         invitedEvents,
+        ownedEvents,
+        sentInvites,
+        receivedInvites,
+        // Client ==========================
+        trainersFollowing,
         // Trainer =========================
         gym,
         availableTimes,
@@ -71,6 +76,7 @@ public class LambdaRequest {
         preferredIntensity,
         workoutCapacity,
         workoutPrice,
+        followers,
         // Gym =============================
         address,
         trainers,
@@ -99,6 +105,7 @@ public class LambdaRequest {
         ifChallenge,
         goal,
         winner,
+        // Invite ==========================
     }
 
     // This is where the inputs are handled!
@@ -287,6 +294,10 @@ public class LambdaRequest {
                 numCreateRequest++;
                 Constants.debugLog("Has a create event request!\n");
             }
+            if (createInviteRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create invite request!\n");
+            }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
@@ -299,7 +310,6 @@ public class LambdaRequest {
 
     private String handleCreate() throws Exception {
         try {
-            // TODO Check the permissions for these guys
             switch (ItemType.valueOf(itemType)) {
                 case Client:
                     return CreateClient.handle(fromID, createClientRequest);
@@ -314,6 +324,8 @@ public class LambdaRequest {
                     return CreateReview.handle(fromID, createReviewRequest, null);
                 case Event:
                     return CreateEvent.handle(fromID, createEventRequest);
+                case Invite:
+                    return CreateInvite.handle(fromID, createInviteRequest);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -342,6 +354,8 @@ public class LambdaRequest {
                     return ReadReviewsByID.handle(ids);
                 case Event:
                     return ReadEventsByID.handle(ids);
+                case Invite:
+                    return ReadInvitesByID.handle(ids);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -366,6 +380,8 @@ public class LambdaRequest {
                     throw new Exception("Can't query a review by a username!");
                 case Event:
                     throw new Exception("Can't query an event by a username!");
+                case Invite:
+                    throw new Exception("Can't query an invite by a username!");
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -497,6 +513,7 @@ public class LambdaRequest {
                     }
                     break;
                 case weeklyHours:
+                    // TODO I want to handle this differently in the future
                     if (itemType.equals("Gym")) {
                         databaseActionCompiler.addAll(GymUpdateWeeklyHours.getActions(fromID, id, attributeValues));
                     }
@@ -588,17 +605,16 @@ public class LambdaRequest {
         // switch all attributes, then if necessary, item type
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
+        if (attributeValues.length != 1) {
+            throw new Exception("For update adding " + attributeName + " on " + itemType + "attributeValues must be"
+                    + "only 1 long!");
+        }
+
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case scheduledWorkouts:
                     if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            databaseActionCompiler.addAll(ClientAddToWorkout.getActions(fromID, id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActionCompiler.addAll(ClientAddToWorkout.getActions(fromID, id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -606,78 +622,56 @@ public class LambdaRequest {
                     }
                     break;
                 case friends:
-                    if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            databaseActionCompiler.addAll(ClientAddFriend.getActions(fromID, id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                        databaseActionCompiler.addAll(UserAcceptFriendRequest.getActions(fromID, id, itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
-                case friendRequests:
-                    if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            databaseActionCompiler.addAll(ClientAddFriendRequest.getActions(fromID, id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
-                    }
-                    else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
-                                itemType + "!");
-                    }
-                    break;
+                    // Now this is handled by creating Invites
+//                case friendRequests:
+//                    if (itemType.equals("Client")) {
+//                        databaseActionCompiler.addAll(ClientAddFriendRequest.getActions(fromID, id, attributeValues[0]));
+//                    }
+//                    else {
+//                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+//                                itemType + "!");
+//                    }
+//                    break;
                 case scheduledEvents:
-                    if (attributeValues.length == 1) {
-                        if (itemType.equals("Client")) {
-                            databaseActionCompiler.addAll(ClientAddToEvent.getActions(fromID, id, attributeValues[0]));
-                        } else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
-                                    itemType + "!");
-                        }
-                    }
-                    else {
-                        throw new Exception("For updating " + attributeName + " on " + itemType +
-                                "attributeValues must be only 1 long!");
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                        databaseActionCompiler.addAll(UserAddToEvent.getActions(fromID, id, itemType, attributeValues[0]));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
                     }
                     break;
-                case invitedEvents:
-                    if (attributeValues.length == 1) {
-                        if (itemType.equals("Client")) {
-                            databaseActionCompiler.addAll(ClientInviteToEvent.getActions(fromID, id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
-                                    itemType + "!");
-                        }
-                    }
-                    else {
-                        throw new Exception("For updating " + attributeName + " on " + itemType +
-                                "attributeValues must be only 1 long!");
-                    }
-                    break;
+                    // Handled by creating invites
+//                case invitedEvents:
+//                    if (itemType.equals("Client")) {
+//                        databaseActionCompiler.addAll(ClientInviteToEvent.getActions(fromID, id, attributeValues[0]));
+//                    }
+//                    else {
+//                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+//                                itemType + "!");
+//                    }
+//                    break;
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
-                        databaseActionCompiler.addAll(TrainerAddAvailableTimes.getActions(fromID, id, attributeValues));
-                    }
-                    else {
+                        databaseActionCompiler.addAll(TrainerAddAvailableTime.getActions(fromID, id,
+                                attributeValues[0]));
+                    } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
                 case vacationTimes:
                     if (itemType.equals("Gym")) {
-                        databaseActionCompiler.addAll(GymAddVacationTimes.getActions(fromID, id, attributeValues));
-                    }
-                    else {
+                        databaseActionCompiler.addAll(GymAddVacationTime.getActions(fromID, id,
+                                attributeValues[0]));
+                    } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
@@ -697,17 +691,16 @@ public class LambdaRequest {
         // switch all attributes, then if necessary, item type
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
+        if (attributeValues.length != 1) {
+            throw new Exception("For update removing " + attributeName + " on " + itemType + "attributeValues must be"
+                    + "only 1 long!");
+        }
+
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case scheduledWorkouts:
                     if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            databaseActionCompiler.addAll(ClientRemoveFromWorkout.getActions(fromID, id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                        databaseActionCompiler.addAll(ClientRemoveFromWorkout.getActions(fromID, id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -715,66 +708,44 @@ public class LambdaRequest {
                     }
                     break;
                 case friends:
-                    if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            databaseActionCompiler.addAll(ClientRemoveFriend.getActions(fromID, id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                        databaseActionCompiler.addAll(UserRemoveFriend.getActions(fromID, id, itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
                     break;
-                case friendRequests:
-                    if (itemType.equals("Client")) {
-                        if (attributeValues.length == 1) {
-                            databaseActionCompiler.addAll(ClientRemoveFriendRequest.getActions(fromID, id, attributeValues[0]));
-                        }
-                        else {
-                            throw new Exception("For updating " + attributeName + " on " + itemType +
-                                    "attributeValues must be only 1 long!");
-                        }
-                    }
-                    else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
-                                itemType + "!");
-                    }
-                    break;
+                    // Handled by deleting the invite
+//                case friendRequests:
+//                    if (itemType.equals("Client")) {
+//                        databaseActionCompiler.addAll(ClientRemoveFriendRequest.getActions(fromID, id, attributeValues[0]));
+//                    }
+//                    else {
+//                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+//                                itemType + "!");
+//                    }
+//                    break;
                 case scheduledEvents:
-                    if (attributeValues.length == 1) {
-                        if (itemType.equals("Client")) {
-                            databaseActionCompiler.addAll(ClientRemoveFromEvent.getActions(fromID, id, attributeValues[0]));
-                        } else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
-                                    itemType + "!");
-                        }
-                    }
-                    else {
-                        throw new Exception("For updating " + attributeName + " on " + itemType +
-                                "attributeValues must be only 1 long!");
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                        databaseActionCompiler.addAll(UserRemoveFromEvent.getActions(fromID, id, itemType, attributeValues[0]));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
                     }
                     break;
-                case invitedEvents:
-                    if (attributeValues.length == 1) {
-                        if (itemType.equals("Client")) {
-                            databaseActionCompiler.addAll(ClientUninviteFromEvent.getActions(fromID, id, attributeValues[0]));
-                        } else {
-                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
-                                    itemType + "!");
-                        }
-                    }
-                    else {
-                        throw new Exception("For updating " + attributeName + " on " + itemType +
-                                "attributeValues must be only 1 long!");
-                    }
-                    break;
+                    // Handled by deleting the invite
+//                case invitedEvents:
+//                    if (itemType.equals("Client")) {
+//                        databaseActionCompiler.addAll(ClientUninviteFromEvent.getActions(fromID, id, attributeValues[0]));
+//                    } else {
+//                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+//                                itemType + "!");
+//                    }
+//                    break;
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
-                        databaseActionCompiler.addAll(TrainerRemoveAvailableTimes.getActions(fromID, id, attributeValues));
+                        databaseActionCompiler.addAll(TrainerRemoveAvailableTime.getActions(fromID, id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -783,7 +754,7 @@ public class LambdaRequest {
                     break;
                 case vacationTimes:
                     if (itemType.equals("Gym")) {
-                        databaseActionCompiler.addAll(GymRemoveVacationTimes.getActions(fromID, id, attributeValues));
+                        databaseActionCompiler.addAll(GymRemoveVacationTime.getActions(fromID, id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -825,6 +796,8 @@ public class LambdaRequest {
                 case Event:
                     databaseActionCompiler.addAll(DeleteEvent.getActions(fromID, id));
                     break;
+                case Invite:
+                    databaseActionCompiler.addAll(DeleteInvite.getActions(fromID, id));
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -840,7 +813,8 @@ public class LambdaRequest {
     public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String
             attributeName, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest
             createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
-                         CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest) {
+                         CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest,
+                         CreateInviteRequest createInviteRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -854,6 +828,7 @@ public class LambdaRequest {
         this.createWorkoutRequest = createWorkoutRequest;
         this.createReviewRequest = createReviewRequest;
         this.createEventRequest = createEventRequest;
+        this.createInviteRequest = createInviteRequest;
     }
 
     public LambdaRequest() {}
@@ -960,5 +935,13 @@ public class LambdaRequest {
 
     public void setCreateEventRequest(CreateEventRequest createEventRequest) {
         this.createEventRequest = createEventRequest;
+    }
+
+    public CreateInviteRequest getCreateInviteRequest() {
+        return createInviteRequest;
+    }
+
+    public void setCreateInviteRequest(CreateInviteRequest createInviteRequest) {
+        this.createInviteRequest = createInviteRequest;
     }
 }

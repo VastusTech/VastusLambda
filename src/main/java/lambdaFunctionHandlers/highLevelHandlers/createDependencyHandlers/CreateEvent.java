@@ -1,11 +1,13 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import main.java.Logic.Constants;
+import main.java.Logic.ItemType;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateEventRequest;
 
 import java.util.ArrayList;
@@ -52,16 +54,18 @@ public class CreateEvent {
                 databaseActionCompiler.add(EventDatabaseActionBuilder.create(createEventRequest));
 
                 // Update owners fields
-                databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddOwnedEvent(createEventRequest
-                        .owner, null, true));
+                String ownerItemType = ItemType.getItemType(createEventRequest.owner);
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddOwnedEvent(createEventRequest
+                        .owner, ownerItemType, null, true));
 
                 // Update each members fields
                 if (createEventRequest.members != null) {
                     for (String member : createEventRequest.members) {
-                        databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledEvent
-                                (member, null, true));
-                        databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime
-                                (member, createEventRequest.time));
+                        String memberItemType = ItemType.getItemType(member);
+                        databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddScheduledEvent
+                                (member, memberItemType, null, true));
+                        databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddScheduledTime
+                                (member, memberItemType, createEventRequest.time, null));
                     }
                 }
 

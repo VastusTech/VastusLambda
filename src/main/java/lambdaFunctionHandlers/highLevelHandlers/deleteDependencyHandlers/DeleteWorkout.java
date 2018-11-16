@@ -4,6 +4,7 @@ import main.java.databaseObjects.Workout;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers.ClientRemoveFromWorkout;
 
 import java.util.ArrayList;
@@ -28,16 +29,18 @@ public class DeleteWorkout {
 
         // remove from trainer's scheduled and completed workouts
         // remove from trainer's scheduled and completed workout times
-        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.trainer, workoutID));
-        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveScheduledTime(workout.trainer, workout
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.trainer, "Trainer",
+                workoutID));
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledTime(workout.trainer, "Trainer", workout
                 .time.toString()));
-        databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.trainer, workoutID));
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.trainer, "Trainer",
+                workoutID));
 
         // Remove from gym's scheduled and completed workout times
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.gym, workoutID));
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveScheduledTime(workout.gym, workout
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.gym, "Gym", workoutID));
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledTime(workout.gym, "Gym", workout
                 .time.toString()));
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.gym, workoutID));
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.gym, "Gym", workoutID));
 
         return databaseActions;
     }

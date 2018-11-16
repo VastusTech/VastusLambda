@@ -12,19 +12,14 @@ public class DeleteTrainer {
     public static List<DatabaseAction> getActions(String fromID, String trainerID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(trainerID) && !fromID.equals("admin")) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a trainer if it's yourself!");
-        }
-
         Trainer trainer = Trainer.readTrainer(trainerID);
 
-        // Remove all reviews in reviews by and reviews about
-        for (String reviewID : trainer.reviewsBy) {
-            databaseActions.addAll(DeleteReview.getActions(fromID, reviewID));
+        if (!fromID.equals(trainerID) && !fromID.equals(trainer.gym) && !fromID.equals("admin")) {
+            throw new Exception("PERMISSIONS ERROR: You can only delete a trainer if it's yourself or your gym!");
         }
-        for (String reviewID : trainer.reviewsAbout) {
-            databaseActions.addAll(DeleteReview.getActions(fromID, reviewID));
-        }
+
+        // Delete the user associated with the trainer
+        databaseActions.addAll(DeleteUser.getActions(fromID, trainer));
 
         // Remove all workouts in scheduled workouts and completed workouts (Cancel them)
         for (String workoutID : trainer.scheduledWorkouts) {

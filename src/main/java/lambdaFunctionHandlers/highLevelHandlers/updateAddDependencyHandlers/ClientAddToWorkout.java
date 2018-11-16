@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHa
 import main.java.databaseObjects.Workout;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseActionBuilder;
 
 import java.util.ArrayList;
@@ -19,11 +20,11 @@ public class ClientAddToWorkout {
         // Get all the actions for this process
         Workout workout = Workout.readWorkout(workoutID);
         // Add to client's scheduled workouts
-        databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(clientID,
+        databaseActions.add(UserDatabaseActionBuilder.updateAddScheduledWorkout(clientID, "Client",
                 workoutID, false));
         // Add to client's scheduled workout times
-        databaseActions.add(ClientDatabaseActionBuilder.updateAddScheduledTime(clientID, workout.time.toString
-                ()));
+        databaseActions.add(UserDatabaseActionBuilder.updateAddScheduledTime(clientID, "Client", workout.time.toString
+                (), null));
         // Add to workout's clients
         databaseActions.add(WorkoutDatabaseActionBuilder.updateAddClient(workoutID, clientID));
         // Add to workout's missingReviews

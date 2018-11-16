@@ -16,6 +16,7 @@ public class Trainer extends User {
     public String preferredIntensity;
     public int workoutCapacity;
     public int workoutPrice;
+    public Set<String> followers;
 
     Trainer(Item item) throws Exception {
         super(item);
@@ -27,6 +28,8 @@ public class Trainer extends User {
         this.preferredIntensity = item.getString("preferredIntensity");
         this.workoutCapacity = Integer.parseInt(item.getString("workoutCapacity"));
         this.workoutPrice = Integer.parseInt(item.getString("workoutPrice"));
+        this.followers = item.getStringSet("followers");
+        if (followers == null) { this.followers = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

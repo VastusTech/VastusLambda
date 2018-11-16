@@ -19,6 +19,8 @@ public interface DatabaseObjectBuilder {
                 return new Review(item);
             case Event:
                 return new Event(item);
+            case Invite:
+                return new Invite(item);
             default:
                 throw new Exception("The item type is improperly formed");
         }

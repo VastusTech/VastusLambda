@@ -34,128 +34,63 @@ public class TrainerDatabaseActionBuilder {
         return new CreateDatabaseAction(item);
     }
 
-    public static DatabaseAction updateName(String id, String name) throws Exception {
-        return UserDatabaseActionBuilder.updateName(id, itemType, name);
-    }
-
-    public static DatabaseAction updateGender(String id, String gender) throws Exception {
-        return UserDatabaseActionBuilder.updateGender(id, itemType, gender);
-    }
-
-    public static DatabaseAction updateBirthday(String id, String birthday) throws Exception {
-        return UserDatabaseActionBuilder.updateBirthday(id, itemType, birthday);
-    }
-
-    public static DatabaseAction updateEmail(String id, String email) throws Exception {
-        return UserDatabaseActionBuilder.updateEmail(id, itemType, email);
-    }
-
-    public static DatabaseAction updateProfileImagePath(String id, String profileImagePath) throws Exception {
-        return UserDatabaseActionBuilder.updateProfileImagePath(id, itemType, profileImagePath);
-    }
-
-    public static DatabaseAction updateAddScheduledWorkout(String id, String workout, boolean ifWithCreate) throws
+    public static DatabaseAction updateAddScheduledTime(String id, String time, boolean ifSchedulingWorkout) throws
             Exception {
-        return UserDatabaseActionBuilder.updateAddScheduledWorkout(id, itemType, workout, ifWithCreate);
-    }
-
-    public static DatabaseAction updateRemoveScheduledWorkout(String id, String workout) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveScheduledWorkout(id, itemType, workout);
-    }
-
-    public static DatabaseAction updateAddCompletedWorkout(String id, String workout) throws Exception {
-        return UserDatabaseActionBuilder.updateAddCompletedWorkout(id, itemType, workout);
-    }
-
-    public static DatabaseAction updateRemoveCompletedWorkout(String id, String workout) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveCompletedWorkout(id, itemType, workout);
-    }
-
-    public static DatabaseAction updateAddScheduledTime(String id, String time) throws Exception {
-        TimeInterval timeInterval = new TimeInterval(time);
-        return UserDatabaseActionBuilder.updateAddScheduledTime(id, itemType, time, new CheckHandler() {
-            @Override
-            // TODO SHOULD THIS BE JUST DURING SCHEDULING WOKROUTS OR ALWAYS FOR AVAILABLE TIMES?
-            public String isViable(DatabaseObject newObject) throws Exception {
-                // This is to check whether any times conflict
-                Trainer trainer = (Trainer)newObject;
-                // Is it during one of the trainer's available times?
-                for (TimeInterval availableTime : trainer.availableTimes) {
-                    if (availableTime.encompasses(timeInterval)) {
-                        // Then, is it conflicting with another one of their workouts?
-                        for (TimeInterval trainerTime : trainer.scheduledTimes) {
-                            if (trainerTime.intersects(timeInterval)) {
-                                return "The scheduled time intersects with the trainer's existing schedule!";
+        if (ifSchedulingWorkout) {
+            TimeInterval timeInterval = new TimeInterval(time);
+            return UserDatabaseActionBuilder.updateAddScheduledTime(id, itemType, time, new CheckHandler() {
+                @Override
+                public String isViable(DatabaseObject newObject) throws Exception {
+                    // This is to check whether any times conflict
+                    Trainer trainer = (Trainer) newObject;
+                    // Is it during one of the trainer's available times?
+                    for (TimeInterval availableTime : trainer.availableTimes) {
+                        if (availableTime.encompasses(timeInterval)) {
+                            // Then, is it conflicting with another one of their workouts?
+                            for (TimeInterval trainerTime : trainer.scheduledTimes) {
+                                if (trainerTime.intersects(timeInterval)) {
+                                    return "The scheduled time intersects with the trainer's existing schedule!";
+                                }
                             }
-                        }
 
-                        return null;
+                            return null;
+                        }
+                    }
+                    return "That time is not during any of the trainer's available times!";
+                }
+            });
+        }
+        else {
+            return UserDatabaseActionBuilder.updateAddScheduledTime(id, itemType, time, null);
+        }
+    }
+
+    public static DatabaseAction updateAddAvailableTime(String id, String availableTime) throws Exception {
+        TimeInterval timeInterval = new TimeInterval(availableTime);
+        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(availableTime), false, "ADD", new CheckHandler() {
+            @Override
+            public String isViable(DatabaseObject newObject) throws Exception {
+                // Check to see if the available time intersects with any of the scheduled times
+                for (TimeInterval scheduledTime : ((Trainer)newObject).scheduledTimes) {
+                    if (scheduledTime.intersects(timeInterval)) {
+                        return "That available time intersects with your existing schedule!";
                     }
                 }
-                return "That time is not during any of the trainer's available times!";
+                return null;
             }
         });
     }
 
-    public static DatabaseAction updateRemoveScheduledTime(String id, String time) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveScheduledTime(id, itemType, time);
-    }
-
-    public static DatabaseAction updateAddReviewBy(String id, String review, boolean ifWithCreate) throws Exception {
-        return UserDatabaseActionBuilder.updateAddReviewBy(id, itemType, review, ifWithCreate);
-    }
-
-    public static DatabaseAction updateRemoveReviewBy(String id, String review) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveReviewBy(id, itemType, review);
-    }
-
-    public static DatabaseAction updateAddReviewAbout(String id, String review, boolean ifWithCreate) throws
-            Exception {
-        return UserDatabaseActionBuilder.updateAddReviewAbout(id, itemType, review, ifWithCreate);
-    }
-
-    public static DatabaseAction updateRemoveReviewAbout(String id, String review) throws Exception {
-        return UserDatabaseActionBuilder.updateRemoveReviewAbout(id, itemType, review);
-    }
-
-    public static DatabaseAction updateFriendlinessRating(String id, String rating) throws Exception {
-        return UserDatabaseActionBuilder.updateFriendlinessRating(id, itemType, rating);
-    }
-
-    public static DatabaseAction updateEffectivenessRating(String id, String rating) throws Exception {
-        return UserDatabaseActionBuilder.updateEffectivenessRating(id, itemType, rating);
-    }
-
-    public static DatabaseAction updateReliabilityRating(String id, String rating) throws Exception {
-        return UserDatabaseActionBuilder.updateReliabilityRating(id, itemType, rating);
-    }
-
-    public static DatabaseAction updateBio(String id, String bio) throws Exception {
-        return UserDatabaseActionBuilder.updateBio(id, itemType, bio);
-    }
-
-//    public static DatabaseAction updateGymID(String id, String gymID) throws Exception {
-//        return new UpdateDatabaseAction();
-//    }
-
-    public static DatabaseAction updateAddAvailableTimes(String id, String[] availableTimes) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(Arrays.asList
-                (availableTimes)), false, "ADD");
-    }
-
-    public static DatabaseAction updateRemoveAvailableTimes(String id, String[] availableTimes) throws Exception {
-        List<TimeInterval> availableTimeIntervals = TimeInterval.getTimeIntervals(Arrays.asList(availableTimes));
-        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(Arrays.asList
-                (availableTimes)), false, "DELETE", new CheckHandler() {
+    public static DatabaseAction updateRemoveAvailableTime(String id, String availableTime) throws Exception {
+        TimeInterval timeInterval = new TimeInterval(availableTime);
+        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(availableTime), false, "DELETE", new CheckHandler() {
             @Override
             public String isViable(DatabaseObject newObject) throws Exception {
                 Trainer trainer = (Trainer)newObject;
                 for (TimeInterval time : trainer.scheduledTimes) {
-                    for (TimeInterval availableTimeInterval : availableTimeIntervals) {
-                        if (availableTimeInterval.intersects(time)) {
-                            return "Trainer already has something scheduled for that time, cannot remove available " +
-                                    "time!";
-                        }
+                    if (timeInterval.intersects(time)) {
+                        return "Trainer already has something scheduled for that time, cannot remove available " +
+                                "time!";
                     }
                 }
                 return null;

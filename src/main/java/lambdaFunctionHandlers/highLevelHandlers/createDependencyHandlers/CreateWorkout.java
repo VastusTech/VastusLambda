@@ -4,10 +4,7 @@ import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
-import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
-import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
-import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateWorkoutRequest;
 
 import java.util.ArrayList;
@@ -39,25 +36,25 @@ public class CreateWorkout {
                 // Add to clients' scheduled workouts
                 // Add to clients' scheduled workout times
                 for (String client : createWorkoutRequest.clients) {
-                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledWorkout(client, null,
-                            true));
-                    databaseActionCompiler.add(ClientDatabaseActionBuilder.updateAddScheduledTime(client,
-                            createWorkoutRequest.time));
+                    databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddScheduledWorkout(client, "Client",
+                            null, true));
+                    databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddScheduledTime(client, "Client",
+                            createWorkoutRequest.time, null));
                 }
 
                 // Add to trainer's scheduled workouts
                 // Add to trainer's scheduled workout times
-                databaseActionCompiler.add(TrainerDatabaseActionBuilder.updateAddScheduledWorkout
-                        (createWorkoutRequest.trainer, null, true));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddScheduledWorkout
+                        (createWorkoutRequest.trainer, "Trainer", null, true));
                 databaseActionCompiler.add(TrainerDatabaseActionBuilder.updateAddScheduledTime
-                        (createWorkoutRequest.trainer, createWorkoutRequest.time));
+                        (createWorkoutRequest.trainer, createWorkoutRequest.time, true));
 
                 // Add to gym's scheduled workouts
                 // Add to gym's scheduled workout times
-                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledWorkout
-                        (createWorkoutRequest.gym, null, true));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddScheduledWorkout
+                        (createWorkoutRequest.gym, "Gym", null, true));
                 databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledTime
-                        (createWorkoutRequest.gym, createWorkoutRequest.time));
+                        (createWorkoutRequest.gym, createWorkoutRequest.time, true));
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
             }

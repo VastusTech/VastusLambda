@@ -4,6 +4,7 @@ import main.java.databaseObjects.Client;
 import main.java.databaseObjects.Workout;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseActionBuilder;
 
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class ClientRemoveFromWorkout {
         }
 
         // We delete the workout from ourselves
-        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledWorkout(clientID, workoutID));
-        databaseActions.add(ClientDatabaseActionBuilder.updateRemoveScheduledTime(clientID, workout.time
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledWorkout(clientID, "Client", workoutID));
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledTime(clientID, "Client", workout.time
                 .toString()));
 
         // And we delete ourselves from the workout
@@ -35,6 +36,7 @@ public class ClientRemoveFromWorkout {
         // If this was a scheduled workout, we would need to be refunded for it
         if (client.scheduledWorkouts.contains(workoutID)) {
             // TODO THIS IS WHERE REFUNDS WOULD GO (As a process that goes after the successful completion?)
+            // TODO Once we actually do Stripe lmao
         }
 
         return databaseActions;

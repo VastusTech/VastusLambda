@@ -20,13 +20,7 @@ public class DeleteGym {
 
         Gym gym = Gym.readGym(gymID);
 
-        // Remove all reviews in reviews by and reviews about
-        for (String reviewID : gym.reviewsBy) {
-            databaseActions.addAll(DeleteReview.getActions(fromID, reviewID));
-        }
-        for (String reviewID : gym.reviewsAbout) {
-            databaseActions.addAll(DeleteReview.getActions(fromID, reviewID));
-        }
+        databaseActions.addAll(DeleteUser.getActions(fromID, gym));
 
         // Remove all trainers in trainers
         for (String trainerID : gym.trainerIDs) {

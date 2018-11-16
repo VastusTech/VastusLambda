@@ -387,7 +387,8 @@ public class DynamoDBHandler {
                 .withNameMap(nameMap).withValueMap(valueMap);
         index.query(querySpec);
         ItemCollection<QueryOutcome> items = index.query(querySpec);
-        return (items.getAccumulatedItemCount() > 0);
+        Iterator<Item> iterator = items.iterator();
+        return (iterator.hasNext());
     }
 
     // TODO We usually don't want to send out a null variable without throwing an exception

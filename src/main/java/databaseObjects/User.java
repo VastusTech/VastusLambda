@@ -3,6 +3,7 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import main.java.databaseOperations.DynamoDBHandler;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
@@ -26,6 +27,15 @@ abstract public class User extends DatabaseObject{
     public float reliabilityRating;
     public float overallRating;
     public String bio;
+    public Set<String> friends;
+    public Set<String> friendRequests;
+    public Set<String> challengesWon;
+    public Set<String> scheduledEvents;
+    public Set<String> completedEvents;
+    public Set<String> ownedEvents;
+    public Set<String> invitedEvents;
+    public Set<String> sentInvites;
+    public Set<String> receivedInvites;
 
     public User(Item item) throws Exception {
         super(item);
@@ -52,6 +62,24 @@ abstract public class User extends DatabaseObject{
         this.reliabilityRating = Float.parseFloat(item.getString("reliabilityRating"));
         this.overallRating = (friendlinessRating + effectivenessRating + reliabilityRating) / 3.0f;
         this.bio = item.getString("bio");
+        this.friends = item.getStringSet("friends");
+        if (friends == null) { this.friends = new HashSet<>(); }
+        this.friendRequests = item.getStringSet("friendRequests");
+        if (friendRequests == null) { this.friendRequests = new HashSet<>(); }
+        this.challengesWon = item.getStringSet("challengesWon");
+        if (challengesWon == null) { this.challengesWon = new HashSet<>(); }
+        this.scheduledEvents = item.getStringSet("scheduledEvents");
+        if (scheduledEvents == null) { this.scheduledEvents = new HashSet<>(); }
+        this.completedEvents = item.getStringSet("completedEvents");
+        if (completedEvents == null) { this.completedEvents = new HashSet<>(); }
+        this.ownedEvents = item.getStringSet("ownedEvents");
+        if (ownedEvents == null) { this.ownedEvents = new HashSet<>(); }
+        this.invitedEvents = item.getStringSet("invitedEvents");
+        if (invitedEvents == null) { this.invitedEvents = new HashSet<>(); }
+        this.sentInvites = item.getStringSet("sentInvites");
+        if (sentInvites == null) { this.sentInvites = new HashSet<>(); }
+        this.receivedInvites = item.getStringSet("receivedInvites");
+        if (receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
     }
 
     private int getAgeFromBirthday(String birthday) {
@@ -62,29 +90,16 @@ abstract public class User extends DatabaseObject{
 
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
-        // item.put("name", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("name", null);
-        // item.put("gender", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("gender", null);
-        // item.put("birthday", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("birthday", null);
-        // item.put("email", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("email", null);
-        // item.put("username", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("username", null);
-        // item.put("profile_image_path", new AttributeValue(Constants.nullAttributeValue));
-        // TODO Point the default image to a default image in the S3 bucket
-        // item.put("profile_image_path", null);
-        // item.put("scheduled_workouts", null);
-        // item.put("completed_workouts", null);
-        // item.put("scheduled_times", null);
-        // item.put("reviews_by", null);
-        // item.put("reviews_about", null);
         item.put("friendlinessRating", new AttributeValue("0.0"));
         item.put("effectivenessRating", new AttributeValue("0.0"));
         item.put("reliabilityRating", new AttributeValue("0.0"));
-        // item.put("bio", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("bio", null);
         return item;
+    }
+
+    public static User readUser(String id, String itemType) throws Exception {
+        Map<String, AttributeValue> key = new HashMap<>();
+        key.put("item_type", new AttributeValue(itemType));
+        key.put("id", new AttributeValue(id));
+        return DynamoDBHandler.getInstance().readItem(key);
     }
 }
