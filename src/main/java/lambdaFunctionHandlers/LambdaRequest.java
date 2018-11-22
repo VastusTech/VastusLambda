@@ -583,6 +583,14 @@ public class LambdaRequest {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
+                case capacity:
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventUpdateCapacity.getActions(fromID, id, attributeValues[0]));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
                 case winner:
                     if (itemType.equals("Event")) {
                         databaseActionCompiler.addAll(EventUpdateWinner.getActions(fromID, id, attributeValues[0]));
@@ -590,6 +598,7 @@ public class LambdaRequest {
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATESET operation on " + attributeName + "!");
             }
@@ -623,7 +632,7 @@ public class LambdaRequest {
                     break;
                 case friends:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        databaseActionCompiler.addAll(UserAcceptFriendRequest.getActions(fromID, id, itemType, attributeValues[0]));
+                        databaseActionCompiler.addAll(UserAddFriend.getActions(fromID, id, itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -798,6 +807,7 @@ public class LambdaRequest {
                     break;
                 case Invite:
                     databaseActionCompiler.addAll(DeleteInvite.getActions(fromID, id));
+                    break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }

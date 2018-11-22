@@ -35,6 +35,9 @@ public class WorkoutDatabaseActionBuilder {
 //    public static DatabaseAction updateTrainerID() {
 //        return null;
 //    }
+    public static DatabaseAction updateIfCompleted(String id, String ifCompleted) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "ifCompleted", new AttributeValue(ifCompleted), false, "PUT");
+    }
 
     public static DatabaseAction updateAddClient(String id, String client) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "clients", new AttributeValue(client), false, "ADD", new CheckHandler() {

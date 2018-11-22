@@ -12,6 +12,7 @@ public class EventResponse extends ObjectResponse {
     public String access;
     public String address;
     public String ifChallenge;
+    public String ifCompleted;
 
     public String title;
     public String description;
@@ -31,6 +32,7 @@ public class EventResponse extends ObjectResponse {
         this.title = event.title;
         this.description = event.description;
         this.ifChallenge = Boolean.toString(event.ifChallenge);
+        this.ifCompleted = Boolean.toString(event.ifCompleted);
         this.goal = event.goal;
         this.difficulty = Integer.toString(event.difficulty);
         this.winner = event.winner;

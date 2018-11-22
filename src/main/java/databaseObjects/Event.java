@@ -22,6 +22,7 @@ public class Event extends DatabaseObject {
     public int capacity;
     public String access;
     public boolean ifChallenge;
+    public boolean ifCompleted;
 
     public String goal;
     public int difficulty;
@@ -41,6 +42,7 @@ public class Event extends DatabaseObject {
         this.description = item.getString("description");
         this.address = item.getString("address");
         this.ifChallenge = Boolean.parseBoolean(item.getString("ifChallenge"));
+        this.ifCompleted = Boolean.parseBoolean(item.getString("ifCompleted"));
         this.goal = item.getString("goal");
         this.difficulty = Integer.parseInt(item.getString("difficulty"));
         this.winner = item.getString("winner");
@@ -55,6 +57,7 @@ public class Event extends DatabaseObject {
         item.put("description", new AttributeValue("Put your description here."));
         item.put("goal", new AttributeValue("Put your goal here."));
         item.put("difficulty", new AttributeValue("3"));
+        item.put("ifCompleted", new AttributeValue("false"));
         return item;
     }
 

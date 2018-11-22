@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Event;
 import main.java.databaseOperations.DatabaseAction;
@@ -17,7 +18,7 @@ public class EventUpdateWinner {
         // Get all the actions for this process
         Event challenge = Event.readEvent(eventID);
 
-        if (!challenge.owner.equals(fromID) && !fromID.equals("admin")) {
+        if (!challenge.owner.equals(fromID) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: In order to update an event, you need to be the owner!");
         }
 
@@ -39,6 +40,9 @@ public class EventUpdateWinner {
                     .time.toString()));
             databaseActions.add(UserDatabaseActionBuilder.updateAddCompletedEvent(userID, userItemType, eventID));
         }
+
+        // Set the event if completed to true
+        databaseActions.add(EventDatabaseActionBuilder.updateIfCompleted(eventID, "true"));
 
         return databaseActions;
     }

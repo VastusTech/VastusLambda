@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.Invite;
@@ -17,7 +18,7 @@ public class DeleteEvent {
         List<DatabaseAction> databaseActions = new ArrayList<>();
         Event event = Event.readEvent(eventID);
 
-        if (!fromID.equals(event.owner) && !fromID.equals("admin")) {
+        if (!fromID.equals(event.owner) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only delete an event you own!");
         }
 

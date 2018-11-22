@@ -13,6 +13,7 @@ import java.util.*;
 
 public class Workout extends DatabaseObject {
     public TimeInterval time;
+    public boolean ifCompleted;
     public String trainer;
     public Set<String> clients;
     public int capacity;
@@ -25,6 +26,7 @@ public class Workout extends DatabaseObject {
     Workout(Item item) throws Exception {
         super(item);
         this.time = new TimeInterval(item.getString("time"));
+        this.ifCompleted = Boolean.parseBoolean(item.getString("ifCompleted"));
         this.trainer = item.getString("trainer");
         this.clients = item.getStringSet("clients");
         if (clients == null) { this.clients = new HashSet<>(); }
@@ -40,6 +42,7 @@ public class Workout extends DatabaseObject {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Workout"));
+        item.put("ifCompleted", new AttributeValue("false"));
         // item.put("time", new AttributeValue(Constants.nullAttributeValue));
         // item.put("time", null);
         // item.put("trainerID", new AttributeValue(Constants.nullAttributeValue));

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
 
@@ -10,7 +11,7 @@ public class GymUpdateGymType {
     public static List<DatabaseAction> getActions(String fromID, String gymID, String gymType) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(gymID) && !fromID.equals("admin")) {
+        if (!fromID.equals(gymID) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only update a gym you own!");
         }
         // TODO Check to see if gymType is well formed

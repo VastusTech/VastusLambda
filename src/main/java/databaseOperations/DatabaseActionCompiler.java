@@ -104,8 +104,20 @@ public class DatabaseActionCompiler {
             intoDatabaseAction.checkHandler = new CheckHandler() {
                 @Override
                 public String isViable(DatabaseObject newObject) throws Exception {
-                    return intoDatabaseAction.checkHandler.isViable(newObject) + " OR " + fromDatabaseAction
-                            .checkHandler.isViable(newObject);
+                    String isViable1 = intoDatabaseAction.checkHandler.isViable(newObject);
+                    String isViable2 = fromDatabaseAction.checkHandler.isViable(newObject);
+                    if (isViable1 != null && isViable2 != null) {
+                        return isViable1 + " AND " + isViable2;
+                    }
+                    else if (isViable1 != null) {
+                        return isViable1;
+                    }
+                    else if (isViable2 != null) {
+                        return isViable2;
+                    }
+                    else {
+                        return null;
+                    }
                 }
             };
         }
@@ -165,15 +177,15 @@ public class DatabaseActionCompiler {
             if (intoUpdateItem.containsKey(attributeName)) {
                 if (action.equals("PUT")) {
                     throw new Exception("INTERNAL ERROR: attempting to overwrite a SET update in a mulit-faceted " +
-                            "update!");
+                            "update. Tried to update = " + attributeName);
                 }
                 else if (action.equals("ADD")) {
                     throw new Exception("INTERNAL ERROR: attempting to overwrite an ADD update in a multi-facted " +
-                            "update");
+                            "update. Tried to update = " + attributeName);
                 }
                 else if (action.equals("DELETE")) {
                     throw new Exception("INTERNAL ERROR: attempting to overwrite a REMOVE update in a multi-facted " +
-                            "update");
+                            "update. Tried to update = " + attributeName);
                 }
             }
             else {

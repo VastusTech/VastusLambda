@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
@@ -11,7 +12,7 @@ public class TrainerAddAvailableTime {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String availableTime) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(trainerID) && !fromID.equals("admin")) {
+        if (!fromID.equals(trainerID) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only update a trainer if it's yourself!");
         }
 

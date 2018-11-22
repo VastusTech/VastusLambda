@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseObjects.Event;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
@@ -12,7 +13,7 @@ public class EventUpdateDifficulty {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
         Event event = Event.readEvent(eventID);
-        if (!fromID.equals(event.owner) && !fromID.equals("admin")) {
+        if (!fromID.equals(event.owner) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only update an event that you own!");
         }
 

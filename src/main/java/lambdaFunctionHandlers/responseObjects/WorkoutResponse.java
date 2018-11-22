@@ -5,6 +5,7 @@ import main.java.databaseObjects.Workout;
 public class WorkoutResponse extends ObjectResponse {
     public String itemType = "Workout";
     public String time;
+    public String ifCompleted;
     public String trainer;
     public String[] clients;
     public String capacity;
@@ -17,6 +18,7 @@ public class WorkoutResponse extends ObjectResponse {
     public WorkoutResponse(Workout workout) {
         super(workout.id);
         this.time = workout.time.toString();
+        this.ifCompleted = Boolean.toString(workout.ifCompleted);
         this.trainer = workout.trainer;
         this.clients = workout.clients.toArray(new String[]{});
         this.capacity = Integer.toString(workout.capacity);

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Review;
 import main.java.databaseOperations.DatabaseAction;
@@ -14,7 +15,7 @@ public class DeleteReview {
         List<DatabaseAction> databaseActions = new ArrayList<>();
         Review review = Review.readReview(reviewID);
 
-        if (!fromID.equals(review.by) && !fromID.equals("admin")) {
+        if (!fromID.equals(review.by) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only delete a review you authored!");
         }
 

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseObjects.Gym;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteReview;
@@ -14,7 +15,7 @@ public class DeleteGym {
         // TODO SEE IF WE CAN GO INTO AWS COGNITO AND DELETE USERS FROM A USER POOL FOR THIS
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(gymID) && !fromID.equals("admin")) {
+        if (!fromID.equals(gymID) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only delete a gym you own!");
         }
 

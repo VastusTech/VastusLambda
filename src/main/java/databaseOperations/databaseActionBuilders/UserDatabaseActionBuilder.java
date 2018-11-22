@@ -237,13 +237,18 @@ public class UserDatabaseActionBuilder {
                 "DELETE");
     }
 
-    // TODO MOVE TO USER
     public static DatabaseAction updateAddInvitedEvent(String id, String itemType, String event) throws
             Exception {
         return new UpdateDatabaseAction(id, itemType, "invitedEvents", new AttributeValue(event), false, "ADD", new
                 CheckHandler() {
                     @Override
                     public String isViable(DatabaseObject newObject) throws Exception {
+                        if (((User)newObject).invitedEvents.contains(event)) {
+                            return "That user was already invited to that event!";
+                        }
+                        if (((User)newObject).scheduledEvents.contains(event)) {
+                            return "That user is already a part of that event!";
+                        }
                         return null;
                     }
                 });
@@ -264,7 +269,7 @@ public class UserDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateRemoveSentInvite(String id, String itemType, String invite) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "sentInvites", new AttributeValue(invite), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "sentInvites", new AttributeValue(invite), false, "DELETE");
     }
 
     public static DatabaseAction updateAddReceivedInvite(String id, String itemType, String invite, boolean
@@ -278,7 +283,7 @@ public class UserDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateRemoveReceivedInvite(String id, String itemType, String invite) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "friendRequests", new AttributeValue(invite),
+        return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite),
                 false, "DELETE");
     }
 }

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -20,7 +21,7 @@ public class CreateWorkout {
                     createWorkoutRequest.price != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!Arrays.asList(createWorkoutRequest.clients).contains(fromID) && !fromID.equals("admin")) {
+                if (!Arrays.asList(createWorkoutRequest.clients).contains(fromID) && !fromID.equals(Constants.adminKey)) {
                     throw new Exception("PERMISSIONS ERROR: You can only create a workout you'll be a part of!");
                 }
 

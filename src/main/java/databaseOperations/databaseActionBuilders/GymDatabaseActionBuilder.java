@@ -90,7 +90,8 @@ public class GymDatabaseActionBuilder {
 
                     // Has to be during the weekly time
                     for (TimeInterval weeklyTime : gym.weeklyHours) {
-                        if (weeklyTime.weeklyEncompasses(timeInterval)) {
+                        // TODO this needs to be fixed
+//                        if (weeklyTime.weeklyEncompasses(timeInterval)) {
                             // Then make sure that it isn't during a vacation time
                             for (TimeInterval vacationTime : gym.vacationTimes) {
                                 if (vacationTime.intersects(timeInterval)) {
@@ -99,7 +100,7 @@ public class GymDatabaseActionBuilder {
                             }
 
                             return null;
-                        }
+//                        }
                     }
 
                     return "That workout isn't during the gym's open hours!";

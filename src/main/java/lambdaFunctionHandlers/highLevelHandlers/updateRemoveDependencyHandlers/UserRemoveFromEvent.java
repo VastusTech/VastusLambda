@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.Invite;
 import main.java.databaseObjects.User;
@@ -18,9 +19,17 @@ public class UserRemoveFromEvent {
 
         Event event = Event.readEvent(eventID);
 
-        if (!fromID.equals(userID) && !fromID.equals(event.owner) && !fromID.equals("admin")) {
+        if (!fromID.equals(userID) && !fromID.equals(event.owner) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only remove someone if you're the owner or that someone " +
                     "is you!");
+        }
+
+        if (!event.members.contains(userID)) {
+            throw new Exception("You can't remove a user that isn't already in the event!");
+        }
+
+        if (event.owner.equals(userID)) {
+            throw new Exception("You can't remove the owner from the event! Just delete the event in that case!");
         }
 
         // We delete the party from ourselves

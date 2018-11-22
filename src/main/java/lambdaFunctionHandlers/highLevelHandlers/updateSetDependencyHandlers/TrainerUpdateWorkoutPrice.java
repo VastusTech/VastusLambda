@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
 
@@ -10,7 +11,7 @@ public class TrainerUpdateWorkoutPrice {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String price) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(trainerID) && !fromID.equals("admin")) {
+        if (!fromID.equals(trainerID) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only update a trainer you are!");
         }
         // Check to see if the price is an int or not

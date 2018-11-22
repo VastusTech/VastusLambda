@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseObjects.Client;
 import main.java.databaseObjects.Workout;
 import main.java.databaseOperations.DatabaseAction;
@@ -17,7 +18,7 @@ public class ClientRemoveFromWorkout {
         Workout workout = Workout.readWorkout(workoutID);
         Client client = Client.readClient(clientID);
 
-        if (!fromID.equals(clientID) && !fromID.equals("admin")) {
+        if (!fromID.equals(clientID) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only remove yourself from a workout!");
         }
 

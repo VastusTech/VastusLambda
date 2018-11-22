@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Event;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -17,14 +18,18 @@ public class CreateInvite {
                     .inviteType != null && createInviteRequest.about != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!(fromID.equals(createInviteRequest.from)) && !fromID.equals("admin")) {
+                if (!(fromID.equals(createInviteRequest.from)) && !fromID.equals(Constants.adminKey)) {
                     throw new Exception("PERMISSIONS ERROR: You can only send invites you have created!");
                 }
 
                 // Check to see if the request features are well formed (i.e not invalid date or time)
-                if (!createInviteRequest.inviteType.equals("friendRequest") && !createInviteRequest.equals
+                if (!createInviteRequest.inviteType.equals("friendRequest") && !createInviteRequest.inviteType.equals
                         ("eventInvite")) {
                     throw new Exception("Did not recognize invite type = " + createInviteRequest.inviteType + "!!");
+                }
+
+                if (createInviteRequest.to.equals(createInviteRequest.from)) {
+                    throw new Exception("Can't send an invite to yourself!");
                 }
 
                 // Add the create statement
@@ -42,7 +47,7 @@ public class CreateInvite {
                         toItemType, null, true));
 
                 if (createInviteRequest.inviteType.equals("friendRequest")) {
-                    if (!(fromID.equals(createInviteRequest.about)) && !fromID.equals("admin")) {
+                    if (!(fromID.equals(createInviteRequest.about)) && !fromID.equals(Constants.adminKey)) {
                         throw new Exception("PERMISSIONS ERROR: You can only send friend requests for yourself!");
                     }
                     databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddFriendRequest(createInviteRequest
@@ -50,7 +55,7 @@ public class CreateInvite {
                 }
                 else if (createInviteRequest.inviteType.equals("eventInvite")) {
                     Event event = Event.readEvent(createInviteRequest.about);
-                    if (!event.members.contains(fromID) && !fromID.equals("admin")) {
+                    if (!event.members.contains(fromID) && !fromID.equals(Constants.adminKey)) {
                         throw new Exception("PERMISSIONS ERROR: You can only send event invites to events you are a " +
                                 "member of!");
                     }

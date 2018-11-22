@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.databaseObjects.Client;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.Invite;
@@ -17,12 +18,17 @@ public class UserAddToEvent {
             Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(userID) && !fromID.equals("admin")) {
+        if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only add yourself to an event!");
         }
 
         // Get all the actions for this process
         Event event = Event.readEvent(eventID);
+
+        // Make sure they aren't already inside the event
+        if (event.members.contains(userID)) {
+            throw new Exception("That user is already in the event!");
+        }
 
         // Add to user's scheduled events
         databaseActions.add(UserDatabaseActionBuilder.updateAddScheduledEvent(userID, itemType,

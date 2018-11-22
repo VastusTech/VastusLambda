@@ -7,6 +7,7 @@ import main.java.databaseObjects.Event;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateEventRequest;
+import org.joda.time.DateTime;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -50,6 +51,10 @@ public class EventDatabaseActionBuilder {
 
     public static DatabaseAction updateIfChallenge(String id, String ifChallenge) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "ifChallenge", new AttributeValue(ifChallenge), false, "PUT");
+    }
+
+    public static DatabaseAction updateIfCompleted(String id, String ifCompleted) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "ifCompleted", new AttributeValue(ifCompleted), false, "PUT");
     }
 
     public static DatabaseAction updateGoal(String id, String goal) throws Exception {
@@ -112,6 +117,10 @@ public class EventDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "invitedMembers", new AttributeValue(user), false, "DELETE");
     }
 
+    public static DatabaseAction updateCapacity(String id, String capacity) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "capacity", new AttributeValue(capacity), false, "PUT");
+    }
+
     public static DatabaseAction updateWinner(String id, String winner) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "winner", new AttributeValue(winner), false, "PUT", new CheckHandler() {
             @Override
@@ -125,7 +134,9 @@ public class EventDatabaseActionBuilder {
                         return null;
                     }
                     else {
-                        return "The event must have at least started!!!";
+                        return "The event must have at least started!!!\n" +
+                                "Event time = " + event.time.toString() + ". Now time = " +
+                                (new DateTime()).toDateTimeISO() + ".";
                     }
                 }
                 else {

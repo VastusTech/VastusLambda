@@ -22,7 +22,7 @@ public class CreateEvent {
                     null && createEventRequest.ifChallenge != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!fromID.equals(createEventRequest.owner) && !fromID.equals("admin")) {
+                if (!fromID.equals(createEventRequest.owner) && !fromID.equals(Constants.adminKey)) {
                     throw new Exception("PERMISSIONS ERROR: You can only create events you're going to own!");
                 }
 
