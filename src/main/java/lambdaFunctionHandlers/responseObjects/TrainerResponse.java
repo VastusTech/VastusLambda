@@ -14,6 +14,7 @@ public class TrainerResponse extends ObjectResponse {
     public String email;
     public String username;
     public String profileImagePath;
+    public String[] profileImagePaths;
     public String[] scheduledWorkouts;
     public String[] completedWorkouts;
     public String[] scheduledTimes;
@@ -39,6 +40,7 @@ public class TrainerResponse extends ObjectResponse {
         this.email = trainer.email;
         this.username = trainer.username;
         this.profileImagePath = trainer.profileImagePath;
+        this.profileImagePaths = trainer.profileImagePaths.toArray(new String[]{});
         this.scheduledWorkouts = trainer.scheduledWorkouts.toArray(new String[]{});
         this.completedWorkouts = trainer.completedWorkouts.toArray(new String[]{});
         List<String> scheduledTimes = new ArrayList<>();

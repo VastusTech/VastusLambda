@@ -13,6 +13,7 @@ public class GymResponse extends ObjectResponse {
     public String email;
     public String username;
     public String profileImagePath;
+    public String[] profileImagePaths;
     public String[] scheduledWorkouts;
     public String[] completedWorkouts;
     public String[] scheduledTimes;
@@ -38,6 +39,7 @@ public class GymResponse extends ObjectResponse {
         this.email = gym.email;
         this.username = gym.username;
         this.profileImagePath = gym.profileImagePath;
+        this.profileImagePaths = gym.profileImagePaths.toArray(new String[]{});
         this.scheduledWorkouts = gym.scheduledWorkouts.toArray(new String[]{});
         this.completedWorkouts = gym.completedWorkouts.toArray(new String[]{});
         List<String> scheduledTimes = new ArrayList<>();

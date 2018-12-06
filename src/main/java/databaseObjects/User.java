@@ -17,6 +17,7 @@ abstract public class User extends DatabaseObject{
     public String email;
     public String username;
     public String profileImagePath;
+    public Set<String> profileImagePaths;
     public Set<String> scheduledWorkouts;
     public Set<String> completedWorkouts;
     public List<TimeInterval> scheduledTimes;
@@ -46,6 +47,8 @@ abstract public class User extends DatabaseObject{
         this.email = item.getString("email");
         this.username = item.getString("username");
         this.profileImagePath = item.getString("profileImagePath");
+        this.profileImagePaths = item.getStringSet("profileImagePaths");
+        if (profileImagePaths == null) { this.profileImagePaths = new HashSet<>(); }
         this.scheduledWorkouts = item.getStringSet("scheduledWorkouts");
         if (scheduledWorkouts == null) { this.scheduledWorkouts = new HashSet<>(); }
         this.completedWorkouts = item.getStringSet("completedWorkouts");

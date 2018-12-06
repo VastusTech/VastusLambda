@@ -32,6 +32,19 @@ public class UserDatabaseActionBuilder {
                 false, "PUT");
     }
 
+    public static DatabaseAction updateAddProfileImagePath(String id, String itemType, String profileImagePath) throws
+            Exception {
+        return new UpdateDatabaseAction(id, itemType, "profileImagePaths", new AttributeValue(profileImagePath),
+                false, "ADD");
+    }
+
+    public static DatabaseAction updateRemoveProfileImagePath(String id, String itemType, String profileImagePath)
+            throws
+            Exception {
+        return new UpdateDatabaseAction(id, itemType, "profileImagePaths", new AttributeValue(profileImagePath),
+                false, "DELETE");
+    }
+
     public static DatabaseAction updateAddScheduledWorkout(String id, String itemType, String workout, boolean
             ifWithCreate) throws Exception {
         if (ifWithCreate) {

@@ -51,6 +51,7 @@ public class LambdaRequest {
         email,
         username,
         profileImagePath,
+        profileImagePaths,
         scheduledWorkouts,
         completedWorkouts,
         scheduledTimes,
@@ -622,6 +623,15 @@ public class LambdaRequest {
 
         try {
             switch (AttributeName.valueOf(attributeName)) {
+                case profileImagePaths:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                        databaseActionCompiler.addAll(UserAddProfileImagePath.getActions(fromID, id, attributeValues[0]));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                 case scheduledWorkouts:
                     if (itemType.equals("Client")) {
                         databaseActionCompiler.addAll(ClientAddToWorkout.getActions(fromID, id, attributeValues[0]));
@@ -693,6 +703,7 @@ public class LambdaRequest {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEADD operation on " + attributeName + "!");
             }
@@ -715,6 +726,15 @@ public class LambdaRequest {
 
         try {
             switch (AttributeName.valueOf(attributeName)) {
+                case profileImagePaths:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                        databaseActionCompiler.addAll(UserRemoveProfileImagePath.getActions(fromID, id, attributeValues[0]));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                 case scheduledWorkouts:
                     if (itemType.equals("Client")) {
                         databaseActionCompiler.addAll(ClientRemoveFromWorkout.getActions(fromID, id, attributeValues[0]));
