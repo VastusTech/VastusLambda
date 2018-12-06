@@ -625,7 +625,8 @@ public class LambdaRequest {
             switch (AttributeName.valueOf(attributeName)) {
                 case profileImagePaths:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        databaseActionCompiler.addAll(UserAddProfileImagePath.getActions(fromID, id, attributeValues[0]));
+                        databaseActionCompiler.addAll(UserAddProfileImagePath.getActions(fromID, id,
+                                itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -728,7 +729,8 @@ public class LambdaRequest {
             switch (AttributeName.valueOf(attributeName)) {
                 case profileImagePaths:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        databaseActionCompiler.addAll(UserRemoveProfileImagePath.getActions(fromID, id, attributeValues[0]));
+                        databaseActionCompiler.addAll(UserRemoveProfileImagePath.getActions(fromID, id,
+                                itemType, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +

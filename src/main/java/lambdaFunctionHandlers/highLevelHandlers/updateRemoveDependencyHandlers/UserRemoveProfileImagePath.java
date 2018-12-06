@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRemoveProfileImagePath {
-    public static List<DatabaseAction> getActions(String fromID, String userID, String profileImagePath) throws
+    public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String
+            profileImagePath) throws
             Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
@@ -17,9 +18,7 @@ public class UserRemoveProfileImagePath {
             throw new Exception("PERMISSIONS ERROR: You can only update a gym you own!");
         }
 
-        String userItemType = ItemType.getItemType(userID);
-
-        databaseActions.add(UserDatabaseActionBuilder.updateRemoveProfileImagePath(userID, userItemType, profileImagePath));
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveProfileImagePath(userID, itemType, profileImagePath));
 
         return databaseActions;
     }
