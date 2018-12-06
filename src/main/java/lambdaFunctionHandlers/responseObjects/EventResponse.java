@@ -18,6 +18,7 @@ public class EventResponse extends ObjectResponse {
     public String description;
     public String goal;
     public String difficulty;
+    public String[] tags;
     public String winner;
 
     public EventResponse(Event event) {
@@ -36,6 +37,7 @@ public class EventResponse extends ObjectResponse {
         this.goal = event.goal;
         this.difficulty = Integer.toString(event.difficulty);
         this.winner = event.winner;
+        this.tags = event.tags.toArray(new String[]{});
     }
 }
 

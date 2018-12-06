@@ -26,6 +26,7 @@ public class Event extends DatabaseObject {
 
     public String goal;
     public int difficulty;
+    public Set<String> tags;
     public String winner;
 
     public Event(Item item) throws Exception {
@@ -45,6 +46,7 @@ public class Event extends DatabaseObject {
         this.ifCompleted = Boolean.parseBoolean(item.getString("ifCompleted"));
         this.goal = item.getString("goal");
         this.difficulty = Integer.parseInt(item.getString("difficulty"));
+        this.tags = item.getStringSet("tags");
         this.winner = item.getString("winner");
     }
 

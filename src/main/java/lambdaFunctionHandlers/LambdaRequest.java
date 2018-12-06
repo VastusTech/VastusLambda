@@ -105,6 +105,7 @@ public class LambdaRequest {
         ifChallenge,
         goal,
         winner,
+        tags,
         // Invite ==========================
     }
 
@@ -685,6 +686,13 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case tags:
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventAddTag.getActions(fromID, id, attributeValues[0]));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
                 default:
                     throw new Exception("Can't perform an UPDATEADD operation on " + attributeName + "!");
             }
@@ -766,6 +774,13 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(GymRemoveVacationTime.getActions(fromID, id, attributeValues[0]));
                     }
                     else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                case tags:
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventRemoveTag.getActions(fromID, id, attributeValues[0]));
+                    } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
                     }

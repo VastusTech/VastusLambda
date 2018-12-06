@@ -121,6 +121,14 @@ public class EventDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "capacity", new AttributeValue(capacity), false, "PUT");
     }
 
+    public static DatabaseAction updateAddTag(String id, String tag) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "tags", new AttributeValue(tag), false, "ADD");
+    }
+
+    public static DatabaseAction updateRemoveTag(String id, String tag) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "tags", new AttributeValue(tag), false, "DELETE");
+    }
+
     public static DatabaseAction updateWinner(String id, String winner) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "winner", new AttributeValue(winner), false, "PUT", new CheckHandler() {
             @Override

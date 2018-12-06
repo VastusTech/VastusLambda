@@ -15,11 +15,12 @@ public class CreateEventRequest {
     // Optional
     public String description;
     public String difficulty;
+    public String[] tags;
     public String[] members;
     public String access;
 
     public CreateEventRequest(String owner, String time, String capacity, String address, String title, String goal,
-        String ifChallenge, String description, String difficulty, String[] members, String access) {
+        String ifChallenge, String description, String difficulty, String[] tags, String[] members, String access) {
         this.owner = owner;
         this.time = time;
         this.capacity = capacity;
@@ -29,6 +30,7 @@ public class CreateEventRequest {
         this.ifChallenge = ifChallenge;
         this.description = description;
         this.difficulty = difficulty;
+        this.tags = tags;
         this.members = members;
         this.access = access;
     }
@@ -105,6 +107,14 @@ public class CreateEventRequest {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
     }
 
     public String[] getMembers() {
