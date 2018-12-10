@@ -31,6 +31,7 @@ public class Constants {
     public static String userPoolID = System.getenv("userPoolID");
     public static String userPoolClientID = System.getenv("userPoolClientID");
     public static String userPoolSecretKey = System.getenv("userPoolSecretKey");
+    public static String ablyAPIKey = System.getenv("ablyAPIKey");
     public static String adminKey = System.getenv("adminKey");
 
 

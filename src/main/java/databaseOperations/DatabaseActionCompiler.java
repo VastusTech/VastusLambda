@@ -3,6 +3,7 @@ package main.java.databaseOperations;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import main.java.databaseObjects.DatabaseObject;
+import main.java.notifications.AblyHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,16 +11,22 @@ import java.util.List;
 import java.util.Map;
 
 public class DatabaseActionCompiler {
+    private AblyHandler ablyHandler;
     private List<DatabaseAction> databaseActions;
     private Map<String, DatabaseAction> databaseActionMap;
 
-    public DatabaseActionCompiler() {
+    public DatabaseActionCompiler() throws Exception {
         databaseActions = new ArrayList<>();
         databaseActionMap = new HashMap<>();
+        ablyHandler = new AblyHandler();
     }
 
     public List<DatabaseAction> getDatabaseActions() {
         return databaseActions;
+    }
+
+    public void sendNotifications() throws Exception {
+        ablyHandler.sendNotifications();
     }
 
     public void add(DatabaseAction databaseAction) throws Exception {
@@ -199,5 +206,9 @@ public class DatabaseActionCompiler {
         for (DatabaseAction databaseAction: databaseActions) {
             add(databaseAction);
         }
+    }
+
+    public void addNotification(String to, String title, Object notification) throws Exception {
+        ablyHandler.addNotification(to, title, notification);
     }
 }

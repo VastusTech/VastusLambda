@@ -65,7 +65,7 @@ public class CreateInvite {
                             .about, createInviteRequest.to));
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
             else {
                 throw new Exception("createClientRequest is missing required fields!");

@@ -81,7 +81,7 @@ public class CreateReview {
                             true));
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
             else {
                 throw new Exception("createReviewRequest is missing required fields!");

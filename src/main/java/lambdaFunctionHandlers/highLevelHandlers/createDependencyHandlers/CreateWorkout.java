@@ -57,7 +57,7 @@ public class CreateWorkout {
                 databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledTime
                         (createWorkoutRequest.gym, createWorkoutRequest.time, true));
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
             else {
                 throw new Exception("createWorkoutRequest is missing required fields!");

@@ -69,7 +69,7 @@ public class CreateEvent {
                     }
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
             else {
                 throw new Exception("createEventRequest is missing required fields!");

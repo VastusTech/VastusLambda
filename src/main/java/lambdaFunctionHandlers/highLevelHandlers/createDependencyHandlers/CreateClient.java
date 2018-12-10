@@ -23,7 +23,7 @@ public class CreateClient {
 
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.create(createClientRequest));
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
             else {
                 throw new Exception("createClientRequest is missing required fields!");

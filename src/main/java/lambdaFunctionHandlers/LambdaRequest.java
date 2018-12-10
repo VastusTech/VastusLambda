@@ -609,7 +609,7 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
     }
 
     public void handleUpdateAdd(String id) throws Exception {
@@ -713,7 +713,7 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
     }
 
     public void handleUpdateRemove(String id) throws Exception {
@@ -815,7 +815,7 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
     }
 
     public void handleDelete(String id) throws Exception {
@@ -854,7 +854,7 @@ public class LambdaRequest {
         }
 
         //Constants.debugLog("Attempting the transaction");
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
     }
 
     public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String

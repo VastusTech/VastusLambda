@@ -54,10 +54,12 @@ public class DynamoDBHandler {
      */
 
     // Returns the ID if it's applicable
-    public String attemptTransaction(List<DatabaseAction> databaseActions) throws Exception {
+    public String attemptTransaction(DatabaseActionCompiler databaseActionCompiler) throws Exception {
         // Marker retry implemented
         Transaction transaction = txManager.newTransaction();
         String returnString = null;
+
+        List<DatabaseAction> databaseActions = databaseActionCompiler.getDatabaseActions();
 
         for (DatabaseAction databaseAction : databaseActions) {
             switch (databaseAction.action) {
@@ -125,10 +127,10 @@ public class DynamoDBHandler {
 
 
                         // This is the marker conditional statement
-                        String conditionalExpression = "#mark = :mark";
-                        Map<String, String> conditionalExpressionNames = new HashMap<>();
-                        conditionalExpressionNames.put("#mark", "marker");
-                        Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
+                        // String conditionalExpression = "#mark = :mark";
+                        // Map<String, String> conditionalExpressionNames = new HashMap<>();
+                        // conditionalExpressionNames.put("#mark", "marker");
+                        // Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
 
                         // This is the actual update item statement
                         Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, returnString);
@@ -146,7 +148,7 @@ public class DynamoDBHandler {
                             String errorMessage = databaseAction.checkHandler.isViable(object);
                             if (errorMessage == null) {
                                 // Put the newly read marker value into the conditional statement
-                                conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
+                                // conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
                                 try {
                                     // Try to update the item and the marker with the conditional check
@@ -204,10 +206,10 @@ public class DynamoDBHandler {
                         key.put("id", databaseAction.item.get("id"));
 
                         // This is the marker conditional statement
-                        String conditionalExpression = "#mark = :mark";
-                        Map<String, String> conditionalExpressionNames = new HashMap<>();
-                        conditionalExpressionNames.put("#mark", "marker");
-                        Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
+//                        String conditionalExpression = "#mark = :mark";
+//                        Map<String, String> conditionalExpressionNames = new HashMap<>();
+//                        conditionalExpressionNames.put("#mark", "marker");
+//                        Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
 
                         boolean ifFinished = false;
                         while (!ifFinished) {
@@ -215,7 +217,7 @@ public class DynamoDBHandler {
                             // Perform the checkHandler check
                             String errorMessage = databaseAction.checkHandler.isViable(object);
                             if (errorMessage == null) {
-                                conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
+//                                conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
                                 try {
                                     // try to delete the item
@@ -258,6 +260,10 @@ public class DynamoDBHandler {
         // If it gets here, then the process completed safely.
         transaction.commit();
         transaction.delete();
+
+        // Then it is safe to use Ably to send the notifications
+        databaseActionCompiler.sendNotifications();
+
         return returnString;
     }
 

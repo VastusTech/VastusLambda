@@ -34,7 +34,7 @@ public class CreateGym {
                 databaseActionCompiler.add(GymDatabaseActionBuilder.create(createGymRequest));
 
                 // Do the transaction and return the ID afterwards
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
             else {
                 throw new Exception("createGymRequest is missing required fields!");

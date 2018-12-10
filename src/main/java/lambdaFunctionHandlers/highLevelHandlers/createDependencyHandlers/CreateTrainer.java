@@ -36,7 +36,7 @@ public class CreateTrainer {
                 databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddTrainer(createTrainerRequest.gym,
                         null, true));
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler.getDatabaseActions());
+                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
             else {
                 throw new Exception("Required fields missing in createTrainerRequest!");
