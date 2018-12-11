@@ -30,6 +30,10 @@ public class UserAddToEvent {
             throw new Exception("That user is already in the event!");
         }
 
+        if (event.ifCompleted) {
+            throw new Exception("That event is already completed!");
+        }
+
         // Add to user's scheduled events
         databaseActions.add(UserDatabaseActionBuilder.updateAddScheduledEvent(userID, itemType,
                 eventID, false));

@@ -29,18 +29,18 @@ public class DeleteClient {
         // Delete the user associated with the client
         databaseActions.addAll(DeleteUser.getActions(fromID, client));
 
-        // TODO This should also be able to delete the workout potentially?
+        // TODO Don't remove people from workouts, we CAN have empty workouts
         // Remove from all scheduled workouts and completed workouts
+        // Also remove from missing reviews in the workouts
         for (String workoutID : client.scheduledWorkouts) {
             databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
             databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
         }
+//        for (String workoutID: client.completedWorkouts) {
+//            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
+//            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
+//        }
 
-        // Also remove from missing reviews in the workouts
-        for (String workoutID: client.completedWorkouts) {
-            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
-            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
-        }
 
         // Also remove from subscribers in trainers
         for (String subscriptionID: client.subscriptions) {

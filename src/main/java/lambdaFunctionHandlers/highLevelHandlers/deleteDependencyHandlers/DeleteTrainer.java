@@ -31,9 +31,9 @@ public class DeleteTrainer {
         for (String workoutID : trainer.scheduledWorkouts) {
             databaseActions.addAll(DeleteWorkout.getActions(trainerID, workoutID));
         }
-        for (String workoutID : trainer.completedWorkouts) {
-            databaseActions.addAll(DeleteWorkout.getActions(trainerID, workoutID));
-        }
+//        for (String workoutID : trainer.completedWorkouts) {
+//            databaseActions.addAll(DeleteWorkout.getActions(trainerID, workoutID));
+//        }
 
         for (String subscriberID : trainer.subscribers) {
             databaseActions.add(ClientDatabaseActionBuilder.updateRemoveSubscription(trainerID, subscriberID));

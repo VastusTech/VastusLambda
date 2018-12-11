@@ -28,9 +28,10 @@ public class DeleteGym {
         databaseActions.addAll(DeleteUser.getActions(fromID, gym));
 
         // Remove all trainers in trainers
-        for (String trainerID : gym.trainerIDs) {
-            databaseActions.addAll(DeleteTrainer.getActions(fromID, trainerID));
-        }
+        // TODO We'll have to do something in this case, but I'm not sure if we should just delete the trainers
+//        for (String trainerID : gym.trainerIDs) {
+//            databaseActions.addAll(DeleteTrainer.getActions(fromID, trainerID));
+//        }
 
         return databaseActions;
 

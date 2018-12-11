@@ -17,15 +17,16 @@ public class DeleteUser {
         // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
         // TODO =======================================================================================================
 
+        // TODO We don't want to give people the power of deleting reviews because they're not there
         // Remove reviews from reviews by and reviews about
-        for (String reviewID : user.reviewsBy) {
-            // Get all the actions that would be necessary for the review deleting process
-            databaseActions.addAll(DeleteReview.getActions(fromID, reviewID));
-        }
-        for (String reviewID : user.reviewsAbout) {
-            // Get all the actions that would be necessary for the review deleting process
-            databaseActions.addAll(DeleteReview.getActions(fromID, reviewID));
-        }
+//        for (String reviewID : user.reviewsBy) {
+//            // Get all the actions that would be necessary for the review deleting process
+//            databaseActions.addAll(DeleteReview.getActions(fromID, reviewID));
+//        }
+//        for (String reviewID : user.reviewsAbout) {
+//            // Get all the actions that would be necessary for the review deleting process
+//            databaseActions.addAll(DeleteReview.getActions(fromID, reviewID));
+//        }
 
 
         // Also remove from scheduled events
@@ -34,9 +35,9 @@ public class DeleteUser {
         }
 
         // Also remove from completed events
-        for (String eventID : user.completedEvents) {
-            databaseActions.add(EventDatabaseActionBuilder.updateRemoveMember(eventID, user.id));
-        }
+//        for (String eventID : user.completedEvents) {
+//            databaseActions.add(EventDatabaseActionBuilder.updateRemoveMember(eventID, user.id));
+//        }
 
         // Also delete the events you own
         for (String eventID : user.ownedEvents) {
@@ -49,9 +50,9 @@ public class DeleteUser {
         }
 
         // Remove all invites from sent
-        for (String inviteID : user.sentInvites) {
-            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
-        }
+//        for (String inviteID : user.sentInvites) {
+//            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+//        }
 
         // Remove all invites from received
         for (String inviteID : user.receivedInvites) {

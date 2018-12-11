@@ -18,6 +18,7 @@ public class Trainer extends User {
     public int workoutPrice;
     public Set<String> followers;
     public Set<String> subscribers;
+    public String subscriptionPrice;
 
     Trainer(Item item) throws Exception {
         super(item);
@@ -33,6 +34,7 @@ public class Trainer extends User {
         if (followers == null) { this.followers = new HashSet<>(); }
         this.subscribers = item.getStringSet("subscribers");
         if (subscribers == null) { this.subscribers = new HashSet<>(); }
+        this.subscriptionPrice = item.getString("subscriptionPrice");
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {
@@ -45,8 +47,9 @@ public class Trainer extends User {
         item.put("workoutSticker", null);
         // item.put("preferred_intensity", new AttributeValue(Constants.nullAttributeValue));
         item.put("preferredIntensity", null);
-        item.put("workoutCapacity", new AttributeValue("4"));
-        item.put("workoutPrice", new AttributeValue("80"));
+        item.put("workoutCapacity", null);
+        item.put("workoutPrice", null);
+        item.put("subscriptionPrice", null);
         return item;
     }
 

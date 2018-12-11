@@ -125,6 +125,10 @@ public class TrainerDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "subscribers", new AttributeValue(subscriber), false, "DELETE");
     }
 
+    public static DatabaseAction updateSubscriptionPrice(String id, String price) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "subscriptionPrice", new AttributeValue(price), false, "PUT");
+    }
+
     public static DatabaseAction delete(String id) {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue(itemType));

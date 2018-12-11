@@ -79,6 +79,7 @@ public class LambdaRequest {
         workoutCapacity,
         workoutPrice,
         followers,
+        subscriptionPrice,
         // Gym =============================
         address,
         trainers,
@@ -426,14 +427,20 @@ public class LambdaRequest {
             attributeValues = null;
         }
 
+        ItemType type = ItemType.valueOf(itemType);
+
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case name:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
-                        databaseActionCompiler.addAll(UserUpdateName.getActions(fromID, id, itemType, attributeValues[0]));
-                    }
-                    else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    // TODO Change all of these into switch statements?
+                    switch (type) {
+                        case Client:
+                        case Trainer:
+                        case Gym:
+                            databaseActionCompiler.addAll(UserUpdateName.getActions(fromID, id, itemType, attributeValues[0]));
+                            break;
+                        default:
+                            throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
                 case gender:
@@ -513,6 +520,15 @@ public class LambdaRequest {
                 case workoutPrice:
                     if (itemType.equals("Trainer")) {
                         databaseActionCompiler.addAll(TrainerUpdateWorkoutPrice.getActions(fromID, id, attributeValues[0]));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case subscriptionPrice:
+                    if (itemType.equals("Trainer")) {
+                        databaseActionCompiler.addAll(TrainerUpdateSubscriptionPrice.getActions(fromID, id,
+                                attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
