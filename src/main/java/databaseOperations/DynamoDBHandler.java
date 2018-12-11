@@ -328,9 +328,14 @@ public class DynamoDBHandler {
     public <T extends DatabaseObject> T readItem(Map<String, AttributeValue> key) throws Exception {
         String id = key.get("id").getS();
         String itemType = key.get("item_type").getS();
-        Constants.debugLog("Read item: id = " + id + ", item_type = " + itemType + "!");
+        Constants.debugLog("Reading item: id = " + id + ", item_type = " + itemType + "!");
         Item item = table.getItem("item_type", itemType, "id", id);
-        Constants.debugLog("Got past the table.getItem statement...");
+
+        // Check is the item didn't return anything
+        if (item == null) {
+            throw new Exception("No " + itemType + " in the database with ID = " + id + "!!");
+        }
+
         DatabaseObject object = DatabaseObjectBuilder.build(item);
         return (T)object;
     }

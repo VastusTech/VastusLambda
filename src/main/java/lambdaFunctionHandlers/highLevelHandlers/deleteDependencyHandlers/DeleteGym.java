@@ -19,6 +19,10 @@ public class DeleteGym {
             throw new Exception("PERMISSIONS ERROR: You can only delete a gym you own!");
         }
 
+        // TODO =======================================================================================================
+        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
+        // TODO =======================================================================================================
+
         Gym gym = Gym.readGym(gymID);
 
         databaseActions.addAll(DeleteUser.getActions(fromID, gym));

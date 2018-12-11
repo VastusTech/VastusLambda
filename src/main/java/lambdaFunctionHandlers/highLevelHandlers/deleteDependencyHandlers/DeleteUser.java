@@ -13,6 +13,10 @@ public class DeleteUser {
     public static List<DatabaseAction> getActions(String fromID, User user) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        // TODO =======================================================================================================
+        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
+        // TODO =======================================================================================================
+
         // Remove reviews from reviews by and reviews about
         for (String reviewID : user.reviewsBy) {
             // Get all the actions that would be necessary for the review deleting process

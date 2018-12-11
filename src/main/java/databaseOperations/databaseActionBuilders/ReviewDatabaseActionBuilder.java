@@ -26,28 +26,8 @@ public class ReviewDatabaseActionBuilder {
         return new CreateDatabaseAction(item);
     }
 
-//    public static DatabaseAction updateByID() {
-//        return null;
-//    }
-
-//    public static DatabaseAction updateAboutID() {
-//        return null;
-//    }
-//
-//    public static DatabaseAction updateFriendlinessRating() {
-//        return null;
-//    }
-//
-//    public static DatabaseAction updateEffectivenessRating() {
-//        return null;
-//    }
-//
-//    public static DatabaseAction updateReliabilityRating() {
-//        return null;
-//    }
-
     public static DatabaseAction updateDescription(String id, String description) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "description", new AttributeValue(description), false, "SET");
+        return new UpdateDatabaseAction(id, itemType, "description", new AttributeValue(description), false, "PUT");
     }
 
     public static DatabaseAction delete(String id) {

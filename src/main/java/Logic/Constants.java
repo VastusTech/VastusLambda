@@ -34,6 +34,10 @@ public class Constants {
     public static String ablyAPIKey = System.getenv("ablyAPIKey");
     public static String adminKey = System.getenv("adminKey");
 
+    // Database Limits
+    public static int userProfileImagePathsLimit = Integer.parseInt(System.getenv("userProfileImagePathsLimit"));
+    public static int postPicturePathsLimit = Integer.parseInt(System.getenv("postPicturePathsLimit"));
+    public static int postVideoPathsLimit = Integer.parseInt(System.getenv("postVideoPathsLimit"));
 
     // public static String nullAttributeValue = System.getenv("nullAttributeValue");
 

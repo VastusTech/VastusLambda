@@ -7,9 +7,10 @@ public enum ItemType {
     Workout,
     Review,
     Event,
-    Invite,;
+    Invite,
+    Post, ;
 
-    public static String getItemType(String id) {
+    public static String getItemType(String id) throws Exception {
         String prefix = id.substring(0, Constants.numPrefix);
         ItemType[] itemTypes = ItemType.values();
 
@@ -20,6 +21,6 @@ public enum ItemType {
             }
         }
 
-        return null;
+        throw new Exception("Couldn't recognize the item type of the ID = " + id);
     }
 }

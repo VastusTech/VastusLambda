@@ -16,15 +16,14 @@ public class CreateTrainer {
         if (createTrainerRequest != null) {
             // Check required fields
             if (createTrainerRequest.name != null && createTrainerRequest.gender != null && createTrainerRequest
-                    .birthday != null && createTrainerRequest.email != null && createTrainerRequest.username != null
-                    && createTrainerRequest.gym != null && createTrainerRequest.workoutSticker != null &&
-                    createTrainerRequest.preferredIntensity != null) {
+                    .birthday != null && createTrainerRequest.email != null && createTrainerRequest.username != null) {
                 // Create the database action list for the transaction to complete
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)
                 new DateTime(createTrainerRequest.birthday);
-                Integer.parseInt(createTrainerRequest.preferredIntensity);
+                if (createTrainerRequest.preferredIntensity != null) { Integer.parseInt(createTrainerRequest
+                        .preferredIntensity); }
                 if (createTrainerRequest.workoutPrice != null) { Integer.parseInt(createTrainerRequest.workoutPrice); }
                 if (createTrainerRequest.workoutCapacity != null) { Integer.parseInt(createTrainerRequest
                         .workoutCapacity); }
@@ -33,8 +32,8 @@ public class CreateTrainer {
                 databaseActionCompiler.add(TrainerDatabaseActionBuilder.create(createTrainerRequest));
 
                 // Add to gym (with gymID and true for fromCreate
-                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddTrainer(createTrainerRequest.gym,
-                        null, true));
+//                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddTrainer(createTrainerRequest.gym,
+//                        null, true));
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }

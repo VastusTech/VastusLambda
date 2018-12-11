@@ -32,6 +32,7 @@ public class LambdaRequest {
     private CreateReviewRequest createReviewRequest;
     private CreateEventRequest createEventRequest;
     private CreateInviteRequest createInviteRequest;
+    private CreatePostRequest createPostRequest;
 
     private enum Action {
         CREATE,
@@ -108,6 +109,10 @@ public class LambdaRequest {
         winner,
         tags,
         // Invite ==========================
+        // Post   ==========================
+        picturePaths,
+        videoPaths,
+        // postType,
     }
 
     // This is where the inputs are handled!
@@ -300,6 +305,10 @@ public class LambdaRequest {
                 numCreateRequest++;
                 Constants.debugLog("Has a create invite request!\n");
             }
+            if (createPostRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create post request!\n");
+            }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
@@ -328,6 +337,8 @@ public class LambdaRequest {
                     return CreateEvent.handle(fromID, createEventRequest);
                 case Invite:
                     return CreateInvite.handle(fromID, createInviteRequest);
+                case Post:
+                    return CreatePost.handle(fromID, createPostRequest);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -358,6 +369,8 @@ public class LambdaRequest {
                     return ReadEventsByID.handle(ids);
                 case Invite:
                     return ReadInvitesByID.handle(ids);
+                case Post:
+                    return ReadPostsByID.handle(ids);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -384,6 +397,8 @@ public class LambdaRequest {
                     throw new Exception("Can't query an event by a username!");
                 case Invite:
                     throw new Exception("Can't query an invite by a username!");
+                case Post:
+                    throw new Exception("Can't query a post by a username!");
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -559,6 +574,9 @@ public class LambdaRequest {
                     if (itemType.equals("Event")) {
                         databaseActionCompiler.addAll(EventUpdateDescription.getActions(fromID, id, attributeValues[0]));
                     }
+                    else if (itemType.equals("Post")) {
+                        databaseActionCompiler.addAll(PostUpdateDescription.getActions(fromID, id, attributeValues[0]));
+                    }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
@@ -566,6 +584,9 @@ public class LambdaRequest {
                 case access:
                     if (itemType.equals("Event")) {
                         databaseActionCompiler.addAll(EventUpdateAccess.getActions(fromID, id, attributeValues[0]));
+                    }
+                    else if (itemType.equals("Post")) {
+                        databaseActionCompiler.addAll(PostUpdateAccess.getActions(fromID, id, attributeValues[0]));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
@@ -705,6 +726,22 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case picturePaths:
+                    if (itemType.equals("Post")) {
+                        databaseActionCompiler.addAll(PostAddPicturePath.getActions(fromID, id, attributeValues[0]));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
+                case videoPaths:
+                    if (itemType.equals("Post")) {
+                        databaseActionCompiler.addAll(PostAddVideoPath.getActions(fromID, id, attributeValues[0]));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEADD operation on " + attributeName + "!");
             }
@@ -807,6 +844,22 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case picturePaths:
+                    if (itemType.equals("Post")) {
+                        databaseActionCompiler.addAll(PostRemovePicturePath.getActions(fromID, id, attributeValues[0]));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
+                case videoPaths:
+                    if (itemType.equals("Post")) {
+                        databaseActionCompiler.addAll(PostRemoveVideoPath.getActions(fromID, id, attributeValues[0]));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEREMOVE operation on " + attributeName + "!");
             }
@@ -844,6 +897,9 @@ public class LambdaRequest {
                     break;
                 case Invite:
                     databaseActionCompiler.addAll(DeleteInvite.getActions(fromID, id));
+                    break;
+                case Post:
+                    databaseActionCompiler.addAll(DeletePost.getActions(fromID, id));
                     break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");

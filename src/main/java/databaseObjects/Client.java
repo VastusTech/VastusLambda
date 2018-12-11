@@ -10,11 +10,14 @@ import java.util.*;
 
 public class Client extends User {
     public Set<String> trainersFollowing;
+    public Set<String> subscriptions;
 
     Client(Item item) throws Exception {
         super(item);
         this.trainersFollowing = item.getStringSet("trainersFollowing");
         if (trainersFollowing == null) { this.trainersFollowing = new HashSet<>(); }
+        this.subscriptions = item.getStringSet("subscription");
+        if (subscriptions == null) { this.subscriptions = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

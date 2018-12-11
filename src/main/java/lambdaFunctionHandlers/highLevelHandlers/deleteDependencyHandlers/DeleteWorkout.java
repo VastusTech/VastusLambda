@@ -21,6 +21,10 @@ public class DeleteWorkout {
             throw new Exception("PERMISSIONS ERROR: You can only delete a workout if you're the trainer!");
         }
 
+        // TODO =======================================================================================================
+        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
+        // TODO =======================================================================================================
+
         // Remove from clients' scheduled workouts and completed workouts
         // Remove clients' scheduled workout times and  completed workout times
         for (String client : workout.clients) {

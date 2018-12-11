@@ -37,6 +37,7 @@ abstract public class User extends DatabaseObject{
     public Set<String> invitedEvents;
     public Set<String> sentInvites;
     public Set<String> receivedInvites;
+    public Set<String> posts;
 
     public User(Item item) throws Exception {
         super(item);
@@ -83,6 +84,8 @@ abstract public class User extends DatabaseObject{
         if (sentInvites == null) { this.sentInvites = new HashSet<>(); }
         this.receivedInvites = item.getStringSet("receivedInvites");
         if (receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
+        this.posts = item.getStringSet("posts");
+        if (posts == null) { this.posts = new HashSet<>(); }
     }
 
     private int getAgeFromBirthday(String birthday) {

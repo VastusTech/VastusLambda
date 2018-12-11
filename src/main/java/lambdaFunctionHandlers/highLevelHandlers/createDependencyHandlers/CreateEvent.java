@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.TimeInterval;
+import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;

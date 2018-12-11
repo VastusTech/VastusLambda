@@ -22,6 +22,10 @@ public class DeleteEvent {
             throw new Exception("PERMISSIONS ERROR: You can only delete an event you own!");
         }
 
+        // TODO =======================================================================================================
+        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
+        // TODO =======================================================================================================
+
         // TODO This is ripe for abuse...
         // TODO Do checking so that a cheeky guy can't just delete a challenge and make it so nobody wins?
 

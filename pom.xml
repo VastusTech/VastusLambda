@@ -51,7 +51,6 @@
       <groupId>io.ably</groupId>
       <artifactId>ably-java</artifactId>
       <version>1.0.8</version>
-      <type>pom</type>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

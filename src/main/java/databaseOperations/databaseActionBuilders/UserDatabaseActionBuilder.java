@@ -299,4 +299,18 @@ public class UserDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite),
                 false, "DELETE");
     }
+
+    public static DatabaseAction updateAddPost(String id, String itemType, String post, boolean ifWithCreate) throws
+            Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "posts", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "posts", new AttributeValue(post), false, "ADD");
+        }
+    }
+
+    public static DatabaseAction updateRemovePost(String id, String itemType, String post) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "posts", new AttributeValue(post), false, "DELETE");
+    }
 }

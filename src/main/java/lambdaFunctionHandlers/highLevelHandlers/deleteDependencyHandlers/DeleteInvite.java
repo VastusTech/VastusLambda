@@ -32,6 +32,10 @@ public class DeleteInvite {
             }
         }
 
+        // TODO =======================================================================================================
+        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
+        // TODO =======================================================================================================
+
         // Remove from from's sentInvites field
         String fromItemType = ItemType.getItemType(invite.from);
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));

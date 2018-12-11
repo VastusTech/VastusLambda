@@ -23,9 +23,11 @@ public class TrainerDatabaseActionBuilder {
         item.put("birthday", new AttributeValue(createTrainerRequest.birthday));
         item.put("email", new AttributeValue(createTrainerRequest.email));
         item.put("username", new AttributeValue(createTrainerRequest.username));
-        item.put("gym", new AttributeValue(createTrainerRequest.gym));
-        item.put("workoutSticker", new AttributeValue(createTrainerRequest.workoutSticker));
-        item.put("preferredIntensity", new AttributeValue(createTrainerRequest.preferredIntensity));
+        if (createTrainerRequest.gym != null) { item.put("gym", new AttributeValue(createTrainerRequest.gym)); }
+        if (createTrainerRequest.workoutSticker != null) { item.put("workoutSticker", new AttributeValue
+                (createTrainerRequest.workoutSticker)); }
+        if (createTrainerRequest.preferredIntensity != null) { item.put("preferredIntensity", new AttributeValue
+                (createTrainerRequest.preferredIntensity)); }
         if (createTrainerRequest.bio != null) { item.put("bio", new AttributeValue(createTrainerRequest.bio)); }
         if (createTrainerRequest.workoutCapacity != null) { item.put("workoutCapacity", new AttributeValue
                 (createTrainerRequest.workoutCapacity)); }
@@ -113,6 +115,14 @@ public class TrainerDatabaseActionBuilder {
 
     public static DatabaseAction updateWorkoutPrice(String id, String price) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "workoutPrice", new AttributeValue(price), false, "PUT");
+    }
+
+    public static DatabaseAction updateAddSubscriber(String id, String subscriber) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "subscribers", new AttributeValue(subscriber), false, "ADD");
+    }
+
+    public static DatabaseAction updateRemoveSubscriber(String id, String subscriber) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "subscribers", new AttributeValue(subscriber), false, "DELETE");
     }
 
     public static DatabaseAction delete(String id) {
