@@ -4,8 +4,8 @@ public class CreatePostRequest {
     public String by;
     public String description;
     public String access;
-    public String postType;
 
+    public String postType;
     public String about;
     public String[] picturePaths;
     public String[] videoPaths;

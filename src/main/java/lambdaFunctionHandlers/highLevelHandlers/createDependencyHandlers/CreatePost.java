@@ -12,11 +12,20 @@ public class CreatePost {
         if (createPostRequest != null) {
             // Check required fields
             if (createPostRequest.by != null && createPostRequest.description != null && createPostRequest
-                    .access != null && createPostRequest.postType != null) {
+                    .access != null) {
                 // Create the database action list for the transaction to complete
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)
+                String postType = createPostRequest.postType;
+                if (postType != null) {
+                    boolean ifType = ItemType.ifItemType(postType);
+                    boolean ifNewType = (postType.substring(0, 3).equals("new")) && ItemType.ifItemType(postType.substring(3));
+                    if (!ifType && !ifNewType) {
+                        throw new Exception("postType must either be empty, \"new\" + <item_type> or just " +
+                                "<item_type>!!");
+                    }
+                }
 
                 // Create post (with createPostRequest)
                 databaseActionCompiler.add(PostDatabaseActionBuilder.create(createPostRequest));

@@ -23,4 +23,14 @@ public enum ItemType {
 
         throw new Exception("Couldn't recognize the item type of the ID = " + id);
     }
+
+    public static boolean ifItemType(String itemType) {
+        try {
+            ItemType.valueOf(itemType);
+        }
+        catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
 }

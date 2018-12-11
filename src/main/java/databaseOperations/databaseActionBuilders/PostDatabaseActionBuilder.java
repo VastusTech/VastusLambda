@@ -21,7 +21,7 @@ public class PostDatabaseActionBuilder {
         item.put("by", new AttributeValue(createPostRequest.by));
         item.put("description", new AttributeValue(createPostRequest.description));
         item.put("access", new AttributeValue(createPostRequest.access));
-        item.put("postType", new AttributeValue(createPostRequest.postType));
+        if (createPostRequest.postType != null) { item.put("postType", new AttributeValue(createPostRequest.postType)); }
         if (createPostRequest.about != null) { item.put("about", new AttributeValue(createPostRequest.about)); }
         if (createPostRequest.picturePaths != null) { item.put("picturePaths", new AttributeValue(Arrays.asList
                 (createPostRequest.picturePaths))); }
