@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
@@ -25,6 +26,12 @@ public class CreatePost {
                         throw new Exception("postType must either be empty, \"new\" + <item_type> or just " +
                                 "<item_type>!!");
                     }
+                }
+
+                // Make sure the post isn't too much
+                if (createPostRequest.picturePaths.length > Constants.postPicturePathsLimit || createPostRequest
+                        .videoPaths.length > Constants.postVideoPathsLimit) {
+                    throw new Exception("That post has too many pictures and/or videos on it!");
                 }
 
                 // Create post (with createPostRequest)

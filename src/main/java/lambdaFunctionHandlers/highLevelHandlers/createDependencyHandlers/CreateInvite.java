@@ -65,6 +65,10 @@ public class CreateInvite {
                             .about, createInviteRequest.to));
                 }
 
+                // Send an Ably notification!
+                // TODO Decide how we do this!
+                databaseActionCompiler.addNotification(createInviteRequest.to, "Received a notification!", null);
+
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
             else {
