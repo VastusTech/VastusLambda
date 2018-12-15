@@ -63,6 +63,10 @@ public class ChallengeDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "difficulty", new AttributeValue(difficulty), false, "PUT");
     }
 
+    public static DatabaseAction updateEndTime(String id, String endTime) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "endTime", new AttributeValue(endTime), false, "PUT");
+    }
+
     public static DatabaseAction updatePrize(String id, String prize) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "prize", new AttributeValue(prize), false, "PUT");
     }

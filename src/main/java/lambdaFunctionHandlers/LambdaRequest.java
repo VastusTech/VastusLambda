@@ -113,6 +113,8 @@ public class LambdaRequest {
         goal,
         winner,
         difficulty,
+        endTime,
+        prize,
         // Invite ==========================
         // Post   ==========================
         picturePaths,
@@ -669,6 +671,30 @@ public class LambdaRequest {
                     }
                     else if (itemType.equals("Challenge")) {
                         databaseActionCompiler.addAll(ChallengeUpdateCapacity.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case difficulty:
+                    if (itemType.equals("Challenge")) {
+                        databaseActionCompiler.addAll(ChallengeUpdateDifficulty.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case endTime:
+                    if (itemType.equals("Challenge")) {
+                        databaseActionCompiler.addAll(ChallengeUpdateEndTime.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case prize:
+                    if (itemType.equals("Challenge")) {
+                        databaseActionCompiler.addAll(ChallengeUpdatePrize.getActions(fromID, id, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
