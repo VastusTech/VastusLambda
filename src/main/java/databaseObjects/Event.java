@@ -3,8 +3,6 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.lambdaFunctionHandlers.responseObjects.EventResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.ObjectResponse;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,11 +55,6 @@ public class Event extends DatabaseObject {
 //        item.put("description", new AttributeValue("Put your description here."));
         item.put("ifCompleted", new AttributeValue("false"));
         return item;
-    }
-
-    @Override
-    public ObjectResponse getResponse() {
-        return new EventResponse(this);
     }
 
     public static Event readEvent(String id) throws Exception {

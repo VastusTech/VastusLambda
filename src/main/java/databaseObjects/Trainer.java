@@ -4,8 +4,6 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.lambdaFunctionHandlers.responseObjects.ObjectResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.TrainerResponse;
 
 import java.util.*;
 
@@ -51,11 +49,6 @@ public class Trainer extends User {
         item.put("workoutPrice", null);
         item.put("subscriptionPrice", null);
         return item;
-    }
-
-    @Override
-    public ObjectResponse getResponse() {
-        return new TrainerResponse(this);
     }
 
     // TODO Implement cache system here again?

@@ -4,8 +4,6 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.lambdaFunctionHandlers.responseObjects.ObjectResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.ReviewResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,11 +41,6 @@ public class Review extends DatabaseObject {
         // item.put("description", new AttributeValue(Constants.nullAttributeValue));
         // item.put("description", null);
         return item;
-    }
-
-    @Override
-    public ObjectResponse getResponse() {
-        return new ReviewResponse(this);
     }
 
     // TODO Implement cache system here again?

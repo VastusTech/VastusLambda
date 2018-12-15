@@ -6,12 +6,10 @@ import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.*;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.readHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.requestObjects.*;
-import main.java.lambdaFunctionHandlers.responseObjects.*;
 import java.util.List;
 
 
@@ -65,6 +63,7 @@ public class LambdaRequest {
         bio,
         friends,
         friendRequests,
+        challenges,
         scheduledEvents,
         invitedEvents,
         ownedEvents,
@@ -365,71 +364,6 @@ public class LambdaRequest {
     private String handleSurveyCreate(String workoutID) throws Exception {
         return CreateReview.handle(fromID, createReviewRequest, workoutID);
     }
-
-//    private List<ObjectResponse> handleIDRead(String[] ids) throws Exception {
-//        try {
-//            switch (ItemType.valueOf(itemType)) {
-//                case Client:
-//                    return ReadClientsByID.handle(ids);
-//                case Trainer:
-//                    return ReadTrainersByID.handle(ids);
-//                case Gym:
-//                    return ReadGymsByID.handle(ids);
-//                case Workout:
-//                    return ReadWorkoutsByID.handle(ids);
-//                case Review:
-//                    return ReadReviewsByID.handle(ids);
-//                case Event:
-//                    return ReadEventsByID.handle(ids);
-//                case Challenge:
-//                    return ReadChallengesByID.handle(ids);
-//                case Invite:
-//                    return ReadInvitesByID.handle(ids);
-//                case Post:
-//                    return ReadPostsByID.handle(ids);
-//                default:
-//                    throw new Exception("Item Type: " + itemType + " recognized but not handled?");
-//            }
-//        }
-//        catch (IllegalArgumentException e) {
-//            throw new Exception("Item Type: " + itemType + " not recognized! Error: " + e.getLocalizedMessage());
-//        }
-//    }
-
-//    private List<ObjectResponse> handleUsernameRead(String[] usernames) throws Exception {
-//        try {
-//            switch (ItemType.valueOf(itemType)) {
-//                case Client:
-//                    return ReadClientsByUsername.handle(usernames);
-//                case Trainer:
-//                    return ReadTrainersByUsername.handle(usernames);
-//                case Gym:
-//                    return ReadGymsByUsername.handle(usernames);
-//                case Workout:
-//                    throw new Exception("Can't query a workout by a username!");
-//                case Review:
-//                    throw new Exception("Can't query a review by a username!");
-//                case Event:
-//                    throw new Exception("Can't query an event by a username!");
-//                case Challenge:
-//                    throw new Exception("Can't query a challenge by a username!");
-//                case Invite:
-//                    throw new Exception("Can't query an invite by a username!");
-//                case Post:
-//                    throw new Exception("Can't query a post by a username!");
-//                default:
-//                    throw new Exception("Item Type: " + itemType + " recognized but not handled?");
-//            }
-//        }
-//        catch (IllegalArgumentException e) {
-//            throw new Exception("Item Type: " + itemType + " not recognized! Error: " + e.getLocalizedMessage());
-//        }
-//    }
-
-//    private List<ObjectResponse> handleGetAll() throws Exception {
-//        // Already Checked, so go to town
-//        return ReadAllGyms.handle();
-//    }
 
     public void handleUpdateSet(String id) throws Exception {
         // switch all attributes, then if necessary, item type
@@ -771,6 +705,14 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case challenges:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                        databaseActionCompiler.addAll(UserAddToChallenge.getActions(fromID, id, itemType, attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
                         databaseActionCompiler.addAll(TrainerAddAvailableTime.getActions(fromID, id,
@@ -875,6 +817,15 @@ public class LambdaRequest {
                 case scheduledEvents:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
                         databaseActionCompiler.addAll(UserRemoveFromEvent.getActions(fromID, id, itemType, attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
+                case challenges:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                        databaseActionCompiler.addAll(UserRemoveFromChallenge.getActions(fromID, id, itemType,
+                                attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");

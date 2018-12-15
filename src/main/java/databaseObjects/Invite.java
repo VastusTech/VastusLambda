@@ -3,8 +3,6 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.lambdaFunctionHandlers.responseObjects.InviteResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.ObjectResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +27,6 @@ public class Invite extends DatabaseObject {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Invite"));
         return item;
-    }
-
-    @Override
-    public ObjectResponse getResponse() {
-        return new InviteResponse(this);
     }
 
     // TODO Implement cache system here again?

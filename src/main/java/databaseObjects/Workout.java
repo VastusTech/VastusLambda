@@ -4,10 +4,6 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.lambdaFunctionHandlers.responseObjects.GymResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.ObjectResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.TrainerResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.WorkoutResponse;
 
 import java.util.*;
 
@@ -43,30 +39,9 @@ public class Workout extends DatabaseObject {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Workout"));
         item.put("ifCompleted", new AttributeValue("false"));
-        // item.put("time", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("time", null);
-        // item.put("trainerID", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("trainerID", null);
-        // item.put("clientIDs", new AttributeValue(new ArrayList<>()));
-        // item.put("clientIDs", null);
-        // item.put("capacity", new AttributeValue(Constants.nullAttributeValue));
         item.put("capacity", new AttributeValue("4"));
-        // item.put("gymID", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("gymID", null);
-        // item.put("sticker", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("sticker", null);
-        // item.put("intensity", new AttributeValue(Constants.nullAttributeValue));
-        // item.put("intensity", null);
-//        item.put("missing_reviews", new AttributeValue(new ArrayList<>()));
-        // item.put("missing_reviews", null);
-        // item.put("price", new AttributeValue(Constants.nullAttributeValue));
         item.put("price", new AttributeValue("80"));
         return item;
-    }
-
-    @Override
-    public ObjectResponse getResponse() {
-        return new WorkoutResponse(this);
     }
 
     // TODO Implement cache system here again?

@@ -3,8 +3,6 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.lambdaFunctionHandlers.responseObjects.GymResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.ObjectResponse;
 
 import java.util.*;
 
@@ -47,11 +45,6 @@ public class Gym extends User {
         item.put("gymType", new AttributeValue("independent"));
         item.put("paymentSplit", new AttributeValue("50"));
         return item;
-    }
-
-    @Override
-    public ObjectResponse getResponse() {
-        return new GymResponse(this);
     }
 
     // TODO Implement cache system here again?

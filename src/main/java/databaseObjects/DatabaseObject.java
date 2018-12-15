@@ -5,7 +5,6 @@ import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.lambdaFunctionHandlers.responseObjects.ObjectResponse;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -25,8 +24,6 @@ abstract public class DatabaseObject {
         this.marker = Integer.toString(item.getNumber("marker").intValueExact());
         this.timeCreated = item.getString("timeCreated");
     }
-
-    abstract public ObjectResponse getResponse();
 
     static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = new HashMap<>();

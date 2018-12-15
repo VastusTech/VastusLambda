@@ -3,8 +3,6 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.lambdaFunctionHandlers.responseObjects.ChallengeResponse;
-import main.java.lambdaFunctionHandlers.responseObjects.ObjectResponse;
 import org.joda.time.DateTime;
 
 import java.util.HashMap;
@@ -67,12 +65,6 @@ public class Challenge extends DatabaseObject {
         item.put("difficulty", new AttributeValue("1"));
         item.put("ifCompleted", new AttributeValue("false"));
         return item;
-    }
-
-    @Override
-    public ObjectResponse getResponse() {
-        return null;
-//        return new ChallengeResponse(this);
     }
 
     public static Challenge readChallenge(String id) throws Exception {
