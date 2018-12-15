@@ -1,7 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
 import main.java.Logic.Constants;
-import main.java.databaseObjects.Client;
+// import main.java.databaseObjects.Client;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.Invite;
 import main.java.databaseObjects.User;
@@ -18,10 +18,6 @@ public class UserAddToEvent {
             Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only add yourself to an event!");
-        }
-
         // Get all the actions for this process
         Event event = Event.readEvent(eventID);
 
@@ -34,6 +30,23 @@ public class UserAddToEvent {
             throw new Exception("That event is already completed!");
         }
 
+        boolean ifAcceptingRequest = false;
+
+        if (event.memberRequests.contains(userID)) {
+            if (!fromID.equals(event.owner) && !fromID.equals(Constants.adminKey)) {
+                throw new Exception("PERMISSIONS ERROR: Only the owner can accept your event member request!");
+            }
+            else {
+                ifAcceptingRequest = true;
+                databaseActions.add(EventDatabaseActionBuilder.updateRemoveMemberRequest(eventID, userID));
+            }
+        }
+        else {
+            if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
+                throw new Exception("PERMISSIONS ERROR: Only you can add you to an event!");
+            }
+        }
+
         // Add to user's scheduled events
         databaseActions.add(UserDatabaseActionBuilder.updateAddScheduledEvent(userID, itemType,
                 eventID, false));
@@ -43,7 +56,7 @@ public class UserAddToEvent {
          null));
 
         // Add to event's members
-        databaseActions.add(EventDatabaseActionBuilder.updateAddMember(eventID, userID));
+        databaseActions.add(EventDatabaseActionBuilder.updateAddMember(eventID, userID, ifAcceptingRequest));
 
         // Delete any potential invites associated with this
         User user = User.readUser(userID, itemType);

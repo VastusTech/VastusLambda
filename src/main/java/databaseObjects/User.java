@@ -30,6 +30,10 @@ abstract public class User extends DatabaseObject{
     public String bio;
     public Set<String> friends;
     public Set<String> friendRequests;
+    public Set<String> challenges;
+    public Set<String> completedChallenges;
+    public Set<String> ownedChallenges;
+    public Set<String> invitedChallenges;
     public Set<String> challengesWon;
     public Set<String> scheduledEvents;
     public Set<String> completedEvents;
@@ -70,6 +74,14 @@ abstract public class User extends DatabaseObject{
         if (friends == null) { this.friends = new HashSet<>(); }
         this.friendRequests = item.getStringSet("friendRequests");
         if (friendRequests == null) { this.friendRequests = new HashSet<>(); }
+        this.challenges = item.getStringSet("challenges");
+        if (challenges == null) { this.challenges = new HashSet<>(); }
+        this.completedChallenges = item.getStringSet("completedChallenges");
+        if (completedChallenges == null) { this.completedChallenges = new HashSet<>(); }
+        this.ownedChallenges = item.getStringSet("ownedChallenges");
+        if (ownedChallenges == null) { this.ownedChallenges = new HashSet<>(); }
+        this.invitedChallenges = item.getStringSet("invitedChallenges");
+        if (invitedChallenges == null) { this.invitedChallenges = new HashSet<>(); }
         this.challengesWon = item.getStringSet("challengesWon");
         if (challengesWon == null) { this.challengesWon = new HashSet<>(); }
         this.scheduledEvents = item.getStringSet("scheduledEvents");

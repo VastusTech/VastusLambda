@@ -2,10 +2,12 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandl
 
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
+import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.Invite;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
+import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.InviteDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
@@ -18,17 +20,45 @@ public class DeleteInvite {
         // List<DatabaseAction> databaseActions = new ArrayList<>();
         DatabaseActionCompiler databaseActions = new DatabaseActionCompiler();
         Invite invite = Invite.readInvite(inviteID);
+        Invite.InviteType inviteType = Invite.InviteType.valueOf(invite.inviteType);
 
-        if (invite.inviteType.equals("friendRequest")) {
-            if (!fromID.equals(invite.to) && !fromID.equals(invite.from) && !fromID.equals(Constants.adminKey)) {
-                throw new Exception("PERMISSIONS ERROR: You can only delete a friend request you are a part of!");
+        // TODO Check permissions
+        switch (Invite.InviteType.valueOf(invite.inviteType)) {
+            case friendRequest: {
+                if (!fromID.equals(invite.to) && !fromID.equals(invite.from) && !fromID.equals(Constants.adminKey)) {
+                    throw new Exception("PERMISSIONS ERROR: You can only delete a friend request you are a part of!");
+                }
+                break;
             }
-        }
-        else if (invite.inviteType.equals("eventInvite")) {
-            Event event = Event.readEvent(invite.about);
-            if (!fromID.equals(invite.to) && !fromID.equals(invite.from) && !fromID.equals(event.owner) && !fromID.equals
-                    (Constants.adminKey)) {
-                throw new Exception("PERMISSIONS ERROR: You can only delete an event invite you are a part of!");
+            case eventInvite: {
+                Event event = Event.readEvent(invite.about);
+                if (!fromID.equals(invite.to) && !fromID.equals(invite.from) && !fromID.equals(event.owner) && !fromID.equals
+                        (Constants.adminKey)) {
+                    throw new Exception("PERMISSIONS ERROR: You can only delete an event invite you are a part of!");
+                }
+                break;
+            }
+            case challengeInvite: {
+                Challenge challenge = Challenge.readChallenge(invite.about);
+                if (!fromID.equals(invite.to) && !fromID.equals(invite.from) && !fromID.equals(challenge.owner) && !fromID
+                        .equals(Constants.adminKey)) {
+                    throw new Exception("PERMISSIONS ERROR: You can only delete an challenge invite you are a part of!");
+                }
+                break;
+            }
+            case eventRequest: {
+                Event event = Event.readEvent(invite.to);
+                if (!fromID.equals(event.owner) && !fromID.equals(invite.from) && !fromID.equals(Constants.adminKey)) {
+                    throw new Exception("PERMISSIONS ERROR: You can only delete an event request you are a part of!");
+                }
+                break;
+            }
+            case challengeRequest: {
+                Challenge challenge = Challenge.readChallenge(invite.to);
+                if (!fromID.equals(challenge.owner) && !fromID.equals(invite.from) && !fromID.equals(Constants.adminKey)) {
+                    throw new Exception("PERMISSIONS ERROR: You can only delete an challenge request you are a part of!");
+                }
+                break;
             }
         }
 
@@ -36,24 +66,51 @@ public class DeleteInvite {
         // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
         // TODO =======================================================================================================
 
-        // Remove from from's sentInvites field
         String fromItemType = ItemType.getItemType(invite.from);
-        databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
-
-        // Remove from to's receivedInvites field
         String toItemType = ItemType.getItemType(invite.to);
-        databaseActions.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
 
-        if (invite.inviteType.equals("friendRequest")) {
-            // Remove from friendRequests
-            databaseActions.add(UserDatabaseActionBuilder.updateRemoveFriendRequest(invite.to, toItemType, invite
-                    .about));
-        }
-        else if (invite.inviteType.equals("eventInvite")) {
-            // Remove from invitedMembers and invitedEvents
-            databaseActions.add(EventDatabaseActionBuilder.updateRemoveInvitedMember(invite.about, invite.to));
-            databaseActions.add(UserDatabaseActionBuilder.updateRemoveInvitedEvent(invite.to, toItemType, invite
-                    .about));
+        switch (Invite.InviteType.valueOf(invite.inviteType)) {
+            case friendRequest:
+                // Remove from from's sentInvites field
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                // Remove from to's receivedInvites field
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
+                // Remove from friendRequests
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveFriendRequest(invite.to, toItemType, invite
+                        .about));
+                break;
+            case eventInvite:
+                // Remove from from's sentInvites field
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                // Remove from to's receivedInvites field
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
+                // Remove from invitedMembers and invitedEvents
+                databaseActions.add(EventDatabaseActionBuilder.updateRemoveInvitedMember(invite.about, invite.to));
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveInvitedEvent(invite.to, toItemType, invite
+                        .about));
+                break;
+            case challengeInvite:
+                // Remove from from's sentInvites field
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                // Remove from to's receivedInvites field
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
+                // Remove from invitedMembers and invitedChallenges
+                databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveInvitedMember(invite.about, invite.to));
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveInvitedChallenge(invite.to, toItemType, invite
+                        .about));
+                break;
+            case eventRequest:
+                // Remove from from's sentInvites field
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                // Remove from the event's memberRequest
+                databaseActions.add(EventDatabaseActionBuilder.updateRemoveMemberRequest(invite.to, invite.from));
+                break;
+            case challengeRequest:
+                // Remove from from's sentInvites field
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                // Remove from the challenge's memberRequest
+                databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMemberRequest(invite.to, invite.from));
+                break;
         }
 
         // Delete the invite

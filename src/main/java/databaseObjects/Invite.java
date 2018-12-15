@@ -43,5 +43,13 @@ public class Invite extends DatabaseObject {
         key.put("id", new AttributeValue(id));
         return DynamoDBHandler.getInstance().readItem(key);
     }
+
+    public enum InviteType {
+        friendRequest,
+        eventInvite,
+        challengeInvite,
+        eventRequest,
+        challengeRequest,
+    }
 }
 

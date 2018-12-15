@@ -8,21 +8,20 @@ import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBu
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventUpdateGoal {
-    public static List<DatabaseAction> getActions(String fromID, String eventID, String goal) throws Exception {
+public class EventUpdateRestriction {
+    static public List<DatabaseAction> getActions(String fromID, String eventID, String restriction) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
         Event event = Event.readEvent(eventID);
         if (!fromID.equals(event.owner) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update an event that you own!");
-        }
-        // Test to see if we can actually do this
-        if (!event.ifChallenge) {
-            throw new Exception("The event needs to be a challenge to do this!");
+            throw new Exception("PERMISSIONS ERROR: You can only update an challenge that you own!");
         }
 
-        // Get all the actions for this process
-        databaseActions.add(EventDatabaseActionBuilder.updateGoal(eventID, goal));
+        if (restriction != null && !restriction.equals("invite")) {
+            throw new Exception("restriction value must be either nothing or \"invite\"");
+        }
+
+        databaseActions.add(EventDatabaseActionBuilder.updateRestriction(eventID, restriction));
 
         return databaseActions;
     }

@@ -201,6 +201,63 @@ public class UserDatabaseActionBuilder {
                 false, "DELETE");
     }
 
+    public static DatabaseAction updateAddChallenge(String id, String itemType, String challenge, boolean ifWithCreate)
+            throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "challenges", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "challenges", new AttributeValue(challenge),
+                    true, "ADD");
+        }
+    }
+
+    public static DatabaseAction updateRemoveChallenge(String id, String itemType, String challenge) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "challenges", new AttributeValue(challenge), false,
+                "DELETE");
+    }
+
+    public static DatabaseAction updateAddCompletedChallenge(String id, String itemType, String challenge) throws
+            Exception {
+        return new UpdateDatabaseAction(id, itemType, "completedChallenges", new AttributeValue(challenge), false,
+                "ADD");
+    }
+
+    public static DatabaseAction updateRemoveCompletedChallenge(String id, String itemType, String challenge) throws
+            Exception {
+        return new UpdateDatabaseAction(id, itemType, "completedChallenges", new AttributeValue(challenge), false,
+                "DELETE");
+    }
+
+    public static DatabaseAction updateAddOwnedChallenge(String id, String itemType, String challenge, boolean
+            ifWithCreate) throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "ownedChallenges", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "ownedChallenges", new AttributeValue(challenge),
+                    true, "ADD");
+        }
+    }
+
+    public static DatabaseAction updateRemoveOwnedChallenge(String id, String itemType, String challenge) throws
+            Exception {
+        return new UpdateDatabaseAction(id, itemType, "ownedChallenges", new AttributeValue(challenge), false,
+                "DELETE");
+    }
+
+    public static DatabaseAction updateAddInvitedChallenge(String id, String itemType, String challenge) throws
+            Exception {
+        return new UpdateDatabaseAction(id, itemType, "invitedChallenges", new AttributeValue(challenge), false,
+                "ADD");
+    }
+
+    public static DatabaseAction updateRemoveInvitedChallenge(String id, String itemType, String challenge) throws
+            Exception {
+        return new UpdateDatabaseAction(id, itemType, "invitedChallenges", new AttributeValue(challenge), false,
+                "DELETE");
+    }
+
     public static DatabaseAction updateAddChallengeWon(String id, String itemType, String challenge) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "challengesWon", new AttributeValue(challenge), false, "ADD");
     }

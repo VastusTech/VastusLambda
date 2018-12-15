@@ -2,6 +2,7 @@ package main.java.databaseOperations;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
+import main.java.Logic.Constants;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.notifications.AblyHandler;
 
@@ -45,16 +46,32 @@ public class DatabaseActionCompiler {
             DBAction action = databaseAction.action;
             if (action == DBAction.CREATE) {
                 if (existingAction == DBAction.CREATE) {
-                    throw new Exception("Can only have one CREATE statement for the object");
+                    throw new Exception("INTERNAL ERROR: Can only have one CREATE statement for the object");
                 }
                 else {
-                    throw new Exception("Create must be first in the list!");
+                    throw new Exception("INTERNAL ERROR: Create must be first in the list!");
                 }
             }
-            else if (action == DBAction.DELETE || existingAction == DBAction.DELETE || action == DBAction
-                    .DELETECONDITIONAL || existingAction == DBAction.DELETECONDITIONAL) {
-                throw new Exception("DELETE or DELETECONDITIONAL can be the only statement on the object at a given " +
-                        "time.");
+            else if (action == DBAction.DELETE || action == DBAction.DELETECONDITIONAL || existingAction == DBAction
+                    .DELETE || existingAction == DBAction.DELETECONDITIONAL) {
+                if (existingAction == DBAction.DELETE || existingAction == DBAction.DELETECONDITIONAL) {
+                    if (action == DBAction.DELETE || action == DBAction.DELETECONDITIONAL) {
+                        // TODO This might not actually be an error. If the deletion process gets more intense with
+                        // TODO checks, then we might want to try to consolidate the two DELETECONDITIONAL statements
+                        // Both are delete, this is an error
+                        throw new Exception("INTERNAL ERROR: Can only DELETE an object once in a transaction.");
+                    }
+                    // Otherwise, the existing action is DELETE, so just forget about the changes
+                    Constants.debugLog("Overwriting potential changes to an item by deleting it!");
+                }
+                else {
+                    // Only action is DELETE
+                    // This is fine, because any update will be usurped anyways, so just console it.
+                    Constants.debugLog("Overwriting potential changes to an item by deleting it!");
+                    existingDatabaseAction.action = databaseAction.action;
+                    existingDatabaseAction.checkHandler = databaseAction.checkHandler;
+                    existingDatabaseAction.ifWithCreate = false;
+                }
             }
             else {
                 consolidateDatabaseActions(existingDatabaseAction, databaseAction);

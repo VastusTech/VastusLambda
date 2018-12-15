@@ -32,7 +32,7 @@ public class UserRemoveFromEvent {
             throw new Exception("You can't remove the owner from the event! Just delete the event in that case!");
         }
 
-        // We delete the party from ourselves
+        // We delete the event from ourselves
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledEvent(userID, itemType, eventID));
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledTime(userID, itemType, event.time
                 .toString()));

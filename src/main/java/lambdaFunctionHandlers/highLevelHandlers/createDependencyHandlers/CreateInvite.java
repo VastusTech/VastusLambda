@@ -2,9 +2,11 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
+import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.Event;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.InviteDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
@@ -24,7 +26,9 @@ public class CreateInvite {
 
                 // Check to see if the request features are well formed (i.e not invalid date or time)
                 if (!createInviteRequest.inviteType.equals("friendRequest") && !createInviteRequest.inviteType.equals
-                        ("eventInvite")) {
+                        ("eventInvite") && !createInviteRequest.inviteType.equals("challengeInvite") &&
+                        !createInviteRequest.inviteType.equals("eventRequest") && !createInviteRequest.inviteType
+                        .equals("challengeRequest")) {
                     throw new Exception("Did not recognize invite type = " + createInviteRequest.inviteType + "!!");
                 }
 
@@ -64,10 +68,34 @@ public class CreateInvite {
                     databaseActionCompiler.add(EventDatabaseActionBuilder.updateAddInvitedMember(createInviteRequest
                             .about, createInviteRequest.to));
                 }
+                else if (createInviteRequest.inviteType.equals("challengeInvite")) {
+                    Challenge challenge = Challenge.readChallenge(createInviteRequest.about);
+                    if (!challenge.members.contains(fromID) && !fromID.equals(Constants.adminKey)) {
+                        throw new Exception("PERMISSIONS ERROR: You can only send challenge invites to challenges you" +
+                                " are a member of!");
+                    }
+                    databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddInvitedChallenge
+                            (createInviteRequest.to, toItemType, createInviteRequest.about));
+                    databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddInvitedMember
+                            (createInviteRequest.about, createInviteRequest.to));
+                }
+                else if (createInviteRequest.inviteType.equals("eventRequest")) {
+                    // TODO This checking is mostly done in EventDatabaseActionBuilder
+                    databaseActionCompiler.add(EventDatabaseActionBuilder.updateAddMemberRequest(createInviteRequest
+                            .to, createInviteRequest.about));
+                }
+                else if (createInviteRequest.inviteType.equals("challengeRequest")) {
+                    // TODO This checking is mostly done in ChallengeDatabaseActionBuilder?
+                    databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddMemberRequest(createInviteRequest
+                            .to, createInviteRequest.about));
+                }
+                else {
+                    throw new Exception("Forgot to check for or implement invite type = " + createInviteRequest.inviteType);
+                }
 
                 // Send an Ably notification!
                 // TODO Decide how we do this!
-                databaseActionCompiler.addNotification(createInviteRequest.to, "Received a notification!", null);
+                // databaseActionCompiler.addNotification(createInviteRequest.to, "Received a notification!", null);
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }

@@ -2,10 +2,12 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
+import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
@@ -20,7 +22,7 @@ public class CreateEvent {
             // Create event
             if (createEventRequest.owner != null && createEventRequest.time != null && createEventRequest
                     .capacity != null && createEventRequest.address != null && createEventRequest.title !=
-                    null && createEventRequest.ifChallenge != null) {
+                    null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!fromID.equals(createEventRequest.owner) && !fromID.equals(Constants.adminKey)) {
@@ -29,15 +31,18 @@ public class CreateEvent {
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)
                 new TimeInterval(createEventRequest.time);
-                Integer.parseInt(createEventRequest.capacity);
-                if (Boolean.parseBoolean(createEventRequest.ifChallenge) && createEventRequest.goal == null) {
-                    throw new Exception("If the event is a challenge, it needs a goal");
+                if (Integer.parseInt(createEventRequest.capacity) <= 0) {
+                    throw new Exception("The capacity must be greater than 1!!");
                 }
-
                 if (createEventRequest.access != null) {
                     if (!createEventRequest.access.equals("public") && !createEventRequest.access.equals
                             ("private")) {
                         throw new Exception("Create Event access must be either \"public\" or \"private\"!");
+                    }
+                }
+                if (createEventRequest.restriction != null) {
+                    if (!createEventRequest.restriction.equals("invite")) {
+                        throw new Exception("Create Event restriction must be nothing or \"invite\"");
                     }
                 }
 
@@ -68,6 +73,17 @@ public class CreateEvent {
                         databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddScheduledTime
                                 (member, memberItemType, createEventRequest.time, null));
                     }
+                }
+
+                // Update the challenge's field
+                if (createEventRequest.challenge != null) {
+                    Challenge challenge = Challenge.readChallenge(createEventRequest.challenge);
+                    if (!fromID.equals(challenge.owner) && !fromID.equals(Constants.adminKey)) {
+                        throw new Exception("PERMISSIONS ERROR: You can only add an event to a challenge if you own " +
+                                "that challenge!");
+                    }
+                    databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddEvent(createEventRequest
+                            .challenge, null, true));
                 }
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);

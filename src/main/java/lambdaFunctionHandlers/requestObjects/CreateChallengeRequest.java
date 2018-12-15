@@ -1,37 +1,40 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateEventRequest {
+public class CreateChallengeRequest {
     // Required
     public String owner;
-    public String time;
+    public String endTime;
     public String capacity;
-    public String address;
     public String title;
+    public String goal;
 
     // Optional
-    public String challenge;
     public String description;
     public String[] tags;
     public String[] members;
     public String access;
     public String restriction;
+    public String difficulty;
+    public String prize;
 
-    public CreateEventRequest(String owner, String time, String capacity, String address, String title, String
-            challenge, String description, String[] tags, String[] members, String access, String restriction) {
+    public CreateChallengeRequest(String owner, String endTime, String capacity, String title, String goal, String
+            description, String[] tags, String[] members, String access, String restriction, String difficulty,
+                                  String prize) {
         this.owner = owner;
-        this.time = time;
+        this.endTime = endTime;
         this.capacity = capacity;
-        this.address = address;
         this.title = title;
+        this.goal = goal;
         this.description = description;
         this.tags = tags;
         this.members = members;
         this.access = access;
         this.restriction = restriction;
-        this.challenge = challenge;
+        this.difficulty = difficulty;
+        this.prize = prize;
     }
 
-    public CreateEventRequest() {}
+    public CreateChallengeRequest() {}
 
     public String getOwner() {
         return owner;
@@ -41,12 +44,12 @@ public class CreateEventRequest {
         this.owner = owner;
     }
 
-    public String getTime() {
-        return time;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getCapacity() {
@@ -57,14 +60,6 @@ public class CreateEventRequest {
         this.capacity = capacity;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -73,12 +68,12 @@ public class CreateEventRequest {
         this.title = title;
     }
 
-    public String getChallenge() {
-        return challenge;
+    public String getGoal() {
+        return goal;
     }
 
-    public void setChallenge(String challenge) {
-        this.challenge = challenge;
+    public void setGoal(String goal) {
+        this.goal = goal;
     }
 
     public String getDescription() {
@@ -120,5 +115,20 @@ public class CreateEventRequest {
     public void setRestriction(String restriction) {
         this.restriction = restriction;
     }
-}
 
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public String getPrize() {
+        return prize;
+    }
+
+    public void setPrize(String prize) {
+        this.prize = prize;
+    }
+}

@@ -7,6 +7,7 @@ public enum ItemType {
     Workout,
     Review,
     Event,
+    Challenge,
     Invite,
     Post, ;
 

@@ -332,6 +332,10 @@ public class TimeInterval {
         return !toDateTime.isAfterNow();
     }
 
+    public static Boolean timeHasPassed(DateTime time) {
+        return !time.isAfterNow();
+    }
+
 //    static public String[] getFromToHourMinute(int fromTotalMinute, int toTotalMinute) {
 //        int fromHour = fromTotalMinute / 60;
 //        int fromMinute = fromTotalMinute % 60;
