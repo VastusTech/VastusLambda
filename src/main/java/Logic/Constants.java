@@ -16,7 +16,7 @@ public class Constants {
             ("workoutShortestTimeSectionInterval")).orElse("15"));
 
     // ID Creation stuff
-    public static int idLength = Integer.parseInt(Optional.ofNullable(System.getenv("idLength")).orElse("11"));
+    public static int idLength = Integer.parseInt(Optional.ofNullable(System.getenv("idLength")).orElse("14"));
     public static int numPrefix = Integer.parseInt(Optional.ofNullable(System.getenv("numPrefix")).orElse("2"));
 
     // Access Materials
@@ -35,9 +35,12 @@ public class Constants {
     public static String adminKey = System.getenv("adminKey");
 
     // Database Limits
-    public static int userProfileImagePathsLimit = Integer.parseInt(System.getenv("userProfileImagePathsLimit"));
-    public static int postPicturePathsLimit = Integer.parseInt(System.getenv("postPicturePathsLimit"));
-    public static int postVideoPathsLimit = Integer.parseInt(System.getenv("postVideoPathsLimit"));
+    public static int userProfileImagePathsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
+            ("userProfileImagePathsLimit")).orElse("10"));
+    public static int postPicturePathsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
+            ("postPicturePathsLimit")).orElse("10"));
+    public static int postVideoPathsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
+            ("postVideoPathsLimit")).orElse("5"));
 
     // public static String nullAttributeValue = System.getenv("nullAttributeValue");
 

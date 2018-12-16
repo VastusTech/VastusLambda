@@ -316,7 +316,8 @@ public class DynamoDBHandler {
         int numDigits = Constants.idLength - Constants.numPrefix;
 
         Random random = new Random();
-        String idNum = Integer.toString(random.nextInt((int)Math.pow(10, numDigits)));
+        double range = random.nextDouble();
+        String idNum = Long.toString((long)(range*Math.pow(10, numDigits)));
 
         while (idNum.length() != numDigits) {
             idNum = "0" + idNum;

@@ -3,6 +3,7 @@ package main.java;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.Logic.ItemType;
 import main.java.databaseOperations.DatabaseAction;
+import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.UpdateDatabaseAction;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -11,12 +12,13 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        String postType = "newEvent";
-        boolean ifType = ItemType.ifItemType(postType);
-        boolean ifNewType = (postType.substring(0, 3).equals("new")) && ItemType.ifItemType(postType.substring(3));
-        if (!ifType && !ifNewType) {
-            System.out.println("Error!");
-        }
+         System.out.println(DynamoDBHandler.generateRandomID("Client"));
+//        String postType = "newEvent";
+//        boolean ifType = ItemType.ifItemType(postType);
+//        boolean ifNewType = (postType.substring(0, 3).equals("new")) && ItemType.ifItemType(postType.substring(3));
+//        if (!ifType && !ifNewType) {
+//            System.out.println("Error!");
+//        }
 //        String startDate = "2018-11-18T21:41:00-05:00";
 //        String endDate = "2018-11-21T"
         // System.out.println(new DateTime().toString());

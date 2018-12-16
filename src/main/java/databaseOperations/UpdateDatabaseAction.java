@@ -45,12 +45,13 @@ public class UpdateDatabaseAction extends DatabaseAction {
             }
 
             if (ifWithCreate) {
-                if (attributeValue == null) {
-                    this.updateItem.put(attributeName, new AttributeValueUpdate(new AttributeValue("id"), action));
-                }
-                else {
-                    throw new Exception("INTERNAL ERROR: Don't set the attributeValue and ask it to add the id");
-                }
+                this.updateItem.put(attributeName, new AttributeValueUpdate(new AttributeValue("id"), action));
+//                if (attributeValue == null) {
+//                    this.updateItem.put(attributeName, new AttributeValueUpdate(new AttributeValue("id"), action));
+//                }
+//                else {
+//                    // throw new Exception("INTERNAL ERROR: Don't set the attributeValue and ask it to add the id");
+//                }
             } else {
                 if ((attributeValue.getS() != null && attributeValue.getS().equals("")) || (attributeValue.getSS() !=
                         null && attributeValue.getSS().size() == 0)) {
