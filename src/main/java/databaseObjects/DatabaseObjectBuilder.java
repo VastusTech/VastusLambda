@@ -19,10 +19,14 @@ public interface DatabaseObjectBuilder {
                 return new Review(item);
             case Event:
                 return new Event(item);
+            case Challenge:
+                return new Challenge(item);
             case Invite:
                 return new Invite(item);
+            case Post:
+                return new Post(item);
             default:
-                throw new Exception("The item type is improperly formed");
+                throw new Exception("Item type = " + itemType + " not implemented in DatabaseObjectBuilder");
         }
     }
 }
