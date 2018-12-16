@@ -87,7 +87,7 @@ public class DynamoDBHandler {
                     catch (Exception e) {
                         transaction.rollback();
                         throw new Exception("Error while trying to create item in the database! Error: " + e
-                                .getLocalizedMessage());
+                                .getLocalizedMessage(), e);
                     }
                     break;
                 case UPDATE:
@@ -115,7 +115,7 @@ public class DynamoDBHandler {
                     catch (Exception e) {
                         transaction.rollback();
                         throw new Exception("Error while trying to update an item in the database. Error: " + e
-                                .getLocalizedMessage());
+                                .getLocalizedMessage(), e);
                     }
                     break;
                 case UPDATESAFE:
@@ -180,7 +180,7 @@ public class DynamoDBHandler {
                     catch (Exception e) {
                         transaction.rollback();
                         throw new Exception("Error while trying to update an item in the database safely. Error: " +
-                                e.getLocalizedMessage());
+                                e.getLocalizedMessage(), e);
                     }
                     break;
                 case DELETE:
@@ -192,7 +192,7 @@ public class DynamoDBHandler {
                     catch (Exception e) {
                         transaction.rollback();
                         throw new Exception("Error while deleting an item in the database. Error: " + e
-                                .getLocalizedMessage());
+                                .getLocalizedMessage(), e);
                     }
                     break;
                 case DELETECONDITIONAL:
@@ -251,7 +251,7 @@ public class DynamoDBHandler {
                         // Else if there is another failure, rollback everything
                         transaction.rollback();
                         throw new Exception("Error while trying to conditionally delete an item. Error: " + e
-                                .getLocalizedMessage());
+                                .getLocalizedMessage(), e);
                     }
                     break;
             }

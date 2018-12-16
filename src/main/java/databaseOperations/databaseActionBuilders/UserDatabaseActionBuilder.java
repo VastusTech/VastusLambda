@@ -208,7 +208,7 @@ public class UserDatabaseActionBuilder {
         }
         else {
             return new UpdateDatabaseAction(id, itemType, "challenges", new AttributeValue(challenge),
-                    true, "ADD");
+                    false, "ADD");
         }
     }
 
