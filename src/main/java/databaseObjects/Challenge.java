@@ -28,6 +28,7 @@ public class Challenge extends DatabaseObject {
     public Set<String> tags;
     public String winner;
     public String prize;
+    public Set<String> submissions;
 
     public Challenge(Item item) throws Exception {
         super(item);
@@ -55,6 +56,8 @@ public class Challenge extends DatabaseObject {
         if (this.tags == null) { this.tags = new HashSet<>(); }
         this.winner = item.getString("winner");
         this.prize = item.getString("prize");
+        this.submissions = item.getStringSet("submissions");
+        if (this.submissions == null) { this.submissions = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

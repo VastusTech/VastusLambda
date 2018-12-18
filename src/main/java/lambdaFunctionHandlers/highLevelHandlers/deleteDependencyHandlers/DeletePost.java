@@ -4,6 +4,7 @@ import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Post;
 import main.java.databaseOperations.DatabaseAction;
+import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
@@ -27,6 +28,11 @@ public class DeletePost {
         String by = post.by;
         String byItemType = ItemType.getItemType(by);
         databaseActions.add(UserDatabaseActionBuilder.updateRemovePost(by, byItemType, postID));
+
+        // Check if we are also removing this post from the challenge submissions
+        if (post.postType != null && post.postType.equals("submission")) {
+            databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveSubmission(post.about, post.id));
+        }
 
         // Delete the post
         databaseActions.add(PostDatabaseActionBuilder.delete(postID));

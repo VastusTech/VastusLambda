@@ -4,6 +4,7 @@ import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
@@ -17,14 +18,30 @@ public class CreatePost {
                 // Create the database action list for the transaction to complete
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
+                // Create post (with createPostRequest)
+                databaseActionCompiler.add(PostDatabaseActionBuilder.create(createPostRequest));
+
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)
                 String postType = createPostRequest.postType;
                 if (postType != null) {
                     boolean ifType = ItemType.ifItemType(postType);
                     boolean ifNewType = (postType.substring(0, 3).equals("new")) && ItemType.ifItemType(postType.substring(3));
-                    if (!ifType && !ifNewType) {
-                        throw new Exception("postType must either be empty, \"new\" + <item_type> or just " +
-                                "<item_type>!!");
+                    boolean ifSubmission = postType.equals("submission");
+                    if (!ifType && !ifNewType && !ifSubmission) {
+                        throw new Exception("postType must either be empty, \"new\" + <item_type>, just " +
+                                "<item_type>, or \"submission\"!!");
+                    }
+                    else {
+                        if (createPostRequest.about == null) {
+                            throw new Exception("PostType of " + postType + " missing the \"about\" section!");
+                        }
+                        if (ifSubmission) {
+                            if (createPostRequest.picturePaths.length == 0 && createPostRequest.videoPaths.length == 0) {
+                                throw new Exception("Submissions must have at least one photo or video!");
+                            }
+                            databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddSubmission
+                                    (createPostRequest.about, null, true));
+                        }
                     }
                 }
 
@@ -34,8 +51,6 @@ public class CreatePost {
                     throw new Exception("That post has too many pictures and/or videos on it!");
                 }
 
-                // Create post (with createPostRequest)
-                databaseActionCompiler.add(PostDatabaseActionBuilder.create(createPostRequest));
 
                 // Add the post to the by's
                 String by = createPostRequest.by;

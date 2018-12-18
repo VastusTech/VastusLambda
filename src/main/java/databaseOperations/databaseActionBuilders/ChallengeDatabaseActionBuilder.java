@@ -228,6 +228,31 @@ public class ChallengeDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "events", new AttributeValue(event), false, "DELETE");
     }
 
+    public static DatabaseAction updateAddSubmission(String id, String submission, boolean ifWithCreate) throws
+            Exception {
+        AttributeValue attributeValue;
+        if (ifWithCreate) {
+            attributeValue = null;
+        }
+        else {
+            attributeValue = new AttributeValue(submission);
+        }
+        return new UpdateDatabaseAction(id, itemType, "submissions", attributeValue, ifWithCreate, "ADD", new CheckHandler() {
+            @Override
+            public String isViable(DatabaseObject newObject) throws Exception {
+                Challenge challenge = (Challenge)newObject;
+                if (challenge.ifCompleted) {
+                    return "That challenge has already finished!";
+                }
+                return null;
+            }
+        });
+    }
+
+    public static DatabaseAction updateRemoveSubmission(String id, String submission) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "submissions", new AttributeValue(submission), false, "DELETE");
+    }
+
     public static DatabaseAction delete(String id) {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue(itemType));
