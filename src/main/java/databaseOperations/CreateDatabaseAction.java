@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CreateDatabaseAction extends DatabaseAction {
-    public CreateDatabaseAction(Map<String, AttributeValue> item) {
+    public UpdateWithIDHandler updateWithIDHandler;
+
+    public CreateDatabaseAction(Map<String, AttributeValue> item, UpdateWithIDHandler updateWithIDHandler) {
         action = DBAction.CREATE;
         this.item = new HashMap<>();
         for (Map.Entry<String, AttributeValue> entry: item.entrySet()) {
@@ -22,5 +24,6 @@ public class CreateDatabaseAction extends DatabaseAction {
                 }
             }
         }
+        this.updateWithIDHandler = updateWithIDHandler;
     }
 }

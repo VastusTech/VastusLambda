@@ -2,6 +2,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
+import main.java.databaseObjects.Challenge;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
@@ -36,9 +37,13 @@ public class CreatePost {
                             throw new Exception("PostType of " + postType + " missing the \"about\" section!");
                         }
                         if (ifSubmission) {
-                            if (createPostRequest.picturePaths.length == 0 && createPostRequest.videoPaths.length == 0) {
-                                throw new Exception("Submissions must have at least one photo or video!");
+                            Challenge challenge = Challenge.readChallenge(createPostRequest.about);
+                            if (!challenge.members.contains(createPostRequest.by)) {
+                                throw new Exception("You must be a part of the challenge to add a submission!");
                             }
+//                            if (createPostRequest.picturePaths.length == 0 && createPostRequest.videoPaths.length == 0) {
+//                                throw new Exception("Submissions must have at least one photo or video!");
+//                            }
                             databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddSubmission
                                     (createPostRequest.about, null, true));
                         }

@@ -2,15 +2,10 @@ package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseObjects.Post;
-import main.java.databaseOperations.CreateDatabaseAction;
-import main.java.databaseOperations.DatabaseAction;
-import main.java.databaseOperations.DeleteDatabaseAction;
-import main.java.databaseOperations.UpdateDatabaseAction;
+import main.java.databaseOperations.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class PostDatabaseActionBuilder {
     final static private String itemType = "Post";
@@ -27,7 +22,21 @@ public class PostDatabaseActionBuilder {
                 (createPostRequest.picturePaths))); }
         if (createPostRequest.videoPaths != null) { item.put("videoPaths", new AttributeValue(Arrays.asList
                 (createPostRequest.videoPaths))); }
-        return new CreateDatabaseAction(item);
+        return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
+            @Override
+            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+                List<String> picturePaths = new ArrayList<>();
+                List<String> videoPaths = new ArrayList<>();
+                for (String picturePath : createPostRequest.picturePaths) {
+                    picturePaths.add(id + "/" + picturePath);
+                }
+                item.put("picturePaths", new AttributeValue(picturePaths));
+                for (String videoPath : createPostRequest.videoPaths) {
+                    videoPaths.add(id + "/" + videoPath);
+                }
+                item.put("videoPaths", new AttributeValue(videoPaths));
+            }
+        });
     }
 
     public static DatabaseAction updateAccess(String id, String access) throws Exception {

@@ -69,6 +69,7 @@ public class DynamoDBHandler {
                         String id = getNewID(databaseAction.item.get("item_type").getS());
                         databaseAction.item.put("id", new AttributeValue(id));
                         databaseAction.item.put("time_created", new AttributeValue(new DateTime().toString()));
+                        ((CreateDatabaseAction)databaseAction).updateWithIDHandler.updateWithID(databaseAction.item, id);
 
                         if (databaseAction.item.containsKey("username")) {
                             if (this.usernameInDatabase(databaseAction.item.get("username").getS(), databaseAction.item
