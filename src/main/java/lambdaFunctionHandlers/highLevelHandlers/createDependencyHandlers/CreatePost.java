@@ -51,8 +51,9 @@ public class CreatePost {
                 }
 
                 // Make sure the post isn't too much
-                if (createPostRequest.picturePaths.length > Constants.postPicturePathsLimit || createPostRequest
-                        .videoPaths.length > Constants.postVideoPathsLimit) {
+                if ((createPostRequest.picturePaths != null && createPostRequest.picturePaths.length > Constants
+                        .postPicturePathsLimit) || (createPostRequest.videoPaths != null && createPostRequest
+                        .videoPaths.length > Constants.postVideoPathsLimit)) {
                     throw new Exception("That post has too many pictures and/or videos on it!");
                 }
 

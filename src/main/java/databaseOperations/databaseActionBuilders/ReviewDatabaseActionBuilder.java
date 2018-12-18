@@ -2,10 +2,7 @@ package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseObjects.Review;
-import main.java.databaseOperations.CreateDatabaseAction;
-import main.java.databaseOperations.DatabaseAction;
-import main.java.databaseOperations.DeleteDatabaseAction;
-import main.java.databaseOperations.UpdateDatabaseAction;
+import main.java.databaseOperations.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateReviewRequest;
 
 import java.util.HashMap;
@@ -23,7 +20,12 @@ public class ReviewDatabaseActionBuilder {
         item.put("effectivenessRating", new AttributeValue(createReviewRequest.effectivenessRating));
         item.put("reliabilityRating", new AttributeValue(createReviewRequest.reliabilityRating));
         item.put("description", new AttributeValue(createReviewRequest.description));
-        return new CreateDatabaseAction(item);
+        return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
+            @Override
+            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+                return;
+            }
+        });
     }
 
     public static DatabaseAction updateDescription(String id, String description) throws Exception {

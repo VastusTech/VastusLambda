@@ -23,7 +23,12 @@ public class ClientDatabaseActionBuilder {
         item.put("email", new AttributeValue(createClientRequest.email));
         item.put("username", new AttributeValue(createClientRequest.username));
         if (createClientRequest.bio != null) { item.put("bio", new AttributeValue(createClientRequest.bio)); }
-        return new CreateDatabaseAction(item);
+        return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
+            @Override
+            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+                return;
+            }
+        });
     }
 
     public static DatabaseAction updateAddTrainerFollowing(String id, String trainer) throws Exception {

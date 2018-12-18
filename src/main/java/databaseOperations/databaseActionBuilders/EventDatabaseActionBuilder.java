@@ -36,7 +36,12 @@ public class EventDatabaseActionBuilder {
                 .restriction)); }
         if (createEventRequest.tags != null) { item.put("tags", new AttributeValue
                 (Arrays.asList(createEventRequest.tags))); }
-        return new CreateDatabaseAction(item);
+        return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
+            @Override
+            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+                return;
+            }
+        });
     }
 
     public static DatabaseAction updateTitle(String id, String title) throws Exception {

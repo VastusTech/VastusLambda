@@ -936,7 +936,8 @@ public class LambdaRequest {
             attributeName, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest
             createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
                          CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest,
-                         CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest) {
+                         CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest,
+                         CreatePostRequest createPostRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -952,6 +953,7 @@ public class LambdaRequest {
         this.createEventRequest = createEventRequest;
         this.createChallengeRequest = createChallengeRequest;
         this.createInviteRequest = createInviteRequest;
+        this.createPostRequest = createPostRequest;
     }
 
     public LambdaRequest() {}
@@ -1074,5 +1076,13 @@ public class LambdaRequest {
 
     public void setCreateInviteRequest(CreateInviteRequest createInviteRequest) {
         this.createInviteRequest = createInviteRequest;
+    }
+
+    public CreatePostRequest getCreatePostRequest() {
+        return createPostRequest;
+    }
+
+    public void setCreatePostRequest(CreatePostRequest createPostRequest) {
+        this.createPostRequest = createPostRequest;
     }
 }

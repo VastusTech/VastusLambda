@@ -25,16 +25,20 @@ public class PostDatabaseActionBuilder {
         return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
-                List<String> picturePaths = new ArrayList<>();
-                List<String> videoPaths = new ArrayList<>();
-                for (String picturePath : createPostRequest.picturePaths) {
-                    picturePaths.add(id + "/" + picturePath);
+                if (createPostRequest.picturePaths != null && createPostRequest.picturePaths.length > 0) {
+                    List<String> picturePaths = new ArrayList<>();
+                    for (String picturePath : createPostRequest.picturePaths) {
+                        picturePaths.add(id + "/" + picturePath);
+                    }
+                    item.put("picturePaths", new AttributeValue(picturePaths));
                 }
-                item.put("picturePaths", new AttributeValue(picturePaths));
-                for (String videoPath : createPostRequest.videoPaths) {
-                    videoPaths.add(id + "/" + videoPath);
+                if (createPostRequest.videoPaths != null && createPostRequest.videoPaths.length > 0) {
+                    List<String> videoPaths = new ArrayList<>();
+                    for (String videoPath : createPostRequest.videoPaths) {
+                        videoPaths.add("/" + id + "/" + videoPath);
+                    }
+                    item.put("videoPaths", new AttributeValue(videoPaths));
                 }
-                item.put("videoPaths", new AttributeValue(videoPaths));
             }
         });
     }

@@ -20,6 +20,8 @@ public class CreatePostRequest {
         this.videoPaths = videoPaths;
     }
 
+    public CreatePostRequest() {}
+
     public String getBy() {
         return by;
     }
