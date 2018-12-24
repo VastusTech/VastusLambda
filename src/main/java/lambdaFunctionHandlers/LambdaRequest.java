@@ -72,6 +72,8 @@ public class LambdaRequest {
         ownedEvents,
         sentInvites,
         receivedInvites,
+        groups,
+        ownedGroups,
         // Client ==========================
         trainersFollowing,
         // Trainer =========================
@@ -767,6 +769,25 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case groups:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
+                        databaseActionCompiler.addAll(UserAddToGroup.getActions(fromID, id, itemType, attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
+                    // TODO We should make a request system for this too
+//                case ownedGroups:
+//                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+//                            .equals("Sponsor")) {
+//                        databaseActionCompiler.addAll(UserAdd.getActions(fromID, id, itemType, attributeValue));
+//                    } else {
+//                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+//                                itemType + "!");
+//                    }
+//                    break;
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
                         databaseActionCompiler.addAll(TrainerAddAvailableTime.getActions(fromID, id,
@@ -886,6 +907,15 @@ public class LambdaRequest {
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
                         databaseActionCompiler.addAll(UserRemoveFromChallenge.getActions(fromID, id, itemType,
                                 attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
+                case groups:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
+                        databaseActionCompiler.addAll(UserRemoveFromGroup.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");

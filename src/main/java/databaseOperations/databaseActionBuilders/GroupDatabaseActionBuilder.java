@@ -53,7 +53,7 @@ public class GroupDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "restriction", new AttributeValue(restriction), false, "PUT");
     }
 
-    public static DatabaseAction updateAddOwner(String id, String owner, boolean ifWithCreate) throws Exception {
+    public static DatabaseAction updateAddOwner(String id, String owner) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "owners", new AttributeValue(owner), false, "ADD");
     }
 
