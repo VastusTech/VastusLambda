@@ -7,7 +7,9 @@ import main.java.databaseObjects.Invite;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.EventUpdateChallenge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +59,19 @@ public class DeleteChallenge {
                     databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
                 }
             }
+        }
+
+        // Remove from the events and from the group
+        for (String eventID : challenge.events) {
+            databaseActions.addAll(EventUpdateChallenge.getActions(fromID, eventID, null));
+        }
+        if (challenge.group != null) {
+            databaseActions.add(GroupDatabaseActionBuilder.updateRemoveChallenge(challenge.group, challengeID));
+        }
+
+        // Delete all the receivedInvites
+        for (String inviteID : challenge.receivedInvites) {
+            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
         }
 
         // Delete the challenge

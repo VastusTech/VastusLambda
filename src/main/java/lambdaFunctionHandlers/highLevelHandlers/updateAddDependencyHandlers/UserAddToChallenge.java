@@ -61,6 +61,12 @@ public class UserAddToChallenge {
                 databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
             }
         }
+        for (String inviteID : challenge.receivedInvites) {
+            Invite invite = Invite.readInvite(inviteID);
+            if (invite.about.equals(userID)) {
+                databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+            }
+        }
 
         return databaseActions;
     }

@@ -6,6 +6,7 @@ import main.java.databaseObjects.Challenge;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
@@ -62,6 +63,12 @@ public class CreatePost {
                 String by = createPostRequest.by;
                 String byItemType = ItemType.getItemType(by);
                 databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddPost(by, byItemType, null, true));
+
+                // Add to the post's group
+                if (createPostRequest.group != null) {
+                    databaseActionCompiler.add(GroupDatabaseActionBuilder.updateAddPost(createPostRequest.group,
+                            null, true));
+                }
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }

@@ -16,9 +16,13 @@ public class EventUpdateChallenge {
 
         // Get the event
         Event event = Event.readEvent(eventID);
-        Challenge challenge = Challenge.readChallenge(challengeID);
+        Challenge challenge = null;
+        if (challengeID != null) {
+            challenge = Challenge.readChallenge(challengeID);
+        }
 
-        if (!(fromID.equals(event.owner) && fromID.equals(challenge.owner)) && !fromID.equals(Constants.adminKey)) {
+        if (!fromID.equals(event.owner) && ((challenge == null || fromID.equals(challenge.owner))) && !fromID.equals
+                (Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only update an event that you own!");
         }
 

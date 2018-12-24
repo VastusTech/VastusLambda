@@ -32,6 +32,9 @@ public class LambdaRequest {
     private CreateChallengeRequest createChallengeRequest;
     private CreateInviteRequest createInviteRequest;
     private CreatePostRequest createPostRequest;
+    private CreateGroupRequest createGroupRequest;
+    private CreateCommentRequest createCommentRequest;
+    private CreateSponsorRequest createSponsorRequest;
 
     private enum Action {
         CREATE,
@@ -118,7 +121,11 @@ public class LambdaRequest {
         // Post   ==========================
         picturePaths,
         videoPaths,
-        // postType,
+        // Group ===========================
+        owners,
+        // Comment =========================
+        comment,
+        // Sponsor =========================
     }
 
     // This is where the inputs are handled!
@@ -320,6 +327,18 @@ public class LambdaRequest {
                 numCreateRequest++;
                 Constants.debugLog("Has a create post request!\n");
             }
+            if (createGroupRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create group request!\n");
+            }
+            if (createCommentRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create comment request!\n");
+            }
+            if (createSponsorRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create sponsor request!\n");
+            }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
@@ -352,6 +371,12 @@ public class LambdaRequest {
                     return CreateInvite.handle(fromID, createInviteRequest);
                 case Post:
                     return CreatePost.handle(fromID, createPostRequest);
+                case Group:
+                    return CreateGroup.handle(fromID, createGroupRequest);
+                case Comment:
+                    return CreateComment.handle(fromID, createCommentRequest);
+                case Sponsor:
+                    return CreateSponsor.handle(fromID, createSponsorRequest);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -392,6 +417,7 @@ public class LambdaRequest {
                         case Client:
                         case Trainer:
                         case Gym:
+                        case Sponsor:
                             databaseActionCompiler.addAll(UserUpdateName.getActions(fromID, id, itemType, attributeValue));
                             break;
                         default:
@@ -399,7 +425,8 @@ public class LambdaRequest {
                     }
                     break;
                 case gender:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserUpdateGender.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -407,7 +434,7 @@ public class LambdaRequest {
                     }
                     break;
                 case birthday:
-                    if (itemType.equals("Client") || itemType.equals("Trainer")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserUpdateBirthday.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -423,7 +450,8 @@ public class LambdaRequest {
                     }
                     break;
                 case email:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserUpdateEmail.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -431,7 +459,8 @@ public class LambdaRequest {
                     }
                     break;
                 case profileImagePath:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserUpdateProfileImagePath.getActions(fromID, id, itemType,
                                 attributeValue));
                     }
@@ -440,7 +469,8 @@ public class LambdaRequest {
                     }
                     break;
                 case bio:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserUpdateBio.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -540,6 +570,9 @@ public class LambdaRequest {
                     else if (itemType.equals("Challenge")) {
                         databaseActionCompiler.addAll(ChallengeUpdateTitle.getActions(fromID, id, attributeValue));
                     }
+                    else if (itemType.equals("Group")) {
+                        databaseActionCompiler.addAll(GroupUpdateTitle.getActions(fromID, id, attributeValue));
+                    }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
@@ -553,6 +586,9 @@ public class LambdaRequest {
                     }
                     else if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostUpdateDescription.getActions(fromID, id, attributeValue));
+                    }
+                    else if (itemType.equals("Group")) {
+                        databaseActionCompiler.addAll(GroupUpdateDescription.getActions(fromID, id, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
@@ -568,6 +604,9 @@ public class LambdaRequest {
                     else if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostUpdateAccess.getActions(fromID, id, attributeValue));
                     }
+                    else if (itemType.equals("Group")) {
+                        databaseActionCompiler.addAll(GroupUpdateAccess.getActions(fromID, id, attributeValue));
+                    }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
@@ -578,6 +617,9 @@ public class LambdaRequest {
                     }
                     else if (itemType.equals("Challenge")) {
                         databaseActionCompiler.addAll(ChallengeUpdateRestriction.getActions(fromID, id, attributeValue));
+                    }
+                    else if (itemType.equals("Group")) {
+                        databaseActionCompiler.addAll(GroupUpdateRestriction.getActions(fromID, id, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
@@ -642,6 +684,14 @@ public class LambdaRequest {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
+                case comment:
+                    if (itemType.equals("Comment")) {
+                        databaseActionCompiler.addAll(CommentUpdateComment.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATESET operation on " + attributeName + "!");
             }
@@ -670,7 +720,8 @@ public class LambdaRequest {
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case profileImagePaths:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserAddProfileImagePath.getActions(fromID, id,
                                 itemType, attributeValue));
                     }
@@ -689,7 +740,8 @@ public class LambdaRequest {
                     }
                     break;
                 case friends:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserAddFriend.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -698,7 +750,8 @@ public class LambdaRequest {
                     }
                     break;
                 case scheduledEvents:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserAddToEvent.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -706,7 +759,8 @@ public class LambdaRequest {
                     }
                     break;
                 case challenges:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserAddToChallenge.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -737,6 +791,9 @@ public class LambdaRequest {
                     }
                     else if (itemType.equals("Challenge")) {
                         databaseActionCompiler.addAll(ChallengeAddTag.getActions(fromID, id, attributeValue));
+                    }
+                    else if (itemType.equals("Group")) {
+                        databaseActionCompiler.addAll(GroupAddTag.getActions(fromID, id, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -787,7 +844,8 @@ public class LambdaRequest {
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case profileImagePaths:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserRemoveProfileImagePath.getActions(fromID, id,
                                 itemType, attributeValue));
                     }
@@ -806,7 +864,8 @@ public class LambdaRequest {
                     }
                     break;
                 case friends:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserRemoveFriend.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -815,7 +874,8 @@ public class LambdaRequest {
                     }
                     break;
                 case scheduledEvents:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserRemoveFromEvent.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -920,6 +980,15 @@ public class LambdaRequest {
                 case Post:
                     databaseActionCompiler.addAll(DeletePost.getActions(fromID, id));
                     break;
+                case Group:
+                    databaseActionCompiler.addAll(DeleteGroup.getActions(fromID, id));
+                    break;
+                case Comment:
+                    databaseActionCompiler.addAll(DeleteComment.getActions(fromID, id));
+                    break;
+                case Sponsor:
+                    databaseActionCompiler.addAll(DeleteSponsor.getActions(fromID, id));
+                    break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -937,7 +1006,8 @@ public class LambdaRequest {
             createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
                          CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest,
                          CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest,
-                         CreatePostRequest createPostRequest) {
+                         CreatePostRequest createPostRequest, CreateGroupRequest createGroupRequest,
+                         CreateCommentRequest createCommentRequest, CreateSponsorRequest createSponsorRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -954,6 +1024,9 @@ public class LambdaRequest {
         this.createChallengeRequest = createChallengeRequest;
         this.createInviteRequest = createInviteRequest;
         this.createPostRequest = createPostRequest;
+        this.createGroupRequest = createGroupRequest;
+        this.createCommentRequest = createCommentRequest;
+        this.createSponsorRequest = createSponsorRequest;
     }
 
     public LambdaRequest() {}
@@ -1084,5 +1157,29 @@ public class LambdaRequest {
 
     public void setCreatePostRequest(CreatePostRequest createPostRequest) {
         this.createPostRequest = createPostRequest;
+    }
+
+    public CreateGroupRequest getCreateGroupRequest() {
+        return createGroupRequest;
+    }
+
+    public void setCreateGroupRequest(CreateGroupRequest createGroupRequest) {
+        this.createGroupRequest = createGroupRequest;
+    }
+
+    public CreateCommentRequest getCreateCommentRequest() {
+        return createCommentRequest;
+    }
+
+    public void setCreateCommentRequest(CreateCommentRequest createCommentRequest) {
+        this.createCommentRequest = createCommentRequest;
+    }
+
+    public CreateSponsorRequest getCreateSponsorRequest() {
+        return createSponsorRequest;
+    }
+
+    public void setCreateSponsorRequest(CreateSponsorRequest createSponsorRequest) {
+        this.createSponsorRequest = createSponsorRequest;
     }
 }

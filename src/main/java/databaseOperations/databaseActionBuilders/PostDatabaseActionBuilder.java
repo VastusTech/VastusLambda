@@ -35,7 +35,7 @@ public class PostDatabaseActionBuilder {
                 if (createPostRequest.videoPaths != null && createPostRequest.videoPaths.length > 0) {
                     List<String> videoPaths = new ArrayList<>();
                     for (String videoPath : createPostRequest.videoPaths) {
-                        videoPaths.add("/" + id + "/" + videoPath);
+                        videoPaths.add(id + "/" + videoPath);
                     }
                     item.put("videoPaths", new AttributeValue(videoPaths));
                 }
@@ -65,6 +65,31 @@ public class PostDatabaseActionBuilder {
 
     public static DatabaseAction updateRemoveVideoPath(String id, String videoPath) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "videoPaths", new AttributeValue(videoPath), false, "DELETE");
+    }
+
+    public static DatabaseAction updateAddLike(String id) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "likes", new AttributeValue().withN("1"), false, "ADD");
+    }
+
+    public static DatabaseAction updateRemoveLike(String id) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "likes", new AttributeValue().withN("1"), false, "DELETE");
+    }
+
+    public static DatabaseAction updateAddComment(String id, String comment, boolean ifWithCreate) throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "comments", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, "ADD");
+        }
+    }
+
+    public static DatabaseAction updateRemoveComment(String id, String comment) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, "DELETE");
+    }
+
+    public static DatabaseAction updateGroup(String id, String group) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "group", new AttributeValue(group), false, "PUT");
     }
 
     public static DatabaseAction delete(String id) {

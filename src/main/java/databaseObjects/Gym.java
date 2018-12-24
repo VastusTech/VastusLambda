@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Gym extends User {
     public String address;
-    public Set<String> trainerIDs;
+    public Set<String> trainers;
     public List<TimeInterval> weeklyHours;
     public List<TimeInterval> vacationTimes;
     public int sessionCapacity;
@@ -18,8 +18,8 @@ public class Gym extends User {
     Gym(Item item) throws Exception {
         super(item);
         this.address = item.getString("address");
-        this.trainerIDs = item.getStringSet("trainers");
-        if (trainerIDs == null) { this.trainerIDs = new HashSet<>(); }
+        this.trainers = item.getStringSet("trainers");
+        if (trainers == null) { this.trainers = new HashSet<>(); }
         Set<String> weeklyHours = item.getStringSet("weeklyHours");
         if (weeklyHours != null) { this.weeklyHours = TimeInterval.getTimeIntervals(weeklyHours); }
         else { this.weeklyHours = new ArrayList<>(); }

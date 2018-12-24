@@ -1,16 +1,20 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
 public class CreatePostRequest {
+    // Required
     public String by;
     public String description;
     public String access;
 
+    // Optional
     public String postType;
     public String about;
     public String[] picturePaths;
     public String[] videoPaths;
+    public String group;
 
-    public CreatePostRequest(String by, String description, String about, String access, String postType, String[] picturePaths, String[] videoPaths) {
+    public CreatePostRequest(String by, String description, String about, String access, String postType, String[]
+            picturePaths, String[] videoPaths, String group) {
         this.by = by;
         this.description = description;
         this.about = about;
@@ -18,6 +22,7 @@ public class CreatePostRequest {
         this.postType = postType;
         this.picturePaths = picturePaths;
         this.videoPaths = videoPaths;
+        this.group = group;
     }
 
     public CreatePostRequest() {}
@@ -76,5 +81,13 @@ public class CreatePostRequest {
 
     public void setVideoPaths(String[] videoPaths) {
         this.videoPaths = videoPaths;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

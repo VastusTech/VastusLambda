@@ -183,6 +183,20 @@ public class ChallengeDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "memberRequests", new AttributeValue(user), false, "DELETE");
     }
 
+    public static DatabaseAction updateAddReceivedInvite(String id, String invite, boolean ifWithCreate) throws
+            Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "receivedInvites", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite), false, "ADD");
+        }
+    }
+
+    public static DatabaseAction updateRemoveReceivedInvite(String id, String invite) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite), false, "DELETE");
+    }
+
     public static DatabaseAction updateCapacity(String id, String capacity) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "capacity", new AttributeValue(capacity), false, "PUT");
     }
@@ -256,6 +270,10 @@ public class ChallengeDatabaseActionBuilder {
 
     public static DatabaseAction updateRemoveSubmission(String id, String submission) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "submissions", new AttributeValue(submission), false, "DELETE");
+    }
+
+    public static DatabaseAction updateGroup(String id, String group) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "group", new AttributeValue(group), false, "PUT");
     }
 
     public static DatabaseAction delete(String id) {

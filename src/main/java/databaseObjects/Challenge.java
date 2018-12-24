@@ -18,16 +18,18 @@ public class Challenge extends DatabaseObject {
     public Set<String> members;
     public Set<String> invitedMembers;
     public Set<String> memberRequests;
+    public Set<String> receivedInvites;
     public int capacity;
+    public boolean ifCompleted;
     public String access;
     public String restriction;
-    public boolean ifCompleted;
     public Set<String> events;
+    public String group;
     public String goal;
     public int difficulty;
-    public Set<String> tags;
     public String winner;
     public String prize;
+    public Set<String> tags;
     public Set<String> submissions;
 
     public Challenge(Item item) throws Exception {
@@ -40,6 +42,8 @@ public class Challenge extends DatabaseObject {
         if (this.invitedMembers == null) { this.invitedMembers = new HashSet<>(); }
         this.memberRequests = item.getStringSet("memberRequests");
         if (this.memberRequests == null) { this.memberRequests = new HashSet<>(); }
+        this.receivedInvites = item.getStringSet("receivedInvites");
+        if (this.receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
         this.capacity = Integer.parseInt(item.getString("capacity"));
         this.access = item.getString("access");
         this.restriction = item.getString("restriction");
@@ -48,6 +52,7 @@ public class Challenge extends DatabaseObject {
         this.ifCompleted = Boolean.parseBoolean(item.getString("ifCompleted"));
         this.events = item.getStringSet("events");
         if (this.events == null) { this.events = new HashSet<>(); }
+        this.group = item.getString("group");
         this.goal = item.getString("goal");
         String difficulty = item.getString("difficulty");
         if (difficulty != null) { this.difficulty = Integer.parseInt(difficulty); }

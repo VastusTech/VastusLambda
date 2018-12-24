@@ -66,6 +66,12 @@ public class UserAddToEvent {
                 databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
             }
         }
+        for (String inviteID : event.receivedInvites) {
+            Invite invite = Invite.readInvite(inviteID);
+            if (invite.about.equals(userID)) {
+                databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+            }
+        }
 
         return databaseActions;
     }

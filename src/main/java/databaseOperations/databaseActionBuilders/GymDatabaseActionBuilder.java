@@ -18,11 +18,13 @@ public class GymDatabaseActionBuilder {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Gym.getEmptyItem();
         item.put("name", new AttributeValue(createGymRequest.name));
-        item.put("birthday", new AttributeValue(createGymRequest.foundingDay));
         item.put("email", new AttributeValue(createGymRequest.email));
         item.put("username", new AttributeValue(createGymRequest.username));
         item.put("address", new AttributeValue(createGymRequest.address));
         item.put("sessionCapacity", new AttributeValue(createGymRequest.sessionCapacity));
+        if (createGymRequest.foundingDay != null) { item.put("birthday", new AttributeValue(createGymRequest
+                .foundingDay)); }
+        if (createGymRequest.stripeID != null) { item.put("stripeID", new AttributeValue(createGymRequest.stripeID)); }
         if (createGymRequest.bio != null) { item.put("bio", new AttributeValue(createGymRequest.bio)); }
         if (createGymRequest.weeklyHours != null) { item.put("weeklyHours", new AttributeValue(Arrays.asList
                 (createGymRequest.weeklyHours))); }
@@ -67,6 +69,7 @@ public class GymDatabaseActionBuilder {
 //        return UserDatabaseActionBuilder.updateRemoveCompletedWorkout(id, itemType, workout);
 //    }
 
+    // TODO How to combine this with the original UserActionDatabaseBuilder logic????
     public static DatabaseAction updateAddScheduledTime(String id, String time, boolean ifSchedulingWorkout) throws
             Exception {
         if (ifSchedulingWorkout) {

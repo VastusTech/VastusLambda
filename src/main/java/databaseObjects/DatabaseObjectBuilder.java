@@ -25,6 +25,12 @@ public interface DatabaseObjectBuilder {
                 return new Invite(item);
             case Post:
                 return new Post(item);
+            case Group:
+                return new Group(item);
+            case Comment:
+                return new Challenge(item);
+            case Sponsor:
+                return new Sponsor(item);
             default:
                 throw new Exception("Item type = " + itemType + " not implemented in DatabaseObjectBuilder");
         }

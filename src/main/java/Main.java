@@ -13,6 +13,9 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
          System.out.println(DynamoDBHandler.generateRandomID("Client"));
+         String ay = null;
+         AttributeValue av = new AttributeValue(ay);
+         System.out.println(av.getS());
 //        String postType = "newEvent";
 //        boolean ifType = ItemType.ifItemType(postType);
 //        boolean ifNewType = (postType.substring(0, 3).equals("new")) && ItemType.ifItemType(postType.substring(3));

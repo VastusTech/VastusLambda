@@ -5,6 +5,7 @@ import main.java.Logic.ItemType;
 import main.java.databaseObjects.Post;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
@@ -32,6 +33,11 @@ public class DeletePost {
         // Check if we are also removing this post from the challenge submissions
         if (post.postType != null && post.postType.equals("submission")) {
             databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveSubmission(post.about, post.id));
+        }
+
+        // Remove from group
+        if (post.group != null) {
+            databaseActions.add(GroupDatabaseActionBuilder.updateRemovePost(post.group, postID));
         }
 
         // Delete the post

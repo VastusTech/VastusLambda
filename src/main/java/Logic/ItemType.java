@@ -9,7 +9,10 @@ public enum ItemType {
     Event,
     Challenge,
     Invite,
-    Post, ;
+    Post,
+    Group,
+    Comment,
+    Sponsor;
 
     public static String getItemType(String id) throws Exception {
         String prefix = id.substring(0, Constants.numPrefix);

@@ -20,7 +20,7 @@ public class CreateGym {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // Check to see if the request features are well formed (i.e invalid date)
-                new DateTime(createGymRequest.foundingDay);
+                if (createGymRequest.foundingDay != null) { new DateTime(createGymRequest.foundingDay); }
                 Integer.parseInt(createGymRequest.sessionCapacity);
                 if (createGymRequest.weeklyHours != null) {
                     for (String time : createGymRequest.weeklyHours) {

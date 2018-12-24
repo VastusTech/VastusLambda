@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,6 +18,9 @@ public class Post extends DatabaseObject {
     public String postType;
     public Set<String> picturePaths;
     public Set<String> videoPaths;
+    public int likes;
+    public Set<String> comments;
+    public String group;
 
     Post(Item item) throws Exception {
         super(item);
@@ -29,6 +33,10 @@ public class Post extends DatabaseObject {
         if (picturePaths == null) { this.picturePaths = new HashSet<>(); }
         this.videoPaths = item.getStringSet("videoPaths");
         if (videoPaths == null) { this.videoPaths = new HashSet<>(); }
+        this.likes = item.getNumber("likes").intValue();
+        this.comments = item.getStringSet("comments");
+        if (comments == null) { this.comments = new HashSet<>(); }
+        this.group = item.getString("group");
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

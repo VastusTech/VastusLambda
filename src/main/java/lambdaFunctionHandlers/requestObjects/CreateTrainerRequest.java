@@ -4,27 +4,29 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 public class CreateTrainerRequest {
     // Required
     public String name;
-    public String gender;
-    public String birthday;
     public String email;
     public String username;
-    public String gym;
-    public String workoutSticker;
-    public String preferredIntensity;
 
     // Optional
+    public String gender;
+    public String birthday;
     public String bio;
+    public String stripeID;
     public String workoutCapacity;
     public String workoutPrice;
+    public String workoutSticker;
+    public String preferredIntensity;
+    public String gym;
 
     public CreateTrainerRequest(String name, String gender, String birthday, String email, String username, String
-            gym, String workoutSticker, String preferredIntensity, String bio, String workoutCapacity, String
-            workoutPrice) {
+            stripeID, String gym, String workoutSticker, String preferredIntensity, String bio, String workoutCapacity,
+                                String workoutPrice) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.email = email;
         this.username = username;
+        this.stripeID = stripeID;
         this.gym = gym;
         this.workoutSticker = workoutSticker;
         this.preferredIntensity = preferredIntensity;
@@ -73,6 +75,14 @@ public class CreateTrainerRequest {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getStripeID() {
+        return stripeID;
+    }
+
+    public void setStripeID(String stripeID) {
+        this.stripeID = stripeID;
     }
 
     public String getGym() {

@@ -18,11 +18,14 @@ public class ClientDatabaseActionBuilder {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Client.getEmptyItem();
         item.put("name", new AttributeValue(createClientRequest.name));
-        item.put("gender", new AttributeValue(createClientRequest.gender));
-        item.put("birthday", new AttributeValue(createClientRequest.birthday));
         item.put("email", new AttributeValue(createClientRequest.email));
         item.put("username", new AttributeValue(createClientRequest.username));
+        if (createClientRequest.gender != null) { item.put("gender", new AttributeValue(createClientRequest.gender)); }
+        if (createClientRequest.birthday != null) { item.put("birthday", new AttributeValue(createClientRequest
+                .birthday)); }
         if (createClientRequest.bio != null) { item.put("bio", new AttributeValue(createClientRequest.bio)); }
+        if (createClientRequest.stripeID != null) { item.put("stripeID", new AttributeValue(createClientRequest
+                .stripeID)); }
         return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {

@@ -41,8 +41,10 @@ public class Invite extends DatabaseObject {
         friendRequest,
         eventInvite,
         challengeInvite,
+        groupInvite,
         eventRequest,
         challengeRequest,
+        groupRequest
     }
 }
 

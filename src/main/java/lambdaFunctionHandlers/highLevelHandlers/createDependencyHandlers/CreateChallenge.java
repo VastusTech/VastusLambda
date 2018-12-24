@@ -5,6 +5,7 @@ import main.java.Logic.ItemType;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateChallengeRequest;
 import org.joda.time.DateTime;
@@ -67,6 +68,12 @@ public class CreateChallenge {
                         databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddChallenge
                                 (member, memberItemType, null, true));
                     }
+                }
+
+                // Add to the challenge's group
+                if (createChallengeRequest.group != null) {
+                    databaseActionCompiler.add(GroupDatabaseActionBuilder.updateAddChallenge(createChallengeRequest.group,
+                            null, true));
                 }
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);

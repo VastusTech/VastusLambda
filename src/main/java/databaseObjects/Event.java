@@ -10,19 +10,21 @@ import java.util.Map;
 import java.util.Set;
 
 public class Event extends DatabaseObject {
-    public String owner;
     public String title;
     public String description;
-    public String address;
+    public String owner;
     public TimeInterval time;
+    public String address;
     public Set<String> members;
     public Set<String> invitedMembers;
     public Set<String> memberRequests;
+    public Set<String> receivedInvites;
     public int capacity;
+    public boolean ifCompleted;
     public String access;
     public String restriction;
-    public boolean ifCompleted;
     public String challenge;
+    public String group;
     public Set<String> tags;
 
     public Event(Item item) throws Exception {
@@ -35,6 +37,8 @@ public class Event extends DatabaseObject {
         if (this.invitedMembers == null) { this.invitedMembers = new HashSet<>(); }
         this.memberRequests = item.getStringSet("memberRequests");
         if (this.memberRequests == null) { this.memberRequests = new HashSet<>(); }
+        this.receivedInvites = item.getStringSet("receivedInvites");
+        if (this.receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
         this.capacity = Integer.parseInt(item.getString("capacity"));
         this.access = item.getString("access");
         this.restriction = item.getString("restriction");
@@ -42,6 +46,7 @@ public class Event extends DatabaseObject {
         this.description = item.getString("description");
         this.address = item.getString("address");
         this.challenge = item.getString("challenge");
+        this.group = item.getString("group");
         this.ifCompleted = Boolean.parseBoolean(item.getString("ifCompleted"));
         this.tags = item.getStringSet("tags");
     }

@@ -19,10 +19,14 @@ public class TrainerDatabaseActionBuilder {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Trainer.getEmptyItem();
         item.put("name", new AttributeValue(createTrainerRequest.name));
-        item.put("gender", new AttributeValue(createTrainerRequest.gender));
-        item.put("birthday", new AttributeValue(createTrainerRequest.birthday));
         item.put("email", new AttributeValue(createTrainerRequest.email));
         item.put("username", new AttributeValue(createTrainerRequest.username));
+        if (createTrainerRequest.gender != null) { item.put("gender", new AttributeValue(createTrainerRequest
+                .gender)); }
+        if (createTrainerRequest.birthday != null) { item.put("birthday", new AttributeValue(createTrainerRequest
+                .birthday)); }
+        if (createTrainerRequest.stripeID != null) { item.put("stripeID", new AttributeValue(createTrainerRequest
+                .stripeID)); }
         if (createTrainerRequest.gym != null) { item.put("gym", new AttributeValue(createTrainerRequest.gym)); }
         if (createTrainerRequest.workoutSticker != null) { item.put("workoutSticker", new AttributeValue
                 (createTrainerRequest.workoutSticker)); }
@@ -41,6 +45,7 @@ public class TrainerDatabaseActionBuilder {
         });
     }
 
+    // TODO How to combine this with the original UserActionDatabaseBuilder logic???? "Extends"?
     public static DatabaseAction updateAddScheduledTime(String id, String time, boolean ifSchedulingWorkout) throws
             Exception {
         if (ifSchedulingWorkout) {

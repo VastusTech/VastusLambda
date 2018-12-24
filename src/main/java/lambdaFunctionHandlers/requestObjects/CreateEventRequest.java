@@ -15,9 +15,11 @@ public class CreateEventRequest {
     public String[] members;
     public String access;
     public String restriction;
+    public String group;
 
     public CreateEventRequest(String owner, String time, String capacity, String address, String title, String
-            challenge, String description, String[] tags, String[] members, String access, String restriction) {
+            challenge, String description, String[] tags, String[] members, String access, String restriction, String
+             group) {
         this.owner = owner;
         this.time = time;
         this.capacity = capacity;
@@ -29,6 +31,7 @@ public class CreateEventRequest {
         this.access = access;
         this.restriction = restriction;
         this.challenge = challenge;
+        this.group = group;
     }
 
     public CreateEventRequest() {}
@@ -119,6 +122,14 @@ public class CreateEventRequest {
 
     public void setRestriction(String restriction) {
         this.restriction = restriction;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }
 

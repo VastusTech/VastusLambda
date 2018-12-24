@@ -1,9 +1,12 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
 import main.java.Logic.ItemType;
+import main.java.databaseObjects.Group;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseAction;
+import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 import java.util.ArrayList;
@@ -34,6 +37,11 @@ public class DeleteUser {
             databaseActions.add(EventDatabaseActionBuilder.updateRemoveMember(eventID, user.id));
         }
 
+        // Also remove from challenges
+        for (String challengeID : user.challenges) {
+            databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMember(challengeID, user.id));
+        }
+
         // Also remove from completed events
 //        for (String eventID : user.completedEvents) {
 //            databaseActions.add(EventDatabaseActionBuilder.updateRemoveMember(eventID, user.id));
@@ -41,7 +49,28 @@ public class DeleteUser {
 
         // Also delete the events you own
         for (String eventID : user.ownedEvents) {
-            databaseActions.addAll(DeleteEvent.getActions(user.id, eventID));
+            databaseActions.addAll(DeleteEvent.getActions(fromID, eventID));
+        }
+
+        // Also delete the challenges you own
+        for (String challengeID : user.ownedChallenges) {
+            databaseActions.addAll(DeleteChallenge.getActions(fromID, challengeID));
+        }
+
+        // Remove yourself as a member from every group
+        for (String groupID : user.groups) {
+            databaseActions.add(GroupDatabaseActionBuilder.updateRemoveMember(groupID, user.id));
+        }
+
+        // For every group either remove yourself as an owner, or delete it entirely if no other owners
+        for (String groupID : user.ownedGroups) {
+            Group group = Group.readGroup(groupID);
+            if (group.owners.size() == 1 && group.owners.contains(user.id)) {
+                databaseActions.addAll(DeleteGroup.getActions(fromID, groupID));
+            }
+            else {
+                databaseActions.add(GroupDatabaseActionBuilder.updateRemoveOwner(groupID, user.id));
+            }
         }
 
         // Remove from all friend's friends lists
@@ -50,9 +79,9 @@ public class DeleteUser {
         }
 
         // Remove all invites from sent
-//        for (String inviteID : user.sentInvites) {
-//            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
-//        }
+        for (String inviteID : user.sentInvites) {
+            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+        }
 
         // Remove all invites from received
         for (String inviteID : user.receivedInvites) {

@@ -16,6 +16,7 @@ abstract public class User extends DatabaseObject{
     public int age;
     public String email;
     public String username;
+    public String stripeID;
     public String profileImagePath;
     public Set<String> profileImagePaths;
     public Set<String> scheduledWorkouts;
@@ -42,6 +43,10 @@ abstract public class User extends DatabaseObject{
     public Set<String> sentInvites;
     public Set<String> receivedInvites;
     public Set<String> posts;
+    public Set<String> comments;
+    public Set<String> groups;
+    public Set<String> invitedGroups;
+    public Set<String> ownedGroups;
 
     public User(Item item) throws Exception {
         super(item);
@@ -51,6 +56,7 @@ abstract public class User extends DatabaseObject{
         this.age = getAgeFromBirthday(birthday);
         this.email = item.getString("email");
         this.username = item.getString("username");
+        this.stripeID = item.getString("stripeID");
         this.profileImagePath = item.getString("profileImagePath");
         this.profileImagePaths = item.getStringSet("profileImagePaths");
         if (profileImagePaths == null) { this.profileImagePaths = new HashSet<>(); }
@@ -98,6 +104,14 @@ abstract public class User extends DatabaseObject{
         if (receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
         this.posts = item.getStringSet("posts");
         if (posts == null) { this.posts = new HashSet<>(); }
+        this.comments = item.getStringSet("comments");
+        if (comments == null) { this.comments = new HashSet<>(); }
+        this.groups = item.getStringSet("groups");
+        if (groups == null) { this.groups = new HashSet<>(); }
+        this.invitedGroups = item.getStringSet("invitedGroups");
+        if (invitedGroups == null) { this.invitedGroups = new HashSet<>(); }
+        this.ownedGroups = item.getStringSet("ownedGroups");
+        if (ownedGroups == null) { this.ownedGroups = new HashSet<>(); }
     }
 
     private int getAgeFromBirthday(String birthday) {

@@ -4,21 +4,24 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 public class CreateClientRequest {
     // Required
     public String name;
-    public String gender;
-    public String birthday;
     public String email;
     public String username;
 
     // Optional
+    public String gender;
+    public String birthday;
+    public String stripeID;
     public String bio;
 
-    public CreateClientRequest(String name, String gender, String birthday, String email, String username, String bio) {
+    public CreateClientRequest(String name, String gender, String birthday, String email, String username, String
+            bio, String stripeID) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.email = email;
         this.username = username;
         this.bio = bio;
+        this.stripeID = stripeID;
     }
 
     public CreateClientRequest() {}
@@ -69,5 +72,13 @@ public class CreateClientRequest {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getStripeID() {
+        return stripeID;
+    }
+
+    public void setStripeID(String stripeID) {
+        this.stripeID = stripeID;
     }
 }

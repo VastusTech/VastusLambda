@@ -7,10 +7,7 @@ import main.java.databaseObjects.TimeInterval;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
-import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
-import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
-import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
-import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateEventRequest;
 
 import java.util.ArrayList;
@@ -84,6 +81,12 @@ public class CreateEvent {
                     }
                     databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddEvent(createEventRequest
                             .challenge, null, true));
+                }
+
+                // Add to the event's group
+                if (createEventRequest.group != null) {
+                    databaseActionCompiler.add(GroupDatabaseActionBuilder.updateAddEvent(createEventRequest.group,
+                            null, true));
                 }
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);

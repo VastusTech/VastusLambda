@@ -26,6 +26,10 @@ public class UserDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "email", new AttributeValue(email), false, "PUT");
     }
 
+    public static DatabaseAction updateStripeID(String id, String itemType, String stripeID) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "stripeID", new AttributeValue(stripeID), false, "PUT");
+    }
+
     public static DatabaseAction updateProfileImagePath(String id, String itemType, String profileImagePath) throws
             Exception {
         return new UpdateDatabaseAction(id, itemType, "profileImagePath", new AttributeValue(profileImagePath),
@@ -369,5 +373,55 @@ public class UserDatabaseActionBuilder {
 
     public static DatabaseAction updateRemovePost(String id, String itemType, String post) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "posts", new AttributeValue(post), false, "DELETE");
+    }
+
+    public static DatabaseAction updateAddComment(String id, String itemType, String comment, boolean ifWithCreate)
+            throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "comments", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, "ADD");
+        }
+    }
+
+    public static DatabaseAction updateRemoveComment(String id, String itemType, String comment) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, "DELETE");
+    }
+
+    public static DatabaseAction updateAddGroup(String id, String itemType, String group, boolean ifWithCreate)
+            throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "groups", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "groups", new AttributeValue(group), false, "ADD");
+        }
+    }
+
+    public static DatabaseAction updateRemoveGroup(String id, String itemType, String group) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "groups", new AttributeValue(group), false, "DELETE");
+    }
+
+    public static DatabaseAction updateAddInvitedGroup(String id, String itemType, String group) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "invitedGroups", new AttributeValue(group), false, "ADD");
+    }
+
+    public static DatabaseAction updateRemoveInvitedGroup(String id, String itemType, String group) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "invitedGroups", new AttributeValue(group), false, "DELETE");
+    }
+
+    public static DatabaseAction updateAddOwnedGroup(String id, String itemType, String group, boolean ifWithCreate)
+            throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "ownedGroups", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "ownedGroups", new AttributeValue(group), false, "ADD");
+        }
+    }
+
+    public static DatabaseAction updateRemoveOwnedGroup(String id, String itemType, String group) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "ownedGroups", new AttributeValue(group), false, "DELETE");
     }
 }

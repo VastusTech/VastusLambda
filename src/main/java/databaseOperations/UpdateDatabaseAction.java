@@ -53,19 +53,31 @@ public class UpdateDatabaseAction extends DatabaseAction {
 //                    // throw new Exception("INTERNAL ERROR: Don't set the attributeValue and ask it to add the id");
 //                }
             } else {
-                if ((attributeValue.getS() != null && attributeValue.getS().equals("")) || (attributeValue.getSS() !=
-                        null && attributeValue.getSS().size() == 0)) {
+                if ((attributeValue.getS() == null && attributeValue.getSS() == null && attributeValue.getN() ==
+                        null) || (attributeValue.getS() != null && attributeValue.getS().equals("")) ||
+                                (attributeValue.getSS() != null && attributeValue.getSS().size() == 0)) {
                     attributeValue = null;
                 }
 
-                if (attributeValue.getS() != null && (action.equals("ADD") || action.equals("DELETE"))) {
-                    // This means that the caller is trying to put a single string in the field, let's help them out
-                    List<String> stringList = new ArrayList<>();
-                    stringList.add(attributeValue.getS());
-                    this.updateItem.put(attributeName, new AttributeValueUpdate(new AttributeValue(stringList), action));
+                if (attributeValue == null) {
+                    if (action.equals("SET")) {
+                        // If you're trying to set it to null, then remove the attribute
+                        this.updateItem.put(attributeName, new AttributeValueUpdate(null, "REMOVE"));
+                    }
+                    else {
+                        throw new Exception("Cannot add/remove a null value to/from a set");
+                    }
                 }
                 else {
-                    this.updateItem.put(attributeName, new AttributeValueUpdate(attributeValue, action));
+                    if (attributeValue.getS() != null && (action.equals("ADD") || action.equals("DELETE"))) {
+                        // This means that the caller is trying to put a single string in the field, let's help them out
+                        List<String> stringList = new ArrayList<>();
+                        stringList.add(attributeValue.getS());
+                        this.updateItem.put(attributeName, new AttributeValueUpdate(new AttributeValue(stringList), action));
+                    }
+                    else {
+                        this.updateItem.put(attributeName, new AttributeValueUpdate(attributeValue, action));
+                    }
                 }
             }
         }

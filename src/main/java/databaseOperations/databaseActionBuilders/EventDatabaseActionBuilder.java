@@ -77,18 +77,26 @@ public class EventDatabaseActionBuilder {
                 CheckHandler() {
                     @Override
                     public String isViable(DatabaseObject newObject) throws Exception {
-                        // The capacity for the challenge must not be filled up yet.
+                        // The capacity for the event must not be filled up yet.
                         Event event = (Event) newObject;
+                        if (event.ifCompleted) {
+                            return "That event has already been completed!";
+                        }
                         if (event.capacity > event.members.size()) {
-                            if (event.access.equals("public")) {
+                            // Check to see if we are accepting a member request
+                            if (ifAccepting) {
+                                if (event.memberRequests.contains(user)) {
+                                    return null;
+                                }
+                                else {
+                                    return "You need to have a member request in order to accept it!";
+                                }
+                            }
+                            else if (event.access.equals("public")) {
                                 return null;
                             }
                             // If this is a private event, then we first check to see if they are in invited
-                            else if (event.invitedMembers.contains(user)) {
-                                return null;
-                            }
-                            // If we're accepting check to see if they requested to join
-                            else if (ifAccepting && event.memberRequests.contains(user)) {
+                            else if (event.invitedMembers.contains(user)){
                                 return null;
                             }
                             else {
@@ -104,7 +112,7 @@ public class EventDatabaseActionBuilder {
                             }
                         }
                         else {
-                            return "That challenge is already filled up!";
+                            return "That event is already filled up!";
                         }
                     }
                 });
@@ -163,6 +171,20 @@ public class EventDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "memberRequests", new AttributeValue(user), false, "DELETE");
     }
 
+    public static DatabaseAction updateAddReceivedInvite(String id, String invite, boolean ifWithCreate) throws
+            Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, "receivedInvites", null, true, "ADD");
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite), false, "ADD");
+        }
+    }
+
+    public static DatabaseAction updateRemoveReceivedInvite(String id, String invite) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite), false, "DELETE");
+    }
+
     public static DatabaseAction updateCapacity(String id, String capacity) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "capacity", new AttributeValue(capacity), false, "PUT");
     }
@@ -173,6 +195,10 @@ public class EventDatabaseActionBuilder {
 
     public static DatabaseAction updateRemoveTag(String id, String tag) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "tags", new AttributeValue(tag), false, "DELETE");
+    }
+
+    public static DatabaseAction updateGroup(String id, String group) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "group", new AttributeValue(group), false, "PUT");
     }
 
     public static DatabaseAction delete(String id) {
