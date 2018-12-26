@@ -29,12 +29,12 @@ public class DeleteComment {
         for (String replyCommentID : comment.comments) {
             databaseActions.addAll(DeleteComment.getActions(fromID, replyCommentID));
         }
-        String onItemType = ItemType.getItemType(comment.on);
-        if (onItemType.equals("Post")) {
-            databaseActions.add(PostDatabaseActionBuilder.updateRemoveComment(comment.on, commentID));
+        String toItemType = ItemType.getItemType(comment.to);
+        if (toItemType.equals("Post")) {
+            databaseActions.add(PostDatabaseActionBuilder.updateRemoveComment(comment.to, commentID));
         }
-        else if (onItemType.equals("Comment")) {
-            databaseActions.add(CommentDatabaseActionBuilder.updateRemoveComment(comment.on, commentID));
+        else if (toItemType.equals("Comment")) {
+            databaseActions.add(CommentDatabaseActionBuilder.updateRemoveComment(comment.to, commentID));
         }
         String byItemType = ItemType.getItemType(comment.by);
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveComment(comment.by, byItemType, commentID));
