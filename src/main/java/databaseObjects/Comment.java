@@ -10,14 +10,14 @@ import java.util.Set;
 
 public class Comment extends DatabaseObject {
     public String by;
-    public String on;
+    public String to;
     public String comment;
     public Set<String> comments;
 
     public Comment(Item item) throws Exception {
         super(item);
         this.by = item.getString("by");
-        this.on = item.getString("on");
+        this.to = item.getString("to");
         this.comment = item.getString("comment");
         this.comments = item.getStringSet("comments");
     }

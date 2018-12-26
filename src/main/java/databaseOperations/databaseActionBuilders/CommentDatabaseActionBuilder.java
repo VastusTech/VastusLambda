@@ -15,7 +15,7 @@ public class CommentDatabaseActionBuilder {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Comment.getEmptyItem();
         item.put("by", new AttributeValue(createCommentRequest.by));
-        item.put("on", new AttributeValue(createCommentRequest.on));
+        item.put("to", new AttributeValue(createCommentRequest.to));
         item.put("comment", new AttributeValue(createCommentRequest.comment));
         return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
             @Override

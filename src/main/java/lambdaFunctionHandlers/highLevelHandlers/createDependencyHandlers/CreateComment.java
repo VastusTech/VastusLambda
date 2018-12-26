@@ -13,7 +13,7 @@ public class CreateComment {
     public static String handle(String fromID, CreateCommentRequest createCommentRequest) throws Exception {
         if (createCommentRequest != null) {
             // Create client
-            if (createCommentRequest.by != null && createCommentRequest.on != null && createCommentRequest.comment
+            if (createCommentRequest.by != null && createCommentRequest.to != null && createCommentRequest.comment
                     != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
@@ -30,17 +30,17 @@ public class CreateComment {
                         byItemType, null, true));
 
                 // Add the comment to the comments of what you are commenting on
-                String onItemType = ItemType.getItemType(createCommentRequest.on);
-                if (onItemType.equals("Post")) {
-                    databaseActionCompiler.add(PostDatabaseActionBuilder.updateAddComment(createCommentRequest.on,
+                String toItemType = ItemType.getItemType(createCommentRequest.to);
+                if (toItemType.equals("Post")) {
+                    databaseActionCompiler.add(PostDatabaseActionBuilder.updateAddComment(createCommentRequest.to,
                             null, true));
                 }
-                else if (onItemType.equals("Comment")) {
-                    databaseActionCompiler.add(CommentDatabaseActionBuilder.updateAddComment(createCommentRequest.on,
+                else if (toItemType.equals("Comment")) {
+                    databaseActionCompiler.add(CommentDatabaseActionBuilder.updateAddComment(createCommentRequest.to,
                             null, true));
                 }
                 else {
-                    throw new Exception("Cannot comment on an object of type: " + onItemType);
+                    throw new Exception("Cannot comment on an object of type: " + toItemType);
                 }
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);

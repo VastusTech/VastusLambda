@@ -3,14 +3,14 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 public class CreateCommentRequest {
     // Required
     public String by;
-    public String on;
+    public String to;
     public String comment;
 
     // Optional
 
-    public CreateCommentRequest(String by, String on, String comment) {
+    public CreateCommentRequest(String by, String to, String comment) {
         this.by = by;
-        this.on = on;
+        this.to = to;
         this.comment = comment;
     }
 
@@ -24,12 +24,12 @@ public class CreateCommentRequest {
         this.by = by;
     }
 
-    public String getOn() {
-        return on;
+    public String getTo() {
+        return to;
     }
 
-    public void setOn(String on) {
-        this.on = on;
+    public void setTo(String to) {
+        this.to = to;
     }
 
     public String getComment() {
