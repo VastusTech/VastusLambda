@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
+
 public class GymDatabaseActionBuilder {
     final static private String itemType = "Gym";
 
@@ -126,31 +128,31 @@ public class GymDatabaseActionBuilder {
 //    }
 
     public static DatabaseAction updateAddress(String id, String address) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "address", new AttributeValue(address), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "address", new AttributeValue(address), false, PUT);
     }
 
     public static DatabaseAction updateAddTrainer(String id, String trainer, boolean ifWithCreate) throws Exception {
         if (ifWithCreate) {
-            return new UpdateDatabaseAction(id, itemType, "trainer", null, true, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "trainer", null, true, ADD);
         }
         else {
-            return new UpdateDatabaseAction(id, itemType, "trainer", new AttributeValue(trainer), false, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "trainer", new AttributeValue(trainer), false, ADD);
         }
 
     }
 
     public static DatabaseAction updateRemoveTrainer(String id, String trainer) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "trainer", new AttributeValue(trainer), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "trainer", new AttributeValue(trainer), false, DELETE);
     }
 
     public static DatabaseAction updateWeeklyHours(String id, String[] weeklyHours) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "weeklyHours", new AttributeValue(Arrays.asList(weeklyHours)),
-                false, "PUT");
+                false, PUT);
     }
 
     // TODO Consider going back to this
 //    public static DatabaseAction updateAddWeeklyHour(String id, String weeklyHour) throws Exception {
-//        return new UpdateDatabaseAction(id, itemType, "weekly_hours", new AttributeValue(weeklyHour), false, "ADD");
+//        return new UpdateDatabaseAction(id, itemType, "weekly_hours", new AttributeValue(weeklyHour), false, ADD);
 //    }
 //
 //    public static DatabaseAction updateRemoveWeeklyHour(String id, String weeklyHour) throws Exception {
@@ -158,24 +160,24 @@ public class GymDatabaseActionBuilder {
 //    }
 
     public static DatabaseAction updateAddVacationTime(String id, String vacationTime) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "vacationTimes", new AttributeValue(vacationTime), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "vacationTimes", new AttributeValue(vacationTime), false, ADD);
     }
 
     public static DatabaseAction updateRemoveVacationTime(String id, String vacationTime) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "vacationTimes", new AttributeValue(vacationTime), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "vacationTimes", new AttributeValue(vacationTime), false, DELETE);
     }
 
     public static DatabaseAction updateSessionCapacity(String id, String sessionCapacity) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "sessionCapacity", new AttributeValue(sessionCapacity), false,
-                "PUT");
+                PUT);
     }
 
     public static DatabaseAction updateGymType(String id, String gymType) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "gymType", new AttributeValue(gymType), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "gymType", new AttributeValue(gymType), false, PUT);
     }
 
     public static DatabaseAction updatePaymentSplit(String id, String paymentSplit) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "paymentSplit", new AttributeValue(paymentSplit), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "paymentSplit", new AttributeValue(paymentSplit), false, PUT);
     }
 
     public static DatabaseAction delete(String id) {

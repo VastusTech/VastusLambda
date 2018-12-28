@@ -22,10 +22,4 @@ public abstract class DatabaseAction {
 
     // This determines whether the ID will be given through item or through the CREATE statment
     boolean ifWithCreate;
-
-    public enum UpdateAction {
-        PUT,
-        ADD,
-        DELETE
-    }
 }

@@ -11,6 +11,8 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateInviteRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
+
 public class InviteDatabaseActionBuilder {
     final static private String itemType = "Invite";
 

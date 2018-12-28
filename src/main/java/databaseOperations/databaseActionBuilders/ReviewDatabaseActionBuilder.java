@@ -8,6 +8,8 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateReviewRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
+
 public class ReviewDatabaseActionBuilder {
     final static private String itemType = "Review";
 
@@ -29,7 +31,7 @@ public class ReviewDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateDescription(String id, String description) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "description", new AttributeValue(description), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "description", new AttributeValue(description), false, PUT);
     }
 
     public static DatabaseAction delete(String id) {

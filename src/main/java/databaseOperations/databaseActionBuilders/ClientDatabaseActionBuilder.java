@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
+
 public class ClientDatabaseActionBuilder {
     final static private String itemType = "Client";
 
@@ -35,21 +37,21 @@ public class ClientDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateAddTrainerFollowing(String id, String trainer) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "trainersFollowing", new AttributeValue(trainer), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "trainersFollowing", new AttributeValue(trainer), false, ADD);
     }
 
     public static DatabaseAction updateRemoveTrainerFollowing(String id, String trainer) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "trainersFollowing", new AttributeValue(trainer), false,
-                "DELETE");
+                DELETE);
     }
 
     public static DatabaseAction updateAddSubscription(String id, String subscription) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "subscriptions", new AttributeValue(subscription), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "subscriptions", new AttributeValue(subscription), false, ADD);
     }
 
     public static DatabaseAction updateRemoveSubscription(String id, String subscripion) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "subscriptions", new AttributeValue(subscripion), false,
-                "DELETE");
+                DELETE);
     }
 
     public static DatabaseAction delete(String id) {

@@ -8,6 +8,8 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateCommentRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
+
 public class CommentDatabaseActionBuilder {
     final static private String itemType = "Comment";
 
@@ -26,20 +28,20 @@ public class CommentDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateComment(String id, String comment) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "comment", new AttributeValue(comment), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "comment", new AttributeValue(comment), false, PUT);
     }
 
     public static DatabaseAction updateAddComment(String id, String comment, boolean ifWithCreate) throws Exception {
         if (ifWithCreate) {
-            return new UpdateDatabaseAction(id, itemType, "comments", null, true, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "comments", null, true, ADD);
         }
         else {
-            return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, ADD);
         }
     }
 
     public static DatabaseAction updateRemoveComment(String id, String comment) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, DELETE);
     }
 
     public static DatabaseAction delete(String id) {

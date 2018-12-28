@@ -7,6 +7,8 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
 
 import java.util.*;
 
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
+
 public class PostDatabaseActionBuilder {
     final static private String itemType = "Post";
 
@@ -44,52 +46,52 @@ public class PostDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateAccess(String id, String access) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "access", new AttributeValue(access), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "access", new AttributeValue(access), false, PUT);
     }
 
     public static DatabaseAction updateDescription(String id, String description) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "description", new AttributeValue(description), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "description", new AttributeValue(description), false, PUT);
     }
 
     public static DatabaseAction updateAddPicturePath(String id, String picturePath) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "picturePaths", new AttributeValue(picturePath), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "picturePaths", new AttributeValue(picturePath), false, ADD);
     }
 
     public static DatabaseAction updateRemovePicturePath(String id, String picturePath) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "picturePaths", new AttributeValue(picturePath), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "picturePaths", new AttributeValue(picturePath), false, DELETE);
     }
 
     public static DatabaseAction updateAddVideoPath(String id, String videoPath) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "videoPaths", new AttributeValue(videoPath), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "videoPaths", new AttributeValue(videoPath), false, ADD);
     }
 
     public static DatabaseAction updateRemoveVideoPath(String id, String videoPath) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "videoPaths", new AttributeValue(videoPath), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "videoPaths", new AttributeValue(videoPath), false, DELETE);
     }
 
     public static DatabaseAction updateAddLike(String id) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "likes", new AttributeValue().withN("1"), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "likes", new AttributeValue().withN("1"), false, ADD);
     }
 
     public static DatabaseAction updateRemoveLike(String id) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "likes", new AttributeValue().withN("1"), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "likes", new AttributeValue().withN("1"), false, DELETE);
     }
 
     public static DatabaseAction updateAddComment(String id, String comment, boolean ifWithCreate) throws Exception {
         if (ifWithCreate) {
-            return new UpdateDatabaseAction(id, itemType, "comments", null, true, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "comments", null, true, ADD);
         }
         else {
-            return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, ADD);
         }
     }
 
     public static DatabaseAction updateRemoveComment(String id, String comment) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "comments", new AttributeValue(comment), false, DELETE);
     }
 
     public static DatabaseAction updateGroup(String id, String group) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "group", new AttributeValue(group), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "group", new AttributeValue(group), false, PUT);
     }
 
     public static DatabaseAction delete(String id) {

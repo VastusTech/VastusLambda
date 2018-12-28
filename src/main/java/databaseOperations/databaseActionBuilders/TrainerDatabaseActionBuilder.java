@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
+
 public class TrainerDatabaseActionBuilder {
     final static private String itemType = "Trainer";
 
@@ -79,7 +81,7 @@ public class TrainerDatabaseActionBuilder {
 
     public static DatabaseAction updateAddAvailableTime(String id, String availableTime) throws Exception {
         TimeInterval timeInterval = new TimeInterval(availableTime);
-        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(availableTime), false, "ADD", new CheckHandler() {
+        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(availableTime), false, ADD, new CheckHandler() {
             @Override
             public String isViable(DatabaseObject newObject) throws Exception {
                 // Check to see if the available time intersects with any of the scheduled times
@@ -95,7 +97,7 @@ public class TrainerDatabaseActionBuilder {
 
     public static DatabaseAction updateRemoveAvailableTime(String id, String availableTime) throws Exception {
         TimeInterval timeInterval = new TimeInterval(availableTime);
-        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(availableTime), false, "DELETE", new CheckHandler() {
+        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(availableTime), false, DELETE, new CheckHandler() {
             @Override
             public String isViable(DatabaseObject newObject) throws Exception {
                 Trainer trainer = (Trainer)newObject;
@@ -111,42 +113,42 @@ public class TrainerDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateWorkoutSticker(String id, String sticker) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workoutSticker", new AttributeValue(sticker), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "workoutSticker", new AttributeValue(sticker), false, PUT);
     }
 
     public static DatabaseAction updatePreferredIntensity(String id, String intensity) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "preferredIntensity", new AttributeValue(intensity), false,
-                "PUT");
+                PUT);
     }
 
     public static DatabaseAction updateWorkoutCapacity(String id, String capacity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workoutCapacity", new AttributeValue(capacity), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "workoutCapacity", new AttributeValue(capacity), false, PUT);
     }
 
     public static DatabaseAction updateWorkoutPrice(String id, String price) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workoutPrice", new AttributeValue(price), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "workoutPrice", new AttributeValue(price), false, PUT);
     }
 
     public static DatabaseAction updateAddSubscriber(String id, String subscriber) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "subscribers", new AttributeValue(subscriber), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "subscribers", new AttributeValue(subscriber), false, ADD);
     }
 
     public static DatabaseAction updateRemoveSubscriber(String id, String subscriber) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "subscribers", new AttributeValue(subscriber), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "subscribers", new AttributeValue(subscriber), false, DELETE);
     }
 
     public static DatabaseAction updateSubscriptionPrice(String id, String price) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "subscriptionPrice", new AttributeValue(price), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "subscriptionPrice", new AttributeValue(price), false, PUT);
     }
 
     public static DatabaseAction updateAddCertification(String id, String certification) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "certifications", new AttributeValue(certification), false,
-                "ADD");
+                ADD);
     }
 
     public static DatabaseAction updateRemoveCertification(String id, String certification) throws Exception {
         return new UpdateDatabaseAction(id, itemType, "certifications", new AttributeValue(certification), false,
-                "DELETE");
+                DELETE);
     }
 
     public static DatabaseAction delete(String id) {

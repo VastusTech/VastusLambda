@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
+
 public class ChallengeDatabaseActionBuilder {
     private static final String itemType = "Challenge";
 
@@ -45,47 +47,47 @@ public class ChallengeDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateTitle(String id, String title) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "title", new AttributeValue(title), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "title", new AttributeValue(title), false, PUT);
     }
 
     public static DatabaseAction updateDescription(String id, String description) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "description", new AttributeValue(description), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "description", new AttributeValue(description), false, PUT);
     }
 
     public static DatabaseAction updateAddress(String id, String address) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "address", new AttributeValue(address), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "address", new AttributeValue(address), false, PUT);
     }
 
     public static DatabaseAction updateIfCompleted(String id, String ifCompleted) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "ifCompleted", new AttributeValue(ifCompleted), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "ifCompleted", new AttributeValue(ifCompleted), false, PUT);
     }
 
     public static DatabaseAction updateGoal(String id, String goal) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "goal", new AttributeValue(goal), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "goal", new AttributeValue(goal), false, PUT);
     }
 
     public static DatabaseAction updateDifficulty(String id, String difficulty) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "difficulty", new AttributeValue(difficulty), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "difficulty", new AttributeValue(difficulty), false, PUT);
     }
 
     public static DatabaseAction updateEndTime(String id, String endTime) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "endTime", new AttributeValue(endTime), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "endTime", new AttributeValue(endTime), false, PUT);
     }
 
     public static DatabaseAction updatePrize(String id, String prize) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "prize", new AttributeValue(prize), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "prize", new AttributeValue(prize), false, PUT);
     }
 
     public static DatabaseAction updateAccess(String id, String access) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "access", new AttributeValue(access), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "access", new AttributeValue(access), false, PUT);
     }
 
     public static DatabaseAction updateRestriction(String id, String restriction) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "restriction", new AttributeValue(restriction), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "restriction", new AttributeValue(restriction), false, PUT);
     }
 
     public static DatabaseAction updateAddMember(String id, String user, boolean ifAccepting) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(user), false, "ADD", new
+        return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(user), false, ADD, new
                 CheckHandler() {
                     @Override
                     public String isViable(DatabaseObject newObject) throws Exception {
@@ -131,19 +133,19 @@ public class ChallengeDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateRemoveMember(String id, String user) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(user), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "members", new AttributeValue(user), false, DELETE);
     }
 
     public static DatabaseAction updateAddInvitedMember(String id, String user) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "invitedMembers", new AttributeValue(user), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "invitedMembers", new AttributeValue(user), false, ADD);
     }
 
     public static DatabaseAction updateRemoveInvitedMember(String id, String user) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "invitedMembers", new AttributeValue(user), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "invitedMembers", new AttributeValue(user), false, DELETE);
     }
 
     public static DatabaseAction updateAddMemberRequest(String id, String user) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "memberRequests", new AttributeValue(user), false, "ADD", new CheckHandler() {
+        return new UpdateDatabaseAction(id, itemType, "memberRequests", new AttributeValue(user), false, ADD, new CheckHandler() {
             @Override
             public String isViable(DatabaseObject newObject) throws Exception {
                 Challenge challenge = (Challenge) newObject;
@@ -180,37 +182,37 @@ public class ChallengeDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateRemoveMemberRequest(String id, String user) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "memberRequests", new AttributeValue(user), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "memberRequests", new AttributeValue(user), false, DELETE);
     }
 
     public static DatabaseAction updateAddReceivedInvite(String id, String invite, boolean ifWithCreate) throws
             Exception {
         if (ifWithCreate) {
-            return new UpdateDatabaseAction(id, itemType, "receivedInvites", null, true, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "receivedInvites", null, true, ADD);
         }
         else {
-            return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite), false, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite), false, ADD);
         }
     }
 
     public static DatabaseAction updateRemoveReceivedInvite(String id, String invite) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "receivedInvites", new AttributeValue(invite), false, DELETE);
     }
 
     public static DatabaseAction updateCapacity(String id, String capacity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "capacity", new AttributeValue(capacity), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "capacity", new AttributeValue(capacity), false, PUT);
     }
 
     public static DatabaseAction updateAddTag(String id, String tag) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "tags", new AttributeValue(tag), false, "ADD");
+        return new UpdateDatabaseAction(id, itemType, "tags", new AttributeValue(tag), false, ADD);
     }
 
     public static DatabaseAction updateRemoveTag(String id, String tag) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "tags", new AttributeValue(tag), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "tags", new AttributeValue(tag), false, DELETE);
     }
 
     public static DatabaseAction updateWinner(String id, String winner) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "winner", new AttributeValue(winner), false, "PUT", new CheckHandler() {
+        return new UpdateDatabaseAction(id, itemType, "winner", new AttributeValue(winner), false, PUT, new CheckHandler() {
             @Override
             public String isViable(DatabaseObject newObject) throws Exception {
                 // Winner must be a member of the challenge, and the challenge must have at least started
@@ -236,15 +238,15 @@ public class ChallengeDatabaseActionBuilder {
 
     public static DatabaseAction updateAddEvent(String id, String event, boolean ifWithCreate) throws Exception {
         if (ifWithCreate) {
-            return new UpdateDatabaseAction(id, itemType, "events", null, true, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "events", null, true, ADD);
         }
         else {
-            return new UpdateDatabaseAction(id, itemType, "events", new AttributeValue(event), false, "ADD");
+            return new UpdateDatabaseAction(id, itemType, "events", new AttributeValue(event), false, ADD);
         }
     }
 
     public static DatabaseAction updateRemoveEvent(String id, String event) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "events", new AttributeValue(event), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "events", new AttributeValue(event), false, DELETE);
     }
 
     public static DatabaseAction updateAddSubmission(String id, String submission, boolean ifWithCreate) throws
@@ -256,7 +258,7 @@ public class ChallengeDatabaseActionBuilder {
         else {
             attributeValue = new AttributeValue(submission);
         }
-        return new UpdateDatabaseAction(id, itemType, "submissions", attributeValue, ifWithCreate, "ADD", new CheckHandler() {
+        return new UpdateDatabaseAction(id, itemType, "submissions", attributeValue, ifWithCreate, ADD, new CheckHandler() {
             @Override
             public String isViable(DatabaseObject newObject) throws Exception {
                 Challenge challenge = (Challenge)newObject;
@@ -269,11 +271,11 @@ public class ChallengeDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateRemoveSubmission(String id, String submission) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "submissions", new AttributeValue(submission), false, "DELETE");
+        return new UpdateDatabaseAction(id, itemType, "submissions", new AttributeValue(submission), false, DELETE);
     }
 
     public static DatabaseAction updateGroup(String id, String group) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "group", new AttributeValue(group), false, "PUT");
+        return new UpdateDatabaseAction(id, itemType, "group", new AttributeValue(group), false, PUT);
     }
 
     public static DatabaseAction delete(String id) {
