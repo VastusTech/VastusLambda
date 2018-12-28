@@ -17,6 +17,7 @@ public class Trainer extends User {
     public Set<String> followers;
     public Set<String> subscribers;
     public String subscriptionPrice;
+    public Set<String> certifications;
 
     Trainer(Item item) throws Exception {
         super(item);
@@ -33,6 +34,8 @@ public class Trainer extends User {
         this.subscribers = item.getStringSet("subscribers");
         if (subscribers == null) { this.subscribers = new HashSet<>(); }
         this.subscriptionPrice = item.getString("subscriptionPrice");
+        this.certifications = item.getStringSet("certifications");
+        if (certifications == null) { this.certifications = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

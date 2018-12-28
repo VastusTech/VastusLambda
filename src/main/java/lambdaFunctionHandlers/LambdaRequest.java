@@ -85,6 +85,7 @@ public class LambdaRequest {
         workoutPrice,
         followers,
         subscriptionPrice,
+        certifications,
         // Gym =============================
         address,
         trainers,
@@ -791,6 +792,15 @@ public class LambdaRequest {
                 case availableTimes:
                     if (itemType.equals("Trainer")) {
                         databaseActionCompiler.addAll(TrainerAddAvailableTime.getActions(fromID, id,
+                                attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
+                case certifications:
+                    if (itemType.equals("Trainer")) {
+                        databaseActionCompiler.addAll(TrainerAddCertification.getActions(fromID, id,
                                 attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +

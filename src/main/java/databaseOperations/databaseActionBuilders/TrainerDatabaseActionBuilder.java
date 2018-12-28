@@ -139,6 +139,16 @@ public class TrainerDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, "subscriptionPrice", new AttributeValue(price), false, "PUT");
     }
 
+    public static DatabaseAction updateAddCertification(String id, String certification) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "certifications", new AttributeValue(certification), false,
+                "ADD");
+    }
+
+    public static DatabaseAction updateRemoveCertification(String id, String certification) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, "certifications", new AttributeValue(certification), false,
+                "DELETE");
+    }
+
     public static DatabaseAction delete(String id) {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue(itemType));
