@@ -15,10 +15,14 @@ public class CreatePost {
     public static String handle(String fromID, CreatePostRequest createPostRequest) throws Exception {
         if (createPostRequest != null) {
             // Check required fields
-            if (createPostRequest.by != null && createPostRequest.description != null && createPostRequest
-                    .access != null) {
+            if (createPostRequest.by != null && createPostRequest.description != null) {
                 // Create the database action list for the transaction to complete
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
+
+                if (createPostRequest.access != null && !createPostRequest.access.equals("private") &&
+                        !createPostRequest.access.equals("public")) {
+                    throw new Exception("The access must be either \"public\" or \"private\"!!!");
+                }
 
                 // Create post (with createPostRequest)
                 databaseActionCompiler.add(PostDatabaseActionBuilder.create(createPostRequest));

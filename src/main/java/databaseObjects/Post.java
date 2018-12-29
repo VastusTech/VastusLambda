@@ -42,6 +42,7 @@ public class Post extends DatabaseObject {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Post"));
+        item.put("access", new AttributeValue("private"));
         item.put("likes", new AttributeValue().withN("0"));
         return item;
     }

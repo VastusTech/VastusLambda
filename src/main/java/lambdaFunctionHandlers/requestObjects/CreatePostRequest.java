@@ -4,9 +4,9 @@ public class CreatePostRequest {
     // Required
     public String by;
     public String description;
-    public String access;
 
     // Optional
+    public String access;
     public String postType;
     public String about;
     public String[] picturePaths;

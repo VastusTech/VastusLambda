@@ -17,7 +17,7 @@ public class PostDatabaseActionBuilder {
         Map<String, AttributeValue> item = Post.getEmptyItem();
         item.put("by", new AttributeValue(createPostRequest.by));
         item.put("description", new AttributeValue(createPostRequest.description));
-        item.put("access", new AttributeValue(createPostRequest.access));
+        if (createPostRequest.access != null) { item.put("access", new AttributeValue(createPostRequest.access)); }
         if (createPostRequest.postType != null) { item.put("postType", new AttributeValue(createPostRequest.postType)); }
         if (createPostRequest.about != null) { item.put("about", new AttributeValue(createPostRequest.about)); }
         if (createPostRequest.picturePaths != null) { item.put("picturePaths", new AttributeValue(Arrays.asList
