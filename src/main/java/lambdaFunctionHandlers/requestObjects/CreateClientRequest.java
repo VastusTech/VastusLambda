@@ -11,10 +11,11 @@ public class CreateClientRequest {
     public String gender;
     public String birthday;
     public String stripeID;
+    public String federatedID;
     public String bio;
 
     public CreateClientRequest(String name, String gender, String birthday, String email, String username, String
-            bio, String stripeID) {
+            bio, String stripeID, String federatedID) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
@@ -22,6 +23,7 @@ public class CreateClientRequest {
         this.username = username;
         this.bio = bio;
         this.stripeID = stripeID;
+        this.federatedID = federatedID;
     }
 
     public CreateClientRequest() {}
@@ -80,5 +82,13 @@ public class CreateClientRequest {
 
     public void setStripeID(String stripeID) {
         this.stripeID = stripeID;
+    }
+
+    public String getFederatedID() {
+        return federatedID;
+    }
+
+    public void setFederatedID(String federatedID) {
+        this.federatedID = federatedID;
     }
 }

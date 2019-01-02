@@ -12,6 +12,7 @@ public class CreateTrainerRequest {
     public String birthday;
     public String bio;
     public String stripeID;
+    public String federatedID;
     public String workoutCapacity;
     public String workoutPrice;
     public String workoutSticker;
@@ -19,14 +20,15 @@ public class CreateTrainerRequest {
     public String gym;
 
     public CreateTrainerRequest(String name, String gender, String birthday, String email, String username, String
-            stripeID, String gym, String workoutSticker, String preferredIntensity, String bio, String workoutCapacity,
-                                String workoutPrice) {
+            stripeID, String federatedID, String gym, String workoutSticker, String preferredIntensity, String bio,
+                                String workoutCapacity, String workoutPrice) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.email = email;
         this.username = username;
         this.stripeID = stripeID;
+        this.federatedID = federatedID;
         this.gym = gym;
         this.workoutSticker = workoutSticker;
         this.preferredIntensity = preferredIntensity;
@@ -83,6 +85,14 @@ public class CreateTrainerRequest {
 
     public void setStripeID(String stripeID) {
         this.stripeID = stripeID;
+    }
+
+    public String getFederatedID() {
+        return federatedID;
+    }
+
+    public void setFederatedID(String federatedID) {
+        this.federatedID = federatedID;
     }
 
     public String getGym() {

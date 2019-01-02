@@ -29,6 +29,8 @@ public class TrainerDatabaseActionBuilder {
                 .birthday)); }
         if (createTrainerRequest.stripeID != null) { item.put("stripeID", new AttributeValue(createTrainerRequest
                 .stripeID)); }
+        if (createTrainerRequest.federatedID != null) { item.put("federatedID", new AttributeValue(createTrainerRequest
+                .federatedID)); }
         if (createTrainerRequest.gym != null) { item.put("gym", new AttributeValue(createTrainerRequest.gym)); }
         if (createTrainerRequest.workoutSticker != null) { item.put("workoutSticker", new AttributeValue
                 (createTrainerRequest.workoutSticker)); }

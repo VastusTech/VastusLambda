@@ -16,6 +16,7 @@ abstract public class User extends DatabaseObject{
     public int age;
     public String email;
     public String username;
+    public String federatedID;
     public String stripeID;
     public String profileImagePath;
     public Set<String> profileImagePaths;
@@ -56,6 +57,7 @@ abstract public class User extends DatabaseObject{
         this.age = getAgeFromBirthday(birthday);
         this.email = item.getString("email");
         this.username = item.getString("username");
+        this.federatedID = item.getString("federatedID");
         this.stripeID = item.getString("stripeID");
         this.profileImagePath = item.getString("profileImagePath");
         this.profileImagePaths = item.getStringSet("profileImagePaths");

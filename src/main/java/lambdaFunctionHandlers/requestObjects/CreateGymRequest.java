@@ -12,19 +12,22 @@ public class CreateGymRequest {
     // Optional
     public String foundingDay;
     public String stripeID;
+    public String federatedID;
     public String gymType;
     public String paymentSplit;
     public String[] weeklyHours;
     public String bio;
 
-    public CreateGymRequest(String name, String email, String username, String foundingDay, String stripeID, String
-            bio, String address, String[] weeklyHours, String sessionCapacity, String gymType, String paymentSplit) {
+    public CreateGymRequest(String name, String email, String username, String foundingDay, String stripeID,
+                            String federatedID, String bio, String address, String[] weeklyHours, String sessionCapacity,
+                            String gymType, String paymentSplit) {
         this.name = name;
         this.email = email;
         this.username = username;
         this.foundingDay = foundingDay;
         this.bio = bio;
         this.stripeID = stripeID;
+        this.federatedID = federatedID;
         this.address = address;
         this.weeklyHours = weeklyHours;
         this.sessionCapacity = sessionCapacity;
@@ -80,6 +83,14 @@ public class CreateGymRequest {
 
     public void setStripeID(String stripeID) {
         this.stripeID = stripeID;
+    }
+
+    public String getFederatedID() {
+        return federatedID;
+    }
+
+    public void setFederatedID(String federatedID) {
+        this.federatedID = federatedID;
     }
 
     public String getAddress() {

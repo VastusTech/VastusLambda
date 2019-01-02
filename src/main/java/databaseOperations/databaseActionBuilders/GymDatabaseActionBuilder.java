@@ -27,6 +27,8 @@ public class GymDatabaseActionBuilder {
         if (createGymRequest.foundingDay != null) { item.put("birthday", new AttributeValue(createGymRequest
                 .foundingDay)); }
         if (createGymRequest.stripeID != null) { item.put("stripeID", new AttributeValue(createGymRequest.stripeID)); }
+        if (createGymRequest.federatedID != null) { item.put("federatedID", new AttributeValue(createGymRequest
+                .federatedID)); }
         if (createGymRequest.bio != null) { item.put("bio", new AttributeValue(createGymRequest.bio)); }
         if (createGymRequest.weeklyHours != null) { item.put("weeklyHours", new AttributeValue(Arrays.asList
                 (createGymRequest.weeklyHours))); }

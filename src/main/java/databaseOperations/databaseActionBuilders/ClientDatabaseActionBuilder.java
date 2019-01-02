@@ -28,6 +28,8 @@ public class ClientDatabaseActionBuilder {
         if (createClientRequest.bio != null) { item.put("bio", new AttributeValue(createClientRequest.bio)); }
         if (createClientRequest.stripeID != null) { item.put("stripeID", new AttributeValue(createClientRequest
                 .stripeID)); }
+        if (createClientRequest.federatedID != null) { item.put("federatedID", new AttributeValue(createClientRequest
+                .federatedID)); }
         return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {

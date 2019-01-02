@@ -9,14 +9,17 @@ public class CreateSponsorRequest {
     // Optional
     public String birthday;
     public String stripeID;
+    public String federatedID;
     public String bio;
 
-    public CreateSponsorRequest(String name, String gender, String birthday, String email, String username, String stripeID, String bio) {
+    public CreateSponsorRequest(String name, String gender, String birthday, String email, String username,
+                                String stripeID, String federatedID, String bio) {
         this.name = name;
         this.birthday = birthday;
         this.email = email;
         this.username = username;
         this.stripeID = stripeID;
+        this.federatedID = federatedID;
         this.bio = bio;
     }
 
@@ -60,6 +63,14 @@ public class CreateSponsorRequest {
 
     public void setStripeID(String stripeID) {
         this.stripeID = stripeID;
+    }
+
+    public String getFederatedID() {
+        return federatedID;
+    }
+
+    public void setFederatedID(String federatedID) {
+        this.federatedID = federatedID;
     }
 
     public String getBio() {

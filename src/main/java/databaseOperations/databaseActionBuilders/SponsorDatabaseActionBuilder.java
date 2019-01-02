@@ -22,6 +22,8 @@ public class SponsorDatabaseActionBuilder {
         if (createSponsorRequest.bio != null) { item.put("bio", new AttributeValue(createSponsorRequest.bio)); }
         if (createSponsorRequest.stripeID != null) { item.put("stripeID", new AttributeValue(createSponsorRequest
                 .stripeID)); }
+        if (createSponsorRequest.federatedID != null) { item.put("federatedID", new AttributeValue(createSponsorRequest
+                .federatedID)); }
         return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
