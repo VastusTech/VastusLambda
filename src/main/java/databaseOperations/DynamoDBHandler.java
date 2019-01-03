@@ -19,10 +19,10 @@ public class DynamoDBHandler {
     // Singleton Pattern!
     private static DynamoDBHandler instance;
 
-    String tableName;
-    TransactionManager txManager;
-    AmazonDynamoDB client;
-    Table table;
+    private String tableName;
+    private TransactionManager txManager;
+    public AmazonDynamoDB client;
+    private Table table;
 
     // Used for the singleton pattern!
     static public DynamoDBHandler getInstance() throws Exception {

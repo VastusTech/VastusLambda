@@ -21,6 +21,7 @@ public class Constants {
 
     // Access Materials
     public static String databaseTableName = System.getenv("databaseTableName");
+    public static String firebaseTokenTableName = System.getenv("firebaseTokenTableName");
     public static String storageBucketName = System.getenv("storageBucketName");
 
     // Potential usage????

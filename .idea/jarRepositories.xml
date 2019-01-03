@@ -16,5 +16,10 @@
       <option name="name" value="2f989c8d-15bd-4735-98e1-803fde68a6b1" />
       <option name="url" value="https://jcenter.bintray.com/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="063aa14d-935a-4411-8c47-201219a3f091" />
+      <option name="name" value="063aa14d-935a-4411-8c47-201219a3f091" />
+      <option name="url" value="https://maven.google.com/" />
+    </remote-repository>
   </component>
 </project>

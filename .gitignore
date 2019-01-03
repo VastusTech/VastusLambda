@@ -68,3 +68,6 @@ fabric.properties
 
 # For Maven created jars
 target/
+
+# For sensitive secret key information
+src/main/resources/firebaseSecretServiceAccountKey.json

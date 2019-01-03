@@ -48,9 +48,9 @@
       <version>1.11.413</version>
     </dependency>
     <dependency>
-      <groupId>io.ably</groupId>
-      <artifactId>ably-java</artifactId>
-      <version>1.0.8</version>
+      <groupId>com.google.firebase</groupId>
+      <artifactId>firebase-admin</artifactId>
+      <version>6.6.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
