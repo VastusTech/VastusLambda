@@ -7,6 +7,10 @@ import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.MessageDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateMessageRequest;
 
+import java.util.List;
+
+import static main.java.databaseObjects.Message.getNotificationIDsFromBoard;
+
 public class CreateMessage {
     public static String handle(String fromID, CreateMessageRequest createMessageRequest) throws Exception {
         if (createMessageRequest != null) {
@@ -35,6 +39,10 @@ public class CreateMessage {
                 databaseActionCompiler.add(MessageDatabaseActionBuilder.create(createMessageRequest));
 
                 // Send a Firebase message!
+                List<String> notificationIDs = Message.getNotificationIDsFromBoard(createMessageRequest.board);
+                for (String id : Message.getNotificationIDsFromBoard(createMessageRequest.board)) {
+                    databaseActionCompiler.addMessage(id, "messageNotification", "Received a message!");
+                }
 //                databaseActionCompiler.addMessage(createMessageRequest.to, "inviteNotification", "Received an invite!");
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);

@@ -76,4 +76,9 @@ public class FirebaseHandler {
         // Response is a message ID string.
         Constants.debugLog("Successfully sent message: " + response);
     }
+
+    public enum NotificationType {
+        inviteNotification,
+        messageNotification
+    }
 }
