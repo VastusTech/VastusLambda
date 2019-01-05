@@ -56,13 +56,10 @@ public class Trainer extends User {
 
     // TODO Implement cache system here again?
     public static Trainer readTrainer(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Trainer"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Trainer) read(tableName, getPrimaryKey("Trainer", id));
     }
 
-    public static Trainer queryTrainer(String username) throws Exception {
-        return DynamoDBHandler.getInstance().usernameQuery(username, "Trainer");
-    }
+//    public static Trainer queryTrainer(String username) throws Exception {
+//        return DynamoDBHandler.getInstance().usernameQuery(username, "Trainer");
+//    }
 }

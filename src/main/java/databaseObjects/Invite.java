@@ -31,10 +31,7 @@ public class Invite extends DatabaseObject {
 
     // TODO Implement cache system here again?
     public static Invite readInvite(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Invite"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Invite) read(tableName, getPrimaryKey("Invite", id));
     }
 
     public enum InviteType {

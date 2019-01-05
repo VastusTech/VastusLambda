@@ -26,13 +26,6 @@ public class Client extends User {
 
     // TODO Implement cache system here again?
     public static Client readClient(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Client"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
-    }
-
-    public static Client queryClient(String username) throws Exception {
-        return DynamoDBHandler.getInstance().usernameQuery(username, "Client");
+        return (Client) read(tableName, getPrimaryKey("Client", id));
     }
 }

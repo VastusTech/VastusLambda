@@ -63,9 +63,6 @@ public class Event extends DatabaseObject {
     }
 
     public static Event readEvent(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("id", new AttributeValue(id));
-        key.put("item_type", new AttributeValue("Event"));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Event) read(tableName, getPrimaryKey("Event", id));
     }
 }

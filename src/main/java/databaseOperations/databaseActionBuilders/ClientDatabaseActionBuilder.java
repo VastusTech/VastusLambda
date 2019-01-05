@@ -1,5 +1,6 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
+import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseObjects.Client;
 import main.java.databaseObjects.DatabaseObject;
@@ -16,6 +17,10 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 public class ClientDatabaseActionBuilder {
     final static private String itemType = "Client";
 
+    private static PrimaryKey getPrimaryKey(String id) {
+        return new PrimaryKey("item_type", itemType, "id", id);
+    }
+
     public static DatabaseAction create(CreateClientRequest createClientRequest) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Client.getEmptyItem();
@@ -30,7 +35,7 @@ public class ClientDatabaseActionBuilder {
                 .stripeID)); }
         if (createClientRequest.federatedID != null) { item.put("federatedID", new AttributeValue(createClientRequest
                 .federatedID)); }
-        return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;
@@ -39,27 +44,24 @@ public class ClientDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateAddTrainerFollowing(String id, String trainer) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "trainersFollowing", new AttributeValue(trainer), false, ADD);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "trainersFollowing", new AttributeValue(trainer), false, ADD);
     }
 
     public static DatabaseAction updateRemoveTrainerFollowing(String id, String trainer) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "trainersFollowing", new AttributeValue(trainer), false,
+        return new UpdateDatabaseAction(getPrimaryKey(id), "trainersFollowing", new AttributeValue(trainer), false,
                 DELETE);
     }
 
     public static DatabaseAction updateAddSubscription(String id, String subscription) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "subscriptions", new AttributeValue(subscription), false, ADD);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "subscriptions", new AttributeValue(subscription), false, ADD);
     }
 
     public static DatabaseAction updateRemoveSubscription(String id, String subscripion) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "subscriptions", new AttributeValue(subscripion), false,
+        return new UpdateDatabaseAction(getPrimaryKey(id), "subscriptions", new AttributeValue(subscripion), false,
                 DELETE);
     }
 
     public static DatabaseAction delete(String id) {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue(itemType));
-        key.put("id", new AttributeValue(id));
-        return new DeleteDatabaseAction(key);
+        return new DeleteDatabaseAction(itemType, getPrimaryKey(id));
     }
 }

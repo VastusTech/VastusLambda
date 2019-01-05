@@ -3,6 +3,7 @@ package main.java.databaseOperations;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import main.java.Logic.Constants;
+import main.java.databaseObjects.DatabaseItem;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.notifications.FirebaseHandler;
 
@@ -127,9 +128,9 @@ public class DatabaseActionCompiler {
             updateUpdateItem(intoDatabaseAction.updateItem, fromDatabaseAction.updateItem);
             intoDatabaseAction.checkHandler = new CheckHandler() {
                 @Override
-                public String isViable(DatabaseObject newObject) throws Exception {
-                    String isViable1 = intoDatabaseAction.checkHandler.isViable(newObject);
-                    String isViable2 = fromDatabaseAction.checkHandler.isViable(newObject);
+                public String isViable(DatabaseItem newItem) throws Exception {
+                    String isViable1 = intoDatabaseAction.checkHandler.isViable(newItem);
+                    String isViable2 = fromDatabaseAction.checkHandler.isViable(newItem);
                     if (isViable1 != null && isViable2 != null) {
                         return isViable1 + " AND " + isViable2;
                     }

@@ -1,5 +1,6 @@
 package main.java.databaseOperations;
 
+import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import main.java.Logic.Constants;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -19,10 +20,11 @@ public class DynamoDBHandler {
     // Singleton Pattern!
     private static DynamoDBHandler instance;
 
-    private String tableName;
     private TransactionManager txManager;
     public AmazonDynamoDB client;
-    private Table table;
+    private Map<String, Table> tables;
+    private Table databaseTable;
+    private Table messageTable;
 
     // Used for the singleton pattern!
     static public DynamoDBHandler getInstance() throws Exception {
@@ -33,8 +35,7 @@ public class DynamoDBHandler {
     }
 
     private DynamoDBHandler() throws Exception {
-        this.tableName = Constants.databaseTableName;
-        // TODO AWS CREDENTIALS GO HERE?
+        // AWS CREDENTIALS GO HERE
         client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 
         long waitTimeSeconds = 10 * 60;
@@ -44,7 +45,13 @@ public class DynamoDBHandler {
 
         txManager = new TransactionManager(client, "Transactions", "TransactionImages");
 
-        table = new Table(client, tableName);
+        tables = new HashMap<>();
+        databaseTable = new Table(client, Constants.databaseTableName);
+        messageTable = new Table(client, Constants.messageTableName);
+        tables.put(Constants.databaseTableName, databaseTable);
+        tables.put(Constants.messageTableName, messageTable);
+//        tables.put(Constants.databaseTableName, new Table(client, Constants.databaseTableName));
+//        tables.put(Constants.messageTableName, new Table(client, Constants.messageTableName));
     }
 
     /*
@@ -66,7 +73,7 @@ public class DynamoDBHandler {
                 case CREATE:
                     try {
                         // Get the ID!
-                        String id = getNewID(databaseAction.item.get("item_type").getS());
+                        String id = getNewID(databaseAction.itemType);
                         databaseAction.item.put("id", new AttributeValue(id));
                         databaseAction.item.put("time_created", new AttributeValue(new DateTime().toString()));
                         ((CreateDatabaseAction)databaseAction).updateWithIDHandler.updateWithID(databaseAction.item, id);
@@ -82,7 +89,8 @@ public class DynamoDBHandler {
 
                         Constants.debugLog("Creating item with item: " + databaseAction.item);
 
-                        transaction.putItem(new PutItemRequest().withTableName(tableName).withItem(databaseAction.item));
+                        transaction.putItem(new PutItemRequest().withTableName(databaseAction.getTableName()).withItem
+                                (databaseAction.item));
                         returnString = id;
                     }
                     catch (Exception e) {
@@ -106,8 +114,8 @@ public class DynamoDBHandler {
                         }
 
                         // This updates the object and the marker
-                        transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
-                                (databaseAction.item).withAttributeUpdates(updateItem));
+                        transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName()).withKey
+                                (databaseAction.getKey()).withAttributeUpdates(updateItem));
 
                         // This updates the marker
                         //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
@@ -122,10 +130,9 @@ public class DynamoDBHandler {
                 case UPDATESAFE:
                     try {
                         // This is the key for getting the item
-                        Map<String, AttributeValue> key = new HashMap<>();
-                        key.put("item_type", databaseAction.item.get("item_type"));
-                        key.put("id", databaseAction.item.get("id"));
-
+//                        Map<String, AttributeValue> key = new HashMap<>();
+//                        key.put("item_type", databaseAction.item.get("item_type"));
+//                        key.put("id", databaseAction.item.get("id"));
 
                         // This is the marker conditional statement
                         // String conditionalExpression = "#mark = :mark";
@@ -143,18 +150,18 @@ public class DynamoDBHandler {
                         boolean ifFinished = false;
                         while (!ifFinished) {
                             // Read and check the expression
-                            DatabaseObject object = readItem(key);
+                            DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
 
                             // Use the checkHandler
-                            String errorMessage = databaseAction.checkHandler.isViable(object);
+                            String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
                             if (errorMessage == null) {
                                 // Put the newly read marker value into the conditional statement
                                 // conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
                                 try {
                                     // Try to update the item and the marker with the conditional check
-                                    transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
-                                            (databaseAction.item).withAttributeUpdates(updateItem));
+                                    transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName())
+                                            .withKey(databaseAction.getKey()).withAttributeUpdates(updateItem));
 
                                             /* TRANSACTIONS CONDITIONS NOT SUPPORTED
                                             .withConditionExpression(conditionalExpression).withExpressionAttributeNames
@@ -187,8 +194,8 @@ public class DynamoDBHandler {
                 case DELETE:
                     try {
                         // Delete the item
-                        transaction.deleteItem(new DeleteItemRequest().withTableName(tableName).withKey
-                                (databaseAction.item));
+                        transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName()).withKey
+                                (databaseAction.getKey()));
                     }
                     catch (Exception e) {
                         transaction.rollback();
@@ -202,9 +209,9 @@ public class DynamoDBHandler {
 
                     try {
                         // This allows us to get the key
-                        Map<String, AttributeValue> key = new HashMap<>();
-                        key.put("item_type", databaseAction.item.get("item_type"));
-                        key.put("id", databaseAction.item.get("id"));
+//                        Map<String, AttributeValue> key = new HashMap<>();
+//                        key.put("item_type", databaseAction.item.get("item_type"));
+//                        key.put("id", databaseAction.item.get("id"));
 
                         // This is the marker conditional statement
 //                        String conditionalExpression = "#mark = :mark";
@@ -214,16 +221,16 @@ public class DynamoDBHandler {
 
                         boolean ifFinished = false;
                         while (!ifFinished) {
-                            DatabaseObject object = readItem(key);
+                            DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
                             // Perform the checkHandler check
-                            String errorMessage = databaseAction.checkHandler.isViable(object);
+                            String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
                             if (errorMessage == null) {
 //                                conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
                                 try {
                                     // try to delete the item
-                                    transaction.deleteItem(new DeleteItemRequest().withTableName(tableName).withKey
-                                            (databaseAction.item));
+                                    transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName())
+                                            .withKey(databaseAction.getKey()));
 
                                             /* CONDITIONS NOT SUPPORTED
                                             .withConditionExpression(conditionalExpression)
@@ -305,7 +312,7 @@ public class DynamoDBHandler {
         while (!ifFound) {
             id = generateRandomID(itemType);
             // TODO Does it just return null if not found?
-            if (table.getItem("item_type", itemType, "id", id) == null) {
+            if (databaseTable.getItem("item_type", itemType, "id", id) == null) {
                 ifFound = true;
             }
         }
@@ -327,69 +334,65 @@ public class DynamoDBHandler {
         return prefix + idNum;
     }
 
-    public <T extends DatabaseObject> T readItem(Map<String, AttributeValue> key) throws Exception {
-        String id = key.get("id").getS();
-        String itemType = key.get("item_type").getS();
-        Constants.debugLog("Reading item: id = " + id + ", item_type = " + itemType + "!");
-        Item item = table.getItem("item_type", itemType, "id", id);
+    public DatabaseItem readItem(String tableName, PrimaryKey primaryKey) throws Exception {
+        Item item = tables.get(tableName).getItem(primaryKey);
+        Constants.debugLog("Reading item with PrimaryKey = " + primaryKey.toString());
 
         // Check is the item didn't return anything
         if (item == null) {
-            throw new Exception("No " + itemType + " in the database with ID = " + id + "!!");
+            throw new Exception("No item in the database with PrimaryKey = " + primaryKey.toString());
         }
-
-        DatabaseObject object = DatabaseObjectBuilder.build(item);
-        return (T)object;
+        return DatabaseItemBuilder.build(item);
     }
 
     // TODO Way to differentiate between no user showed up and error?
     // TODO YES by throwing an exception!
-    public <T extends DatabaseObject> T usernameQuery(String username, String itemType) throws Exception {
-        Index index = table.getIndex("item_type-username-index");
-
-        HashMap<String, String> nameMap = new HashMap<>();
-        nameMap.put("#usr", "username");
-        nameMap.put("#type", "item_type");
-
-        HashMap<String, Object> valueMap = new HashMap<>();
-        valueMap.put(":usr", username);
-        valueMap.put(":type", itemType);
-
-        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type AND #usr = :usr")
-                .withNameMap(nameMap).withValueMap(valueMap);
-
-        Item resultItem = null;
-
-        try {
-            ItemCollection<QueryOutcome> items = index.query(querySpec);
-            Iterator<Item> iterator = items.iterator();
-            int i = 0;
-            if (!iterator.hasNext()) {
-                // This means that nothing showed up in the query,
-                return null;
-            }
-            while (iterator.hasNext()) {
-                if (i > 0) {
-                    // This means that the query came up with more than one result
-                    throw new Exception("More than one item has " + username + " as their username!!!!");
-                }
-                resultItem = iterator.next();
-                i++;
-            }
-        }
-        catch (Exception e) {
-            throw new Exception("Error while username querying. Error: " + e.getLocalizedMessage());
-        }
-
-        if (resultItem != null) {
-            return (T)DatabaseObjectBuilder.build(resultItem);
-        }
-
-        return null;
-    }
+//    public <T extends DatabaseObject> T usernameQuery(String username, String itemType) throws Exception {
+//        Index index = databaseTable.getIndex("item_type-username-index");
+//
+//        HashMap<String, String> nameMap = new HashMap<>();
+//        nameMap.put("#usr", "username");
+//        nameMap.put("#type", "item_type");
+//
+//        HashMap<String, Object> valueMap = new HashMap<>();
+//        valueMap.put(":usr", username);
+//        valueMap.put(":type", itemType);
+//
+//        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type AND #usr = :usr")
+//                .withNameMap(nameMap).withValueMap(valueMap);
+//
+//        Item resultItem = null;
+//
+//        try {
+//            ItemCollection<QueryOutcome> items = index.query(querySpec);
+//            Iterator<Item> iterator = items.iterator();
+//            int i = 0;
+//            if (!iterator.hasNext()) {
+//                // This means that nothing showed up in the query,
+//                return null;
+//            }
+//            while (iterator.hasNext()) {
+//                if (i > 0) {
+//                    // This means that the query came up with more than one result
+//                    throw new Exception("More than one item has " + username + " as their username!!!!");
+//                }
+//                resultItem = iterator.next();
+//                i++;
+//            }
+//        }
+//        catch (Exception e) {
+//            throw new Exception("Error while username querying. Error: " + e.getLocalizedMessage());
+//        }
+//
+//        if (resultItem != null) {
+//            return (T)DatabaseItemBuilder.build(resultItem);
+//        }
+//
+//        return null;
+//    }
 
     private boolean usernameInDatabase(String username, String item_type) {
-        Index index = table.getIndex("item_type-username-index");
+        Index index = databaseTable.getIndex("item_type-username-index");
         HashMap<String, String> nameMap = new HashMap<>();
         nameMap.put("#usr", "username");
         nameMap.put("#type", "item_type");
@@ -405,24 +408,24 @@ public class DynamoDBHandler {
     }
 
     // TODO We usually don't want to send out a null variable without throwing an exception
-    public <T extends DatabaseObject> List<T> getAll(String itemType) throws Exception {
-        HashMap<String, String> nameMap = new HashMap<>();
-        nameMap.put("#type", "item_type");
-
-        HashMap<String, Object> valueMap = new HashMap<>();
-        valueMap.put(":type", itemType);
-
-        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type").withNameMap(nameMap)
-                .withValueMap(valueMap);
-
-        ItemCollection<QueryOutcome> items = table.query(querySpec);
-        Iterator<Item> iterator = items.iterator();
-        List<T> allList = new ArrayList<>();
-        while (iterator.hasNext()) {
-            Item item = iterator.next();
-            allList.add((T)DatabaseObjectBuilder.build(item));
-        }
-
-        return allList;
-    }
+//    public <T extends DatabaseObject> List<T> getAll(String itemType) throws Exception {
+//        HashMap<String, String> nameMap = new HashMap<>();
+//        nameMap.put("#type", "item_type");
+//
+//        HashMap<String, Object> valueMap = new HashMap<>();
+//        valueMap.put(":type", itemType);
+//
+//        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type").withNameMap(nameMap)
+//                .withValueMap(valueMap);
+//
+//        ItemCollection<QueryOutcome> items = databaseTable.query(querySpec);
+//        Iterator<Item> iterator = items.iterator();
+//        List<T> allList = new ArrayList<>();
+//        while (iterator.hasNext()) {
+//            Item item = iterator.next();
+//            allList.add((T)DatabaseItemBuilder.build(item));
+//        }
+//
+//        return allList;
+//    }
 }

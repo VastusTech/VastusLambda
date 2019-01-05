@@ -131,9 +131,6 @@ abstract public class User extends DatabaseObject{
     }
 
     public static User readUser(String id, String itemType) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue(itemType));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (User) read(tableName, getPrimaryKey(itemType, id));
     }
 }

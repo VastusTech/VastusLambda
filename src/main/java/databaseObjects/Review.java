@@ -45,9 +45,6 @@ public class Review extends DatabaseObject {
 
     // TODO Implement cache system here again?
     public static Review readReview(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Review"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Review) read(tableName, getPrimaryKey("Review", id));
     }
 }

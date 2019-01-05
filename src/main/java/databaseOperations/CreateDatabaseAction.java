@@ -8,7 +8,8 @@ import java.util.Map;
 public class CreateDatabaseAction extends DatabaseAction {
     public UpdateWithIDHandler updateWithIDHandler;
 
-    public CreateDatabaseAction(Map<String, AttributeValue> item, UpdateWithIDHandler updateWithIDHandler) {
+    public CreateDatabaseAction(String itemType, Map<String, AttributeValue> item, UpdateWithIDHandler
+            updateWithIDHandler) {
         action = DBAction.CREATE;
         this.item = new HashMap<>();
         for (Map.Entry<String, AttributeValue> entry: item.entrySet()) {

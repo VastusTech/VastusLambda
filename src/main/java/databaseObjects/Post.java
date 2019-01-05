@@ -49,9 +49,6 @@ public class Post extends DatabaseObject {
 
     // TODO Implement cache system here again?
     public static Post readPost(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Post"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Post) read(tableName, getPrimaryKey("Post", id));
     }
 }

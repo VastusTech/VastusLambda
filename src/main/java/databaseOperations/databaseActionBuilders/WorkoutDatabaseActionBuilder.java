@@ -1,6 +1,8 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
+import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import main.java.databaseObjects.DatabaseItem;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.Workout;
 import main.java.databaseOperations.*;
@@ -15,6 +17,10 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 public class WorkoutDatabaseActionBuilder {
     final static private String itemType = "Workout";
 
+    static private PrimaryKey getPrimaryKey(String id) {
+        return new PrimaryKey("item_type", itemType, "id", id);
+    }
+
     public static DatabaseAction create(CreateWorkoutRequest createWorkoutRequest) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Workout.getEmptyItem();
@@ -27,7 +33,7 @@ public class WorkoutDatabaseActionBuilder {
         item.put("sticker", new AttributeValue(createWorkoutRequest.sticker));
         item.put("intensity", new AttributeValue(createWorkoutRequest.intensity));
         item.put("price", new AttributeValue(createWorkoutRequest.price));
-        return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;
@@ -43,15 +49,15 @@ public class WorkoutDatabaseActionBuilder {
 //        return null;
 //    }
     public static DatabaseAction updateIfCompleted(String id, String ifCompleted) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "ifCompleted", new AttributeValue(ifCompleted), false, PUT);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "ifCompleted", new AttributeValue(ifCompleted), false, PUT);
     }
 
     public static DatabaseAction updateAddClient(String id, String client) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "clients", new AttributeValue(client), false, ADD, new CheckHandler() {
+        return new UpdateDatabaseAction(getPrimaryKey(id), "clients", new AttributeValue(client), false, ADD, new CheckHandler() {
             @Override
-            public String isViable(DatabaseObject newObject) throws Exception {
+            public String isViable(DatabaseItem newItem) throws Exception {
                 // The capacity for the workout must not be filled up yet.
-                Workout workout = (Workout)newObject;
+                Workout workout = (Workout) newItem;
                 if (workout.capacity > workout.clients.size()) {
                     return null;
                 }
@@ -63,7 +69,7 @@ public class WorkoutDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateRemoveClient(String id, String client) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "clients", new AttributeValue(client), false, DELETE);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "clients", new AttributeValue(client), false, DELETE);
     }
 
 //    public static DatabaseAction updateCapacity() {
@@ -83,19 +89,19 @@ public class WorkoutDatabaseActionBuilder {
 //    }
 
     public static DatabaseAction updateAddMissingReview(String id, String user) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "missingReviews", new AttributeValue(user), false, ADD);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "missingReviews", new AttributeValue(user), false, ADD);
     }
 
     public static DatabaseAction updateRemoveMissingReview(String id, String user, boolean ifFinishing) throws
             Exception {
         // If you're finishing a workout, then you need to abide by the rules, but if you're cancelling you don't
         if (ifFinishing) {
-            return new UpdateDatabaseAction(id, itemType, "missingReviews", new AttributeValue(user), false,
+            return new UpdateDatabaseAction(getPrimaryKey(id), "missingReviews", new AttributeValue(user), false,
                     DELETE, new CheckHandler() {
                 @Override
                 // You can't do a review if the workout hasn't started yet!!!
-                public String isViable(DatabaseObject newObject) throws Exception {
-                    if (((Workout) newObject).time.hasAlreadyStarted()) {
+                public String isViable(DatabaseItem newItem) throws Exception {
+                    if (((Workout) newItem).time.hasAlreadyStarted()) {
                         return null;
                     }
                     else {
@@ -105,7 +111,7 @@ public class WorkoutDatabaseActionBuilder {
             });
         }
         else {
-            return new UpdateDatabaseAction(id, itemType, "missingReviews", new AttributeValue(user), false,
+            return new UpdateDatabaseAction(getPrimaryKey(id), "missingReviews", new AttributeValue(user), false,
                     DELETE);
         }
     }
@@ -115,21 +121,15 @@ public class WorkoutDatabaseActionBuilder {
 //    }
 
     public static DatabaseAction delete(String id) {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue(itemType));
-        key.put("id", new AttributeValue(id));
-        return new DeleteDatabaseAction(key);
+        return new DeleteDatabaseAction(itemType, getPrimaryKey(id));
     }
 
     public static DatabaseAction deleteIfEmpty(String id) {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue(itemType));
-        key.put("id", new AttributeValue(id));
-        return new DeleteDatabaseAction(key, new CheckHandler() {
+        return new DeleteDatabaseAction(itemType, getPrimaryKey(id), new CheckHandler() {
             @Override
-            public String isViable(DatabaseObject newObject) throws Exception {
+            public String isViable(DatabaseItem newItem) throws Exception {
                 // We only want to delete this object if it is currently empty!
-                if (((Workout)newObject).clients.size() == 0) {
+                if (((Workout) newItem).clients.size() == 0) {
                     return null;
                 }
                 else {

@@ -30,9 +30,6 @@ public class Comment extends DatabaseObject {
 
     // TODO Implement cache system here again?
     public static Comment readComment(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Comment"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Comment) read(tableName, getPrimaryKey("Comment", id));
     }
 }

@@ -64,9 +64,6 @@ public class Group extends DatabaseObject {
 
     // TODO Implement cache system here again?
     public static Group readGroup(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Group"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Group) read(tableName, getPrimaryKey("Group", id));
     }
 }

@@ -35,6 +35,7 @@ public class LambdaRequest {
     private CreateGroupRequest createGroupRequest;
     private CreateCommentRequest createCommentRequest;
     private CreateSponsorRequest createSponsorRequest;
+    private CreateMessageRequest createMessageRequest;
 
     private enum Action {
         CREATE,
@@ -342,6 +343,10 @@ public class LambdaRequest {
                 numCreateRequest++;
                 Constants.debugLog("Has a create sponsor request!\n");
             }
+            if (createMessageRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create message request!\n");
+            }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
@@ -380,6 +385,8 @@ public class LambdaRequest {
                     return CreateComment.handle(fromID, createCommentRequest);
                 case Sponsor:
                     return CreateSponsor.handle(fromID, createSponsorRequest);
+                case Message:
+                    return CreateMessage.handle(fromID, createMessageRequest);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -1047,7 +1054,8 @@ public class LambdaRequest {
                          CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest,
                          CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest,
                          CreatePostRequest createPostRequest, CreateGroupRequest createGroupRequest,
-                         CreateCommentRequest createCommentRequest, CreateSponsorRequest createSponsorRequest) {
+                         CreateCommentRequest createCommentRequest, CreateSponsorRequest createSponsorRequest,
+                         CreateMessageRequest createMessageRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -1067,6 +1075,7 @@ public class LambdaRequest {
         this.createGroupRequest = createGroupRequest;
         this.createCommentRequest = createCommentRequest;
         this.createSponsorRequest = createSponsorRequest;
+        this.createMessageRequest = createMessageRequest;
     }
 
     public LambdaRequest() {}
@@ -1221,5 +1230,13 @@ public class LambdaRequest {
 
     public void setCreateSponsorRequest(CreateSponsorRequest createSponsorRequest) {
         this.createSponsorRequest = createSponsorRequest;
+    }
+
+    public CreateMessageRequest getCreateMessageRequest() {
+        return createMessageRequest;
+    }
+
+    public void setCreateMessageRequest(CreateMessageRequest createMessageRequest) {
+        this.createMessageRequest = createMessageRequest;
     }
 }

@@ -3,8 +3,8 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import main.java.Logic.ItemType;
 
-public interface DatabaseObjectBuilder {
-    static DatabaseObject build(Item item) throws Exception {
+public interface DatabaseItemBuilder {
+    static DatabaseItem build(Item item) throws Exception {
         String itemType = (String)item.get("item_type");
         switch (ItemType.valueOf(itemType)) {
             case Client:
@@ -31,8 +31,10 @@ public interface DatabaseObjectBuilder {
                 return new Challenge(item);
             case Sponsor:
                 return new Sponsor(item);
+            case Message:
+                return new Message(item);
             default:
-                throw new Exception("Item type = " + itemType + " not implemented in DatabaseObjectBuilder");
+                throw new Exception("Item type = " + itemType + " not implemented in DatabaseItemBuilder");
         }
     }
 }

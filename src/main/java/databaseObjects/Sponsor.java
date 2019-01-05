@@ -22,13 +22,10 @@ public class Sponsor extends User {
 
     // TODO Implement cache system here again?
     public static Sponsor readSponsor(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Sponsor"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Sponsor) read(tableName, getPrimaryKey("Sponsor", id));
     }
 
-    public static Client querySponsor(String username) throws Exception {
-        return DynamoDBHandler.getInstance().usernameQuery(username, "Sponsor");
-    }
+//    public static Client querySponsor(String username) throws Exception {
+//        return DynamoDBHandler.getInstance().usernameQuery(username, "Sponsor");
+//    }
 }

@@ -22,6 +22,7 @@ public class Constants {
     // Access Materials
     public static String databaseTableName = System.getenv("databaseTableName");
     public static String firebaseTokenTableName = System.getenv("firebaseTokenTableName");
+    public static String messageTableName = System.getenv("messageTableName");
     public static String storageBucketName = System.getenv("storageBucketName");
 
     // Potential usage????
@@ -32,7 +33,6 @@ public class Constants {
     public static String userPoolID = System.getenv("userPoolID");
     public static String userPoolClientID = System.getenv("userPoolClientID");
     public static String userPoolSecretKey = System.getenv("userPoolSecretKey");
-    public static String ablyAPIKey = System.getenv("ablyAPIKey");
     public static String adminKey = System.getenv("adminKey");
 
     // Database Limits

@@ -1,6 +1,8 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
+import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import main.java.databaseObjects.DatabaseItem;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.Gym;
 import main.java.databaseObjects.TimeInterval;
@@ -15,6 +17,10 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 public class GymDatabaseActionBuilder {
     final static private String itemType = "Gym";
+
+    private static PrimaryKey getPrimaryKey(String id) {
+        return new PrimaryKey("item_type", itemType, "id", id);
+    }
 
     public static DatabaseAction create(CreateGymRequest createGymRequest) {
         // Handle the setting of the items!
@@ -36,7 +42,7 @@ public class GymDatabaseActionBuilder {
                 new AttributeValue(createGymRequest.gymType)); }
         if (createGymRequest.paymentSplit != null) { item.put("paymentSplit",
                 new AttributeValue(createGymRequest.paymentSplit)); }
-        return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;
@@ -45,32 +51,32 @@ public class GymDatabaseActionBuilder {
     }
 
 //    public static DatabaseAction updateFoundingDay(String id, String foundingDay) throws Exception {
-//        return UserDatabaseActionBuilder.updateBirthday(id, itemType, foundingDay);
+//        return UserDatabaseActionBuilder.updateBirthday(getPrimaryKey(id), foundingDay);
 //    }
 
 //    public static DatabaseAction updateEmail(String id, String email) throws Exception {
-//        return UserDatabaseActionBuilder.updateEmail(id, itemType, email);
+//        return UserDatabaseActionBuilder.updateEmail(getPrimaryKey(id), email);
 //    }
 //
 //    public static DatabaseAction updateProfileImagePath(String id, String profileImagePath) throws Exception {
-//        return UserDatabaseActionBuilder.updateProfileImagePath(id, itemType, profileImagePath);
+//        return UserDatabaseActionBuilder.updateProfileImagePath(getPrimaryKey(id), profileImagePath);
 //    }
 //
 //    public static DatabaseAction updateAddScheduledWorkout(String id, String workout, boolean ifWithCreate) throws
 //            Exception {
-//        return UserDatabaseActionBuilder.updateAddScheduledWorkout(id, itemType, workout, ifWithCreate);
+//        return UserDatabaseActionBuilder.updateAddScheduledWorkout(getPrimaryKey(id), workout, ifWithCreate);
 //    }
 //
 //    public static DatabaseAction updateRemoveScheduledWorkout(String id, String workout) throws Exception {
-//        return UserDatabaseActionBuilder.updateRemoveScheduledWorkout(id, itemType, workout);
+//        return UserDatabaseActionBuilder.updateRemoveScheduledWorkout(getPrimaryKey(id), workout);
 //    }
 //
 //    public static DatabaseAction updateAddCompletedWorkout(String id, String workout) throws Exception {
-//        return UserDatabaseActionBuilder.updateAddCompletedWorkout(id, itemType, workout);
+//        return UserDatabaseActionBuilder.updateAddCompletedWorkout(getPrimaryKey(id), workout);
 //    }
 //
 //    public static DatabaseAction updateRemoveCompletedWorkout(String id, String workout) throws Exception {
-//        return UserDatabaseActionBuilder.updateRemoveCompletedWorkout(id, itemType, workout);
+//        return UserDatabaseActionBuilder.updateRemoveCompletedWorkout(getPrimaryKey(id), workout);
 //    }
 
     // TODO How to combine this with the original UserActionDatabaseBuilder logic????
@@ -80,9 +86,9 @@ public class GymDatabaseActionBuilder {
             TimeInterval timeInterval = new TimeInterval(time);
             return UserDatabaseActionBuilder.updateAddScheduledTime(id, itemType, time, new CheckHandler() {
                 @Override
-                public String isViable(DatabaseObject newObject) throws Exception {
+                public String isViable(DatabaseItem newItem) throws Exception {
                     // This is to check whether any times conflict
-                    Gym gym = (Gym) newObject;
+                    Gym gym = (Gym) newItem;
 
                     // Check every time section to see if it's too filled for the gym space.
                     for (TimeInterval timeSection : timeInterval.getAllTimeSections()) {
@@ -126,67 +132,64 @@ public class GymDatabaseActionBuilder {
     }
 
 //    public static DatabaseAction updateRemoveScheduledTime(String id, String time) throws Exception {
-//        return UserDatabaseActionBuilder.updateRemoveScheduledTime(id, itemType, time);
+//        return UserDatabaseActionBuilder.updateRemoveScheduledTime(getPrimaryKey(id), time);
 //    }
 
     public static DatabaseAction updateAddress(String id, String address) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "address", new AttributeValue(address), false, PUT);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "address", new AttributeValue(address), false, PUT);
     }
 
     public static DatabaseAction updateAddTrainer(String id, String trainer, boolean ifWithCreate) throws Exception {
         if (ifWithCreate) {
-            return new UpdateDatabaseAction(id, itemType, "trainer", null, true, ADD);
+            return new UpdateDatabaseAction(getPrimaryKey(id), "trainer", null, true, ADD);
         }
         else {
-            return new UpdateDatabaseAction(id, itemType, "trainer", new AttributeValue(trainer), false, ADD);
+            return new UpdateDatabaseAction(getPrimaryKey(id), "trainer", new AttributeValue(trainer), false, ADD);
         }
 
     }
 
     public static DatabaseAction updateRemoveTrainer(String id, String trainer) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "trainer", new AttributeValue(trainer), false, DELETE);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "trainer", new AttributeValue(trainer), false, DELETE);
     }
 
     public static DatabaseAction updateWeeklyHours(String id, String[] weeklyHours) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "weeklyHours", new AttributeValue(Arrays.asList(weeklyHours)),
+        return new UpdateDatabaseAction(getPrimaryKey(id), "weeklyHours", new AttributeValue(Arrays.asList(weeklyHours)),
                 false, PUT);
     }
 
     // TODO Consider going back to this
 //    public static DatabaseAction updateAddWeeklyHour(String id, String weeklyHour) throws Exception {
-//        return new UpdateDatabaseAction(id, itemType, "weekly_hours", new AttributeValue(weeklyHour), false, ADD);
+//        return new UpdateDatabaseAction(getPrimaryKey(id), "weekly_hours", new AttributeValue(weeklyHour), false, ADD);
 //    }
 //
 //    public static DatabaseAction updateRemoveWeeklyHour(String id, String weeklyHour) throws Exception {
-//        return new UpdateDatabaseAction(id, itemType, "weekly_hours", new AttributeValue(weeklyHour), false, "REMOVE");
+//        return new UpdateDatabaseAction(getPrimaryKey(id), "weekly_hours", new AttributeValue(weeklyHour), false, "REMOVE");
 //    }
 
     public static DatabaseAction updateAddVacationTime(String id, String vacationTime) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "vacationTimes", new AttributeValue(vacationTime), false, ADD);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "vacationTimes", new AttributeValue(vacationTime), false, ADD);
     }
 
     public static DatabaseAction updateRemoveVacationTime(String id, String vacationTime) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "vacationTimes", new AttributeValue(vacationTime), false, DELETE);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "vacationTimes", new AttributeValue(vacationTime), false, DELETE);
     }
 
     public static DatabaseAction updateSessionCapacity(String id, String sessionCapacity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "sessionCapacity", new AttributeValue(sessionCapacity), false,
+        return new UpdateDatabaseAction(getPrimaryKey(id), "sessionCapacity", new AttributeValue(sessionCapacity), false,
                 PUT);
     }
 
     public static DatabaseAction updateGymType(String id, String gymType) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "gymType", new AttributeValue(gymType), false, PUT);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "gymType", new AttributeValue(gymType), false, PUT);
     }
 
     public static DatabaseAction updatePaymentSplit(String id, String paymentSplit) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "paymentSplit", new AttributeValue(paymentSplit), false, PUT);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "paymentSplit", new AttributeValue(paymentSplit), false, PUT);
     }
 
     public static DatabaseAction delete(String id) {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue(itemType));
-        key.put("id", new AttributeValue(id));
-        return new DeleteDatabaseAction(key);
+        return new DeleteDatabaseAction(itemType, getPrimaryKey(id));
     }
 }
 

@@ -48,10 +48,7 @@ public class CreateReview {
                         null, true));
 
                 // Calculate about's ratings
-                Map<String, AttributeValue> aboutKey = new HashMap<>();
-                aboutKey.put("item_type", new AttributeValue(aboutItemType));
-                aboutKey.put("id", new AttributeValue(about));
-                User user = DynamoDBHandler.getInstance().readItem(aboutKey);
+                User user = User.readUser(about, aboutItemType);
                 float friendlinessRating = Float.parseFloat(createReviewRequest.friendlinessRating);
                 float effectivenessRating = Float.parseFloat(createReviewRequest.effectivenessRating);
                 float reliabilityRating = Float.parseFloat(createReviewRequest.reliabilityRating);

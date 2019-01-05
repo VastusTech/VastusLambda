@@ -1,6 +1,8 @@
 package main.java.databaseOperations.databaseActionBuilders;
 
+import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import main.java.databaseObjects.DatabaseItem;
 import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseObjects.Trainer;
@@ -16,6 +18,10 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 public class TrainerDatabaseActionBuilder {
     final static private String itemType = "Trainer";
+
+    private static PrimaryKey getPrimaryKey(String id) {
+        return new PrimaryKey("item_type", itemType, "id", id);
+    }
 
     public static DatabaseAction create(CreateTrainerRequest createTrainerRequest) {
         // Handle the setting of the items!
@@ -41,7 +47,7 @@ public class TrainerDatabaseActionBuilder {
                 (createTrainerRequest.workoutCapacity)); }
         if (createTrainerRequest.workoutPrice != null) { item.put("workoutPrice", new AttributeValue
                 (createTrainerRequest.workoutPrice)); }
-        return new CreateDatabaseAction(item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;
@@ -56,9 +62,9 @@ public class TrainerDatabaseActionBuilder {
             TimeInterval timeInterval = new TimeInterval(time);
             return UserDatabaseActionBuilder.updateAddScheduledTime(id, itemType, time, new CheckHandler() {
                 @Override
-                public String isViable(DatabaseObject newObject) throws Exception {
+                public String isViable(DatabaseItem newItem) throws Exception {
                     // This is to check whether any times conflict
-                    Trainer trainer = (Trainer) newObject;
+                    Trainer trainer = (Trainer) newItem;
                     // Is it during one of the trainer's available times?
                     for (TimeInterval availableTime : trainer.availableTimes) {
                         if (availableTime.encompasses(timeInterval)) {
@@ -83,11 +89,11 @@ public class TrainerDatabaseActionBuilder {
 
     public static DatabaseAction updateAddAvailableTime(String id, String availableTime) throws Exception {
         TimeInterval timeInterval = new TimeInterval(availableTime);
-        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(availableTime), false, ADD, new CheckHandler() {
+        return new UpdateDatabaseAction(getPrimaryKey(id), "availableTimes", new AttributeValue(availableTime), false, ADD, new CheckHandler() {
             @Override
-            public String isViable(DatabaseObject newObject) throws Exception {
+            public String isViable(DatabaseItem newItem) throws Exception {
                 // Check to see if the available time intersects with any of the scheduled times
-                for (TimeInterval scheduledTime : ((Trainer)newObject).scheduledTimes) {
+                for (TimeInterval scheduledTime : ((Trainer) newItem).scheduledTimes) {
                     if (scheduledTime.intersects(timeInterval)) {
                         return "That available time intersects with your existing schedule!";
                     }
@@ -99,10 +105,10 @@ public class TrainerDatabaseActionBuilder {
 
     public static DatabaseAction updateRemoveAvailableTime(String id, String availableTime) throws Exception {
         TimeInterval timeInterval = new TimeInterval(availableTime);
-        return new UpdateDatabaseAction(id, itemType, "availableTimes", new AttributeValue(availableTime), false, DELETE, new CheckHandler() {
+        return new UpdateDatabaseAction(getPrimaryKey(id), "availableTimes", new AttributeValue(availableTime), false, DELETE, new CheckHandler() {
             @Override
-            public String isViable(DatabaseObject newObject) throws Exception {
-                Trainer trainer = (Trainer)newObject;
+            public String isViable(DatabaseItem newItem) throws Exception {
+                Trainer trainer = (Trainer) newItem;
                 for (TimeInterval time : trainer.scheduledTimes) {
                     if (timeInterval.intersects(time)) {
                         return "Trainer already has something scheduled for that time, cannot remove available " +
@@ -115,48 +121,45 @@ public class TrainerDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateWorkoutSticker(String id, String sticker) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workoutSticker", new AttributeValue(sticker), false, PUT);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "workoutSticker", new AttributeValue(sticker), false, PUT);
     }
 
     public static DatabaseAction updatePreferredIntensity(String id, String intensity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "preferredIntensity", new AttributeValue(intensity), false,
+        return new UpdateDatabaseAction(getPrimaryKey(id), "preferredIntensity", new AttributeValue(intensity), false,
                 PUT);
     }
 
     public static DatabaseAction updateWorkoutCapacity(String id, String capacity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workoutCapacity", new AttributeValue(capacity), false, PUT);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "workoutCapacity", new AttributeValue(capacity), false, PUT);
     }
 
     public static DatabaseAction updateWorkoutPrice(String id, String price) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "workoutPrice", new AttributeValue(price), false, PUT);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "workoutPrice", new AttributeValue(price), false, PUT);
     }
 
     public static DatabaseAction updateAddSubscriber(String id, String subscriber) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "subscribers", new AttributeValue(subscriber), false, ADD);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "subscribers", new AttributeValue(subscriber), false, ADD);
     }
 
     public static DatabaseAction updateRemoveSubscriber(String id, String subscriber) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "subscribers", new AttributeValue(subscriber), false, DELETE);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "subscribers", new AttributeValue(subscriber), false, DELETE);
     }
 
     public static DatabaseAction updateSubscriptionPrice(String id, String price) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "subscriptionPrice", new AttributeValue(price), false, PUT);
+        return new UpdateDatabaseAction(getPrimaryKey(id), "subscriptionPrice", new AttributeValue(price), false, PUT);
     }
 
     public static DatabaseAction updateAddCertification(String id, String certification) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "certifications", new AttributeValue(certification), false,
+        return new UpdateDatabaseAction(getPrimaryKey(id), "certifications", new AttributeValue(certification), false,
                 ADD);
     }
 
     public static DatabaseAction updateRemoveCertification(String id, String certification) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, "certifications", new AttributeValue(certification), false,
+        return new UpdateDatabaseAction(getPrimaryKey(id), "certifications", new AttributeValue(certification), false,
                 DELETE);
     }
 
     public static DatabaseAction delete(String id) {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue(itemType));
-        key.put("id", new AttributeValue(id));
-        return new DeleteDatabaseAction(key);
+        return new DeleteDatabaseAction(itemType, getPrimaryKey(id));
     }
 }

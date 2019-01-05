@@ -49,13 +49,10 @@ public class Gym extends User {
 
     // TODO Implement cache system here again?
     public static Gym readGym(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Gym"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Gym) read(tableName, getPrimaryKey("Gym", id));
     }
 
-    public static Gym queryGym(String username) throws Exception {
-        return DynamoDBHandler.getInstance().usernameQuery(username, "Gym");
-    }
+//    public static Gym queryGym(String username) throws Exception {
+//        return DynamoDBHandler.getInstance().usernameQuery(username, "Gym");
+//    }
 }

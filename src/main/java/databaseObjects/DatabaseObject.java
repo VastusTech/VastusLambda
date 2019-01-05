@@ -1,6 +1,7 @@
 package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -11,13 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-abstract public class DatabaseObject {
+abstract public class DatabaseObject extends DatabaseItem {
+    final public static String tableName = Constants.databaseTableName;
+
     public String id;
     public String itemType;
     public String marker;
     public String timeCreated;
 
     public DatabaseObject(Item item) throws Exception {
+        // Set the rest of the object
         this.id = item.getString("id");
         this.itemType = item.getString("item_type");
         // TODO Surely there must be a better way to do this? Test if you just getString?
@@ -34,10 +38,11 @@ abstract public class DatabaseObject {
         return item;
     }
 
-    public static User readDatabaseObject(String id, String itemType) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue(itemType));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+    public static DatabaseObject readDatabaseObject(String id, String itemType) throws Exception {
+        return (DatabaseObject)DatabaseItem.read(tableName, getPrimaryKey(itemType, id));
+    }
+
+    static public PrimaryKey getPrimaryKey(String itemType, String id) {
+        return new PrimaryKey("item_type", itemType, "id", id);
     }
 }

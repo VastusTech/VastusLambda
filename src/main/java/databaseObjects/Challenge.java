@@ -76,9 +76,6 @@ public class Challenge extends DatabaseObject {
     }
 
     public static Challenge readChallenge(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("id", new AttributeValue(id));
-        key.put("item_type", new AttributeValue("Challenge"));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Challenge) read(tableName, getPrimaryKey("Challenge", id));
     }
 }

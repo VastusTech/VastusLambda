@@ -12,7 +12,8 @@ public enum ItemType {
     Post,
     Group,
     Comment,
-    Sponsor;
+    Sponsor,
+    Message;
 
     public static String getItemType(String id) throws Exception {
         String prefix = id.substring(0, Constants.numPrefix);

@@ -46,9 +46,6 @@ public class Workout extends DatabaseObject {
 
     // TODO Implement cache system here again?
     public static Workout readWorkout(String id) throws Exception {
-        Map<String, AttributeValue> key = new HashMap<>();
-        key.put("item_type", new AttributeValue("Workout"));
-        key.put("id", new AttributeValue(id));
-        return DynamoDBHandler.getInstance().readItem(key);
+        return (Workout) read(tableName, getPrimaryKey("Workout", id));
     }
 }

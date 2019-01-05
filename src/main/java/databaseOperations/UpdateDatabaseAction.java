@@ -1,5 +1,6 @@
 package main.java.databaseOperations;
 
+import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import main.java.Logic.Constants;
@@ -11,12 +12,10 @@ import java.util.List;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 public class UpdateDatabaseAction extends DatabaseAction {
-    public UpdateDatabaseAction(String id, String itemType, String attributeName, AttributeValue attributeValue,
+    public UpdateDatabaseAction(PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action) throws Exception {
         this.action = DBAction.UPDATE;
-        this.item = new HashMap<>();
-        this.item.put("item_type", new AttributeValue(itemType));
-        this.item.put("id", new AttributeValue(id));
+        this.primaryKey = primaryKey;
         this.ifWithCreate = ifWithCreate;
         this.updateItem = new HashMap<>();
 
@@ -25,12 +24,10 @@ public class UpdateDatabaseAction extends DatabaseAction {
         // TODO LOG HERE
     }
 
-    public UpdateDatabaseAction(String id, String itemType, String attributeName, AttributeValue attributeValue,
+    public UpdateDatabaseAction(PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action, CheckHandler checkHandler) throws Exception {
         this.action = DBAction.UPDATESAFE;
-        this.item = new HashMap<>();
-        this.item.put("item_type", new AttributeValue(itemType));
-        this.item.put("id", new AttributeValue(id));
+        this.primaryKey = primaryKey;
         this.ifWithCreate = ifWithCreate;
         this.checkHandler = checkHandler;
         this.updateItem = new HashMap<>();
