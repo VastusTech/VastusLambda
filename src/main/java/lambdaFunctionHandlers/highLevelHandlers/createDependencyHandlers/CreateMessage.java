@@ -41,7 +41,7 @@ public class CreateMessage {
                 // Send a Firebase message!
                 List<String> notificationIDs = Message.getNotificationIDsFromBoard(createMessageRequest.board);
                 for (String id : Message.getNotificationIDsFromBoard(createMessageRequest.board)) {
-                    databaseActionCompiler.addMessage(id, "messageNotification", "Received a message!");
+                    databaseActionCompiler.addMessage(id, "Received a message!", "You received a message from User ID = " + createMessageRequest.from);
                 }
 //                databaseActionCompiler.addMessage(createMessageRequest.to, "inviteNotification", "Received an invite!");
 

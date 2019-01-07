@@ -20,22 +20,18 @@
       <id>aws-transactions</id>
       <url>file://${project.basedir}/lib/aws-transactions</url>
     </repository>
-    <repository>
-      <id>jcenter</id>
-      <url>https://jcenter.bintray.com/</url>
-    </repository>
   </repositories>
 
   <dependencies>
     <dependency>
+      <groupId>javax.json</groupId>
+      <artifactId>javax.json-api</artifactId> 
+      <version>1.1.4</version>
+    </dependency>
+    <dependency>
       <groupId>com.amazonaws.services.dynamodbv2</groupId>
       <artifactId>amazon-dynamodb-transactions</artifactId>
       <version>1.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk-core</artifactId>
-      <version>1.11.413</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
@@ -48,9 +44,9 @@
       <version>1.11.413</version>
     </dependency>
     <dependency>
-      <groupId>com.google.firebase</groupId>
-      <artifactId>firebase-admin</artifactId>
-      <version>6.6.0</version>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-lambda</artifactId>
+      <version>1.11.478</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

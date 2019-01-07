@@ -11,8 +11,8 @@
     <orderEntry type="library" name="junit:junit:4.12" level="project" />
     <orderEntry type="library" name="amazon-dynamodb-transactions-1.1.2" level="project" />
     <orderEntry type="library" name="com.amazonaws:aws-java-sdk-dynamodb:1.11.414" level="project" />
-    <orderEntry type="library" name="com.amazonaws:aws-java-sdk-core:1.11.414" level="project" />
+    <orderEntry type="library" name="com.amazonaws:aws-java-sdk-lambda:1.11.478" level="project" />
     <orderEntry type="library" name="com.amazonaws:aws-lambda-java-core:1.2.0" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-admin:6.6.0" level="project" />
+    <orderEntry type="library" name="javax.json:javax.json-api:1.1.4" level="project" />
   </component>
 </module>

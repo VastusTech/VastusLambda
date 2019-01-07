@@ -25,6 +25,7 @@ public class DynamoDBHandler {
     private Map<String, Table> tables;
     private Table databaseTable;
     private Table messageTable;
+    private Table firebaseTokenTable;
 
     // Used for the singleton pattern!
     static public DynamoDBHandler getInstance() throws Exception {
@@ -48,6 +49,7 @@ public class DynamoDBHandler {
         tables = new HashMap<>();
         databaseTable = new Table(client, Constants.databaseTableName);
         messageTable = new Table(client, Constants.messageTableName);
+        firebaseTokenTable = new Table(client, Constants.firebaseTokenTableName);
         tables.put(Constants.databaseTableName, databaseTable);
         tables.put(Constants.messageTableName, messageTable);
 //        tables.put(Constants.databaseTableName, new Table(client, Constants.databaseTableName));
@@ -405,6 +407,16 @@ public class DynamoDBHandler {
         ItemCollection<QueryOutcome> items = index.query(querySpec);
         Iterator<Item> iterator = items.iterator();
         return (iterator.hasNext());
+    }
+
+    public Set<String> getFirebaseTokens(String userID) {
+        Item item = firebaseTokenTable.getItem("id", userID);
+        Set<String> tokens = item.getStringSet("tokens");
+//        String expires = item.getString("expires");
+        // TODO Make sure that these tokens haven't expired?
+
+        if (tokens == null) { tokens = new HashSet<String>(); }
+        return tokens;
     }
 
     // TODO We usually don't want to send out a null variable without throwing an exception

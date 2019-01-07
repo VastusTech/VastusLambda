@@ -4,8 +4,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import main.java.Logic.Constants;
 import main.java.databaseObjects.DatabaseItem;
-import main.java.databaseObjects.DatabaseObject;
-import main.java.notifications.FirebaseHandler;
+import main.java.notifications.NotificationHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 public class DatabaseActionCompiler {
-    private FirebaseHandler firebaseHandler;
+    private NotificationHandler notificationHandler;
     private List<DatabaseAction> databaseActions;
     private Map<String, DatabaseAction> databaseActionMap;
 
     public DatabaseActionCompiler() throws Exception {
         databaseActions = new ArrayList<>();
         databaseActionMap = new HashMap<>();
-        firebaseHandler = new FirebaseHandler();
+        notificationHandler = new NotificationHandler();
     }
 
     public List<DatabaseAction> getDatabaseActions() {
@@ -28,7 +27,7 @@ public class DatabaseActionCompiler {
     }
 
     public void sendNotifications() throws Exception {
-        firebaseHandler.sendMessages();
+        notificationHandler.sendMessages();
     }
 
     public void add(DatabaseAction databaseAction) throws Exception {
@@ -226,14 +225,7 @@ public class DatabaseActionCompiler {
         }
     }
 
-    public void addMessage(String to, String type, String message) {
-        Map<String, String> data = new HashMap<>();
-        data.put("type", type);
-        data.put("message", message);
-        addNotification(to, data);
-    }
-
-    public void addNotification(String to, Map<String, String> data) {
-        firebaseHandler.addMessageForUser(to, data);
+    public void addMessage(String to, String title, String body) throws Exception {
+        notificationHandler.addMessage(to, title, body);
     }
 }

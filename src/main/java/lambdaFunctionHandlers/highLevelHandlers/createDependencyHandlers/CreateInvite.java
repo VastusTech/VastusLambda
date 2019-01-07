@@ -132,7 +132,7 @@ public class CreateInvite {
                 }
 
                 // Send a Firebase message!
-                databaseActionCompiler.addMessage(createInviteRequest.to, "inviteNotification", "Received an invite!");
+                databaseActionCompiler.addMessage(createInviteRequest.to, "Received an Invite!", "Received an invite with type = " + createInviteRequest.inviteType + "!");
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
