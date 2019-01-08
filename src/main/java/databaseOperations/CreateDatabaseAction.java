@@ -11,6 +11,7 @@ public class CreateDatabaseAction extends DatabaseAction {
     public CreateDatabaseAction(String itemType, Map<String, AttributeValue> item, UpdateWithIDHandler
             updateWithIDHandler) {
         action = DBAction.CREATE;
+        this.itemType = itemType;
         this.item = new HashMap<>();
         for (Map.Entry<String, AttributeValue> entry: item.entrySet()) {
             String key = entry.getKey();

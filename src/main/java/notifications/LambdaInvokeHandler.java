@@ -30,6 +30,7 @@ public class LambdaInvokeHandler {
     }
 
     public void invokeLambda(String functionName, String payload) {
+        Constants.debugLog("SENDING LAMBDA TO FUNCTION = " + functionName + ", PAYLOAD: \n" + payload);
         InvokeRequest request = new InvokeRequest().withFunctionName(functionName).withPayload(payload);
         // TODO How to skip the response?
         InvokeResult result = client.invoke(request);

@@ -36,10 +36,10 @@ public class ReviewDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateDescription(String id, String description) throws Exception {
-        return new UpdateDatabaseAction(getPrimaryKey(id), "description", new AttributeValue(description), false, PUT);
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "description", new AttributeValue(description), false, PUT);
     }
 
     public static DatabaseAction delete(String id) {
-        return new DeleteDatabaseAction(itemType, getPrimaryKey(id));
+        return new DeleteDatabaseAction(id, itemType, getPrimaryKey(id));
     }
 }

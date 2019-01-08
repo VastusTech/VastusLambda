@@ -14,6 +14,7 @@ public abstract class DatabaseAction {
     DBAction action;
     Map<String, AttributeValue> item;
     PrimaryKey primaryKey;
+    String id;
     String itemType;
 
     // These should only be used for UPDATE and UPDATESAFE main.java.databaseOperations.DBAction's

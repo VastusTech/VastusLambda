@@ -35,6 +35,6 @@ public class MessageDatabaseActionBuilder {
     }
 
     public static DatabaseAction delete(String board, String id) {
-        return new DeleteDatabaseAction(itemType, getPrimaryKey(board, id));
+        return new DeleteDatabaseAction(id, itemType, getPrimaryKey(board, id));
     }
 }

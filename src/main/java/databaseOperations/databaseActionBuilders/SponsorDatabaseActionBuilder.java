@@ -37,6 +37,6 @@ public class SponsorDatabaseActionBuilder {
     }
 
     public static DatabaseAction delete(String id) {
-        return new DeleteDatabaseAction(itemType, getPrimaryKey(id));
+        return new DeleteDatabaseAction(id, itemType, getPrimaryKey(id));
     }
 }

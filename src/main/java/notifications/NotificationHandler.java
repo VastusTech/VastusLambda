@@ -33,7 +33,7 @@ public class NotificationHandler {
         for (Message message : messages) {
             json.add(message.createMessageJSON());
         }
-        return Json.createObjectBuilder().add("messages", json).toString();
+        return Json.createObjectBuilder().add("messages", json).build().toString();
     }
 
     public enum NotificationType {

@@ -15,8 +15,8 @@ public class CreateTrainer {
     public static String handle(String fromID, CreateTrainerRequest createTrainerRequest) throws Exception {
         if (createTrainerRequest != null) {
             // Check required fields
-            if (createTrainerRequest.name != null && createTrainerRequest.birthday != null &&
-                    createTrainerRequest.email != null && createTrainerRequest.username != null) {
+            if (createTrainerRequest.name != null && createTrainerRequest.email != null &&
+                    createTrainerRequest.username != null) {
                 // Create the database action list for the transaction to complete
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 

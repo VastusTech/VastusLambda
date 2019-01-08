@@ -33,7 +33,7 @@ public class DatabaseActionCompiler {
     public void add(DatabaseAction databaseAction) throws Exception {
         String id;
         if (databaseAction.action != DBAction.CREATE) {
-            id = databaseAction.item.get("id").getS();
+            id = databaseAction.id;
         }
         else {
             id = "create";

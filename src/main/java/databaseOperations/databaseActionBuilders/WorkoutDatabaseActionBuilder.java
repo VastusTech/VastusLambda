@@ -49,11 +49,11 @@ public class WorkoutDatabaseActionBuilder {
 //        return null;
 //    }
     public static DatabaseAction updateIfCompleted(String id, String ifCompleted) throws Exception {
-        return new UpdateDatabaseAction(getPrimaryKey(id), "ifCompleted", new AttributeValue(ifCompleted), false, PUT);
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "ifCompleted", new AttributeValue(ifCompleted), false, PUT);
     }
 
     public static DatabaseAction updateAddClient(String id, String client) throws Exception {
-        return new UpdateDatabaseAction(getPrimaryKey(id), "clients", new AttributeValue(client), false, ADD, new CheckHandler() {
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "clients", new AttributeValue(client), false, ADD, new CheckHandler() {
             @Override
             public String isViable(DatabaseItem newItem) throws Exception {
                 // The capacity for the workout must not be filled up yet.
@@ -69,7 +69,7 @@ public class WorkoutDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateRemoveClient(String id, String client) throws Exception {
-        return new UpdateDatabaseAction(getPrimaryKey(id), "clients", new AttributeValue(client), false, DELETE);
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "clients", new AttributeValue(client), false, DELETE);
     }
 
 //    public static DatabaseAction updateCapacity() {
@@ -89,14 +89,14 @@ public class WorkoutDatabaseActionBuilder {
 //    }
 
     public static DatabaseAction updateAddMissingReview(String id, String user) throws Exception {
-        return new UpdateDatabaseAction(getPrimaryKey(id), "missingReviews", new AttributeValue(user), false, ADD);
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "missingReviews", new AttributeValue(user), false, ADD);
     }
 
     public static DatabaseAction updateRemoveMissingReview(String id, String user, boolean ifFinishing) throws
             Exception {
         // If you're finishing a workout, then you need to abide by the rules, but if you're cancelling you don't
         if (ifFinishing) {
-            return new UpdateDatabaseAction(getPrimaryKey(id), "missingReviews", new AttributeValue(user), false,
+            return new UpdateDatabaseAction(id, getPrimaryKey(id), "missingReviews", new AttributeValue(user), false,
                     DELETE, new CheckHandler() {
                 @Override
                 // You can't do a review if the workout hasn't started yet!!!
@@ -111,7 +111,7 @@ public class WorkoutDatabaseActionBuilder {
             });
         }
         else {
-            return new UpdateDatabaseAction(getPrimaryKey(id), "missingReviews", new AttributeValue(user), false,
+            return new UpdateDatabaseAction(id, getPrimaryKey(id), "missingReviews", new AttributeValue(user), false,
                     DELETE);
         }
     }
@@ -121,11 +121,11 @@ public class WorkoutDatabaseActionBuilder {
 //    }
 
     public static DatabaseAction delete(String id) {
-        return new DeleteDatabaseAction(itemType, getPrimaryKey(id));
+        return new DeleteDatabaseAction(id, itemType, getPrimaryKey(id));
     }
 
     public static DatabaseAction deleteIfEmpty(String id) {
-        return new DeleteDatabaseAction(itemType, getPrimaryKey(id), new CheckHandler() {
+        return new DeleteDatabaseAction(id, itemType, getPrimaryKey(id), new CheckHandler() {
             @Override
             public String isViable(DatabaseItem newItem) throws Exception {
                 // We only want to delete this object if it is currently empty!

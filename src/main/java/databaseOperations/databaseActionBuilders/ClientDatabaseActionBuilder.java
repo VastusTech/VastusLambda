@@ -44,24 +44,24 @@ public class ClientDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateAddTrainerFollowing(String id, String trainer) throws Exception {
-        return new UpdateDatabaseAction(getPrimaryKey(id), "trainersFollowing", new AttributeValue(trainer), false, ADD);
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "trainersFollowing", new AttributeValue(trainer), false, ADD);
     }
 
     public static DatabaseAction updateRemoveTrainerFollowing(String id, String trainer) throws Exception {
-        return new UpdateDatabaseAction(getPrimaryKey(id), "trainersFollowing", new AttributeValue(trainer), false,
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "trainersFollowing", new AttributeValue(trainer), false,
                 DELETE);
     }
 
     public static DatabaseAction updateAddSubscription(String id, String subscription) throws Exception {
-        return new UpdateDatabaseAction(getPrimaryKey(id), "subscriptions", new AttributeValue(subscription), false, ADD);
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "subscriptions", new AttributeValue(subscription), false, ADD);
     }
 
     public static DatabaseAction updateRemoveSubscription(String id, String subscripion) throws Exception {
-        return new UpdateDatabaseAction(getPrimaryKey(id), "subscriptions", new AttributeValue(subscripion), false,
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "subscriptions", new AttributeValue(subscripion), false,
                 DELETE);
     }
 
     public static DatabaseAction delete(String id) {
-        return new DeleteDatabaseAction(itemType, getPrimaryKey(id));
+        return new DeleteDatabaseAction(id, itemType, getPrimaryKey(id));
     }
 }
