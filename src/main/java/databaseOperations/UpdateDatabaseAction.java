@@ -64,7 +64,7 @@ public class UpdateDatabaseAction extends DatabaseAction {
                 if (attributeValue == null) {
                     if (action == PUT) {
                         // If you're trying to set it to null, then remove the attribute
-                        this.updateItem.put(attributeName, new AttributeValueUpdate(null, "REMOVE"));
+                        this.updateItem.put(attributeName, new AttributeValueUpdate(null, "DELETE"));
                     }
                     else {
                         throw new Exception("Cannot add/remove a null value to/from a set");

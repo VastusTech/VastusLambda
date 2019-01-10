@@ -111,7 +111,7 @@ public class DynamoDBHandler {
 
                         Constants.debugLog("Update statement -------------------------");
                         for (Map.Entry<String, AttributeValueUpdate> entry : updateItem.entrySet()) {
-                            if (entry.getValue().getAction().equals("REMOVE")) {
+                            if (entry.getValue().getAction().equals("DELETE")) {
                                 Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
                                         .getAction() + "!");
                             }
