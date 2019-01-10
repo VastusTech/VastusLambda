@@ -295,12 +295,12 @@ public class DynamoDBHandler {
                 for (AttributeValueUpdate valueUpdate: databaseAction.updateItem.values()) {
                     // For each one that uses the id, switch it to the return string
                     if (valueUpdate.getAction().equals("PUT")) {
-                        if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("id")) {
+                        if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("")) {
                             valueUpdate.setValue(new AttributeValue(returnString));
                         }
                     }
                     else if (valueUpdate.getAction().equals("ADD") || valueUpdate.getAction().equals("DELETE")) {
-                        if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("id")) {
+                        if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("")) {
                             valueUpdate.setValue(new AttributeValue(stringList));
                         }
                     }

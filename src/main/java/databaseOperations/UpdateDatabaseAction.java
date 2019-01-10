@@ -47,7 +47,7 @@ public class UpdateDatabaseAction extends DatabaseAction {
             }
 
             if (ifWithCreate) {
-                this.updateItem.put(attributeName, new AttributeValueUpdate(new AttributeValue("id"), action.toString()));
+                this.updateItem.put(attributeName, new AttributeValueUpdate(new AttributeValue(""), action.toString()));
 //                if (attributeValue == null) {
 //                    this.updateItem.put(attributeName, new AttributeValueUpdate(new AttributeValue("id"), action));
 //                }
