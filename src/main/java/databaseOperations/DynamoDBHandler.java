@@ -111,8 +111,14 @@ public class DynamoDBHandler {
 
                         Constants.debugLog("Update statement -------------------------");
                         for (Map.Entry<String, AttributeValueUpdate> entry : updateItem.entrySet()) {
-                            Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
-                                    .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
+                            if (entry.getValue().getAction().equals("REMOVE")) {
+                                Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
+                                        .getAction() + "!");
+                            }
+                            else {
+                                Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
+                                        .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
+                            }
                         }
 
                         // This updates the object and the marker
