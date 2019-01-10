@@ -19,7 +19,7 @@ public class ChallengeUpdateCapacity {
 
         // Test the integer
         int cap = Integer.parseInt(capacity);
-        if (cap >= 1) {
+        if (!(cap >= 1)) {
             throw new Exception("Capacity must be greater than zero!");
         }
 

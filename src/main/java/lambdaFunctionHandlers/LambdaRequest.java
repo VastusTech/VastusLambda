@@ -289,7 +289,7 @@ public class LambdaRequest {
 
             if (attributeValues != null) {
                 for (String value : attributeValues) {
-                    if (value.equals("")) {
+                    if (value != null && value.equals("")) {
                         throw new Exception("No fields are allowed to be empty strings!");
                     }
                 }
