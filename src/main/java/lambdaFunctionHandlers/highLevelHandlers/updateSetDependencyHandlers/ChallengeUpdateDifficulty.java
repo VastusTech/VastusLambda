@@ -19,7 +19,7 @@ public class ChallengeUpdateDifficulty {
 
         // Test the integer
         int diff = Integer.parseInt(difficulty);
-        if (diff < 1 || diff < 3) {
+        if (diff < 1 || diff > 3) {
             throw new Exception("Difficulty must be 1, 2, or 3!");
         }
 
