@@ -25,6 +25,7 @@ public class MessageDatabaseActionBuilder {
         item.put("board", new AttributeValue(createMessageRequest.board));
         item.put("from", new AttributeValue(createMessageRequest.from));
         item.put("message", new AttributeValue(createMessageRequest.message));
+        item.put("name", new AttributeValue(createMessageRequest.name));
         if (createMessageRequest.type != null) { item.put("type", new AttributeValue(createMessageRequest.type)); }
         return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
             @Override

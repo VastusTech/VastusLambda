@@ -20,6 +20,7 @@ public class Message extends DatabaseItem {
     public String time_created;
     public String type;
     public String from;
+    public String name;
     public String message;
 
     public Message(Item item) throws Exception {
@@ -29,6 +30,7 @@ public class Message extends DatabaseItem {
         time_created = item.getString("time_created");
         type = item.getString("type");
         from = item.getString("from");
+        name = item.getString("name");
         message = item.getString("message");
     }
 

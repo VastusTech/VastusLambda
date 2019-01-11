@@ -5,13 +5,15 @@ public class CreateMessageRequest {
     public String board;
     public String from;
     public String message;
+    public String name;
 
     // Optional
     public String type;
 
-    public CreateMessageRequest(String board, String from, String message, String type) {
+    public CreateMessageRequest(String board, String from, String name, String message, String type) {
         this.board = board;
         this.from = from;
+        this.name = name;
         this.message = message;
         this.type = type;
     }
@@ -32,6 +34,14 @@ public class CreateMessageRequest {
 
     public void setFrom(String from) {
         this.from = from;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getMessage() {

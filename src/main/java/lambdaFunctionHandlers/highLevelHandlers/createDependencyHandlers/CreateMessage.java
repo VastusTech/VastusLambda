@@ -19,7 +19,7 @@ public class CreateMessage {
         if (createMessageRequest != null) {
             // Create client
             if (createMessageRequest.from != null && createMessageRequest.board != null && createMessageRequest
-                    .message != null) {
+                    .message != null && createMessageRequest.name != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!(fromID.equals(createMessageRequest.from)) && !fromID.equals(Constants.adminKey)) {
@@ -44,6 +44,7 @@ public class CreateMessage {
                 // Send an Ably message!
                 JsonObjectBuilder payload = Json.createObjectBuilder()
                     .add("from", createMessageRequest.from)
+                    .add("name", createMessageRequest.name)
                     .add("message", createMessageRequest.message)
                     .add("board", createMessageRequest.board);
 
