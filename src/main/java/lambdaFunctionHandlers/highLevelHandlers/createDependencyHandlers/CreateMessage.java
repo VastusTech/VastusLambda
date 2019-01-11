@@ -44,7 +44,8 @@ public class CreateMessage {
                 // Send an Ably message!
                 JsonObjectBuilder payload = Json.createObjectBuilder()
                     .add("from", createMessageRequest.from)
-                    .add("message", createMessageRequest.message);
+                    .add("message", createMessageRequest.message)
+                    .add("board", createMessageRequest.board);
 
                 if (createMessageRequest.type != null) {
                     payload = payload.add("type", createMessageRequest.type);

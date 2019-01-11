@@ -137,6 +137,7 @@ public class CreateInvite {
                 // Send an Ably message!
                 JsonObjectBuilder payload = Json.createObjectBuilder()
                         .add("from", createInviteRequest.from)
+                        .add("to", createInviteRequest.to)
                         .add("inviteType", createInviteRequest.inviteType)
                         .add("about", createInviteRequest.about);
 
