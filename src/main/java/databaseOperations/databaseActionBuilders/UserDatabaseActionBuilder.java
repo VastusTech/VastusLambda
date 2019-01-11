@@ -257,7 +257,18 @@ public class UserDatabaseActionBuilder {
     public static DatabaseAction updateAddInvitedChallenge(String id, String itemType, String challenge) throws
             Exception {
         return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "invitedChallenges", new AttributeValue(challenge), false,
-                ADD);
+                ADD, new CheckHandler() {
+            @Override
+            public String isViable(DatabaseItem newItem) throws Exception {
+                if (((User) newItem).invitedChallenges.contains(challenge)) {
+                    return "That user was already invited to that challenge!";
+                }
+                if (((User) newItem).challenges.contains(challenge)) {
+                    return "That user is already a part of that challenge!";
+                }
+                return null;
+            }
+        });
     }
 
     public static DatabaseAction updateRemoveInvitedChallenge(String id, String itemType, String challenge) throws
@@ -408,7 +419,18 @@ public class UserDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateAddInvitedGroup(String id, String itemType, String group) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "invitedGroups", new AttributeValue(group), false, ADD);
+        return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "invitedGroups", new AttributeValue(group), false, ADD, new CheckHandler() {
+            @Override
+            public String isViable(DatabaseItem newItem) throws Exception {
+                if (((User) newItem).invitedGroups.contains(group)) {
+                    return "That user was already invited to that group!";
+                }
+                if (((User) newItem).groups.contains(group)) {
+                    return "That user is already a part of that group!";
+                }
+                return null;
+            }
+        });
     }
 
     public static DatabaseAction updateRemoveInvitedGroup(String id, String itemType, String group) throws Exception {
