@@ -417,12 +417,20 @@ public class DynamoDBHandler {
 
     public Set<String> getFirebaseTokens(String userID) {
         Item item = firebaseTokenTable.getItem("id", userID);
-        Set<String> tokens = item.getStringSet("tokens");
-//        String expires = item.getString("expires");
+        Set<String> tokens = null;
+        if (item != null) {
+            tokens = item.getStringSet("tokens");
+        }
+
+        // String expires = item.getString("expires");
         // TODO Make sure that these tokens haven't expired?
 
-        if (tokens == null) { tokens = new HashSet<String>(); }
-        return tokens;
+        if (tokens == null) {
+            return new HashSet<>();
+        }
+        else {
+            return tokens;
+        }
     }
 
     // TODO We usually don't want to send out a null variable without throwing an exception
