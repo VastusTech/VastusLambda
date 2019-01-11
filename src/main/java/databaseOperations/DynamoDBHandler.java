@@ -173,8 +173,10 @@ public class DynamoDBHandler {
                             DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
 
                             // Use the checkHandler
+                            Constants.debugLog("Checking the viability of the item received");
                             String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
                             if (errorMessage == null) {
+                                Constants.debugLog("The item is viable!!!");
                                 // Put the newly read marker value into the conditional statement
                                 // conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
