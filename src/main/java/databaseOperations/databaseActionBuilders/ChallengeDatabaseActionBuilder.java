@@ -2,6 +2,8 @@ package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+
+import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.*;
 import main.java.databaseOperations.*;
@@ -153,6 +155,7 @@ public class ChallengeDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, getPrimaryKey(id), "memberRequests", new AttributeValue(user), false, ADD, new CheckHandler() {
             @Override
             public String isViable(DatabaseItem newItem) throws Exception {
+                Constants.debugLog("Checking update add member request!");
                 Challenge challenge = (Challenge) newItem;
                 if (challenge.restriction.equals("invite")) {
                     // Check to see if the member was already invited
