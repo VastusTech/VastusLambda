@@ -37,7 +37,7 @@ public class UserAddToChallenge {
             }
             else {
                 ifAcceptingRequest = true;
-                databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMemberRequest(challengeID, userID));
+//                databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMemberRequest(challengeID, userID));
             }
         }
         else {
