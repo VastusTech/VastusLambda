@@ -1,11 +1,14 @@
 package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
+
+import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 
 public interface DatabaseItemBuilder {
     static DatabaseItem build(Item item) throws Exception {
         String itemType = (String)item.get("item_type");
+        Constants.debugLog("Building database item with itemType = " + itemType + ", item = " + item.toJSONPretty());
         switch (ItemType.valueOf(itemType)) {
             case Client:
                 return new Client(item);
