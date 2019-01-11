@@ -10,6 +10,7 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateMessageRequest;
 import java.util.List;
 
 import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 
 import static main.java.databaseObjects.Message.getNotificationIDsFromBoard;
 
@@ -41,11 +42,15 @@ public class CreateMessage {
                 databaseActionCompiler.add(MessageDatabaseActionBuilder.create(createMessageRequest));
 
                 // Send an Ably message!
-                databaseActionCompiler.addMessage(createMessageRequest.board + "-Board", "Message",
-                        Json.createObjectBuilder()
-                                .add("from", createMessageRequest.from)
-                                .add("message", createMessageRequest.message)
-                                .add("type", createMessageRequest.type));
+                JsonObjectBuilder payload = Json.createObjectBuilder()
+                    .add("from", createMessageRequest.from)
+                    .add("message", createMessageRequest.message);
+
+                if (createMessageRequest.type != null) {
+                    payload = payload.add("type", createMessageRequest.type);
+                }
+
+                databaseActionCompiler.addMessage(createMessageRequest.board + "-Board", "Message", payload);
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }

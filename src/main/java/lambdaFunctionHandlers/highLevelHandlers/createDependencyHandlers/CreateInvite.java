@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 
 public class CreateInvite {
     public static String handle(String fromID, CreateInviteRequest createInviteRequest) throws Exception {
@@ -134,12 +135,17 @@ public class CreateInvite {
                 }
 
                 // Send an Ably message!
-                databaseActionCompiler.addMessage(createInviteRequest.to + "-Notifications", "Invite",
-                        Json.createObjectBuilder()
-                                .add("from", createInviteRequest.from)
-                                .add("inviteType", createInviteRequest.inviteType)
-                                .add("about", createInviteRequest.about)
-                                .add("description", createInviteRequest.description));
+                JsonObjectBuilder payload = Json.createObjectBuilder()
+                        .add("from", createInviteRequest.from)
+                        .add("inviteType", createInviteRequest.inviteType)
+                        .add("about", createInviteRequest.about);
+
+                if (createInviteRequest.description != null) {
+                    payload = payload.add("description", createInviteRequest.description);
+                }
+
+
+                databaseActionCompiler.addMessage(createInviteRequest.to + "-Notifications", "Invite", payload);
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }
