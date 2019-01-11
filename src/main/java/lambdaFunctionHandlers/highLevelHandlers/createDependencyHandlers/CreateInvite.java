@@ -14,6 +14,8 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateInviteRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.json.Json;
+
 public class CreateInvite {
     public static String handle(String fromID, CreateInviteRequest createInviteRequest) throws Exception {
         if (createInviteRequest != null) {
@@ -131,8 +133,13 @@ public class CreateInvite {
                         throw new Exception("Forgot to check for or implement invite type = " + createInviteRequest.inviteType);
                 }
 
-                // Send a Firebase message!
-                databaseActionCompiler.addMessage(createInviteRequest.to, "Received an Invite!", "Received an invite with type = " + createInviteRequest.inviteType + "!");
+                // Send an Ably message!
+                databaseActionCompiler.addMessage(createInviteRequest.to + "-Notifications", "Invite",
+                        Json.createObjectBuilder()
+                                .add("from", createInviteRequest.from)
+                                .add("inviteType", createInviteRequest.inviteType)
+                                .add("about", createInviteRequest.about)
+                                .add("description", createInviteRequest.description));
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }

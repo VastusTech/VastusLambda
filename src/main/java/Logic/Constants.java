@@ -24,6 +24,7 @@ public class Constants {
     public static String firebaseTokenTableName = System.getenv("firebaseTokenTableName");
     public static String messageTableName = System.getenv("messageTableName");
     public static String firebaseFunctionName = System.getenv("firebaseFunctionName");
+    public static String ablyFunctionName = System.getenv("ablyFunctionName");
     public static String storageBucketName = System.getenv("storageBucketName");
 
     // Potential usage????

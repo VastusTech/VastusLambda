@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.JsonObjectBuilder;
+
 public class DatabaseActionCompiler {
     private NotificationHandler notificationHandler;
     private List<DatabaseAction> databaseActions;
@@ -225,7 +227,7 @@ public class DatabaseActionCompiler {
         }
     }
 
-    public void addMessage(String to, String title, String body) throws Exception {
-        notificationHandler.addMessage(to, title, body);
+    public void addMessage(String to, String type, JsonObjectBuilder payload) throws Exception {
+        notificationHandler.addMessage(to, type, payload);
     }
 }

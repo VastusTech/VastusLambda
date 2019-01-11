@@ -9,6 +9,8 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateMessageRequest;
 
 import java.util.List;
 
+import javax.json.Json;
+
 import static main.java.databaseObjects.Message.getNotificationIDsFromBoard;
 
 public class CreateMessage {
@@ -38,12 +40,12 @@ public class CreateMessage {
                 // Add the create statement
                 databaseActionCompiler.add(MessageDatabaseActionBuilder.create(createMessageRequest));
 
-                // Send a Firebase message!
-                List<String> notificationIDs = Message.getNotificationIDsFromBoard(createMessageRequest.board);
-                for (String id : Message.getNotificationIDsFromBoard(createMessageRequest.board)) {
-                    databaseActionCompiler.addMessage(id, "Received a message!", "You received a message from User ID = " + createMessageRequest.from);
-                }
-//                databaseActionCompiler.addMessage(createMessageRequest.to, "inviteNotification", "Received an invite!");
+                // Send an Ably message!
+                databaseActionCompiler.addMessage(createMessageRequest.board + "-Board", "Message",
+                        Json.createObjectBuilder()
+                                .add("from", createMessageRequest.from)
+                                .add("message", createMessageRequest.message)
+                                .add("type", createMessageRequest.type));
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }

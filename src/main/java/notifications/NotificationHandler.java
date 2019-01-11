@@ -8,30 +8,26 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 
 import main.java.Logic.Constants;
-import main.java.databaseOperations.DynamoDBHandler;
 
 public class NotificationHandler {
-    // POJO that we define ourselves and convert to JSON
-    private List<Message> messages;
+    private List<Notification> notifications;
 
     public NotificationHandler() {
-        messages = new ArrayList<>();
+        notifications = new ArrayList<>();
     }
 
     public void sendMessages() {
-        LambdaInvokeHandler.getInstance().invokeLambda(Constants.firebaseFunctionName, getMessagesPayload());
+        LambdaInvokeHandler.getInstance().invokeLambda(Constants.ablyFunctionName, getNotificationsPayload());
     }
 
-    public void addMessage(String userID, String title, String body) throws Exception {
-        for (String token : DynamoDBHandler.getInstance().getFirebaseTokens(userID)) {
-            messages.add(new Message(token, title, body));
-        }
+    public void addMessage(String channel, String type, JsonObjectBuilder payload) throws Exception {
+        notifications.add(new Notification(channel, type, payload));
     }
 
-    private String getMessagesPayload() {
+    private String getNotificationsPayload() {
         JsonArrayBuilder json = Json.createArrayBuilder();
-        for (Message message : messages) {
-            json.add(message.createMessageJSON());
+        for (Notification notification : notifications) {
+            json.add(notification.createMessageJSON());
         }
         return Json.createObjectBuilder().add("messages", json).build().toString();
     }
@@ -41,27 +37,22 @@ public class NotificationHandler {
         messageNotification
     }
 
-    private class Message {
-        String token;
-//        String type;
-        String title;
-        String body;
+    private class Notification {
+        String channel;
+        String type;
+        JsonObjectBuilder payload;
 
-        private Message(String token, String title, String body) {
-            this.token = token;
-//            this.type = type;
-            this.title = title;
-            this.body = body;
+        private Notification(String channel, String type, JsonObjectBuilder payload) {
+            this.channel = channel;
+            this.type = type;
+            this.payload = payload;
         }
 
         JsonObjectBuilder createMessageJSON() {
             return Json.createObjectBuilder()
-                    .add("token", token)
-                    .add("notification", Json.createObjectBuilder()
-//                        .add("type", this.type)
-                        .add("title", this.title)
-                        .add("body", this.body)
-                    );
+                    .add("channel", channel)
+                    .add("type", type)
+                    .add("payload", payload);
         }
     }
 }
