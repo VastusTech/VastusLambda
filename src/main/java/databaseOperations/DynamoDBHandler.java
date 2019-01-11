@@ -154,6 +154,18 @@ public class DynamoDBHandler {
                         // This is the marker update statement
                         updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
 
+                        Constants.debugLog("Update Safe statement -------------------------");
+                        for (Map.Entry<String, AttributeValueUpdate> entry : updateItem.entrySet()) {
+                            if (entry.getValue().getAction().equals("DELETE")) {
+                                Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
+                                        .getAction() + "!");
+                            }
+                            else {
+                                Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
+                                        .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
+                            }
+                        }
+
                         // We loop until we successfully update the item without the item being updated meanwhile
                         boolean ifFinished = false;
                         while (!ifFinished) {
