@@ -132,7 +132,7 @@ public class GroupDatabaseActionBuilder {
             @Override
             public String isViable(DatabaseItem newItem) throws Exception {
                 Group group = (Group) newItem;
-                if (group.restriction.equals("invite")) {
+                if (group.restriction != null && group.restriction.equals("invite")) {
                     // Check to see if the member was already invited
                     if (!group.access.equals("public")) {
                         // If this is a private group then we check to see if they are a friend of the owner

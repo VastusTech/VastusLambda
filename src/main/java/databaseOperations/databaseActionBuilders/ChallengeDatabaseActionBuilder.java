@@ -157,7 +157,7 @@ public class ChallengeDatabaseActionBuilder {
             public String isViable(DatabaseItem newItem) throws Exception {
                 Constants.debugLog("Checking update add member request!");
                 Challenge challenge = (Challenge) newItem;
-                if (challenge.restriction.equals("invite")) {
+                if (challenge.restriction != null && challenge.restriction.equals("invite")) {
                     // Check to see if the member was already invited
                     if (!challenge.access.equals("public")) {
                         // If this is a private challenge then we check to see if they are a friend of the owner

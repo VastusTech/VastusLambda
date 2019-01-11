@@ -143,7 +143,7 @@ public class EventDatabaseActionBuilder {
             @Override
             public String isViable(DatabaseItem newItem) throws Exception {
                 Event event = (Event) newItem;
-                if (event.restriction.equals("invite")) {
+                if (event.restriction != null && event.restriction.equals("invite")) {
                     // Check to see if the member was already invited
                     if (!event.access.equals("public")) {
                         // If this is a private event then we check to see if they are a friend of the owner
