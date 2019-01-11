@@ -226,7 +226,17 @@ public class ChallengeDatabaseActionBuilder {
                     // TODO This might be dangerous, given that this could be running in any part of the country.....
                     // TODO TEST TEST TEST TEST TEST
                     if (TimeInterval.timeHasPassed(new DateTime(challenge.endTime))) {
-                        return null;
+                        if (challenge.members.size() < 2) {
+                            return "The challenge must have at least 2 members to be viable for winning!";
+                        }
+                        else {
+                            if (challenge.winner != null) {
+                                return "That challenge has already been won!";
+                            }
+                            else {
+                                return null;
+                            }
+                        }
                     }
                     else {
                         return "The challenge due date must have passed before declaring a winner!!!\n" +
