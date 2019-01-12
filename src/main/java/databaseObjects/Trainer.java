@@ -27,8 +27,10 @@ public class Trainer extends User {
         else { this.availableTimes = new ArrayList<>(); }
         this.workoutSticker = item.getString("workoutSticker");
         this.preferredIntensity = item.getString("preferredIntensity");
-        this.workoutCapacity = Integer.parseInt(item.getString("workoutCapacity"));
-        this.workoutPrice = Integer.parseInt(item.getString("workoutPrice"));
+        String workoutCapacity = item.getString("workoutCapacity");
+        if (workoutCapacity != null) { this.workoutCapacity = Integer.parseInt(workoutCapacity); }
+        String workoutPrice = item.getString("workoutPrice");
+        if (workoutPrice != null) { this.workoutPrice = Integer.parseInt(workoutPrice); }
         this.followers = item.getStringSet("followers");
         if (followers == null) { this.followers = new HashSet<>(); }
         this.subscribers = item.getStringSet("subscribers");
