@@ -859,7 +859,7 @@ public class LambdaRequest {
             }
         }
         catch (IllegalArgumentException e) {
-            throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
+            throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.toString(), e);
         }
 
         DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
