@@ -30,7 +30,11 @@ public class MessageDatabaseActionBuilder {
         return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
-                return;
+                if (createMessageRequest.type != null) {
+                    if (createMessageRequest.type.equals("picture") || createMessageRequest.type.equals("video")) {
+                        item.put("message", new AttributeValue(id + "/" + createMessageRequest.message));
+                    }
+                }
             }
         });
     }
