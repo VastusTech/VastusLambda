@@ -145,8 +145,31 @@ public class CreateInvite {
                     payload = payload.add("description", createInviteRequest.description);
                 }
 
-
-                databaseActionCompiler.addMessage(createInviteRequest.to + "-Notifications", "Invite", payload);
+                switch (toItemType) {
+                    case "Client":
+                    case "Trainer":
+                    case "Gym":
+                        // Send to the person
+                        databaseActionCompiler.addMessage(createInviteRequest.to + "-Notifications", "Invite", payload);
+                        break;
+                    case "Event":
+                        // Send to the owner
+                        databaseActionCompiler.addMessage(Event.readEvent(createInviteRequest.to).owner + "-Notifications", "Invite", payload);;
+                        break;
+                    case "Challenge":
+                        // Send to the owner
+                        databaseActionCompiler.addMessage(Challenge.readChallenge(createInviteRequest.to).owner + "-Notifications", "Invite", payload);;
+                        break;
+                    case "Group":
+                        // Send to the owners
+                        for (String owner : Group.readGroup(createInviteRequest.to).owners) {
+                            databaseActionCompiler.addMessage(owner + "-Notifications", "Invite", payload);
+                        }
+                        break;
+                    default:
+                        Constants.debugLog("SENDING MESSAGE NOT HANDLED FOR INVITE TO THAT ITEM TYPE = " + toItemType);
+                        break;
+                }
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }

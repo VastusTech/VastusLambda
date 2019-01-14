@@ -4,6 +4,7 @@ import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.Event;
+import main.java.databaseObjects.Group;
 import main.java.databaseObjects.Invite;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -15,10 +16,12 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
+
 public class DeleteInvite {
     public static List<DatabaseAction> getActions(String fromID, String inviteID) throws Exception {
-        // List<DatabaseAction> databaseActions = new ArrayList<>();
-        DatabaseActionCompiler databaseActions = new DatabaseActionCompiler();
+        DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
         Invite invite = Invite.readInvite(inviteID);
         Invite.InviteType inviteType = Invite.InviteType.valueOf(invite.inviteType);
 
@@ -72,50 +75,73 @@ public class DeleteInvite {
         switch (Invite.InviteType.valueOf(invite.inviteType)) {
             case friendRequest:
                 // Remove from from's sentInvites field
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
                 // Remove from to's receivedInvites field
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
                 // Remove from friendRequests
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveFriendRequest(invite.to, toItemType, invite
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveFriendRequest(invite.to, toItemType, invite
                         .about));
                 break;
             case eventInvite:
                 // Remove from from's sentInvites field
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
                 // Remove from to's receivedInvites field
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
                 // Remove from invitedMembers and invitedEvents
-                databaseActions.add(EventDatabaseActionBuilder.updateRemoveInvitedMember(invite.about, invite.to));
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveInvitedEvent(invite.to, toItemType, invite
+                databaseActionCompiler.add(EventDatabaseActionBuilder.updateRemoveInvitedMember(invite.about, invite.to));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveInvitedEvent(invite.to, toItemType, invite
                         .about));
                 break;
             case challengeInvite:
                 // Remove from from's sentInvites field
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
                 // Remove from to's receivedInvites field
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveReceivedInvite(invite.to, toItemType, inviteID));
                 // Remove from invitedMembers and invitedChallenges
-                databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveInvitedMember(invite.about, invite.to));
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveInvitedChallenge(invite.to, toItemType, invite
+                databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateRemoveInvitedMember(invite.about, invite.to));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveInvitedChallenge(invite.to, toItemType, invite
                         .about));
                 break;
             case eventRequest:
                 // Remove from from's sentInvites field
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
                 // Remove from the event's memberRequest
-                databaseActions.add(EventDatabaseActionBuilder.updateRemoveMemberRequest(invite.to, invite.from));
+                databaseActionCompiler.add(EventDatabaseActionBuilder.updateRemoveMemberRequest(invite.to, invite.from));
                 break;
             case challengeRequest:
                 // Remove from from's sentInvites field
-                databaseActions.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
+                databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));
                 // Remove from the challenge's memberRequest
-                databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveMemberRequest(invite.to, invite.from));
+                databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateRemoveMemberRequest(invite.to, invite.from));
                 break;
         }
 
-        // Delete the invite
-        databaseActions.add(InviteDatabaseActionBuilder.delete(inviteID));
+        // Send an Ably message!
+        JsonObjectBuilder payload = Json.createObjectBuilder()
+                .add("id", invite.id);
 
-        return databaseActions.getDatabaseActions();
+        if (toItemType.equals("Client") || toItemType.equals("Trainer") || toItemType.equals("Gym")) {
+            // Send to the person
+            databaseActionCompiler.addMessage(invite.to + "-Notifications", "DeleteInvite", payload);
+        } else if (toItemType.equals("Event")) {
+            // Send to the owner
+            databaseActionCompiler.addMessage(Event.readEvent(invite.to).owner + "-Notifications", "DeleteInvite", payload);;
+        } else if (toItemType.equals("Challenge")) {
+            // Send to the owner
+            databaseActionCompiler.addMessage(Challenge.readChallenge(invite.to).owner + "-Notifications", "DeleteInvite", payload);;
+        } else if (toItemType.equals("Group")) {
+            // Send to the owners
+            for (String owner : Group.readGroup(invite.to).owners) {
+                databaseActionCompiler.addMessage(owner + "-Notifications", "DeleteInvite", payload);
+            }
+        }
+        else {
+            Constants.debugLog("SENDING MESSAGE NOT HANDLED FOR INVITE TO THAT ITEM TYPE = " + toItemType);
+        }
+
+        // Delete the invite
+        databaseActionCompiler.add(InviteDatabaseActionBuilder.delete(inviteID));
+
+        return databaseActionCompiler.getDatabaseActions();
     }
 }
