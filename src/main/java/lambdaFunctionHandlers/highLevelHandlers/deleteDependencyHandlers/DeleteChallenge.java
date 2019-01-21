@@ -9,6 +9,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.ItemNotFoundException;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.EventUpdateChallenge;
 
 import java.util.ArrayList;
@@ -54,9 +55,15 @@ public class DeleteChallenge {
 
             // Also check their sentInvites and check to see if they sent any invites for this challenge
             for (String inviteID : user.sentInvites) {
-                Invite invite = Invite.readInvite(inviteID);
-                if (invite.about.equals(challengeID)) {
-                    databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+                try {
+                    Invite invite = Invite.readInvite(inviteID);
+                    if (invite.about.equals(challengeID)) {
+                        databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+                    }
+                }
+                catch (ItemNotFoundException e) {
+                    Constants.debugLog("Couldn't find invite in user's sent invites, " +
+                            "but it's not really our problem...");
                 }
             }
         }
@@ -71,7 +78,12 @@ public class DeleteChallenge {
 
         // Delete all the receivedInvites
         for (String inviteID : challenge.receivedInvites) {
-            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+            try {
+                databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+            }
+            catch (ItemNotFoundException e) {
+                Constants.debugLog("Couldn't delete invite, but it's okay");
+            }
         }
 
         // Delete the challenge

@@ -11,6 +11,8 @@ import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.transactions.Transaction;
 import com.amazonaws.services.dynamodbv2.transactions.TransactionManager;
 import main.java.databaseObjects.*;
+import main.java.databaseOperations.exceptions.ItemNotFoundException;
+
 import org.joda.time.DateTime;
 
 import java.util.*;
@@ -362,7 +364,7 @@ public class DynamoDBHandler {
 
         // Check is the item didn't return anything
         if (item == null) {
-            throw new Exception("No item in the database with PrimaryKey = " + primaryKey.toString());
+            throw new ItemNotFoundException("No item in the database with PrimaryKey = " + primaryKey.toString());
         }
         return DatabaseItemBuilder.build(item);
     }
