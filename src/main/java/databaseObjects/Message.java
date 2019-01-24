@@ -21,6 +21,7 @@ public class Message extends DatabaseItem {
     public String type;
     public String from;
     public String name;
+    public String profileImagePath;
     public String message;
 
     public Message(Item item) throws Exception {
@@ -31,6 +32,7 @@ public class Message extends DatabaseItem {
         type = item.getString("type");
         from = item.getString("from");
         name = item.getString("name");
+        profileImagePath = item.getString("profileImagePath");
         message = item.getString("message");
     }
 

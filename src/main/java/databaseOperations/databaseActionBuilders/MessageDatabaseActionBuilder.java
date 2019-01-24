@@ -27,6 +27,9 @@ public class MessageDatabaseActionBuilder {
         item.put("message", new AttributeValue(createMessageRequest.message));
         item.put("name", new AttributeValue(createMessageRequest.name));
         if (createMessageRequest.type != null) { item.put("type", new AttributeValue(createMessageRequest.type)); }
+        if (createMessageRequest.profileImagePath != null) {
+            item.put("profileImagePath", new AttributeValue(createMessageRequest.profileImagePath));
+        }
         return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {

@@ -52,6 +52,10 @@ public class CreateMessage {
                     payload = payload.add("type", createMessageRequest.type);
                 }
 
+                if (createMessageRequest.profileImagePath != null) {
+                    payload = payload.add("profileImagePath", createMessageRequest.profileImagePath);
+                }
+
                 databaseActionCompiler.addMessage(createMessageRequest.board + "-Board", "Message", payload);
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);

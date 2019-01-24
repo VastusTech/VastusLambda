@@ -9,11 +9,13 @@ public class CreateMessageRequest {
 
     // Optional
     public String type;
+    public String profileImagePath;
 
-    public CreateMessageRequest(String board, String from, String name, String message, String type) {
+    public CreateMessageRequest(String board, String from, String name, String profileImagePath, String message, String type) {
         this.board = board;
         this.from = from;
         this.name = name;
+        this.profileImagePath = profileImagePath;
         this.message = message;
         this.type = type;
     }
@@ -42,6 +44,14 @@ public class CreateMessageRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProfileImagePath() {
+        return profileImagePath;
+    }
+
+    public void setProfileImagePath(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
     }
 
     public String getMessage() {
