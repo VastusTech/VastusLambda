@@ -48,6 +48,7 @@ public class LambdaRequest {
 
     private enum AttributeName {
         // User ===========================
+        stripeID,
         name,
         gender,
         birthday,
@@ -463,6 +464,15 @@ public class LambdaRequest {
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
                             .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserUpdateEmail.getActions(fromID, id, itemType, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case stripeID:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
+                        databaseActionCompiler.addAll(UserUpdateStripeID.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
