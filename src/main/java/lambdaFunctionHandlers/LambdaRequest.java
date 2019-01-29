@@ -116,6 +116,7 @@ public class LambdaRequest {
         restriction,
         tags,
         challenge,
+        ifCompleted,
         // Challenge =======================
         goal,
         winner,
@@ -648,6 +649,14 @@ public class LambdaRequest {
                 case challenge:
                     if (itemType.equals("Event")) {
                         databaseActionCompiler.addAll(EventUpdateChallenge.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case ifCompleted:
+                    if (itemType.equals("Event")) {
+                        databaseActionCompiler.addAll(EventUpdateIfCompleted.getActions(fromID, id, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");

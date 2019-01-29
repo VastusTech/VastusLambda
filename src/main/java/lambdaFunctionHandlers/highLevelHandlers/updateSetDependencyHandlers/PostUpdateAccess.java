@@ -1,6 +1,8 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import javafx.geometry.Pos;
 import main.java.Logic.Constants;
+import main.java.Logic.ItemType;
 import main.java.databaseObjects.Post;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
@@ -21,6 +23,10 @@ public class PostUpdateAccess {
         // Check to see if the access is valid
         if (!access.equals("private") && !access.equals("public")) {
             throw new Exception("Challenge access must be \"public\" or \"private\"!");
+        }
+
+        if (access.equals("public") && ItemType.getItemType(Post.readPost(postID).by).equals("Client")) {
+            throw new Exception("A Client cannot own a public Post!");
         }
 
         // Get all the actions for this process

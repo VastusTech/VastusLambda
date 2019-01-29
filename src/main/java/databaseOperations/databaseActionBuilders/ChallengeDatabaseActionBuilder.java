@@ -267,6 +267,14 @@ public class ChallengeDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, getPrimaryKey(id), "events", new AttributeValue(event), false, DELETE);
     }
 
+    public static DatabaseAction updateAddCompletedEvent(String id, String event) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "completedEvents", new AttributeValue(event), false, ADD);
+    }
+
+    public static DatabaseAction updateRemoveCompletedEvent(String id, String event) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "completedEvents", new AttributeValue(event), false, DELETE);
+    }
+
     public static DatabaseAction updateAddSubmission(String id, String submission, boolean ifWithCreate) throws
             Exception {
         AttributeValue attributeValue;

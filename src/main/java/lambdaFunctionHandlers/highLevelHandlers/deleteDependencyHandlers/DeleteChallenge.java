@@ -70,10 +70,13 @@ public class DeleteChallenge {
 
         // Remove from the events and from the group
         for (String eventID : challenge.events) {
-            databaseActions.addAll(EventUpdateChallenge.getActions(fromID, eventID, null));
+            // TODO Instead of deleting maybe we can just complete them?
+            databaseActions.addAll(DeleteEvent.getActions(fromID, eventID));
         }
+
         if (challenge.group != null) {
             databaseActions.add(GroupDatabaseActionBuilder.updateRemoveChallenge(challenge.group, challengeID));
+            databaseActions.add(GroupDatabaseActionBuilder.updateRemoveCompletedChallenge(challenge.group, challengeID));
         }
 
         // Delete all the receivedInvites

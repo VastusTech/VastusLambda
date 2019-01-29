@@ -24,6 +24,7 @@ public class Challenge extends DatabaseObject {
     public String access;
     public String restriction;
     public Set<String> events;
+    public Set<String> completedEvents;
     public String group;
     public String goal;
     public int difficulty;
@@ -52,6 +53,8 @@ public class Challenge extends DatabaseObject {
         this.ifCompleted = Boolean.parseBoolean(item.getString("ifCompleted"));
         this.events = item.getStringSet("events");
         if (this.events == null) { this.events = new HashSet<>(); }
+        this.completedEvents = item.getStringSet("completedEvents");
+        if (this.completedEvents == null) { this.completedEvents = new HashSet<>(); }
         this.group = item.getString("group");
         this.goal = item.getString("goal");
         String difficulty = item.getString("difficulty");

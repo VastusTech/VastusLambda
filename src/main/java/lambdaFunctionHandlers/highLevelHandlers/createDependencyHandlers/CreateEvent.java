@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Challenge;
+import main.java.databaseObjects.Group;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -28,15 +29,31 @@ public class CreateEvent {
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)
                 new TimeInterval(createEventRequest.time);
-                if (Integer.parseInt(createEventRequest.capacity) <= 0) {
+                if (Integer.parseInt(createEventRequest.capacity) < 1) {
                     throw new Exception("The capacity must be greater than 1!!");
                 }
+
                 if (createEventRequest.access != null) {
                     if (!createEventRequest.access.equals("public") && !createEventRequest.access.equals
                             ("private")) {
                         throw new Exception("Create Event access must be either \"public\" or \"private\"!");
                     }
                 }
+                else if (createEventRequest.group != null && createEventRequest.challenge != null) {
+                        throw new Exception("An event can only be a part of either a Group or a" +
+                                " Challenge, not both!");
+                }
+                else if (createEventRequest.group != null) {
+                    createEventRequest.access = Group.readGroup(createEventRequest.group).access;
+                }
+                else if (createEventRequest.challenge != null) {
+                    createEventRequest.access = Challenge.readChallenge(createEventRequest.challenge).access;
+                }
+                else {
+                    throw new Exception("Create Event access must either be set or inherit from a " +
+                            "Challenge or a Group!");
+                }
+
                 if (createEventRequest.restriction != null) {
                     if (!createEventRequest.restriction.equals("invite")) {
                         throw new Exception("Create Event restriction must be nothing or \"invite\"");
@@ -58,6 +75,11 @@ public class CreateEvent {
 
                 // Update owners fields
                 String ownerItemType = ItemType.getItemType(createEventRequest.owner);
+
+                if (ownerItemType.equals("Client") && createEventRequest.access.equals("public")) {
+                    throw new Exception("Clients cannot create public Events!");
+                }
+
                 databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddOwnedEvent(createEventRequest
                         .owner, ownerItemType, null, true));
 

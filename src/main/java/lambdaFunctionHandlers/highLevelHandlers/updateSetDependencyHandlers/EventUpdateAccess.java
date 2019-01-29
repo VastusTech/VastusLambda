@@ -1,6 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
 import main.java.Logic.Constants;
+import main.java.Logic.ItemType;
 import main.java.databaseObjects.Event;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
@@ -18,6 +19,10 @@ public class EventUpdateAccess {
 
         if (!access.equals("private") && !access.equals("public")) {
             throw new Exception("Event access must be \"public\" or \"private\"!");
+        }
+
+        if (access.equals("public") && ItemType.getItemType(Event.readEvent(eventID).owner).equals("Client")) {
+            throw new Exception("A Client cannot own a public Event!");
         }
 
         // Get all the actions for this process

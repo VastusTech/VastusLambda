@@ -2,6 +2,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
+import main.java.databaseObjects.Group;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
@@ -31,12 +32,20 @@ public class CreateChallenge {
                 if (Integer.parseInt(createChallengeRequest.capacity) <= 0) {
                     throw new Exception("The capacity must be greater than 1!!");
                 }
+
                 if (createChallengeRequest.access != null) {
                     if (!createChallengeRequest.access.equals("public") && !createChallengeRequest.access.equals
                             ("private")) {
                         throw new Exception("Create Challenge access must be either \"public\" or \"private\"!");
                     }
                 }
+                else if (createChallengeRequest.group != null) {
+                    createChallengeRequest.access = Group.readGroup(createChallengeRequest.group).access;
+                }
+                else {
+                    throw new Exception("Create Challenge access must either be set or inherit from group!");
+                }
+
                 if (createChallengeRequest.restriction != null) {
                     if (!createChallengeRequest.restriction.equals("invite")) {
                         throw new Exception("Create Challenge restriction must be nothing or \"invite\"");
@@ -58,6 +67,11 @@ public class CreateChallenge {
 
                 // Update owners fields
                 String ownerItemType = ItemType.getItemType(createChallengeRequest.owner);
+
+                if (ownerItemType.equals("Client") && createChallengeRequest.access.equals("public")) {
+                    throw new Exception("Clients cannot create public Challenges!");
+                }
+
                 databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddOwnedChallenge(createChallengeRequest
                         .owner, ownerItemType, null, true));
 

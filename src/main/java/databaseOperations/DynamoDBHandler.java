@@ -67,6 +67,9 @@ public class DynamoDBHandler {
     // Returns the ID if it's applicable
     public String attemptTransaction(DatabaseActionCompiler databaseActionCompiler) throws Exception {
         // Marker retry implemented
+        // TODO ==============================================================================
+        // TODO TRANSACTIONS ARE LIMITED TO 10 UNIQUE THINGS EACH, WE NEED TO BREAK IT UP
+        // TODO ==============================================================================
         Transaction transaction = txManager.newTransaction();
         String returnString = null;
 

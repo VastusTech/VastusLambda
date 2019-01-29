@@ -55,9 +55,11 @@ public class DeleteEvent {
         // Remove from the challenge and from the group
         if (event.challenge != null) {
             databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveEvent(event.challenge, eventID));
+            databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveCompletedEvent(event.challenge, eventID));
         }
         if (event.group != null) {
             databaseActions.add(GroupDatabaseActionBuilder.updateRemoveEvent(event.group, eventID));
+            databaseActions.add(GroupDatabaseActionBuilder.updateRemoveCompletedEvent(event.group, eventID));
         }
 
         // Remove the receivedInvites

@@ -38,10 +38,12 @@ public class DeleteGroup {
             databaseActions.add(UserDatabaseActionBuilder.updateRemoveGroup(memberID, memberItemType, groupID));
         }
         for (String eventID : group.events) {
-            databaseActions.addAll(EventUpdateGroup.getActions(fromID, eventID, null));
+            // TODO Instead of deleting maybe we can just complete them?
+            databaseActions.addAll(DeleteEvent.getActions(fromID, eventID));
         }
         for (String challengeID : group.challenges) {
-            databaseActions.addAll(ChallengeUpdateGroup.getActions(fromID, challengeID, null));
+            // TODO Instead of deleting maybe we can just complete them?
+            databaseActions.addAll(DeleteChallenge.getActions(fromID, challengeID));
         }
         for (String postID : group.posts) {
             databaseActions.addAll(PostUpdateGroup.getActions(fromID, postID, null));

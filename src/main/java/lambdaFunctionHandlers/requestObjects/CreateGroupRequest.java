@@ -4,9 +4,9 @@ public class CreateGroupRequest {
     // Required
     public String title;
     public String description;
+    public String access;
 
     // Optional
-    public String access;
     public String[] owners;
     public String[] members;
     public String[] tags;

@@ -15,7 +15,8 @@ public class CreateGroup {
     public static String handle(String fromID, CreateGroupRequest createGroupRequest) throws Exception {
         if (createGroupRequest != null) {
             // Create client
-            if (createGroupRequest.title != null && createGroupRequest.description != null) {
+            if (createGroupRequest.title != null && createGroupRequest.description != null
+                    && createGroupRequest.access != null) {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (createGroupRequest.owners == null) {
@@ -50,6 +51,11 @@ public class CreateGroup {
                 // Add to the owners' ownedGroups
                 for (String ownerID : createGroupRequest.owners) {
                     String ownerItemType = ItemType.getItemType(ownerID);
+
+                    if (ownerItemType.equals("Client") && createGroupRequest.access.equals("public")) {
+                        throw new Exception("No owners of a public group can be Clients!");
+                    }
+
                     databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddOwnedGroup(ownerID, ownerItemType,
                             null, true));
                 }

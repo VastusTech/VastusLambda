@@ -40,6 +40,10 @@ public class DeletePost {
             databaseActions.add(GroupDatabaseActionBuilder.updateRemovePost(post.group, postID));
         }
 
+        for (String commentID : post.comments) {
+            databaseActions.addAll(DeleteComment.getActions(fromID, commentID));
+        }
+
         // Delete the post
         databaseActions.add(PostDatabaseActionBuilder.delete(postID));
 

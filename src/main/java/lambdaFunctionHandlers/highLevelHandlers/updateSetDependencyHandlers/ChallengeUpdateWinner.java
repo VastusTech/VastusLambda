@@ -5,6 +5,7 @@ import main.java.Logic.ItemType;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 import java.util.ArrayList;
@@ -32,6 +33,12 @@ public class ChallengeUpdateWinner {
             String userItemType = ItemType.getItemType(userID);
             databaseActions.add(UserDatabaseActionBuilder.updateRemoveChallenge(userID, userItemType, challengeID));
             databaseActions.add(UserDatabaseActionBuilder.updateAddCompletedChallenge(userID, userItemType, challengeID));
+        }
+
+        // Updated Completed to Group as well
+        if (challenge.group != null) {
+            databaseActions.add(GroupDatabaseActionBuilder.updateRemoveChallenge(challenge.group, challengeID));
+            databaseActions.add(GroupDatabaseActionBuilder.updateAddCompletedChallenge(challenge.group, challengeID));
         }
 
         // Set the event if completed to true

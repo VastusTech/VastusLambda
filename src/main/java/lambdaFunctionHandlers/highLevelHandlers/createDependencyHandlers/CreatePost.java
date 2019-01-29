@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Challenge;
+import main.java.databaseObjects.Group;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
@@ -19,9 +20,19 @@ public class CreatePost {
                 // Create the database action list for the transaction to complete
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
+                if (!(fromID.equals(createPostRequest.by)) && !fromID.equals(Constants.adminKey)) {
+                    throw new Exception("PERMISSIONS ERROR: You can only create posts as yourself!");
+                }
+
                 if (createPostRequest.access != null && !createPostRequest.access.equals("private") &&
                         !createPostRequest.access.equals("public")) {
                     throw new Exception("The access must be either \"public\" or \"private\"!!!");
+                }
+                else if (createPostRequest.group != null) {
+                    createPostRequest.access = Group.readGroup(createPostRequest.group).access;
+                }
+                else {
+                    throw new Exception("Create post access must either be set or inherit from a group");
                 }
 
                 // Create post (with createPostRequest)
