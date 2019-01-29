@@ -127,6 +127,7 @@ public class LambdaRequest {
         // Post   ==========================
         picturePaths,
         videoPaths,
+        likes,
         // Group ===========================
         owners,
         // Comment =========================
@@ -873,6 +874,14 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case likes:
+                    if (itemType.equals("Post")) {
+                        databaseActionCompiler.addAll(PostAddLike.getActions(fromID, id, attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEADD operation on " + attributeName + "!");
             }
@@ -997,6 +1006,14 @@ public class LambdaRequest {
                 case videoPaths:
                     if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostRemoveVideoPath.getActions(fromID, id, attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
+                case likes:
+                    if (itemType.equals("Post")) {
+                        databaseActionCompiler.addAll(PostRemoveLike.getActions(fromID, id, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");

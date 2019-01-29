@@ -18,7 +18,7 @@ public class Post extends DatabaseObject {
     public String postType;
     public Set<String> picturePaths;
     public Set<String> videoPaths;
-    public int likes;
+    public Set<String> likes;
     public Set<String> comments;
     public String group;
 
@@ -33,7 +33,8 @@ public class Post extends DatabaseObject {
         if (picturePaths == null) { this.picturePaths = new HashSet<>(); }
         this.videoPaths = item.getStringSet("videoPaths");
         if (videoPaths == null) { this.videoPaths = new HashSet<>(); }
-        this.likes = item.getNumber("likes").intValue();
+        this.likes = item.getStringSet("likes");
+        if (likes == null) { this.likes = new HashSet<>(); }
         this.comments = item.getStringSet("comments");
         if (comments == null) { this.comments = new HashSet<>(); }
         this.group = item.getString("group");

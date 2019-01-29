@@ -74,12 +74,12 @@ public class PostDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, getPrimaryKey(id), "videoPaths", new AttributeValue(videoPath), false, DELETE);
     }
 
-    public static DatabaseAction updateAddLike(String id) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "likes", new AttributeValue().withN("1"), false, ADD);
+    public static DatabaseAction updateAddLike(String id, String like) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "likes", new AttributeValue(like), false, ADD);
     }
 
-    public static DatabaseAction updateRemoveLike(String id) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "likes", new AttributeValue().withN("1"), false, DELETE);
+    public static DatabaseAction updateRemoveLike(String id, String like) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "likes", new AttributeValue(like), false, DELETE);
     }
 
     public static DatabaseAction updateAddComment(String id, String comment, boolean ifWithCreate) throws Exception {

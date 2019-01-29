@@ -71,6 +71,8 @@ public class DynamoDBHandler {
         // TODO TRANSACTIONS ARE LIMITED TO 10 UNIQUE THINGS EACH, WE NEED TO BREAK IT UP
         // TODO ==============================================================================
         Transaction transaction = txManager.newTransaction();
+        int uniqueActionsInCurrentTransaction = 0;
+        final int transactionActionLimit = 10;
         String returnString = null;
 
         List<DatabaseAction> databaseActions = databaseActionCompiler.getDatabaseActions();
@@ -98,6 +100,7 @@ public class DynamoDBHandler {
 
                         transaction.putItem(new PutItemRequest().withTableName(databaseAction.getTableName()).withItem
                                 (databaseAction.item));
+                        uniqueActionsInCurrentTransaction++;
                         returnString = id;
                     }
                     catch (Exception e) {
@@ -129,6 +132,7 @@ public class DynamoDBHandler {
                         // This updates the object and the marker
                         transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName()).withKey
                                 (databaseAction.getKey()).withAttributeUpdates(updateItem));
+                        uniqueActionsInCurrentTransaction++;
 
                         // This updates the marker
                         //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
@@ -189,6 +193,7 @@ public class DynamoDBHandler {
                                     // Try to update the item and the marker with the conditional check
                                     transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName())
                                             .withKey(databaseAction.getKey()).withAttributeUpdates(updateItem));
+                                    uniqueActionsInCurrentTransaction++;
 
                                             /* TRANSACTIONS CONDITIONS NOT SUPPORTED
                                             .withConditionExpression(conditionalExpression).withExpressionAttributeNames
@@ -223,6 +228,7 @@ public class DynamoDBHandler {
                         // Delete the item
                         transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName()).withKey
                                 (databaseAction.getKey()));
+                        uniqueActionsInCurrentTransaction++;
                     }
                     catch (Exception e) {
                         transaction.rollback();
@@ -258,6 +264,7 @@ public class DynamoDBHandler {
                                     // try to delete the item
                                     transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName())
                                             .withKey(databaseAction.getKey()));
+                                    uniqueActionsInCurrentTransaction++;
 
                                             /* CONDITIONS NOT SUPPORTED
                                             .withConditionExpression(conditionalExpression)
@@ -289,6 +296,14 @@ public class DynamoDBHandler {
                                 .getLocalizedMessage(), e);
                     }
                     break;
+            }
+
+            // If we are over the limit, then we do the transaction and keep going
+            if (uniqueActionsInCurrentTransaction >= transactionActionLimit) {
+                transaction.commit();
+                transaction.delete();
+                transaction = txManager.newTransaction();
+                uniqueActionsInCurrentTransaction = 0;
             }
         }
 
