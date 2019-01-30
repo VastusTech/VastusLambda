@@ -24,9 +24,11 @@ public class CreatePost {
                     throw new Exception("PERMISSIONS ERROR: You can only create posts as yourself!");
                 }
 
-                if (createPostRequest.access != null && !createPostRequest.access.equals("private") &&
-                        !createPostRequest.access.equals("public")) {
-                    throw new Exception("The access must be either \"public\" or \"private\"!!!");
+                if (createPostRequest.access != null) {
+                    if (!createPostRequest.access.equals("private")
+                            && !createPostRequest.access.equals("public")) {
+                        throw new Exception("The access must be either \"public\" or \"private\"!!!");
+                    }
                 }
                 else if (createPostRequest.group != null) {
                     createPostRequest.access = Group.readGroup(createPostRequest.group).access;
