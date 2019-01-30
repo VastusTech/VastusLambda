@@ -44,10 +44,12 @@ abstract public class User extends DatabaseObject{
     public Set<String> sentInvites;
     public Set<String> receivedInvites;
     public Set<String> posts;
+    public Set<String> liked;
     public Set<String> comments;
     public Set<String> groups;
     public Set<String> invitedGroups;
     public Set<String> ownedGroups;
+    public Set<String> messageBoards;
 
     public User(Item item) throws Exception {
         super(item);
@@ -106,6 +108,8 @@ abstract public class User extends DatabaseObject{
         if (receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
         this.posts = item.getStringSet("posts");
         if (posts == null) { this.posts = new HashSet<>(); }
+        this.liked = item.getStringSet("liked");
+        if (liked == null) { this.liked = new HashSet<>(); }
         this.comments = item.getStringSet("comments");
         if (comments == null) { this.comments = new HashSet<>(); }
         this.groups = item.getStringSet("groups");
@@ -114,6 +118,8 @@ abstract public class User extends DatabaseObject{
         if (invitedGroups == null) { this.invitedGroups = new HashSet<>(); }
         this.ownedGroups = item.getStringSet("ownedGroups");
         if (ownedGroups == null) { this.ownedGroups = new HashSet<>(); }
+        this.messageBoards = item.getStringSet("messageBoards");
+        if (messageBoards == null) { this.messageBoards = new HashSet<>(); }
     }
 
     private int getAgeFromBirthday(String birthday) {

@@ -390,6 +390,14 @@ public class UserDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "posts", new AttributeValue(post), false, DELETE);
     }
 
+    public static DatabaseAction updateAddLike(String id, String itemType, String like) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "likes", new AttributeValue(like), false, ADD);
+    }
+
+    public static DatabaseAction updateRemoveLike(String id, String itemType, String like) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "likes", new AttributeValue(like), false, DELETE);
+    }
+
     public static DatabaseAction updateAddComment(String id, String itemType, String comment, boolean ifWithCreate)
             throws Exception {
         if (ifWithCreate) {
@@ -449,5 +457,13 @@ public class UserDatabaseActionBuilder {
 
     public static DatabaseAction updateRemoveOwnedGroup(String id, String itemType, String group) throws Exception {
         return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "ownedGroups", new AttributeValue(group), false, DELETE);
+    }
+
+    public static DatabaseAction updateAddMessageBoard(String id, String itemType, String messageBoard) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "messageBoards", new AttributeValue(messageBoard), false, ADD);
+    }
+
+    public static DatabaseAction updateRemoveMessageBoard(String id, String itemType, String messageBoard) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "messageBoards", new AttributeValue(messageBoard), false, DELETE);
     }
 }

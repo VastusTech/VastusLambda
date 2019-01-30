@@ -76,6 +76,7 @@ public class LambdaRequest {
         receivedInvites,
         groups,
         ownedGroups,
+        messageBoards,
         // Client ==========================
         trainersFollowing,
         // Trainer =========================
@@ -806,6 +807,15 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case messageBoards:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
+                        databaseActionCompiler.addAll(UserAddMessageBoard.getActions(fromID, id, itemType, attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                     // TODO We should make a request system for this too
 //                case ownedGroups:
 //                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
@@ -961,6 +971,15 @@ public class LambdaRequest {
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
                             .equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserRemoveFromGroup.getActions(fromID, id, itemType, attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
+                case messageBoards:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
+                        databaseActionCompiler.addAll(UserRemoveMessageBoard.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
