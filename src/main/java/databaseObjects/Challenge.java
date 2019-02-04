@@ -27,11 +27,13 @@ public class Challenge extends DatabaseObject {
     public Set<String> completedEvents;
     public String group;
     public String goal;
+    public String challengeType;
     public int difficulty;
     public String winner;
     public String prize;
     public Set<String> tags;
     public Set<String> submissions;
+    public Set<String> streaks;
 
     public Challenge(Item item) throws Exception {
         super(item);
@@ -57,6 +59,7 @@ public class Challenge extends DatabaseObject {
         if (this.completedEvents == null) { this.completedEvents = new HashSet<>(); }
         this.group = item.getString("group");
         this.goal = item.getString("goal");
+        this.challengeType = item.getString("challengeType");
         String difficulty = item.getString("difficulty");
         if (difficulty != null) { this.difficulty = Integer.parseInt(difficulty); }
         else { this.difficulty = 0; }
@@ -66,6 +69,8 @@ public class Challenge extends DatabaseObject {
         this.prize = item.getString("prize");
         this.submissions = item.getStringSet("submissions");
         if (this.submissions == null) { this.submissions = new HashSet<>(); }
+        this.streaks = item.getStringSet("streaks");
+        if (this.streaks == null) { this.streaks = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

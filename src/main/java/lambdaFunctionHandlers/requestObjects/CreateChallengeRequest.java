@@ -9,6 +9,7 @@ public class CreateChallengeRequest {
     public String goal;
 
     // Optional
+    public String challengeType;
     public String group;
     public String description;
     public String[] tags;
@@ -19,13 +20,14 @@ public class CreateChallengeRequest {
     public String prize;
 
     public CreateChallengeRequest(String owner, String endTime, String capacity, String title, String goal, String
-            group, String description, String[] tags, String[] members, String access, String restriction,
-                                  String difficulty, String prize) {
+            challengeType, String group, String description, String[] tags, String[] members, String access, String
+            restriction, String difficulty, String prize) {
         this.owner = owner;
         this.endTime = endTime;
         this.capacity = capacity;
         this.title = title;
         this.goal = goal;
+        this.challengeType = challengeType;
         this.group = group;
         this.description = description;
         this.tags = tags;
@@ -68,6 +70,14 @@ public class CreateChallengeRequest {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getChallengeType() {
+        return challengeType;
+    }
+
+    public void setChallengeType(String challengeType) {
+        this.challengeType = challengeType;
     }
 
     public String getGoal() {

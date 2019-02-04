@@ -56,8 +56,6 @@ public class Event extends DatabaseObject {
         item.put("item_type", new AttributeValue("Event"));
         item.put("capacity", new AttributeValue("10"));
         item.put("access", new AttributeValue("private"));
-//        item.put("title", new AttributeValue("Untitled"));
-//        item.put("description", new AttributeValue("Put your description here."));
         item.put("ifCompleted", new AttributeValue("false"));
         return item;
     }

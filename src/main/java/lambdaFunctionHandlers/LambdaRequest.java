@@ -36,6 +36,7 @@ public class LambdaRequest {
     private CreateCommentRequest createCommentRequest;
     private CreateSponsorRequest createSponsorRequest;
     private CreateMessageRequest createMessageRequest;
+    private CreateStreakRequest createStreakRequest;
 
     private enum Action {
         CREATE,
@@ -134,6 +135,8 @@ public class LambdaRequest {
         // Comment =========================
         comment,
         // Sponsor =========================
+        // Message =========================
+        // Streak =========================
     }
 
     // This is where the inputs are handled!
@@ -351,6 +354,10 @@ public class LambdaRequest {
                 numCreateRequest++;
                 Constants.debugLog("Has a create message request!\n");
             }
+            if (createStreakRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create streak request!\n");
+            }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
@@ -391,6 +398,8 @@ public class LambdaRequest {
                     return CreateSponsor.handle(fromID, createSponsorRequest);
                 case Message:
                     return CreateMessage.handle(fromID, createMessageRequest);
+                case Streak:
+                    return CreateStreak.handle(fromID, createStreakRequest);
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -1110,7 +1119,7 @@ public class LambdaRequest {
                          CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest,
                          CreatePostRequest createPostRequest, CreateGroupRequest createGroupRequest,
                          CreateCommentRequest createCommentRequest, CreateSponsorRequest createSponsorRequest,
-                         CreateMessageRequest createMessageRequest) {
+                         CreateMessageRequest createMessageRequest, CreateStreakRequest createStreakRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -1131,6 +1140,7 @@ public class LambdaRequest {
         this.createCommentRequest = createCommentRequest;
         this.createSponsorRequest = createSponsorRequest;
         this.createMessageRequest = createMessageRequest;
+        this.createStreakRequest = createStreakRequest;
     }
 
     public LambdaRequest() {}
@@ -1293,5 +1303,13 @@ public class LambdaRequest {
 
     public void setCreateMessageRequest(CreateMessageRequest createMessageRequest) {
         this.createMessageRequest = createMessageRequest;
+    }
+
+    public CreateStreakRequest getCreateStreakRequest() {
+        return createStreakRequest;
+    }
+
+    public void setCreateStreakRequest(CreateStreakRequest createStreakRequest) {
+        this.createStreakRequest = createStreakRequest;
     }
 }

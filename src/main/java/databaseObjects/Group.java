@@ -12,6 +12,8 @@ import java.util.Set;
 public class Group extends DatabaseObject {
     public String title;
     public String description;
+    public String motto;
+    public String groupImagePath;
     public Set<String> owners;
     public Set<String> members;
     public Set<String> invitedMembers;
@@ -25,11 +27,14 @@ public class Group extends DatabaseObject {
     public Set<String> completedChallenges;
     public Set<String> posts;
     public Set<String> tags;
+    public Set<String> streaks;
 
     Group(Item item) throws Exception {
         super(item);
         this.title = item.getString("title");
         this.description = item.getString("description");
+        this.motto = item.getString("motto");
+        this.groupImagePath = item.getString("groupImagePath");
         this.owners = item.getStringSet("owners");
         if (this.owners == null) { this.owners = new HashSet<>(); }
         this.members = item.getStringSet("members");
@@ -54,6 +59,8 @@ public class Group extends DatabaseObject {
         if (this.posts == null) { this.posts = new HashSet<>(); }
         this.tags = item.getStringSet("tags");
         if (this.tags == null) { this.tags = new HashSet<>(); }
+        this.streaks = item.getStringSet("streaks");
+        if (this.streaks == null) { this.streaks = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

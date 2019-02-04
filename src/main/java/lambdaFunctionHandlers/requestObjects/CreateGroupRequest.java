@@ -7,15 +7,20 @@ public class CreateGroupRequest {
     public String access;
 
     // Optional
+    public String motto;
+    public String groupImagePath;
     public String[] owners;
     public String[] members;
     public String[] tags;
     public String restriction;
 
-    public CreateGroupRequest(String title, String description, String access, String[] owners, String[] members, String[] tags, String restriction) {
+    public CreateGroupRequest(String title, String description, String access, String motto, String groupImagePath,
+                              String[] owners, String[] members, String[] tags, String restriction) {
         this.title = title;
         this.description = description;
         this.access = access;
+        this.motto = motto;
+        this.groupImagePath = groupImagePath;
         this.owners = owners;
         this.members = members;
         this.tags = tags;
@@ -46,6 +51,22 @@ public class CreateGroupRequest {
 
     public void setAccess(String access) {
         this.access = access;
+    }
+
+    public String getMotto() {
+        return motto;
+    }
+
+    public void setMotto(String motto) {
+        this.motto = motto;
+    }
+
+    public String getGroupImagePath() {
+        return groupImagePath;
+    }
+
+    public void setGroupImagePath(String groupImagePath) {
+        this.groupImagePath = groupImagePath;
     }
 
     public String[] getOwners() {

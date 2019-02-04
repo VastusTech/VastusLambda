@@ -31,6 +31,10 @@ public class ChallengeDatabaseActionBuilder {
         item.put("capacity", new AttributeValue(createChallengeRequest.capacity));
         item.put("title", new AttributeValue(createChallengeRequest.title));
         item.put("goal", new AttributeValue(createChallengeRequest.goal));
+        if (createChallengeRequest.challengeType != null) { item.put("challengeType", new AttributeValue(
+                createChallengeRequest.challengeType)); }
+        if (createChallengeRequest.group != null) { item.put("group", new AttributeValue(createChallengeRequest
+                .group)); }
         if (createChallengeRequest.prize != null) { item.put("prize", new AttributeValue(createChallengeRequest
                 .prize)); }
         if (createChallengeRequest.description != null) { item.put("description", new AttributeValue(createChallengeRequest

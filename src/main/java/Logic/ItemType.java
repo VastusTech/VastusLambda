@@ -13,7 +13,8 @@ public enum ItemType {
     Group,
     Comment,
     Sponsor,
-    Message;
+    Message,
+    Streak,;
 
     public static String getItemType(String id) throws Exception {
         String prefix = id.substring(0, Constants.numPrefix);

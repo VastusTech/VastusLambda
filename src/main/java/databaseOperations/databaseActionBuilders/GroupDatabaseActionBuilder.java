@@ -28,7 +28,11 @@ public class GroupDatabaseActionBuilder {
         Map<String, AttributeValue> item = Group.getEmptyItem();
         item.put("title", new AttributeValue(createGroupRequest.title));
         item.put("description", new AttributeValue(createGroupRequest.description));
-        if (createGroupRequest.access != null) { item.put("access", new AttributeValue(createGroupRequest.access)); }
+        item.put("access", new AttributeValue(createGroupRequest.access));
+        if (createGroupRequest.motto != null) { item.put("motto", new AttributeValue(createGroupRequest
+                .motto)); }
+        if (createGroupRequest.groupImagePath != null) { item.put("groupImagePath", new AttributeValue(createGroupRequest
+                .groupImagePath)); }
         if (createGroupRequest.restriction != null) { item.put("restriction", new AttributeValue(createGroupRequest
                 .restriction)); }
         if (createGroupRequest.members != null) { item.put("members", new AttributeValue(Arrays.asList(createGroupRequest
@@ -51,6 +55,14 @@ public class GroupDatabaseActionBuilder {
 
     public static DatabaseAction updateDescription(String id, String description) throws Exception {
         return new UpdateDatabaseAction(id, getPrimaryKey(id), "description", new AttributeValue(description), false, PUT);
+    }
+
+    public static DatabaseAction updateMotto(String id, String motto) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "motto", new AttributeValue(motto), false, PUT);
+    }
+
+    public static DatabaseAction updateGroupImagePath(String id, String groupImagePath) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "groupImagePath", new AttributeValue(groupImagePath), false, PUT);
     }
 
     public static DatabaseAction updateAccess(String id, String access) throws Exception {
@@ -251,9 +263,19 @@ public class GroupDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, getPrimaryKey(id), "tags", new AttributeValue(tag), false, DELETE);
     }
 
-    public static DatabaseAction updateGroup(String id, String group) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "group", new AttributeValue(group), false, PUT);
+    public static DatabaseAction updateAddStreak(String id, String streak, boolean ifWithCreate) throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, getPrimaryKey(id), "streaks", null, true, ADD);
+        }
+        else {
+            return new UpdateDatabaseAction(id, getPrimaryKey(id), "streaks", new AttributeValue(streak), false, ADD);
+        }
     }
+
+    public static DatabaseAction updateRemoveStreak(String id, String streak) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(id), "streaks", new AttributeValue(streak), false, DELETE);
+    }
+
 
     public static DatabaseAction delete(String id) {
         return new DeleteDatabaseAction(id, itemType, getPrimaryKey(id));

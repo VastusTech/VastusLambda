@@ -1,4 +1,4 @@
-package test.databaseObjectTests;
+package test.java.databaseObjectTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 // EXPECTED (THEORETICALLY) , ACTUAL (TESTED)
-public class TimeIntervalTests {
+public class TimeIntervalTest {
     @Before
     public void initConstants() {
         Constants.workoutShortestTimeSectionInterval = 5;

@@ -5,6 +5,9 @@ import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+
+import org.joda.time.DateTime;
+
 import main.java.databaseOperations.DynamoDBHandler;
 
 import java.math.BigDecimal;
@@ -17,16 +20,16 @@ abstract public class DatabaseObject extends DatabaseItem {
 
     public String id;
     public String itemType;
-    public String marker;
-    public String timeCreated;
+    public int marker;
+    public DateTime timeCreated;
 
     public DatabaseObject(Item item) throws Exception {
         // Set the rest of the object
         this.id = item.getString("id");
         this.itemType = item.getString("item_type");
         // TODO Surely there must be a better way to do this? Test if you just getString?
-        this.marker = Integer.toString(item.getNumber("marker").intValueExact());
-        this.timeCreated = item.getString("timeCreated");
+        this.marker = item.getNumber("marker").intValueExact();
+        this.timeCreated = new DateTime(item.getString("timeCreated"));
     }
 
     static Map<String, AttributeValue> getEmptyItem() {

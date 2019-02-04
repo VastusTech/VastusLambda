@@ -50,6 +50,7 @@ abstract public class User extends DatabaseObject{
     public Set<String> invitedGroups;
     public Set<String> ownedGroups;
     public Set<String> messageBoards;
+    public Set<String> streaks;
 
     public User(Item item) throws Exception {
         super(item);
@@ -120,6 +121,8 @@ abstract public class User extends DatabaseObject{
         if (ownedGroups == null) { this.ownedGroups = new HashSet<>(); }
         this.messageBoards = item.getStringSet("messageBoards");
         if (messageBoards == null) { this.messageBoards = new HashSet<>(); }
+        this.streaks = item.getStringSet("streaks");
+        if (streaks == null) { this.streaks = new HashSet<>(); }
     }
 
     private int getAgeFromBirthday(String birthday) {

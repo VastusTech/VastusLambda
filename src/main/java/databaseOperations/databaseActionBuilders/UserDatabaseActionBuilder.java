@@ -466,4 +466,17 @@ public class UserDatabaseActionBuilder {
     public static DatabaseAction updateRemoveMessageBoard(String id, String itemType, String messageBoard) throws Exception {
         return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "messageBoards", new AttributeValue(messageBoard), false, DELETE);
     }
+
+    public static DatabaseAction updateAddStreak(String id, String itemType, String streak, boolean ifWithCreate) throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "streaks", null, true, ADD);
+        }
+        else {
+            return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "streaks", new AttributeValue(streak), false, ADD);
+        }
+    }
+
+    public static DatabaseAction updateRemoveStreak(String id, String itemType, String streak) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "streaks", new AttributeValue(streak), false, DELETE);
+    }
 }
