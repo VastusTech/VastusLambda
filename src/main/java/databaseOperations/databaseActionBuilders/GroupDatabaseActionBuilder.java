@@ -44,7 +44,9 @@ public class GroupDatabaseActionBuilder {
         return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
-                return;
+                if (createGroupRequest.groupImagePath != null) {
+                    item.put("groupImagePath", new AttributeValue(id + "/" + createGroupRequest.groupImagePath));
+                }
             }
         });
     }
