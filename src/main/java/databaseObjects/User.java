@@ -15,6 +15,7 @@ abstract public class User extends DatabaseObject{
     public String birthday;
     public int age;
     public String email;
+    public String location;
     public String username;
     public String federatedID;
     public String stripeID;
@@ -59,6 +60,7 @@ abstract public class User extends DatabaseObject{
         this.birthday = item.getString("birthday");
         this.age = getAgeFromBirthday(birthday);
         this.email = item.getString("email");
+        this.location = item.getString("location");
         this.username = item.getString("username");
         this.federatedID = item.getString("federatedID");
         this.stripeID = item.getString("stripeID");

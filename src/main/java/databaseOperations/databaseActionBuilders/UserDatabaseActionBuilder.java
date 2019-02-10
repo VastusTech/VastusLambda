@@ -30,6 +30,10 @@ public class UserDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "email", new AttributeValue(email), false, PUT);
     }
 
+    public static DatabaseAction updateLocation(String id, String itemType, String location) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "location", new AttributeValue(location), false, PUT);
+    }
+
     public static DatabaseAction updateStripeID(String id, String itemType, String stripeID) throws Exception {
         return new UpdateDatabaseAction(id, getPrimaryKey(itemType, id), "stripeID", new AttributeValue(stripeID), false, PUT);
     }

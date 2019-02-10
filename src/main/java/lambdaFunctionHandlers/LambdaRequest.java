@@ -55,6 +55,7 @@ public class LambdaRequest {
         birthday,
         foundingDay,
         email,
+        location,
         username,
         profileImagePath,
         profileImagePaths,
@@ -459,6 +460,14 @@ public class LambdaRequest {
                 case birthday:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Sponsor")) {
                         databaseActionCompiler.addAll(UserUpdateBirthday.getActions(fromID, id, itemType, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case location:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Sponsor")) {
+                        databaseActionCompiler.addAll(UserUpdateLocation.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
