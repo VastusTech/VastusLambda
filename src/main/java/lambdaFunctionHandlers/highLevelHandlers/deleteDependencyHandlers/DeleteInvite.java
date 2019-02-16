@@ -117,27 +117,27 @@ public class DeleteInvite {
         }
 
         // Send an Ably message!
-        JsonObjectBuilder payload = Json.createObjectBuilder()
-                .add("id", invite.id);
-
-        if (toItemType.equals("Client") || toItemType.equals("Trainer") || toItemType.equals("Gym")) {
-            // Send to the person
-            databaseActionCompiler.addMessage(invite.to + "-Notifications", "DeleteInvite", payload);
-        } else if (toItemType.equals("Event")) {
-            // Send to the owner
-            databaseActionCompiler.addMessage(Event.readEvent(invite.to).owner + "-Notifications", "DeleteInvite", payload);;
-        } else if (toItemType.equals("Challenge")) {
-            // Send to the owner
-            databaseActionCompiler.addMessage(Challenge.readChallenge(invite.to).owner + "-Notifications", "DeleteInvite", payload);;
-        } else if (toItemType.equals("Group")) {
-            // Send to the owners
-            for (String owner : Group.readGroup(invite.to).owners) {
-                databaseActionCompiler.addMessage(owner + "-Notifications", "DeleteInvite", payload);
-            }
-        }
-        else {
-            Constants.debugLog("SENDING MESSAGE NOT HANDLED FOR INVITE TO THAT ITEM TYPE = " + toItemType);
-        }
+//        JsonObjectBuilder payload = Json.createObjectBuilder()
+//                .add("id", invite.id);
+//
+//        if (toItemType.equals("Client") || toItemType.equals("Trainer") || toItemType.equals("Gym")) {
+//            // Send to the person
+//            databaseActionCompiler.addMessage(invite.to + "-Notifications", "DeleteInvite", payload);
+//        } else if (toItemType.equals("Event")) {
+//            // Send to the owner
+//            databaseActionCompiler.addMessage(Event.readEvent(invite.to).owner + "-Notifications", "DeleteInvite", payload);;
+//        } else if (toItemType.equals("Challenge")) {
+//            // Send to the owner
+//            databaseActionCompiler.addMessage(Challenge.readChallenge(invite.to).owner + "-Notifications", "DeleteInvite", payload);;
+//        } else if (toItemType.equals("Group")) {
+//            // Send to the owners
+//            for (String owner : Group.readGroup(invite.to).owners) {
+//                databaseActionCompiler.addMessage(owner + "-Notifications", "DeleteInvite", payload);
+//            }
+//        }
+//        else {
+//            Constants.debugLog("SENDING MESSAGE NOT HANDLED FOR INVITE TO THAT ITEM TYPE = " + toItemType);
+//        }
 
         // Delete the invite
         databaseActionCompiler.add(InviteDatabaseActionBuilder.delete(inviteID));

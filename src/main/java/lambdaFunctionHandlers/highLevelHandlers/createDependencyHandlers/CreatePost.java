@@ -64,6 +64,11 @@ public class CreatePost {
 //                            }
                             databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddSubmission
                                     (createPostRequest.about, null, true));
+
+                            databaseActionCompiler.getNotificationHandler().addAddNotification(
+                                    createPostRequest.about, "submissions", "", true
+                            );
+                            databaseActionCompiler.getNotificationHandler().setCreateFlag(createPostRequest.about);
                         }
                     }
                 }
@@ -74,7 +79,6 @@ public class CreatePost {
                         .videoPaths.length > Constants.postVideoPathsLimit)) {
                     throw new Exception("That post has too many pictures and/or videos on it!");
                 }
-
 
                 // Add the post to the by's
                 String by = createPostRequest.by;

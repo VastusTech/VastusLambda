@@ -1,13 +1,17 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import main.java.Logic.Constants;
+import main.java.Logic.ItemType;
 import main.java.databaseObjects.Message;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.MessageDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateMessageRequest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
@@ -37,26 +41,36 @@ public class CreateMessage {
                 }
 
                 // Check to see if the request features are well formed (i.e not invalid date or time)
+                List<String> notificationIDs = Message.getNotificationIDsFromBoard(createMessageRequest.board);
+
+                // If the notifications list is bigger than one, then we know all the IDs are users
+                if (notificationIDs.size() > 1) {
+                    // Then we add the board to their boards
+                    for (String id : notificationIDs) {
+                        String itemType = ItemType.getItemType(id);
+                        databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddMessageBoard(id, itemType, createMessageRequest.board));
+                    }
+                }
 
                 // Add the create statement
                 databaseActionCompiler.add(MessageDatabaseActionBuilder.create(createMessageRequest));
 
                 // Send an Ably message!
-                JsonObjectBuilder payload = Json.createObjectBuilder()
-                    .add("from", createMessageRequest.from)
-                    .add("name", createMessageRequest.name)
-                    .add("message", createMessageRequest.message)
-                    .add("board", createMessageRequest.board);
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("from",  createMessageRequest.from);
+                payload.put("name", createMessageRequest.name);
+                payload.put("message", createMessageRequest.message);
+                payload.put("board", createMessageRequest.board);
 
                 if (createMessageRequest.type != null) {
-                    payload = payload.add("type", createMessageRequest.type);
+                    payload.put("type", createMessageRequest.type);
                 }
 
                 if (createMessageRequest.profileImagePath != null) {
-                    payload = payload.add("profileImagePath", createMessageRequest.profileImagePath);
+                    payload.put("profileImagePath", createMessageRequest.profileImagePath);
                 }
 
-                databaseActionCompiler.addMessage(createMessageRequest.board + "-Board", "Message", payload);
+                databaseActionCompiler.getNotificationHandler().addMessageNotification(createMessageRequest.board, payload);
 
                 return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
             }

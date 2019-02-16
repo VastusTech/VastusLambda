@@ -102,6 +102,10 @@ public class DynamoDBHandler {
                                 (databaseAction.item));
                         uniqueActionsInCurrentTransaction++;
                         returnString = id;
+
+                        // Add the item to the Create object fields
+                        databaseActionCompiler.getNotificationHandler().fillCreateObject(id,
+                                convertFromAttributeValueMap(databaseAction.item));
                     }
                     catch (Exception e) {
                         transaction.rollback();
@@ -465,6 +469,24 @@ public class DynamoDBHandler {
         else {
             return tokens;
         }
+    }
+
+    private Map<String, Object> convertFromAttributeValueMap(Map<String, AttributeValue> map) {
+        Map<String, Object> returnMap = new HashMap<>();
+        for (Map.Entry<String, AttributeValue> entry : map.entrySet()) {
+            String name = entry.getKey();
+            AttributeValue value = entry.getValue();
+            if (value.getS() != null) {
+                returnMap.put(name, value.getS());
+            }
+            else if (value.getSS() != null) {
+                returnMap.put(name, value.getSS());
+            }
+            else if (value.getN() != null) {
+                returnMap.put(name, value.getN());
+            }
+        }
+        return returnMap;
     }
 
     // TODO We usually don't want to send out a null variable without throwing an exception

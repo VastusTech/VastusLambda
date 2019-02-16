@@ -227,7 +227,11 @@ public class DatabaseActionCompiler {
         }
     }
 
-    public void addMessage(String to, String type, JsonObjectBuilder payload) throws Exception {
-        notificationHandler.addMessage(to, type, payload);
+    public NotificationHandler getNotificationHandler() {
+        return this.notificationHandler;
     }
+
+//    public void addMessage(String to, String type, JsonObjectBuilder payload) throws Exception {
+////        notificationHandler.addMessage(to, type, payload);
+//    }
 }

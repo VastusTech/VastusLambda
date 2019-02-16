@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import main.java.Logic.Constants;
+import main.java.notifications.Notification;
 
 import java.util.HashMap;
 import java.util.Map;

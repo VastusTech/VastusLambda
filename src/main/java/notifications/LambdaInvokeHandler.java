@@ -34,6 +34,6 @@ public class LambdaInvokeHandler {
         InvokeRequest request = new InvokeRequest().withFunctionName(functionName).withPayload(payload);
         // TODO How to skip the response?
         InvokeResult result = client.invoke(request);
-        Constants.debugLog("LOG RESULT FROM FIREBASE LAMBDA: \n" + result.getLogResult());
+        Constants.debugLog("LOG RESULT FROM " + functionName + " LAMBDA: \n" + result.getLogResult());
     }
 }
