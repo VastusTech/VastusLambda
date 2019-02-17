@@ -476,14 +476,14 @@ public class DynamoDBHandler {
         for (Map.Entry<String, AttributeValue> entry : map.entrySet()) {
             String name = entry.getKey();
             AttributeValue value = entry.getValue();
-            if (value.getS() != null) {
-                returnMap.put(name, value.getS());
-            }
-            else if (value.getSS() != null) {
-                returnMap.put(name, value.getSS());
-            }
-            else if (value.getN() != null) {
-                returnMap.put(name, value.getN());
+            if (value != null) {
+                if (value.getS() != null) {
+                    returnMap.put(name, value.getS());
+                } else if (value.getSS() != null) {
+                    returnMap.put(name, value.getSS());
+                } else if (value.getN() != null) {
+                    returnMap.put(name, value.getN());
+                }
             }
         }
         return returnMap;

@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * DatabaseObject class represents any object that is in the "Classics" table for the Vastus app
+ * tech stack. Specifies the essential fields that every item will have, including the fields that
+ * make up the primary key: id and item_type.
+ */
 abstract public class DatabaseObject extends DatabaseItem {
     final public static String tableName = Constants.databaseTableName;
 

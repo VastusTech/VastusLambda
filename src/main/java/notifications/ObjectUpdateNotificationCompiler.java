@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import main.java.Logic.Constants;
+
 /**
  * Compiles the notifications together so that it sends all relevant information to one channel at
  * a time. For instance, if two notifications were going to be sent to a single channel, this class
@@ -58,7 +60,7 @@ public class ObjectUpdateNotificationCompiler {
             addUpdateType(channel, updateType, new HashMap<>());
         }
         else {
-            notification.addPayloadField(channel, new HashMap<>());
+            notification.addPayloadField(updateType, new HashMap<>());
         }
     }
 
@@ -71,6 +73,7 @@ public class ObjectUpdateNotificationCompiler {
      */
     public void fillCreateObjectFields(String id, Map<String, Object> createObject) {
         for (Notification notification : getNotifications()) {
+            Constants.debugLog("Notification before being filled = " + notification.toString() + "\n");
             if (notification.payloadContainsKey("SET")) {
                 notification.replaceFromPayloadField("SET", "", id);
             }
@@ -83,6 +86,8 @@ public class ObjectUpdateNotificationCompiler {
             if (notification.payloadContainsKey("CREATE")) {
                 notification.addPayloadField("CREATE", createObject);
             }
+            Constants.debugLog("Notification after being filled = " + notification.toString() + "\n");
+
         }
     }
 
