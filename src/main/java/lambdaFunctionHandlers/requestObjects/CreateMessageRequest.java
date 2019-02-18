@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateMessageRequest {
+public class CreateMessageRequest extends CreateObjectRequest {
     // Required
     public String board;
     public String from;
@@ -9,7 +9,7 @@ public class CreateMessageRequest {
 
     // Optional
     public String type;
-    public String profileImagePath;
+    public String profileImagePath; // TODO This isn't super efficient from the front-end perspective
 
     public CreateMessageRequest(String board, String from, String name, String profileImagePath, String message, String type) {
         this.board = board;
@@ -21,6 +21,11 @@ public class CreateMessageRequest {
     }
 
     public CreateMessageRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(board, from, message, name, type, profileImagePath);
+    }
 
     public String getBoard() {
         return board;

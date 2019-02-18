@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateGroupRequest {
+public class CreateGroupRequest extends CreateObjectRequest {
     // Required
     public String title;
     public String description;
@@ -28,6 +28,12 @@ public class CreateGroupRequest {
     }
 
     public CreateGroupRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(title, description, access, motto, groupImagePath, restriction)
+                || arrayHasEmptyString(owners, members, tags);
+    }
 
     public String getTitle() {
         return title;

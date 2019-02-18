@@ -9,6 +9,7 @@ import main.java.databaseOperations.databaseActionBuilders.MessageDatabaseAction
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateMessageRequest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,12 @@ import javax.json.JsonObjectBuilder;
 import static main.java.databaseObjects.Message.getNotificationIDsFromBoard;
 
 public class CreateMessage {
-    public static String handle(String fromID, CreateMessageRequest createMessageRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateMessageRequest createMessageRequest, boolean ifWithCreate) throws Exception {
         if (createMessageRequest != null) {
             // Create client
             if (createMessageRequest.from != null && createMessageRequest.board != null && createMessageRequest
                     .message != null && createMessageRequest.name != null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!(fromID.equals(createMessageRequest.from)) && !fromID.equals(Constants.adminKey)) {
@@ -53,7 +55,7 @@ public class CreateMessage {
                 }
 
                 // Add the create statement
-                databaseActionCompiler.add(MessageDatabaseActionBuilder.create(createMessageRequest));
+                databaseActionCompiler.add(MessageDatabaseActionBuilder.create(createMessageRequest, ifWithCreate));
 
                 // Send an Ably message!
                 Map<String, Object> payload = new HashMap<>();
@@ -72,7 +74,9 @@ public class CreateMessage {
 
                 databaseActionCompiler.getNotificationHandler().addMessageNotification(createMessageRequest.board, payload);
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("createClientRequest is missing required fields!");

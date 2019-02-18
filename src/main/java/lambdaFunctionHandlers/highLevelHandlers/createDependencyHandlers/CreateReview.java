@@ -15,11 +15,12 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateReviewRequest;
 import java.util.*;
 
 public class CreateReview {
-    public static String handle(String fromID, CreateReviewRequest createReviewRequest, String surveyWorkoutID) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateReviewRequest createReviewRequest, String surveyWorkoutID, boolean ifWithCreate) throws Exception {
         if (createReviewRequest != null) {
             if (createReviewRequest.by != null && createReviewRequest.about != null && createReviewRequest
                     .friendlinessRating != null && createReviewRequest.effectivenessRating != null &&
                     createReviewRequest.reliabilityRating != null && createReviewRequest.description != null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!fromID.equals(createReviewRequest.by) && !fromID.equals(Constants.adminKey)) {
@@ -27,7 +28,7 @@ public class CreateReview {
                 }
 
                 // Create Review
-                databaseActionCompiler.add(ReviewDatabaseActionBuilder.create(createReviewRequest));
+                databaseActionCompiler.add(ReviewDatabaseActionBuilder.create(createReviewRequest, ifWithCreate));
 
                 // Add to by's reviews by
                 String byID = createReviewRequest.by;
@@ -78,7 +79,9 @@ public class CreateReview {
                             true));
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("createReviewRequest is missing required fields!");

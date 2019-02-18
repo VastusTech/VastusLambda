@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -10,11 +13,12 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import main.java.lambdaFunctionHandlers.requestObjects.CreateCommentRequest;
 
 public class CreateComment {
-    public static String handle(String fromID, CreateCommentRequest createCommentRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateCommentRequest createCommentRequest, boolean ifWithCreate) throws Exception {
         if (createCommentRequest != null) {
             // Create client
             if (createCommentRequest.by != null && createCommentRequest.to != null && createCommentRequest.comment
                     != null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!fromID.equals(createCommentRequest.by) && !fromID.equals(Constants.adminKey)) {
@@ -22,7 +26,7 @@ public class CreateComment {
                 }
 
                 // Create the object
-                databaseActionCompiler.add(CommentDatabaseActionBuilder.create(createCommentRequest));
+                databaseActionCompiler.add(CommentDatabaseActionBuilder.create(createCommentRequest, ifWithCreate));
 
                 // Add it to the author's comments
                 String byItemType = ItemType.getItemType(createCommentRequest.by);
@@ -43,7 +47,9 @@ public class CreateComment {
                     throw new Exception("Cannot comment on an object of type: " + toItemType);
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("createCommentRequest is missing required fields!");

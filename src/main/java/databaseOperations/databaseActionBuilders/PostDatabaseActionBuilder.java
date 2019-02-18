@@ -17,7 +17,7 @@ public class PostDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreatePostRequest createPostRequest) {
+    public static DatabaseAction create(CreatePostRequest createPostRequest, boolean ifWithCreate) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Post.getEmptyItem();
         item.put("by", new AttributeValue(createPostRequest.by));
@@ -29,7 +29,7 @@ public class PostDatabaseActionBuilder {
                 (createPostRequest.picturePaths))); }
         if (createPostRequest.videoPaths != null) { item.put("videoPaths", new AttributeValue(Arrays.asList
                 (createPostRequest.videoPaths))); }
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 if (createPostRequest.picturePaths != null && createPostRequest.picturePaths.length > 0) {

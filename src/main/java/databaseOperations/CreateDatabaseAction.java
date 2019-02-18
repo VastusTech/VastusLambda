@@ -8,8 +8,9 @@ import java.util.Map;
 public class CreateDatabaseAction extends DatabaseAction {
     public UpdateWithIDHandler updateWithIDHandler;
 
-    public CreateDatabaseAction(String itemType, Map<String, AttributeValue> item, UpdateWithIDHandler
-            updateWithIDHandler) {
+    public CreateDatabaseAction(String itemType, Map<String, AttributeValue> item, boolean ifWithCreate,
+                                UpdateWithIDHandler updateWithIDHandler) {
+        this.ifWithCreate = ifWithCreate;
         action = DBAction.CREATE;
         this.itemType = itemType;
         this.item = new HashMap<>();

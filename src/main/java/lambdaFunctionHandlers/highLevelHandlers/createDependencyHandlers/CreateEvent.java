@@ -13,14 +13,16 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateEventRequest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CreateEvent {
-    public static String handle(String fromID, CreateEventRequest createEventRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateEventRequest createEventRequest, boolean ifWithCreate) throws Exception {
         if (createEventRequest != null) {
             // Create event
             if (createEventRequest.owner != null && createEventRequest.time != null && createEventRequest
                     .capacity != null && createEventRequest.address != null && createEventRequest.title !=
                     null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!fromID.equals(createEventRequest.owner) && !fromID.equals(Constants.adminKey)) {
@@ -71,7 +73,7 @@ public class CreateEvent {
                     }
                 }
 
-                databaseActionCompiler.add(EventDatabaseActionBuilder.create(createEventRequest));
+                databaseActionCompiler.add(EventDatabaseActionBuilder.create(createEventRequest, ifWithCreate));
 
                 // Update owners fields
                 String ownerItemType = ItemType.getItemType(createEventRequest.owner);
@@ -111,7 +113,11 @@ public class CreateEvent {
                             null, true));
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                // TODO Automatically create a post for them!
+
+                return compilers;
             }
             else {
                 throw new Exception("createEventRequest is missing required fields!");

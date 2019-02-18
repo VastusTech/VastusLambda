@@ -18,7 +18,7 @@ public class ReviewDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateReviewRequest createReviewRequest) {
+    public static DatabaseAction create(CreateReviewRequest createReviewRequest, boolean ifWithCreate) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Review.getEmptyItem();
         item.put("by", new AttributeValue(createReviewRequest.by));
@@ -27,7 +27,7 @@ public class ReviewDatabaseActionBuilder {
         item.put("effectivenessRating", new AttributeValue(createReviewRequest.effectivenessRating));
         item.put("reliabilityRating", new AttributeValue(createReviewRequest.reliabilityRating));
         item.put("description", new AttributeValue(createReviewRequest.description));
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;

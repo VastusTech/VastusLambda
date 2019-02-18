@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.java.Logic.Constants;
 import main.java.databaseObjects.Streak;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -8,11 +11,12 @@ import main.java.databaseOperations.databaseActionBuilders.StreakDatabaseActionB
 import main.java.lambdaFunctionHandlers.requestObjects.CreateStreakRequest;
 
 public class CreateStreak {
-    public static String handle(String fromID, CreateStreakRequest createStreakRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateStreakRequest createStreakRequest, boolean ifWithCreate) throws Exception {
         if (createStreakRequest != null) {
             // Create Streak
             if (createStreakRequest.owner != null && createStreakRequest.about != null && createStreakRequest
                     .streakType != null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // TODO Permissions?
@@ -26,9 +30,11 @@ public class CreateStreak {
                 }
 
                 // Add the create statement
-                databaseActionCompiler.add(StreakDatabaseActionBuilder.create(createStreakRequest));
+                databaseActionCompiler.add(StreakDatabaseActionBuilder.create(createStreakRequest, ifWithCreate));
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("createClientRequest is missing required fields!");

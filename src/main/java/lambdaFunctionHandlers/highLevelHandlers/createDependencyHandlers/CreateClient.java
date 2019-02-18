@@ -11,18 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateClient {
-    public static String handle(String fromID, CreateClientRequest createClientRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateClientRequest createClientRequest, boolean ifWithCreate) throws Exception {
         if (createClientRequest != null) {
             // Create client
             if (createClientRequest.name != null && createClientRequest.email != null && createClientRequest.username != null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // Check to see if the request features are well formed (i.e not invalid date or time)
                 if (createClientRequest.birthday != null) { new DateTime(createClientRequest.birthday); }
 
-                databaseActionCompiler.add(ClientDatabaseActionBuilder.create(createClientRequest));
+                databaseActionCompiler.add(ClientDatabaseActionBuilder.create(createClientRequest, ifWithCreate));
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("createClientRequest is missing required fields!");

@@ -11,18 +11,21 @@ import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateInviteRequest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
 public class CreateInvite {
-    public static String handle(String fromID, CreateInviteRequest createInviteRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateInviteRequest createInviteRequest, boolean ifWithCreate) throws Exception {
         if (createInviteRequest != null) {
             // Create client
             if (createInviteRequest.from != null && createInviteRequest.to != null && createInviteRequest
                     .inviteType != null && createInviteRequest.about != null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!(fromID.equals(createInviteRequest.from)) && !fromID.equals(Constants.adminKey)) {
@@ -44,7 +47,7 @@ public class CreateInvite {
                 }
 
                 // Add the create statement
-                databaseActionCompiler.add(InviteDatabaseActionBuilder.create(createInviteRequest));
+                databaseActionCompiler.add(InviteDatabaseActionBuilder.create(createInviteRequest, ifWithCreate));
 
                 // Then we add it to the object's stuff
                 // Add to the from's sentInvites
@@ -171,7 +174,9 @@ public class CreateInvite {
 //                        break;
 //                }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("createClientRequest is missing required fields!");

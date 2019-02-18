@@ -12,11 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateGym {
-    public static String handle(String fromID, CreateGymRequest createGymRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGymRequest createGymRequest, boolean ifWithCreate) throws Exception {
         if (createGymRequest != null) {
             if (createGymRequest.name != null && createGymRequest.foundingDay != null && createGymRequest.email !=
                     null && createGymRequest.username != null && createGymRequest.address != null && createGymRequest
                     .sessionCapacity != null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // Check to see if the request features are well formed (i.e invalid date)
@@ -31,10 +32,11 @@ public class CreateGym {
 
 
                 // Create Gym
-                databaseActionCompiler.add(GymDatabaseActionBuilder.create(createGymRequest));
+                databaseActionCompiler.add(GymDatabaseActionBuilder.create(createGymRequest, ifWithCreate));
 
-                // Do the transaction and return the ID afterwards
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("createGymRequest is missing required fields!");

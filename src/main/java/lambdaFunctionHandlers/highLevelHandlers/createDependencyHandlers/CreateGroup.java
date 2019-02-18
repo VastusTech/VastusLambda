@@ -10,13 +10,15 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateGroupRequest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CreateGroup {
-    public static String handle(String fromID, CreateGroupRequest createGroupRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGroupRequest createGroupRequest, boolean ifWithCreate) throws Exception {
         if (createGroupRequest != null) {
             // Create client
             if (createGroupRequest.title != null && createGroupRequest.description != null
                     && createGroupRequest.access != null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (createGroupRequest.owners == null) {
@@ -46,7 +48,7 @@ public class CreateGroup {
                 }
 
                 // Create the group
-                databaseActionCompiler.add(GroupDatabaseActionBuilder.create(createGroupRequest));
+                databaseActionCompiler.add(GroupDatabaseActionBuilder.create(createGroupRequest, ifWithCreate));
 
                 // Add to the owners' ownedGroups
                 for (String ownerID : createGroupRequest.owners) {
@@ -66,7 +68,11 @@ public class CreateGroup {
                             null, true));
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                // TODO Automatically create post
+
+                return compilers;
             }
             else {
                 throw new Exception("createGroupRequest is missing required fields!");

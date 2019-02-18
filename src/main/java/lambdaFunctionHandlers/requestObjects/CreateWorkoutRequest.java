@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateWorkoutRequest {
+public class CreateWorkoutRequest extends CreateObjectRequest {
     // Required
     public String time;
     public String trainer;
@@ -23,6 +23,12 @@ public class CreateWorkoutRequest {
     }
 
     public CreateWorkoutRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(time, trainer, gym, sticker, intensity, price)
+                || arrayHasEmptyString(clients);
+    }
 
     public String getTime() {
         return time;

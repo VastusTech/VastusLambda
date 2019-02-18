@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateChallengeRequest {
+public class CreateChallengeRequest extends CreateObjectRequest {
     // Required
     public String owner;
     public String endTime;
@@ -39,6 +39,13 @@ public class CreateChallengeRequest {
     }
 
     public CreateChallengeRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(owner, endTime, capacity, title, goal, challengeType, group,
+                description, access, restriction, difficulty, prize)
+                || arrayHasEmptyString(tags, members);
+    }
 
     public String getOwner() {
         return owner;

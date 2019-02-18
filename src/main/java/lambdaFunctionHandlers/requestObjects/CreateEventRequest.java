@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateEventRequest {
+public class CreateEventRequest extends CreateObjectRequest {
     // Required
     public String owner;
     public String time;
@@ -35,6 +35,13 @@ public class CreateEventRequest {
     }
 
     public CreateEventRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(owner, time, capacity, address, title, description, access, restriction,
+                challenge, group)
+                || arrayHasEmptyString(tags, members);
+    }
 
     public String getOwner() {
         return owner;

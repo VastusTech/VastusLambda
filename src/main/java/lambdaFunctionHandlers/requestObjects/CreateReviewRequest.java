@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateReviewRequest {
+public class CreateReviewRequest extends CreateObjectRequest {
     // Required
     public String by;
     public String about;
@@ -19,6 +19,11 @@ public class CreateReviewRequest {
     }
 
     public CreateReviewRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(by, about, friendlinessRating, effectivenessRating, reliabilityRating, description);
+    }
 
     public String getBy() {
         return by;

@@ -18,13 +18,13 @@ public class CommentDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateCommentRequest createCommentRequest) {
+    public static DatabaseAction create(CreateCommentRequest createCommentRequest, boolean ifWithCreate) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Comment.getEmptyItem();
         item.put("by", new AttributeValue(createCommentRequest.by));
         item.put("to", new AttributeValue(createCommentRequest.to));
         item.put("comment", new AttributeValue(createCommentRequest.comment));
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;

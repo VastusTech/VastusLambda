@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Challenge;
@@ -13,11 +16,12 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
 
 public class CreatePost {
-    public static String handle(String fromID, CreatePostRequest createPostRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreatePostRequest createPostRequest, boolean ifWithCreate) throws Exception {
         if (createPostRequest != null) {
             // Check required fields
             if (createPostRequest.by != null && createPostRequest.description != null) {
                 // Create the database action list for the transaction to complete
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!(fromID.equals(createPostRequest.by)) && !fromID.equals(Constants.adminKey)) {
@@ -38,7 +42,7 @@ public class CreatePost {
                 }
 
                 // Create post (with createPostRequest)
-                databaseActionCompiler.add(PostDatabaseActionBuilder.create(createPostRequest));
+                databaseActionCompiler.add(PostDatabaseActionBuilder.create(createPostRequest, ifWithCreate));
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)
                 String postType = createPostRequest.postType;
@@ -91,7 +95,9 @@ public class CreatePost {
                             null, true));
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("Required fields missing in createPostRequest!");

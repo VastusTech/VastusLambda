@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreatePostRequest {
+public class CreatePostRequest extends CreateObjectRequest {
     // Required
     public String by;
     public String description;
@@ -26,6 +26,12 @@ public class CreatePostRequest {
     }
 
     public CreatePostRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(by, description, about, access, postType, group)
+                || arrayHasEmptyString(picturePaths, videoPaths);
+    }
 
     public String getBy() {
         return by;

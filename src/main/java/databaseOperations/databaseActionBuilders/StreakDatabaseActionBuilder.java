@@ -22,14 +22,14 @@ public class StreakDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateStreakRequest createStreakRequest) {
+    public static DatabaseAction create(CreateStreakRequest createStreakRequest, boolean ifWithCreate) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Streak.getEmptyItem();
         item.put("owner", new AttributeValue(createStreakRequest.owner));
         item.put("about", new AttributeValue(createStreakRequest.about));
         item.put("streakType", new AttributeValue(createStreakRequest.streakType));
         if (createStreakRequest.updateType != null) { item.put("updateType", new AttributeValue(createStreakRequest.updateType)); }
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;

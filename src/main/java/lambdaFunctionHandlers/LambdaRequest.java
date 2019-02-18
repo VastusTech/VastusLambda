@@ -10,6 +10,8 @@ import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHan
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.requestObjects.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -306,58 +308,100 @@ public class LambdaRequest {
             if (createClientRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create client request!\n");
+                if (createClientRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Client Request can be empty string!");
+                }
             }
             if (createTrainerRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create trainer request!\n");
+                if (createTrainerRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Trainer Request can be empty string!");
+                }
             }
             if (createGymRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create gym request!\n");
+                if (createGymRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Gym Request can be empty string!");
+                }
             }
             if (createWorkoutRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create workout request!\n");
+                if (createWorkoutRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Workout Request can be empty string!");
+                }
             }
             if (createReviewRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create review request!\n");
+                if (createReviewRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Review Request can be empty string!");
+                }
             }
             if (createEventRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create event request!\n");
+                if (createEventRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Event Request can be empty string!");
+                }
             }
             if (createChallengeRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create challenge request!\n");
+                if (createChallengeRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Challenge Request can be empty string!");
+                }
             }
             if (createInviteRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create invite request!\n");
+                if (createInviteRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Invite Request can be empty string!");
+                }
             }
             if (createPostRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create post request!\n");
+                if (createPostRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Post Request can be empty string!");
+                }
             }
             if (createGroupRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create group request!\n");
+                if (createGroupRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Group Request can be empty string!");
+                }
             }
             if (createCommentRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create comment request!\n");
+                if (createCommentRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Comment Request can be empty string!");
+                }
             }
             if (createSponsorRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create sponsor request!\n");
+                if (createSponsorRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Sponsor Request can be empty string!");
+                }
             }
             if (createMessageRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create message request!\n");
+                if (createMessageRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Message Request can be empty string!");
+                }
             }
             if (createStreakRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create streak request!\n");
+                if (createStreakRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Streak Request can be empty string!");
+                }
             }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
@@ -370,37 +414,52 @@ public class LambdaRequest {
     }
 
     private String handleCreate() throws Exception {
+        List<DatabaseActionCompiler> compilers;
         try {
             switch (ItemType.valueOf(itemType)) {
                 case Client:
-                    return CreateClient.handle(fromID, createClientRequest);
+                    compilers = CreateClient.getCompilers(fromID, createClientRequest, false);
+                    break;
                 case Trainer:
-                    return CreateTrainer.handle(fromID, createTrainerRequest);
+                    compilers = CreateTrainer.getCompilers(fromID, createTrainerRequest, false);
+                    break;
                 case Gym:
-                    return CreateGym.handle(fromID, createGymRequest);
+                    compilers = CreateGym.getCompilers(fromID, createGymRequest, false);
+                    break;
                 case Workout:
-                    return CreateWorkout.handle(fromID, createWorkoutRequest);
+                    compilers = CreateWorkout.getCompilers(fromID, createWorkoutRequest, false);
+                    break;
                 case Review:
                     // Send a null for surveyWorkoutID because we're not creating it for a survey
-                    return CreateReview.handle(fromID, createReviewRequest, null);
+                    compilers = CreateReview.getCompilers(fromID, createReviewRequest, null, false);
+                    break;
                 case Event:
-                    return CreateEvent.handle(fromID, createEventRequest);
+                    compilers = CreateEvent.getCompilers(fromID, createEventRequest, false);
+                    break;
                 case Challenge:
-                    return CreateChallenge.handle(fromID, createChallengeRequest);
+                    compilers = CreateChallenge.getCompilers(fromID, createChallengeRequest, false);
+                    break;
                 case Invite:
-                    return CreateInvite.handle(fromID, createInviteRequest);
+                    compilers = CreateInvite.getCompilers(fromID, createInviteRequest, false);
+                    break;
                 case Post:
-                    return CreatePost.handle(fromID, createPostRequest);
+                    compilers = CreatePost.getCompilers(fromID, createPostRequest, false);
+                    break;
                 case Group:
-                    return CreateGroup.handle(fromID, createGroupRequest);
+                    compilers = CreateGroup.getCompilers(fromID, createGroupRequest, false);
+                    break;
                 case Comment:
-                    return CreateComment.handle(fromID, createCommentRequest);
+                    compilers = CreateComment.getCompilers(fromID, createCommentRequest, false);
+                    break;
                 case Sponsor:
-                    return CreateSponsor.handle(fromID, createSponsorRequest);
+                    compilers = CreateSponsor.getCompilers(fromID, createSponsorRequest, false);
+                    break;
                 case Message:
-                    return CreateMessage.handle(fromID, createMessageRequest);
+                    compilers = CreateMessage.getCompilers(fromID, createMessageRequest, false);
+                    break;
                 case Streak:
-                    return CreateStreak.handle(fromID, createStreakRequest);
+                    compilers = CreateStreak.getCompilers(fromID, createStreakRequest, false);
+                    break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -408,11 +467,19 @@ public class LambdaRequest {
         catch (IllegalArgumentException e) {
             throw new Exception("Item Type: " + itemType + " not recognized! Error: " + e.getLocalizedMessage());
         }
+
+        return DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
 
     private String handleSurveyCreate(String workoutID) throws Exception {
-        return CreateReview.handle(fromID, createReviewRequest, workoutID);
+        return DynamoDBHandler.getInstance().attemptTransaction(CreateReview.getCompilers(fromID, createReviewRequest, workoutID, false));
     }
+
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+    // TODO *  =====================================================================  *
+    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
+    // TODO *  =====================================================================  *
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 
     public void handleUpdateSet(String id) throws Exception {
         // switch all attributes, then if necessary, item type
@@ -749,8 +816,16 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
+        compilers.add(databaseActionCompiler);
+        DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
+
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+    // TODO *  =====================================================================  *
+    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
+    // TODO *  =====================================================================  *
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 
     public void handleUpdateAdd(String id) throws Exception {
         // switch all attributes, then if necessary, item type
@@ -918,8 +993,16 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.toString(), e);
         }
 
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
+        compilers.add(databaseActionCompiler);
+        DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
+
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+    // TODO *  =====================================================================  *
+    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
+    // TODO *  =====================================================================  *
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 
     public void handleUpdateRemove(String id) throws Exception {
         // switch all attributes, then if necessary, item type
@@ -1064,8 +1147,16 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
+        compilers.add(databaseActionCompiler);
+        DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
+
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+    // TODO *  =====================================================================  *
+    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
+    // TODO *  =====================================================================  *
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 
     public void handleDelete(String id) throws Exception {
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
@@ -1118,8 +1209,16 @@ public class LambdaRequest {
         }
 
         //Constants.debugLog("Attempting the transaction");
-        DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
+        compilers.add(databaseActionCompiler);
+        DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
+
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+    // TODO *  =====================================================================  *
+    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
+    // TODO *  =====================================================================  *
+    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 
     public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String
             attributeName, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest

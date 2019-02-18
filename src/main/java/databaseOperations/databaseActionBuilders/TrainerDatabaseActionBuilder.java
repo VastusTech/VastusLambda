@@ -23,7 +23,7 @@ public class TrainerDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateTrainerRequest createTrainerRequest) {
+    public static DatabaseAction create(CreateTrainerRequest createTrainerRequest, boolean ifWithCreate) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Trainer.getEmptyItem();
         item.put("name", new AttributeValue(createTrainerRequest.name));
@@ -47,7 +47,7 @@ public class TrainerDatabaseActionBuilder {
                 (createTrainerRequest.workoutCapacity)); }
         if (createTrainerRequest.workoutPrice != null) { item.put("workoutPrice", new AttributeValue
                 (createTrainerRequest.workoutPrice)); }
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;

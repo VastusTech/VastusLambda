@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateStreakRequest {
+public class CreateStreakRequest extends CreateObjectRequest {
     // Required
     public String owner;
     public String about;
@@ -17,6 +17,11 @@ public class CreateStreakRequest {
     }
 
     public CreateStreakRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(owner, about, streakType, updateType);
+    }
 
     public String getOwner() {
         return owner;

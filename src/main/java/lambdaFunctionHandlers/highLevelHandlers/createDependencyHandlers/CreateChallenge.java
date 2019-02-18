@@ -13,14 +13,16 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CreateChallenge {
-    public static String handle(String fromID, CreateChallengeRequest createChallengeRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateChallengeRequest createChallengeRequest, boolean ifWithCreate) throws Exception {
         if (createChallengeRequest != null) {
             // Create challenge
             if (createChallengeRequest.owner != null && createChallengeRequest.endTime != null && createChallengeRequest
                     .capacity != null && createChallengeRequest.title != null && createChallengeRequest.goal !=
                     null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!fromID.equals(createChallengeRequest.owner) && !fromID.equals(Constants.adminKey)) {
@@ -63,7 +65,7 @@ public class CreateChallenge {
                     }
                 }
 
-                databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest));
+                databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest, ifWithCreate));
 
                 // Update owners fields
                 String ownerItemType = ItemType.getItemType(createChallengeRequest.owner);
@@ -90,7 +92,11 @@ public class CreateChallenge {
                             null, true));
                 }
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                // TODO AUTOMATICALLY CREATE A POST FOR THEM!!!!
+
+                return compilers;
             }
             else {
                 throw new Exception("createChallengeRequest is missing required fields!");

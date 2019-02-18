@@ -21,7 +21,7 @@ public class InviteDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateInviteRequest createInviteRequest) {
+    public static DatabaseAction create(CreateInviteRequest createInviteRequest, boolean ifWithCreate) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Invite.getEmptyItem();
         item.put("from", new AttributeValue(createInviteRequest.from));
@@ -30,7 +30,7 @@ public class InviteDatabaseActionBuilder {
         item.put("about", new AttributeValue(createInviteRequest.about));
         if (createInviteRequest.description != null) { item.put("description", new AttributeValue(createInviteRequest
                 .description)); }
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;

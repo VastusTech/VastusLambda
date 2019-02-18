@@ -1,6 +1,5 @@
 package main.java.databaseOperations;
 
-import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import main.java.Logic.Constants;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -54,8 +53,6 @@ public class DynamoDBHandler {
         firebaseTokenTable = new Table(client, Constants.firebaseTokenTableName);
         tables.put(Constants.databaseTableName, databaseTable);
         tables.put(Constants.messageTableName, messageTable);
-//        tables.put(Constants.databaseTableName, new Table(client, Constants.databaseTableName));
-//        tables.put(Constants.messageTableName, new Table(client, Constants.messageTableName));
     }
 
     /*
@@ -64,211 +61,224 @@ public class DynamoDBHandler {
     Then we check to see if it is changed while we are trying to do stuff to it.
      */
 
-    // Returns the ID if it's applicable
-    public String attemptTransaction(DatabaseActionCompiler databaseActionCompiler) throws Exception {
+    /**
+     * Uses the list of database action compilers to perform the operations as indicated in the API
+     * and isolates the creation between each compiler. It also tries to determine the ID as close
+     * to the actual transaction as possible, in order to reduce the chance of trying to put
+     * duplicate IDs in the database. Also sends notifications after the transaction is complete.
+     *
+     * @param databaseActionCompilers The List of compilers for all the database actions.
+     * @return The first newly created ID if the transaction included a CREATE statement.
+     * @throws Exception If any of the transactions fail or the pre-transaction checks fail.
+     */
+    public String attemptTransaction(List<DatabaseActionCompiler> databaseActionCompilers) throws Exception {
         // Marker retry implemented
         // TODO ==============================================================================
         // TODO TRANSACTIONS ARE LIMITED TO 10 UNIQUE THINGS EACH, WE NEED TO BREAK IT UP
         // TODO ==============================================================================
-        Transaction transaction = txManager.newTransaction();
-        int uniqueActionsInCurrentTransaction = 0;
-        final int transactionActionLimit = 10;
-        String returnString = null;
+        final int transactionActionLimit = 10; // Transactions can only handle 10 unique things each
+        // This indicates created ID for current compiler and also supports passover between transactions.
+        String newlyCreatedID = null; // This indicates the created ID for the current compiler.
+        String returnString = null; // This indicates the created ID for the first compiler
 
-        List<DatabaseAction> databaseActions = databaseActionCompiler.getDatabaseActions();
+        // For each transaction
+        for (DatabaseActionCompiler databaseActionCompiler : databaseActionCompilers) {
+            // Start the new transaction
+            Transaction transaction = txManager.newTransaction();
+            // Count how many unique actions is in the current transaction
+            int uniqueActionsInCurrentTransaction = 0;
 
-        for (DatabaseAction databaseAction : databaseActions) {
-            switch (databaseAction.action) {
-                case CREATE:
-                    try {
-                        // Get the ID!
-                        String id = getNewID(databaseAction.itemType);
-                        databaseAction.item.put("id", new AttributeValue(id));
-                        databaseAction.item.put("time_created", new AttributeValue(new DateTime().toString()));
-                        ((CreateDatabaseAction)databaseAction).updateWithIDHandler.updateWithID(databaseAction.item, id);
+            List<DatabaseAction> databaseActions = databaseActionCompiler.getDatabaseActions();
 
-                        if (databaseAction.item.containsKey("username")) {
-                            if (this.usernameInDatabase(databaseAction.item.get("username").getS(), databaseAction.item
-                                    .get("item_type").getS())) {
-                                // This means that the database already has this username, we should not do this
-                                throw new Exception("Attempted to put repeat username: " + databaseAction.item.get
-                                        ("username").getS() + " into the database!");
+            for (DatabaseAction databaseAction : databaseActions) {
+                switch (databaseAction.action) {
+                    case CREATE:
+                        try {
+                            // Get the ID!
+                            String id = getNewID(databaseAction.itemType);
+                            databaseAction.item.put("id", new AttributeValue(id));
+                            databaseAction.item.put("time_created", new AttributeValue(new DateTime().toString()));
+                            ((CreateDatabaseAction) databaseAction).updateWithIDHandler.updateWithID(databaseAction.item, id);
+
+                            if (databaseAction.item.containsKey("username")) {
+                                if (this.usernameInDatabase(databaseAction.item.get("username").getS(), databaseAction.item
+                                        .get("item_type").getS())) {
+                                    // This means that the database already has this username, we should not do this
+                                    throw new Exception("Attempted to put repeat username: " + databaseAction.item.get
+                                            ("username").getS() + " into the database!");
+                                }
                             }
+
+                            // TODO THIS WORKS FOR ONLY IF IT'S a STRING VALUE, NOT INSIDE A STRING SET, if that's a problem, reevaluate...
+                            Map<String, AttributeValue> putItem = getPutItem(databaseAction, newlyCreatedID);
+
+                            Constants.debugLog("Creating item with item: " + databaseAction.item);
+
+                            transaction.putItem(new PutItemRequest().withTableName(databaseAction.getTableName()).withItem
+                                    (putItem));
+                            uniqueActionsInCurrentTransaction++;
+                            newlyCreatedID = id;
+                            if (returnString == null) { returnString = newlyCreatedID; }
+
+                            // Add the item to the Create object fields
+                            databaseActionCompiler.getNotificationHandler().fillCreateObject(id,
+                                    convertFromAttributeValueMap(databaseAction.item));
+                        } catch (Exception e) {
+                            transaction.rollback();
+                            throw new Exception("Error while trying to create item in the database! Error: " + e
+                                    .getLocalizedMessage(), e);
                         }
+                        break;
+                    case UPDATE:
+                        try {
+                            // This is the actual update item statement
+                            Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, newlyCreatedID);
 
-                        Constants.debugLog("Creating item with item: " + databaseAction.item);
+                            // This is the updating marker statement
+                            updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
 
-                        transaction.putItem(new PutItemRequest().withTableName(databaseAction.getTableName()).withItem
-                                (databaseAction.item));
-                        uniqueActionsInCurrentTransaction++;
-                        returnString = id;
-
-                        // Add the item to the Create object fields
-                        databaseActionCompiler.getNotificationHandler().fillCreateObject(id,
-                                convertFromAttributeValueMap(databaseAction.item));
-                    }
-                    catch (Exception e) {
-                        transaction.rollback();
-                        throw new Exception("Error while trying to create item in the database! Error: " + e
-                                .getLocalizedMessage(), e);
-                    }
-                    break;
-                case UPDATE:
-                    try {
-                        // This is the actual update item statement
-                        Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, returnString);
-
-                        // This is the updating marker statement
-                        updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
-
-                        Constants.debugLog("Update statement -------------------------");
-                        for (Map.Entry<String, AttributeValueUpdate> entry : updateItem.entrySet()) {
-                            if (entry.getValue().getAction().equals("DELETE")) {
-                                Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
-                                        .getAction() + "!");
+                            Constants.debugLog("Update statement -------------------------");
+                            for (Map.Entry<String, AttributeValueUpdate> entry : updateItem.entrySet()) {
+                                if (entry.getValue().getAction().equals("DELETE")) {
+                                    Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
+                                            .getAction() + "!");
+                                } else {
+                                    Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
+                                            .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
+                                }
                             }
-                            else {
-                                Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
-                                        .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
-                            }
+
+                            // This updates the object and the marker
+                            transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName()).withKey
+                                    (databaseAction.getKey()).withAttributeUpdates(updateItem));
+                            uniqueActionsInCurrentTransaction++;
+
+                            // This updates the marker
+                            //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
+                            //(databaseAction.item).withAttributeUpdates(markerUpdate));
+                        } catch (Exception e) {
+                            transaction.rollback();
+                            throw new Exception("Error while trying to update an item in the database. Error: " + e
+                                    .getLocalizedMessage(), e);
                         }
-
-                        // This updates the object and the marker
-                        transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName()).withKey
-                                (databaseAction.getKey()).withAttributeUpdates(updateItem));
-                        uniqueActionsInCurrentTransaction++;
-
-                        // This updates the marker
-                        //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
-                                //(databaseAction.item).withAttributeUpdates(markerUpdate));
-                    }
-                    catch (Exception e) {
-                        transaction.rollback();
-                        throw new Exception("Error while trying to update an item in the database. Error: " + e
-                                .getLocalizedMessage(), e);
-                    }
-                    break;
-                case UPDATESAFE:
-                    try {
-                        // This is the key for getting the item
+                        break;
+                    case UPDATESAFE:
+                        try {
+                            // This is the key for getting the item
 //                        Map<String, AttributeValue> key = new HashMap<>();
 //                        key.put("item_type", databaseAction.item.get("item_type"));
 //                        key.put("id", databaseAction.item.get("id"));
 
-                        // This is the marker conditional statement
-                        // String conditionalExpression = "#mark = :mark";
-                        // Map<String, String> conditionalExpressionNames = new HashMap<>();
-                        // conditionalExpressionNames.put("#mark", "marker");
-                        // Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
+                            // This is the marker conditional statement
+                            // String conditionalExpression = "#mark = :mark";
+                            // Map<String, String> conditionalExpressionNames = new HashMap<>();
+                            // conditionalExpressionNames.put("#mark", "marker");
+                            // Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
 
-                        // This is the actual update item statement
-                        Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, returnString);
+                            // This is the actual update item statement
+                            Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, newlyCreatedID);
 
-                        // This is the marker update statement
-                        updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
+                            // This is the marker update statement
+                            updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
 
-                        Constants.debugLog("Update Safe statement -------------------------");
-                        for (Map.Entry<String, AttributeValueUpdate> entry : updateItem.entrySet()) {
-                            if (entry.getValue().getAction().equals("DELETE")) {
-                                Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
-                                        .getAction() + "!");
+                            Constants.debugLog("Update Safe statement -------------------------");
+                            for (Map.Entry<String, AttributeValueUpdate> entry : updateItem.entrySet()) {
+                                if (entry.getValue().getAction().equals("DELETE")) {
+                                    Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
+                                            .getAction() + "!");
+                                } else {
+                                    Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
+                                            .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
+                                }
                             }
-                            else {
-                                Constants.debugLog("Updating " + entry.getKey() + " with action " + entry.getValue()
-                                        .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
-                            }
-                        }
 
-                        // We loop until we successfully update the item without the item being updated meanwhile
-                        boolean ifFinished = false;
-                        while (!ifFinished) {
-                            // Read and check the expression
-                            DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
+                            // We loop until we successfully update the item without the item being updated meanwhile
+                            boolean ifFinished = false;
+                            while (!ifFinished) {
+                                // Read and check the expression
+                                DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
 
-                            // Use the checkHandler
-                            Constants.debugLog("Checking the viability of the item received");
-                            String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
-                            if (errorMessage == null) {
-                                Constants.debugLog("The item is viable!!!");
-                                // Put the newly read marker value into the conditional statement
-                                // conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
+                                // Use the checkHandler
+                                Constants.debugLog("Checking the viability of the item received");
+                                String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
+                                if (errorMessage == null) {
+                                    Constants.debugLog("The item is viable!!!");
+                                    // Put the newly read marker value into the conditional statement
+                                    // conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
-                                try {
-                                    // Try to update the item and the marker with the conditional check
-                                    transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName())
-                                            .withKey(databaseAction.getKey()).withAttributeUpdates(updateItem));
-                                    uniqueActionsInCurrentTransaction++;
+                                    try {
+                                        // Try to update the item and the marker with the conditional check
+                                        transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName())
+                                                .withKey(databaseAction.getKey()).withAttributeUpdates(updateItem));
+                                        uniqueActionsInCurrentTransaction++;
 
                                             /* TRANSACTIONS CONDITIONS NOT SUPPORTED
                                             .withConditionExpression(conditionalExpression).withExpressionAttributeNames
                                                     (conditionalExpressionNames).withExpressionAttributeValues(conditionalExpressionValues));
                                              */
 
-                                    // Update the marker afterwards
-                                    //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
-                                            //(databaseAction.item).withAttributeUpdates(markerUpdate));
+                                        // Update the marker afterwards
+                                        //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
+                                        //(databaseAction.item).withAttributeUpdates(markerUpdate));
 
-                                    // This exits the loop
-                                    ifFinished = true;
-                                } catch (ConditionalCheckFailedException ce) {
-                                    // This means that the item was changed while we were trying to update it
-                                    // Keep checking and trying again!
+                                        // This exits the loop
+                                        ifFinished = true;
+                                    } catch (ConditionalCheckFailedException ce) {
+                                        // This means that the item was changed while we were trying to update it
+                                        // Keep checking and trying again!
+                                    }
+                                } else {
+                                    // If the object is no longer viable, then we need to throw an exception and exit
+                                    throw new Exception("The item failed the checkHandler: " + errorMessage);
                                 }
                             }
-                            else {
-                                // If the object is no longer viable, then we need to throw an exception and exit
-                                throw new Exception("The item failed the checkHandler: " + errorMessage);
-                            }
+                        } catch (Exception e) {
+                            transaction.rollback();
+                            throw new Exception("Error while trying to update an item in the database safely. Error: " +
+                                    e.getLocalizedMessage(), e);
                         }
-                    }
-                    catch (Exception e) {
-                        transaction.rollback();
-                        throw new Exception("Error while trying to update an item in the database safely. Error: " +
-                                e.getLocalizedMessage(), e);
-                    }
-                    break;
-                case DELETE:
-                    try {
-                        // Delete the item
-                        transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName()).withKey
-                                (databaseAction.getKey()));
-                        uniqueActionsInCurrentTransaction++;
-                    }
-                    catch (Exception e) {
-                        transaction.rollback();
-                        throw new Exception("Error while deleting an item in the database. Error: " + e
-                                .getLocalizedMessage(), e);
-                    }
-                    break;
-                case DELETECONDITIONAL:
-                    // Delete conditional essentially will use a checkHandler for the situation, but will only fail
-                    // itself if it fails that checkHandler, it won't rollback the entire transaction.
+                        break;
+                    case DELETE:
+                        try {
+                            // Delete the item
+                            transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName()).withKey
+                                    (databaseAction.getKey()));
+                            uniqueActionsInCurrentTransaction++;
+                        } catch (Exception e) {
+                            transaction.rollback();
+                            throw new Exception("Error while deleting an item in the database. Error: " + e
+                                    .getLocalizedMessage(), e);
+                        }
+                        break;
+                    case DELETECONDITIONAL:
+                        // Delete conditional essentially will use a checkHandler for the situation, but will only fail
+                        // itself if it fails that checkHandler, it won't rollback the entire transaction.
 
-                    try {
-                        // This allows us to get the key
+                        try {
+                            // This allows us to get the key
 //                        Map<String, AttributeValue> key = new HashMap<>();
 //                        key.put("item_type", databaseAction.item.get("item_type"));
 //                        key.put("id", databaseAction.item.get("id"));
 
-                        // This is the marker conditional statement
+                            // This is the marker conditional statement
 //                        String conditionalExpression = "#mark = :mark";
 //                        Map<String, String> conditionalExpressionNames = new HashMap<>();
 //                        conditionalExpressionNames.put("#mark", "marker");
 //                        Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
 
-                        boolean ifFinished = false;
-                        while (!ifFinished) {
-                            DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
-                            // Perform the checkHandler check
-                            String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
-                            if (errorMessage == null) {
+                            boolean ifFinished = false;
+                            while (!ifFinished) {
+                                DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
+                                // Perform the checkHandler check
+                                String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
+                                if (errorMessage == null) {
 //                                conditionalExpressionValues.put(":mark", new AttributeValue().withN(object.marker));
 
-                                try {
-                                    // try to delete the item
-                                    transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName())
-                                            .withKey(databaseAction.getKey()));
-                                    uniqueActionsInCurrentTransaction++;
+                                    try {
+                                        // try to delete the item
+                                        transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName())
+                                                .withKey(databaseAction.getKey()));
+                                        uniqueActionsInCurrentTransaction++;
 
                                             /* CONDITIONS NOT SUPPORTED
                                             .withConditionExpression(conditionalExpression)
@@ -276,49 +286,75 @@ public class DynamoDBHandler {
                                             .withExpressionAttributeValues(conditionalExpressionValues));
                                             */
 
+                                        ifFinished = true;
+                                        // the process was successful.
+                                    }
+                                    // If the marker conditional statement fails, repeat
+                                    catch (ConditionalCheckFailedException ce) {
+                                        // This means that the item was changed and we need to try it again
+                                    }
+                                } else {
+                                    // This means that the process was not successful, but because this is a delete
+                                    // conditional, we will simply just keep going, as this means that the item no longer
+                                    // needs to be deleted.
+                                    Constants.debugLog("Couldn't delete from condition: " + errorMessage);
                                     ifFinished = true;
-                                    // the process was successful.
-                                }
-                                // If the marker conditional statement fails, repeat
-                                catch (ConditionalCheckFailedException ce) {
-                                    // This means that the item was changed and we need to try it again
                                 }
                             }
-                            else {
-                                // This means that the process was not successful, but because this is a delete
-                                // conditional, we will simply just keep going, as this means that the item no longer
-                                // needs to be deleted.
-                                Constants.debugLog("Couldn't delete from condition: " + errorMessage);
-                                ifFinished = true;
-                            }
+                        } catch (Exception e) {
+                            // Else if there is another failure, rollback everything
+                            transaction.rollback();
+                            throw new Exception("Error while trying to conditionally delete an item. Error: " + e
+                                    .getLocalizedMessage(), e);
                         }
-                    }
-                    catch (Exception e) {
-                        // Else if there is another failure, rollback everything
-                        transaction.rollback();
-                        throw new Exception("Error while trying to conditionally delete an item. Error: " + e
-                                .getLocalizedMessage(), e);
-                    }
-                    break;
+                        break;
+                }
+
+                // If we are over the limit, then we do the transaction and keep going
+                if (uniqueActionsInCurrentTransaction >= transactionActionLimit) {
+                    transaction.commit();
+                    transaction.delete();
+                    transaction = txManager.newTransaction();
+                    uniqueActionsInCurrentTransaction = 0;
+                }
             }
 
-            // If we are over the limit, then we do the transaction and keep going
-            if (uniqueActionsInCurrentTransaction >= transactionActionLimit) {
-                transaction.commit();
-                transaction.delete();
-                transaction = txManager.newTransaction();
-                uniqueActionsInCurrentTransaction = 0;
-            }
+            // If it gets here, then the process completed safely.
+            transaction.commit();
+            transaction.delete();
+
+            // Then it is safe to use Ably to send the notifications
+            databaseActionCompiler.sendNotifications();
         }
 
-        // If it gets here, then the process completed safely.
-        transaction.commit();
-        transaction.delete();
-
-        // Then it is safe to use Ably to send the notifications
-        databaseActionCompiler.sendNotifications();
-
         return returnString;
+    }
+
+    /**
+     * Gets the Put Item, accounting for any passover that may occur in the process. (Passover meaning
+     * if there are multiple transactions and an item wants the newly created ID of the previous
+     * created item.)
+     *
+     * @param databaseAction The CREATE database action.
+     * @param passoverID The potential ID from the previous created item.
+     * @return The Map that indicates the Put Item.
+     * @throws Exception If the statement is malformed or done in the wrong order.
+     */
+    private Map<String, AttributeValue> getPutItem(DatabaseAction databaseAction,
+                                                            String passoverID) throws Exception {
+        if (databaseAction.ifWithCreate) {
+            if (passoverID == null) {
+                throw new Exception("An ifWithCreate CREATE statement must be after an initial CREATE statement!");
+            }
+            else {
+                for (AttributeValue value : databaseAction.item.values()) {
+                    if (value.getS() != null && value.getS().equals("")) {
+                        value.setS(passoverID);
+                    }
+                }
+            }
+        }
+        return databaseAction.item;
     }
 
     private Map<String, AttributeValueUpdate> getUpdateItem(DatabaseAction databaseAction,

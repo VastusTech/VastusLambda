@@ -23,7 +23,7 @@ public class ChallengeDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateChallengeRequest createChallengeRequest) {
+    public static DatabaseAction create(CreateChallengeRequest createChallengeRequest, boolean ifWithCreate) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Challenge.getEmptyItem();
         item.put("owner", new AttributeValue(createChallengeRequest.owner));
@@ -49,7 +49,7 @@ public class ChallengeDatabaseActionBuilder {
                 .restriction)); }
         if (createChallengeRequest.tags != null) { item.put("tags", new AttributeValue
                 (Arrays.asList(createChallengeRequest.tags))); }
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;

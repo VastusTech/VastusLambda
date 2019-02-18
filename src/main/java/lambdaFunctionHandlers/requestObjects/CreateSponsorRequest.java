@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateSponsorRequest {
+public class CreateSponsorRequest extends CreateObjectRequest {
     // Required
     public String name;
     public String email;
@@ -24,6 +24,11 @@ public class CreateSponsorRequest {
     }
 
     public CreateSponsorRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(name, birthday, email, username, stripeID, federatedID, bio);
+    }
 
     public String getName() {
         return name;

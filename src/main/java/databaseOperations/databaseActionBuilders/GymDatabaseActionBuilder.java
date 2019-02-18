@@ -22,7 +22,7 @@ public class GymDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateGymRequest createGymRequest) {
+    public static DatabaseAction create(CreateGymRequest createGymRequest, boolean ifWithCreate) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Gym.getEmptyItem();
         item.put("name", new AttributeValue(createGymRequest.name));
@@ -42,7 +42,7 @@ public class GymDatabaseActionBuilder {
                 new AttributeValue(createGymRequest.gymType)); }
         if (createGymRequest.paymentSplit != null) { item.put("paymentSplit",
                 new AttributeValue(createGymRequest.paymentSplit)); }
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 return;

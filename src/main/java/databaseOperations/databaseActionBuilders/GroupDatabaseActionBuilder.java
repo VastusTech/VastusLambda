@@ -23,7 +23,7 @@ public class GroupDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateGroupRequest createGroupRequest) {
+    public static DatabaseAction create(CreateGroupRequest createGroupRequest, boolean ifWithCreate) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Group.getEmptyItem();
         item.put("title", new AttributeValue(createGroupRequest.title));
@@ -41,7 +41,7 @@ public class GroupDatabaseActionBuilder {
                 .owners))); }
         if (createGroupRequest.tags != null) { item.put("tags", new AttributeValue(Arrays.asList(createGroupRequest
                 .tags))); }
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 if (createGroupRequest.groupImagePath != null) {

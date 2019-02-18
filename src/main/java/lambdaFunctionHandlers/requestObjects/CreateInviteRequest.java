@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateInviteRequest {
+public class CreateInviteRequest extends CreateObjectRequest {
     // Required
     public String from;
     public String to;
@@ -19,6 +19,11 @@ public class CreateInviteRequest {
     }
 
     public CreateInviteRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(from, to, inviteType, about, description);
+    }
 
     public String getFrom() {
         return from;

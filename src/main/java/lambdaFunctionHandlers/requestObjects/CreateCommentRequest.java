@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-public class CreateCommentRequest {
+public class CreateCommentRequest extends CreateObjectRequest {
     // Required
     public String by;
     public String to;
@@ -15,6 +15,11 @@ public class CreateCommentRequest {
     }
 
     public CreateCommentRequest() {}
+
+    @Override
+    public boolean ifHasEmptyString() {
+        return hasEmptyString(by, to, comment);
+    }
 
     public String getBy() {
         return by;

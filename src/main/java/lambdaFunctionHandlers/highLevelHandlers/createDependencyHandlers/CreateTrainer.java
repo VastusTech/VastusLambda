@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateTrainer {
-    public static String handle(String fromID, CreateTrainerRequest createTrainerRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateTrainerRequest createTrainerRequest, boolean ifWithCreate) throws Exception {
         if (createTrainerRequest != null) {
             // Check required fields
             if (createTrainerRequest.name != null && createTrainerRequest.email != null &&
                     createTrainerRequest.username != null) {
                 // Create the database action list for the transaction to complete
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)
@@ -29,13 +30,15 @@ public class CreateTrainer {
                         .workoutCapacity); }
 
                 // Create trainer (with createTrainerRequest)
-                databaseActionCompiler.add(TrainerDatabaseActionBuilder.create(createTrainerRequest));
+                databaseActionCompiler.add(TrainerDatabaseActionBuilder.create(createTrainerRequest, ifWithCreate));
 
                 // Add to gym (with gymID and true for fromCreate
 //                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddTrainer(createTrainerRequest.gym,
 //                        null, true));
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("Required fields missing in createTrainerRequest!");

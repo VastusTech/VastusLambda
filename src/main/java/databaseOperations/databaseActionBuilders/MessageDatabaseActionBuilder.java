@@ -19,7 +19,7 @@ public class MessageDatabaseActionBuilder {
         return new PrimaryKey("board", board, "id", id);
     }
 
-    public static DatabaseAction create(CreateMessageRequest createMessageRequest) {
+    public static DatabaseAction create(CreateMessageRequest createMessageRequest, boolean ifWithCreate) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Message.getEmptyItem();
         item.put("board", new AttributeValue(createMessageRequest.board));
@@ -30,7 +30,7 @@ public class MessageDatabaseActionBuilder {
         if (createMessageRequest.profileImagePath != null) {
             item.put("profileImagePath", new AttributeValue(createMessageRequest.profileImagePath));
         }
-        return new CreateDatabaseAction(itemType, item, new UpdateWithIDHandler() {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
             @Override
             public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
                 if (createMessageRequest.type != null) {

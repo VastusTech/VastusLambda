@@ -13,12 +13,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CreateWorkout {
-    public static String handle(String fromID, CreateWorkoutRequest createWorkoutRequest) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateWorkoutRequest createWorkoutRequest, boolean ifWithCreate) throws Exception {
         if (createWorkoutRequest != null) {
             if (createWorkoutRequest.time != null && createWorkoutRequest.trainer != null && createWorkoutRequest
                     .clients != null && createWorkoutRequest.gym != null && createWorkoutRequest.capacity != null
                     && createWorkoutRequest.sticker != null && createWorkoutRequest.intensity != null &&
                     createWorkoutRequest.price != null) {
+                List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!Arrays.asList(createWorkoutRequest.clients).contains(fromID) && !fromID.equals(Constants.adminKey)) {
@@ -32,7 +33,7 @@ public class CreateWorkout {
                 Float.parseFloat(createWorkoutRequest.price);
 
                 // Create Workout
-                databaseActionCompiler.add(WorkoutDatabaseActionBuilder.create(createWorkoutRequest));
+                databaseActionCompiler.add(WorkoutDatabaseActionBuilder.create(createWorkoutRequest, ifWithCreate));
 
                 // Add to clients' scheduled workouts
                 // Add to clients' scheduled workout times
@@ -57,7 +58,9 @@ public class CreateWorkout {
                 databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddScheduledTime
                         (createWorkoutRequest.gym, createWorkoutRequest.time, true));
 
-                return DynamoDBHandler.getInstance().attemptTransaction(databaseActionCompiler);
+                compilers.add(databaseActionCompiler);
+
+                return compilers;
             }
             else {
                 throw new Exception("createWorkoutRequest is missing required fields!");
