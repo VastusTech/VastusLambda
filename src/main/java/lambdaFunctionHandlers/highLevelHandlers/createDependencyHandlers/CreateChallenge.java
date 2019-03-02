@@ -9,6 +9,8 @@ import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActi
 import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateChallengeRequest;
+import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
+
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -95,6 +97,12 @@ public class CreateChallenge {
                 compilers.add(databaseActionCompiler);
 
                 // TODO AUTOMATICALLY CREATE A POST FOR THEM!!!!
+
+                // Manually add a CreatePostRequest, then send it, utilizing the Passover ID functionality!
+                CreatePostRequest createPostRequest = new CreatePostRequest(createChallengeRequest.owner,
+                        null, "", createChallengeRequest.access, "newChallenge", null, null,
+                        createChallengeRequest.group);
+                compilers.addAll(CreatePost.getCompilers(fromID, createPostRequest, true));
 
                 return compilers;
             }

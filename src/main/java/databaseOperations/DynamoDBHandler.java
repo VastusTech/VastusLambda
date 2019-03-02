@@ -74,12 +74,27 @@ public class DynamoDBHandler {
     public String attemptTransaction(List<DatabaseActionCompiler> databaseActionCompilers) throws Exception {
         // Marker retry implemented
         // TODO ==============================================================================
-        // TODO TRANSACTIONS ARE LIMITED TO 10 UNIQUE THINGS EACH, WE NEED TO BREAK IT UP
+        // TODO BECAUSE TRANSACTIONS ARE BROKEN UP, LET'S DO ALL THE CHECKING BEFOREHAND INSTEAD
+        // TODO IN ORDER TO INCREASE THE CHANCE OF AN "ATOMIC" FUNCTIONALITY!!!!!!
         // TODO ==============================================================================
         final int transactionActionLimit = 10; // Transactions can only handle 10 unique things each
         // This indicates created ID for current compiler and also supports passover between transactions.
         String newlyCreatedID = null; // This indicates the created ID for the current compiler.
         String returnString = null; // This indicates the created ID for the first compiler
+
+        // Pre-checking
+        for (DatabaseActionCompiler databaseActionCompiler : databaseActionCompilers) {
+            for (DatabaseAction databaseAction : databaseActionCompiler.getDatabaseActions()) {
+                if (databaseAction.action == DBAction.UPDATESAFE) {
+                    DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
+                    String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
+                    if (errorMessage != null) {
+                        throw new Exception("Unable to perform database action. Item failed runtime checker: " +
+                                errorMessage);
+                    }
+                }
+            }
+        }
 
         // For each transaction
         for (DatabaseActionCompiler databaseActionCompiler : databaseActionCompilers) {

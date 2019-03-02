@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseObjects.Message;
+import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.MessageDatabaseActionBuilder;
@@ -50,7 +51,16 @@ public class CreateMessage {
                     // Then we add the board to their boards
                     for (String id : notificationIDs) {
                         String itemType = ItemType.getItemType(id);
-                        databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddMessageBoard(id, itemType, createMessageRequest.board));
+                        User user = User.readUser(id, itemType);
+                        if (!user.messageBoards.contains(createMessageRequest.board)) {
+                            databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddMessageBoard(id, itemType, createMessageRequest.board));
+                            databaseActionCompiler.getNotificationHandler().addAddNotification(
+                                    id,
+                                    "messageBoards",
+                                    createMessageRequest.board,
+                                    false
+                            );
+                        }
                     }
                 }
 
