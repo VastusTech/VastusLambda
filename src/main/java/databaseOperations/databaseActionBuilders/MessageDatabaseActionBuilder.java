@@ -6,11 +6,14 @@ import main.java.databaseObjects.Message;
 import main.java.databaseOperations.CreateDatabaseAction;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DeleteDatabaseAction;
+import main.java.databaseOperations.UpdateDatabaseAction;
 import main.java.databaseOperations.UpdateWithIDHandler;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateMessageRequest;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 public class MessageDatabaseActionBuilder {
     private static final String itemType = "Message";
@@ -40,6 +43,10 @@ public class MessageDatabaseActionBuilder {
                 }
             }
         });
+    }
+
+    public static DatabaseAction updateAddLastSeenFor(String board, String id, String lastSeenFor) throws Exception {
+        return new UpdateDatabaseAction(id, getPrimaryKey(board, id), "lastSeenFor", new AttributeValue(lastSeenFor), false, ADD);
     }
 
     public static DatabaseAction delete(String board, String id) {

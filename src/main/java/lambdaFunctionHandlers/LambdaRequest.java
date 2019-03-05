@@ -22,6 +22,7 @@ public class LambdaRequest {
     private String specifyAction;
     private String itemType;
     private String[] identifiers;
+    private String secondaryIdentifier;
     private String attributeName;
     private String[] attributeValues;
 

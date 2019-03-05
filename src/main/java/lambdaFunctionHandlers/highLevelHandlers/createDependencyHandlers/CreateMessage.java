@@ -89,7 +89,7 @@ public class CreateMessage {
                 return compilers;
             }
             else {
-                throw new Exception("createClientRequest is missing required fields!");
+                throw new Exception("createMessageRequest is missing required fields!");
             }
         }
         else {

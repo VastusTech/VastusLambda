@@ -37,11 +37,11 @@ public class CreateStreak {
                 return compilers;
             }
             else {
-                throw new Exception("createClientRequest is missing required fields!");
+                throw new Exception("createStreakRequest is missing required fields!");
             }
         }
         else {
-            throw new Exception("createMessageRequest not initialized for CREATE statement!");
+            throw new Exception("createStreakRequest not initialized for CREATE statement!");
         }
     }
 }

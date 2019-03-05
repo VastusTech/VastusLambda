@@ -8,8 +8,10 @@ import main.java.Logic.ItemType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Message extends DatabaseItem {
     final public static String tableName = Constants.messageTableName;
@@ -23,6 +25,7 @@ public class Message extends DatabaseItem {
     public String name;
     public String profileImagePath;
     public String message;
+    public Set<String> lastSeenFor;
 
     public Message(Item item) throws Exception {
         id = item.getString("id");
@@ -34,6 +37,8 @@ public class Message extends DatabaseItem {
         name = item.getString("name");
         profileImagePath = item.getString("profileImagePath");
         message = item.getString("message");
+        lastSeenFor = item.getStringSet("lastSeenFor");
+        if (lastSeenFor == null) { lastSeenFor = new HashSet<>(); }
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {
