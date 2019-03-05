@@ -140,6 +140,7 @@ public class LambdaRequest {
         comment,
         // Sponsor =========================
         // Message =========================
+        lastSeenFor,
         // Streak =========================
     }
 
@@ -289,6 +290,9 @@ public class LambdaRequest {
         }
         if (identifiers == null) {
             identifiers = new String[]{};
+        }
+        if (secondaryIdentifier != null && !itemType.equals("Message")) {
+            throw new Exception("You can only have a secondary identifier to identify a board!!!");
         }
 
         if (action != null  && fromID != null && !fromID.equals("") && itemType != null) {
@@ -986,6 +990,14 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case lastSeenFor:
+                    if (itemType.equals("Message")) {
+                        databaseActionCompiler.addAll(MessageAddLastSeenFor.getActions(fromID, secondaryIdentifier, id, attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEADD operation on " + attributeName + "!");
             }
@@ -1222,7 +1234,7 @@ public class LambdaRequest {
     // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 
     public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String
-            attributeName, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest
+            attributeName, String secondaryIdentifier, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest
             createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
                          CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest,
                          CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest,
@@ -1234,6 +1246,7 @@ public class LambdaRequest {
         this.specifyAction = specifyAction;
         this.itemType = itemType;
         this.identifiers = identifiers;
+        this.secondaryIdentifier = secondaryIdentifier;
         this.attributeName = attributeName;
         this.attributeValues = attributeValues;
         this.createClientRequest = createClientRequest;
@@ -1292,6 +1305,14 @@ public class LambdaRequest {
 
     public void setIdentifiers(String[] identifiers) {
         this.identifiers = identifiers;
+    }
+
+    public String getSecondaryIdentifier() {
+        return secondaryIdentifier;
+    }
+
+    public void setSecondaryIdentifier(String secondaryIdentifier) {
+        this.secondaryIdentifier = secondaryIdentifier;
     }
 
     public String getAttributeName() {
