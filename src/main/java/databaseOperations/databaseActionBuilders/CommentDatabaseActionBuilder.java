@@ -33,20 +33,20 @@ public class CommentDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateComment(String id, String comment) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "comment", new AttributeValue(comment), false, PUT);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "comment", new AttributeValue(comment), false, PUT);
     }
 
     public static DatabaseAction updateAddComment(String id, String comment, boolean ifWithCreate) throws Exception {
         if (ifWithCreate) {
-            return new UpdateDatabaseAction(id, getPrimaryKey(id), "comments", null, true, ADD);
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "comments", null, true, ADD);
         }
         else {
-            return new UpdateDatabaseAction(id, getPrimaryKey(id), "comments", new AttributeValue(comment), false, ADD);
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "comments", new AttributeValue(comment), false, ADD);
         }
     }
 
     public static DatabaseAction updateRemoveComment(String id, String comment) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "comments", new AttributeValue(comment), false, DELETE);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "comments", new AttributeValue(comment), false, DELETE);
     }
 
     public static DatabaseAction delete(String id) {

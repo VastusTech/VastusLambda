@@ -162,6 +162,8 @@ public class DynamoDBHandler {
                                             .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
                                 }
                             }
+                            Constants.debugLog("Using primary key = " + databaseAction.primaryKey.toString());
+                            Constants.debugLog("On table = " + databaseAction.getTableName());
 
                             // This updates the object and the marker
                             transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName()).withKey

@@ -38,19 +38,19 @@ public class StreakDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateLastUpdated(String id, String lastUpdated) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "lastUpdated", new AttributeValue(lastUpdated), false, PUT);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "lastUpdated", new AttributeValue(lastUpdated), false, PUT);
     }
 
     public static DatabaseAction updateAddN(String id) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "N", new AttributeValue().withN("1"), false, ADD);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "N", new AttributeValue().withN("1"), false, ADD);
     }
 
     public static DatabaseAction updateAddBestN(String id) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "bestN", new AttributeValue().withN("1"), false, ADD);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "bestN", new AttributeValue().withN("1"), false, ADD);
     }
 
     public static DatabaseAction updateAddCurrentN(String id) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "currentN", new AttributeValue().withN("1"), false, ADD);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "currentN", new AttributeValue().withN("1"), false, ADD);
     }
 
     public static DatabaseAction delete(String id) {

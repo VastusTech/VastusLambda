@@ -46,7 +46,7 @@ public class MessageDatabaseActionBuilder {
     }
 
     public static DatabaseAction updateAddLastSeenFor(String board, String id, String lastSeenFor) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(board, id), "lastSeenFor", new AttributeValue(lastSeenFor), false, ADD);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(board, id), "lastSeenFor", new AttributeValue(lastSeenFor), false, ADD);
     }
 
     public static DatabaseAction delete(String board, String id) {

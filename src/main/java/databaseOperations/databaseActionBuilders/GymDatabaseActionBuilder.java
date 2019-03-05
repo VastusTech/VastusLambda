@@ -136,56 +136,56 @@ public class GymDatabaseActionBuilder {
 //    }
 
     public static DatabaseAction updateAddress(String id, String address) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "address", new AttributeValue(address), false, PUT);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "address", new AttributeValue(address), false, PUT);
     }
 
     public static DatabaseAction updateAddTrainer(String id, String trainer, boolean ifWithCreate) throws Exception {
         if (ifWithCreate) {
-            return new UpdateDatabaseAction(id, getPrimaryKey(id), "trainer", null, true, ADD);
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "trainer", null, true, ADD);
         }
         else {
-            return new UpdateDatabaseAction(id, getPrimaryKey(id), "trainer", new AttributeValue(trainer), false, ADD);
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "trainer", new AttributeValue(trainer), false, ADD);
         }
 
     }
 
     public static DatabaseAction updateRemoveTrainer(String id, String trainer) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "trainer", new AttributeValue(trainer), false, DELETE);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "trainer", new AttributeValue(trainer), false, DELETE);
     }
 
     public static DatabaseAction updateWeeklyHours(String id, String[] weeklyHours) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "weeklyHours", new AttributeValue(Arrays.asList(weeklyHours)),
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "weeklyHours", new AttributeValue(Arrays.asList(weeklyHours)),
                 false, PUT);
     }
 
     // TODO Consider going back to this
 //    public static DatabaseAction updateAddWeeklyHour(String id, String weeklyHour) throws Exception {
-//        return new UpdateDatabaseAction(id, getPrimaryKey(id), "weekly_hours", new AttributeValue(weeklyHour), false, ADD);
+//        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "weekly_hours", new AttributeValue(weeklyHour), false, ADD);
 //    }
 //
 //    public static DatabaseAction updateRemoveWeeklyHour(String id, String weeklyHour) throws Exception {
-//        return new UpdateDatabaseAction(id, getPrimaryKey(id), "weekly_hours", new AttributeValue(weeklyHour), false, "REMOVE");
+//        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "weekly_hours", new AttributeValue(weeklyHour), false, "REMOVE");
 //    }
 
     public static DatabaseAction updateAddVacationTime(String id, String vacationTime) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "vacationTimes", new AttributeValue(vacationTime), false, ADD);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "vacationTimes", new AttributeValue(vacationTime), false, ADD);
     }
 
     public static DatabaseAction updateRemoveVacationTime(String id, String vacationTime) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "vacationTimes", new AttributeValue(vacationTime), false, DELETE);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "vacationTimes", new AttributeValue(vacationTime), false, DELETE);
     }
 
     public static DatabaseAction updateSessionCapacity(String id, String sessionCapacity) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "sessionCapacity", new AttributeValue(sessionCapacity), false,
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "sessionCapacity", new AttributeValue(sessionCapacity), false,
                 PUT);
     }
 
     public static DatabaseAction updateGymType(String id, String gymType) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "gymType", new AttributeValue(gymType), false, PUT);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "gymType", new AttributeValue(gymType), false, PUT);
     }
 
     public static DatabaseAction updatePaymentSplit(String id, String paymentSplit) throws Exception {
-        return new UpdateDatabaseAction(id, getPrimaryKey(id), "paymentSplit", new AttributeValue(paymentSplit), false, PUT);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "paymentSplit", new AttributeValue(paymentSplit), false, PUT);
     }
 
     public static DatabaseAction delete(String id) {

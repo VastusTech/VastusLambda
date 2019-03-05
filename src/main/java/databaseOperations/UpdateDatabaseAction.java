@@ -12,7 +12,7 @@ import java.util.List;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 public class UpdateDatabaseAction extends DatabaseAction {
-    public UpdateDatabaseAction(String id, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
+    public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action) throws Exception {
         this.id = id;
         this.action = DBAction.UPDATE;
@@ -25,7 +25,7 @@ public class UpdateDatabaseAction extends DatabaseAction {
         // TODO LOG HERE
     }
 
-    public UpdateDatabaseAction(String id, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
+    public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action, CheckHandler checkHandler) throws Exception {
         this.id = id;
         this.action = DBAction.UPDATESAFE;
