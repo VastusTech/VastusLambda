@@ -15,6 +15,7 @@ public class UpdateDatabaseAction extends DatabaseAction {
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action) throws Exception {
         this.id = id;
+        this.itemType = itemType;
         this.action = DBAction.UPDATE;
         this.primaryKey = primaryKey;
         this.ifWithCreate = ifWithCreate;
@@ -28,6 +29,7 @@ public class UpdateDatabaseAction extends DatabaseAction {
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action, CheckHandler checkHandler) throws Exception {
         this.id = id;
+        this.itemType = itemType;
         this.action = DBAction.UPDATESAFE;
         this.primaryKey = primaryKey;
         this.ifWithCreate = ifWithCreate;

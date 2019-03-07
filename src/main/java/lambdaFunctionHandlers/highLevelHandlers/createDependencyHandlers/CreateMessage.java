@@ -82,6 +82,12 @@ public class CreateMessage {
                     payload.put("profileImagePath", createMessageRequest.profileImagePath);
                 }
 
+                for (String notifyID : Message.getNotificationIDsFromBoard(createMessageRequest.board)) {
+                    if (!notifyID.equals(fromID)) {
+                        databaseActionCompiler.getNotificationHandler().setCreateFlag(notifyID);
+                    }
+                }
+
                 databaseActionCompiler.getNotificationHandler().addMessageNotification(createMessageRequest.board, payload);
 
                 compilers.add(databaseActionCompiler);
