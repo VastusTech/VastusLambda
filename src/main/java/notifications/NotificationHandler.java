@@ -163,7 +163,9 @@ public class NotificationHandler {
      * Sends the messages to the Ably Lambda Function with the notifications payload.
      */
     public void sendMessages() {
-        LambdaInvokeHandler.getInstance().invokeLambda(Constants.ablyFunctionName, getNotificationsPayload());
+        String payload = getNotificationsPayload();
+        Constants.debugLog("Sending payload to ABLY. Payload = \n" + payload);
+        LambdaInvokeHandler.getInstance().invokeLambda(Constants.ablyFunctionName, payload);
     }
 
     /**
