@@ -13,9 +13,10 @@ public class CreateClientRequest extends CreateObjectRequest {
     public String stripeID;
     public String federatedID;
     public String bio;
+    public String enterpriseID;
 
     public CreateClientRequest(String name, String gender, String birthday, String email, String username, String
-            bio, String stripeID, String federatedID) {
+            bio, String stripeID, String federatedID, String enterpriseID) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
@@ -24,6 +25,7 @@ public class CreateClientRequest extends CreateObjectRequest {
         this.bio = bio;
         this.stripeID = stripeID;
         this.federatedID = federatedID;
+        this.enterpriseID = enterpriseID;
     }
 
     public CreateClientRequest() {}

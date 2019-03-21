@@ -33,12 +33,11 @@ public class WorkoutDatabaseActionBuilder {
         item.put("sticker", new AttributeValue(createWorkoutRequest.sticker));
         item.put("intensity", new AttributeValue(createWorkoutRequest.intensity));
         item.put("price", new AttributeValue(createWorkoutRequest.price));
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+            (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }
-        });
+        );
     }
 
 //    public static DatabaseAction updateTime() {

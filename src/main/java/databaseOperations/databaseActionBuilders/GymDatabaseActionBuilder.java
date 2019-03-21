@@ -42,12 +42,11 @@ public class GymDatabaseActionBuilder {
                 new AttributeValue(createGymRequest.gymType)); }
         if (createGymRequest.paymentSplit != null) { item.put("paymentSplit",
                 new AttributeValue(createGymRequest.paymentSplit)); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+            (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }
-        });
+        );
     }
 
 //    public static DatabaseAction updateFoundingDay(String id, String foundingDay) throws Exception {

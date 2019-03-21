@@ -29,25 +29,24 @@ public class PostDatabaseActionBuilder {
                 (createPostRequest.picturePaths))); }
         if (createPostRequest.videoPaths != null) { item.put("videoPaths", new AttributeValue(Arrays.asList
                 (createPostRequest.videoPaths))); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+            (Map<String, AttributeValue> createdItem, String id) -> {
                 if (createPostRequest.picturePaths != null && createPostRequest.picturePaths.length > 0) {
                     List<String> picturePaths = new ArrayList<>();
                     for (String picturePath : createPostRequest.picturePaths) {
                         picturePaths.add(id + "/" + picturePath);
                     }
-                    item.put("picturePaths", new AttributeValue(picturePaths));
+                    createdItem.put("picturePaths", new AttributeValue(picturePaths));
                 }
                 if (createPostRequest.videoPaths != null && createPostRequest.videoPaths.length > 0) {
                     List<String> videoPaths = new ArrayList<>();
                     for (String videoPath : createPostRequest.videoPaths) {
                         videoPaths.add(id + "/" + videoPath);
                     }
-                    item.put("videoPaths", new AttributeValue(videoPaths));
+                    createdItem.put("videoPaths", new AttributeValue(videoPaths));
                 }
             }
-        });
+        );
     }
 
     public static DatabaseAction updateAccess(String id, String access) throws Exception {

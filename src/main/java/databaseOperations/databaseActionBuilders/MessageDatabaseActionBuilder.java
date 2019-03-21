@@ -33,16 +33,15 @@ public class MessageDatabaseActionBuilder {
         if (createMessageRequest.profileImagePath != null) {
             item.put("profileImagePath", new AttributeValue(createMessageRequest.profileImagePath));
         }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+            (Map<String, AttributeValue> createdItem, String id) -> {
                 if (createMessageRequest.type != null) {
                     if (createMessageRequest.type.equals("picture") || createMessageRequest.type.equals("video")) {
-                        item.put("message", new AttributeValue(id + "/" + createMessageRequest.message));
+                        createdItem.put("message", new AttributeValue(id + "/" + createMessageRequest.message));
                     }
                 }
             }
-        });
+        );
     }
 
     public static DatabaseAction updateAddLastSeenFor(String board, String id, String lastSeenFor) throws Exception {

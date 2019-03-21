@@ -6,7 +6,6 @@ import main.java.databaseObjects.Comment;
 import main.java.databaseOperations.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateCommentRequest;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
@@ -24,12 +23,11 @@ public class CommentDatabaseActionBuilder {
         item.put("by", new AttributeValue(createCommentRequest.by));
         item.put("to", new AttributeValue(createCommentRequest.to));
         item.put("comment", new AttributeValue(createCommentRequest.comment));
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+            (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }
-        });
+        );
     }
 
     public static DatabaseAction updateComment(String id, String comment) throws Exception {

@@ -47,12 +47,11 @@ public class TrainerDatabaseActionBuilder {
                 (createTrainerRequest.workoutCapacity)); }
         if (createTrainerRequest.workoutPrice != null) { item.put("workoutPrice", new AttributeValue
                 (createTrainerRequest.workoutPrice)); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+            (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }
-        });
+        );
     }
 
     // TODO How to combine this with the original UserActionDatabaseBuilder logic???? "Extends"?

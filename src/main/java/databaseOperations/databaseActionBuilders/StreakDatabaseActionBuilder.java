@@ -29,12 +29,11 @@ public class StreakDatabaseActionBuilder {
         item.put("about", new AttributeValue(createStreakRequest.about));
         item.put("streakType", new AttributeValue(createStreakRequest.streakType));
         if (createStreakRequest.updateType != null) { item.put("updateType", new AttributeValue(createStreakRequest.updateType)); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+            (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }
-        });
+        );
     }
 
     public static DatabaseAction updateLastUpdated(String id, String lastUpdated) throws Exception {

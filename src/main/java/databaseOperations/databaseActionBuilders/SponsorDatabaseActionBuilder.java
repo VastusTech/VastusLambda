@@ -28,12 +28,11 @@ public class SponsorDatabaseActionBuilder {
                 .stripeID)); }
         if (createSponsorRequest.federatedID != null) { item.put("federatedID", new AttributeValue(createSponsorRequest
                 .federatedID)); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+            (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }
-        });
+        );
     }
 
     public static DatabaseAction delete(String id) {

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.databaseObjects.Enterprise;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
@@ -20,6 +21,12 @@ public class CreateClient {
 
                 // Check to see if the request features are well formed (i.e not invalid date or time)
                 if (createClientRequest.birthday != null) { new DateTime(createClientRequest.birthday); }
+
+                // TODO Check the enterprise ID
+                // TODO This will need to be changed to be more secure in the future!!!
+                if (createClientRequest.enterpriseID != null) {
+                    Enterprise.readEnterprise(createClientRequest.enterpriseID);
+                }
 
                 databaseActionCompiler.add(ClientDatabaseActionBuilder.create(createClientRequest, ifWithCreate));
 

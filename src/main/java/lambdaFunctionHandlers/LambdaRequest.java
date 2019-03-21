@@ -40,6 +40,7 @@ public class LambdaRequest {
     private CreateSponsorRequest createSponsorRequest;
     private CreateMessageRequest createMessageRequest;
     private CreateStreakRequest createStreakRequest;
+    private CreateEnterpriseRequest createEnterpriseRequest;
 
     private enum Action {
         CREATE,
@@ -408,6 +409,13 @@ public class LambdaRequest {
                     throw new Exception("No field inside Create Streak Request can be empty string!");
                 }
             }
+            if (createEnterpriseRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create enterprise request!\n");
+                if (createEnterpriseRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Streak Request can be empty string!");
+                }
+            }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
@@ -464,6 +472,9 @@ public class LambdaRequest {
                     break;
                 case Streak:
                     compilers = CreateStreak.getCompilers(fromID, createStreakRequest, false);
+                    break;
+                case Enterprise:
+                    compilers = CreateEnterprise.getCompilers(fromID, createEnterpriseRequest, false);
                     break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
@@ -1240,7 +1251,8 @@ public class LambdaRequest {
                          CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest,
                          CreatePostRequest createPostRequest, CreateGroupRequest createGroupRequest,
                          CreateCommentRequest createCommentRequest, CreateSponsorRequest createSponsorRequest,
-                         CreateMessageRequest createMessageRequest, CreateStreakRequest createStreakRequest) {
+                         CreateMessageRequest createMessageRequest, CreateStreakRequest createStreakRequest,
+                         CreateEnterpriseRequest createEnterpriseRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -1263,6 +1275,7 @@ public class LambdaRequest {
         this.createSponsorRequest = createSponsorRequest;
         this.createMessageRequest = createMessageRequest;
         this.createStreakRequest = createStreakRequest;
+        this.createEnterpriseRequest = createEnterpriseRequest;
     }
 
     public LambdaRequest() {}
@@ -1441,5 +1454,13 @@ public class LambdaRequest {
 
     public void setCreateStreakRequest(CreateStreakRequest createStreakRequest) {
         this.createStreakRequest = createStreakRequest;
+    }
+
+    public CreateEnterpriseRequest getCreateEnterpriseRequest() {
+        return createEnterpriseRequest;
+    }
+
+    public void setCreateEnterpriseRequest(CreateEnterpriseRequest createEnterpriseRequest) {
+        this.createEnterpriseRequest = createEnterpriseRequest;
     }
 }

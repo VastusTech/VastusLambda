@@ -14,7 +14,8 @@ public enum ItemType {
     Comment,
     Sponsor,
     Message,
-    Streak,;
+    Streak,
+    Enterprise,;
 
     public static String getItemType(String id) throws Exception {
         String prefix = id.substring(0, Constants.numPrefix);

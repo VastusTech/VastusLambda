@@ -27,20 +27,23 @@ public class ClientDatabaseActionBuilder {
         item.put("name", new AttributeValue(createClientRequest.name));
         item.put("email", new AttributeValue(createClientRequest.email));
         item.put("username", new AttributeValue(createClientRequest.username));
-        if (createClientRequest.gender != null) { item.put("gender", new AttributeValue(createClientRequest.gender)); }
-        if (createClientRequest.birthday != null) { item.put("birthday", new AttributeValue(createClientRequest
-                .birthday)); }
-        if (createClientRequest.bio != null) { item.put("bio", new AttributeValue(createClientRequest.bio)); }
-        if (createClientRequest.stripeID != null) { item.put("stripeID", new AttributeValue(createClientRequest
-                .stripeID)); }
-        if (createClientRequest.federatedID != null) { item.put("federatedID", new AttributeValue(createClientRequest
-                .federatedID)); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
-                return;
-            }
-        });
+        if (createClientRequest.gender != null) { item.put("gender",
+                new AttributeValue(createClientRequest.gender)); }
+        if (createClientRequest.birthday != null) { item.put("birthday",
+                new AttributeValue(createClientRequest.birthday)); }
+        if (createClientRequest.bio != null) { item.put("bio",
+                new AttributeValue(createClientRequest.bio)); }
+        if (createClientRequest.stripeID != null) { item.put("stripeID",
+                new AttributeValue(createClientRequest.stripeID)); }
+        if (createClientRequest.federatedID != null) { item.put("federatedID",
+                new AttributeValue(createClientRequest.federatedID)); }
+        if (createClientRequest.enterpriseID != null) { item.put("enterpriseID",
+                new AttributeValue(createClientRequest.enterpriseID)); }
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+                (Map<String, AttributeValue> createdItem, String id) -> {
+                    return;
+                }
+        );
     }
 
     public static DatabaseAction updateAddTrainerFollowing(String id, String trainer) throws Exception {

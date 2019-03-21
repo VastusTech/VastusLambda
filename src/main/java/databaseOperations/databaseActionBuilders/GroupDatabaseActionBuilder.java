@@ -41,14 +41,13 @@ public class GroupDatabaseActionBuilder {
                 .owners))); }
         if (createGroupRequest.tags != null) { item.put("tags", new AttributeValue(Arrays.asList(createGroupRequest
                 .tags))); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate, new UpdateWithIDHandler() {
-            @Override
-            public void updateWithID(Map<String, AttributeValue> item, String id) throws Exception {
+        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+            (Map<String, AttributeValue> createdItem, String id) -> {
                 if (createGroupRequest.groupImagePath != null) {
-                    item.put("groupImagePath", new AttributeValue(id + "/" + createGroupRequest.groupImagePath));
+                    createdItem.put("groupImagePath", new AttributeValue(id + "/" + createGroupRequest.groupImagePath));
                 }
             }
-        });
+        );
     }
 
     public static DatabaseAction updateTitle(String id, String title) throws Exception {
