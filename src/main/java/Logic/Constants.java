@@ -10,7 +10,7 @@ public class Constants {
     // TODO timeoutSeconds, userPoolName, userPoolID, userPoolClientID, userPoolSecretKey, nullAttributeValue
 
     private static LambdaLogger logger;
-    private static boolean ifDebug = Boolean.parseBoolean(System.getenv("ifDebug"));
+    public static boolean ifDebug = Boolean.parseBoolean(System.getenv("ifDebug"));
 
     public static int workoutShortestTimeSectionInterval = Integer.parseInt(Optional.ofNullable(System.getenv
             ("workoutShortestTimeSectionInterval")).orElse("15"));

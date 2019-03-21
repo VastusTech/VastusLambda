@@ -2,6 +2,7 @@ package main.java.lambdaFunctionHandlers;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import main.java.Logic.Constants;
+import main.java.Logic.debugging.SingletonTimer;
 
 public class LambdaFunctionHandler {
     public LambdaResponse handleRequest(LambdaRequest input, Context context) throws Exception {
@@ -12,6 +13,11 @@ public class LambdaFunctionHandler {
         }
         Constants.setLogger(context.getLogger());
         Constants.debugLog(input.toString());
-        return new LambdaResponse(input.process());
+        // Start the time testing
+        SingletonTimer.get().start("Get into input");
+        LambdaResponse response = new LambdaResponse(input.process());
+        SingletonTimer.get().finish();
+        if (Constants.ifDebug) { Constants.debugLog(SingletonTimer.get().toString()); }
+        return response;
     }
 }

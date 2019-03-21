@@ -9,6 +9,8 @@ import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.transactions.Transaction;
 import com.amazonaws.services.dynamodbv2.transactions.TransactionManager;
+
+import main.java.Logic.debugging.SingletonTimer;
 import main.java.databaseObjects.*;
 import main.java.databaseOperations.exceptions.ItemNotFoundException;
 
@@ -82,6 +84,8 @@ public class DynamoDBHandler {
         String newlyCreatedID = null; // This indicates the created ID for the current compiler.
         String returnString = null; // This indicates the created ID for the first compiler
 
+        SingletonTimer.get().checkpoint("Pre-checking the actions check handlers");
+
         // Pre-checking
         for (DatabaseActionCompiler databaseActionCompiler : databaseActionCompilers) {
             for (DatabaseAction databaseAction : databaseActionCompiler.getDatabaseActions()) {
@@ -95,6 +99,8 @@ public class DynamoDBHandler {
                 }
             }
         }
+
+        SingletonTimer.get().checkpoint("Handling the transactions");
 
         // For each transaction
         for (DatabaseActionCompiler databaseActionCompiler : databaseActionCompilers) {
@@ -339,6 +345,8 @@ public class DynamoDBHandler {
             // If it gets here, then the process completed safely.
             transaction.commit();
             transaction.delete();
+
+            SingletonTimer.get().checkpoint("Sending the notifications");
 
             // Then it is safe to use Ably to send the notifications
             databaseActionCompiler.sendNotifications();

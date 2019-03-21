@@ -2,6 +2,7 @@ package main.java.lambdaFunctionHandlers;
 
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
+import main.java.Logic.debugging.SingletonTimer;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.*;
@@ -150,6 +151,7 @@ public class LambdaRequest {
         try {
             // First check all of the inputs for the stuff
             checkInputs();
+            SingletonTimer.get().checkpoint("Switch for action");
 
             switch (Action.valueOf(action)) {
                 case CREATE:
@@ -427,6 +429,7 @@ public class LambdaRequest {
     }
 
     private String handleCreate() throws Exception {
+        SingletonTimer.get().checkpoint("Get compilers for Create");
         List<DatabaseActionCompiler> compilers;
         try {
             switch (ItemType.valueOf(itemType)) {
@@ -484,6 +487,7 @@ public class LambdaRequest {
             throw new Exception("Item Type: " + itemType + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
+        SingletonTimer.get().checkpoint("Attempt the transaction");
         return DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
 
@@ -499,6 +503,7 @@ public class LambdaRequest {
 
     public void handleUpdateSet(String id) throws Exception {
         // switch all attributes, then if necessary, item type
+        SingletonTimer.get().checkpoint("Init compiler for Update Set");
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         String attributeValue = null;
@@ -845,6 +850,7 @@ public class LambdaRequest {
 
     public void handleUpdateAdd(String id) throws Exception {
         // switch all attributes, then if necessary, item type
+        SingletonTimer.get().checkpoint("Init compiler for Update Add");
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         String attributeValue = null;
@@ -1030,6 +1036,7 @@ public class LambdaRequest {
 
     public void handleUpdateRemove(String id) throws Exception {
         // switch all attributes, then if necessary, item type
+        SingletonTimer.get().checkpoint("Init compiler for Update Remove");
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         String attributeValue = null;
@@ -1183,6 +1190,7 @@ public class LambdaRequest {
     // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 
     public void handleDelete(String id) throws Exception {
+        SingletonTimer.get().checkpoint("Init compiler for Delete");
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         //Constants.debugLog("Handling delete actions");
