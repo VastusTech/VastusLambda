@@ -29,10 +29,10 @@ public class Timer {
     /**
      * Puts another section into the times map with a section name to it.
      * @param nextSectionName The name of the next section to be timed.
-     * @return The current time in milliseconds.
+     * @return The current time in nanoseconds.
      */
     public long checkpoint(String nextSectionName) {
-        long time = System.currentTimeMillis();
+        long time = System.nanoTime();
         times.put(nextSectionName, time);
         return time;
     }
@@ -54,7 +54,7 @@ public class Timer {
         if (startTime == -1 || endTime == -1) {
             return "Timer not finished yet!";
         }
-        long executionTime = endTime - startTime;
+        float executionTime = (float)(endTime - startTime) / 1000000.0f;
         StringBuilder sb = new StringBuilder();
         sb.append("===========================================\n");
         sb.append("=              EXECUTION TIME             =\n");
@@ -74,13 +74,12 @@ public class Timer {
                 sb.append(previousSection);
                 sb.append("): \n");
                 sb.append("    Time Elapsed: ");
-                long elapsedTime = entry.getValue() - previousTime;
+                float elapsedTime = (float)(entry.getValue() - previousTime) / 1000000.0f;
                 sb.append(elapsedTime);
-                float percentage = (float)elapsedTime / (float)executionTime;
+                float percentage = 100.0f * elapsedTime / executionTime;
                 sb.append("ms \n    Percentage: ");
                 sb.append(percentage);
-                sb.append('\n');
-                sb.append('\n');
+                sb.append("%\n\n");
             }
             previousSection = entry.getKey();
             previousTime = entry.getValue();
