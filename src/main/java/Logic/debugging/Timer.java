@@ -14,15 +14,17 @@ public class Timer {
     }
 
     public void start(String startSectionName) {
-        checkpoint(startSectionName);
+        startTime = checkpoint(startSectionName);
     }
 
-    public void checkpoint(String nextSectionName) {
-        times.put(nextSectionName, System.currentTimeMillis());
+    public long checkpoint(String nextSectionName) {
+        long time = System.currentTimeMillis();
+        times.put(nextSectionName, time);
+        return time;
     }
 
     public void finish() {
-        checkpoint("end");
+        endTime = checkpoint("end");
     }
 
     @Override
