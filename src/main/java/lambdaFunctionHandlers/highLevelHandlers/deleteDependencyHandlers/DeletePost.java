@@ -12,6 +12,8 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import java.util.ArrayList;
 import java.util.List;
 
+import static main.java.databaseObjects.Streak.StreakType.submission;
+
 public class DeletePost {
     public static List<DatabaseAction> getActions(String fromID, String postID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
@@ -40,6 +42,13 @@ public class DeletePost {
             databaseActions.add(GroupDatabaseActionBuilder.updateRemovePost(post.group, postID));
         }
 
+        // Remove from liked
+        for (String likedID : post.likes) {
+            String likeItemType = ItemType.getItemType(likedID);
+            databaseActions.add(UserDatabaseActionBuilder.updateRemoveLike(likedID, likeItemType, postID));
+        }
+
+        // Remove from commented
         for (String commentID : post.comments) {
             databaseActions.addAll(DeleteComment.getActions(fromID, commentID));
         }

@@ -10,6 +10,7 @@ public enum ItemType {
     Challenge,
     Invite,
     Post,
+    Submission,
     Group,
     Comment,
     Sponsor,

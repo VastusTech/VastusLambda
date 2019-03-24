@@ -6,23 +6,23 @@ import java.util.List;
 import main.java.Logic.Constants;
 import main.java.Logic.ItemType;
 import main.java.databaseOperations.DatabaseAction;
-import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
-public class PostRemoveLike {
-    public static List<DatabaseAction> getActions(String fromID, String postID, String like) throws Exception {
+public class SubmissionRemoveLike {
+    public static List<DatabaseAction> getActions(String fromID, String submissionID, String like) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
         if (!fromID.equals(like) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only remove like as yourself!");
+            throw new Exception("PERMISSIONS ERROR: You can only remove a like as yourself!");
         }
 
-        // Remove from post
-        databaseActions.add(PostDatabaseActionBuilder.updateRemoveLike(postID, like));
+        // Remove from submission
+        databaseActions.add(SubmissionDatabaseActionBuilder.updateRemoveLike(submissionID, like));
 
         // Also remove from the user
         String likeItemType = ItemType.getItemType(like);
-        databaseActions.add(UserDatabaseActionBuilder.updateRemoveLike(like, likeItemType, postID));
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveLike(like, likeItemType, submissionID));
 
         return databaseActions;
     }

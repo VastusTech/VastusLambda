@@ -36,6 +36,7 @@ public class LambdaRequest {
     private CreateChallengeRequest createChallengeRequest;
     private CreateInviteRequest createInviteRequest;
     private CreatePostRequest createPostRequest;
+    private CreateSubmissionRequest createSubmissionRequest;
     private CreateGroupRequest createGroupRequest;
     private CreateCommentRequest createCommentRequest;
     private CreateSponsorRequest createSponsorRequest;
@@ -376,6 +377,13 @@ public class LambdaRequest {
                     throw new Exception("No field inside Create Post Request can be empty string!");
                 }
             }
+            if (createSubmissionRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create submission request!\n");
+                if (createSubmissionRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Submission Request can be empty string!");
+                }
+            }
             if (createGroupRequest != null) {
                 numCreateRequest++;
                 Constants.debugLog("Has a create group request!\n");
@@ -460,6 +468,9 @@ public class LambdaRequest {
                     break;
                 case Post:
                     compilers = CreatePost.getCompilers(fromID, createPostRequest, false);
+                    break;
+                case Submission:
+                    compilers = CreateSubmission.getCompilers(fromID, createSubmissionRequest, false);
                     break;
                 case Group:
                     compilers = CreateGroup.getCompilers(fromID, createGroupRequest, false);
@@ -715,6 +726,9 @@ public class LambdaRequest {
                     }
                     else if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostUpdateDescription.getActions(fromID, id, attributeValue));
+                    }
+                    else if (itemType.equals("Submission")) {
+                        databaseActionCompiler.addAll(SubmissionUpdateDescription.getActions(fromID, id, attributeValue));
                     }
                     else if (itemType.equals("Group")) {
                         databaseActionCompiler.addAll(GroupUpdateDescription.getActions(fromID, id, attributeValue));
@@ -986,6 +1000,8 @@ public class LambdaRequest {
                 case picturePaths:
                     if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostAddPicturePath.getActions(fromID, id, attributeValue));
+                    } else if (itemType.equals("Submission")) {
+                        databaseActionCompiler.addAll(SubmissionAddPicturePath.getActions(fromID, id, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
@@ -994,6 +1010,8 @@ public class LambdaRequest {
                 case videoPaths:
                     if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostAddVideoPath.getActions(fromID, id, attributeValue));
+                    } else if (itemType.equals("Submission")) {
+                        databaseActionCompiler.addAll(SubmissionAddVideoPath.getActions(fromID, id, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
@@ -1002,6 +1020,8 @@ public class LambdaRequest {
                 case likes:
                     if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostAddLike.getActions(fromID, id, attributeValue));
+                    } else if (itemType.equals("Submission")) {
+                        databaseActionCompiler.addAll(SubmissionAddLike.getActions(fromID, id, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
@@ -1149,6 +1169,8 @@ public class LambdaRequest {
                 case picturePaths:
                     if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostRemovePicturePath.getActions(fromID, id, attributeValue));
+                    } else if (itemType.equals("Submission")) {
+                        databaseActionCompiler.addAll(SubmissionRemovePicturePath.getActions(fromID, id, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
@@ -1157,6 +1179,8 @@ public class LambdaRequest {
                 case videoPaths:
                     if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostRemoveVideoPath.getActions(fromID, id, attributeValue));
+                    } else if (itemType.equals("Submission")) {
+                        databaseActionCompiler.addAll(SubmissionRemoveVideoPath.getActions(fromID, id, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
@@ -1165,6 +1189,8 @@ public class LambdaRequest {
                 case likes:
                     if (itemType.equals("Post")) {
                         databaseActionCompiler.addAll(PostRemoveLike.getActions(fromID, id, attributeValue));
+                    } else if (itemType.equals("Submission")) {
+                        databaseActionCompiler.addAll(SubmissionRemoveLike.getActions(fromID, id, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
@@ -1223,6 +1249,9 @@ public class LambdaRequest {
                 case Post:
                     databaseActionCompiler.addAll(DeletePost.getActions(fromID, id));
                     break;
+                case Submission:
+                    databaseActionCompiler.addAll(DeleteSubmission.getActions(fromID, id));
+                    break;
                 case Group:
                     databaseActionCompiler.addAll(DeleteGroup.getActions(fromID, id));
                     break;
@@ -1257,10 +1286,10 @@ public class LambdaRequest {
             createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
                          CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest,
                          CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest,
-                         CreatePostRequest createPostRequest, CreateGroupRequest createGroupRequest,
-                         CreateCommentRequest createCommentRequest, CreateSponsorRequest createSponsorRequest,
-                         CreateMessageRequest createMessageRequest, CreateStreakRequest createStreakRequest,
-                         CreateEnterpriseRequest createEnterpriseRequest) {
+                         CreatePostRequest createPostRequest, CreateSubmissionRequest createSubmissionRequest,
+                         CreateGroupRequest createGroupRequest, CreateCommentRequest createCommentRequest,
+                         CreateSponsorRequest createSponsorRequest, CreateMessageRequest createMessageRequest,
+                         CreateStreakRequest createStreakRequest, CreateEnterpriseRequest createEnterpriseRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -1278,6 +1307,7 @@ public class LambdaRequest {
         this.createChallengeRequest = createChallengeRequest;
         this.createInviteRequest = createInviteRequest;
         this.createPostRequest = createPostRequest;
+        this.createSubmissionRequest = createSubmissionRequest;
         this.createGroupRequest = createGroupRequest;
         this.createCommentRequest = createCommentRequest;
         this.createSponsorRequest = createSponsorRequest;
@@ -1422,6 +1452,14 @@ public class LambdaRequest {
 
     public void setCreatePostRequest(CreatePostRequest createPostRequest) {
         this.createPostRequest = createPostRequest;
+    }
+
+    public CreateSubmissionRequest getCreateSubmissionRequest() {
+        return createSubmissionRequest;
+    }
+
+    public void setCreateSubmissionRequest(CreateSubmissionRequest createSubmissionRequest) {
+        this.createSubmissionRequest = createSubmissionRequest;
     }
 
     public CreateGroupRequest getCreateGroupRequest() {

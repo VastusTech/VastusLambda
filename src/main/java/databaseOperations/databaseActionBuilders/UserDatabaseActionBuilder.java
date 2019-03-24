@@ -394,6 +394,20 @@ public class UserDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "posts", new AttributeValue(post), false, DELETE);
     }
 
+    public static DatabaseAction updateAddSubmission(String id, String itemType, String submission, boolean ifWithCreate) throws
+            Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "submissions", null, true, ADD);
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "submissions", new AttributeValue(submission), false, ADD);
+        }
+    }
+
+    public static DatabaseAction updateRemoveSubmission(String id, String itemType, String submission) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "submissions", new AttributeValue(submission), false, DELETE);
+    }
+
     public static DatabaseAction updateAddLike(String id, String itemType, String like) throws Exception {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "likes", new AttributeValue(like), false, ADD);
     }

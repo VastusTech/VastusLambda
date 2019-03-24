@@ -36,6 +36,10 @@ public interface DatabaseItemBuilder {
                 return new Sponsor(item);
             case Message:
                 return new Message(item);
+            case Streak:
+                return new Streak(item);
+            case Enterprise:
+                return new Enterprise(item);
             default:
                 throw new Exception("Item type = " + itemType + " not implemented in DatabaseItemBuilder");
         }

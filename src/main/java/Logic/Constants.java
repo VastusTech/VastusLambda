@@ -8,6 +8,7 @@ public class Constants {
     // TODO THIS GETS IT FROM THE ENVIRONMENTAL VARIABLES FROM AWS LAMBDA (with encryption ;))
     // TODO PUT THESE: workoutShortestTimeSectionInterval, idLength, numPrefix, databaseTableName, storageBucketName,
     // TODO timeoutSeconds, userPoolName, userPoolID, userPoolClientID, userPoolSecretKey, nullAttributeValue
+    public static boolean ifTesting = false;
 
     private static LambdaLogger logger;
     public static boolean ifDebug = Boolean.parseBoolean(System.getenv("ifDebug"));

@@ -9,6 +9,7 @@ import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.CommentDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateCommentRequest;
 
@@ -37,6 +38,10 @@ public class CreateComment {
                 String toItemType = ItemType.getItemType(createCommentRequest.to);
                 if (toItemType.equals("Post")) {
                     databaseActionCompiler.add(PostDatabaseActionBuilder.updateAddComment(createCommentRequest.to,
+                            null, true));
+                }
+                else if (toItemType.equals("Submission")) {
+                    databaseActionCompiler.add(SubmissionDatabaseActionBuilder.updateAddComment(createCommentRequest.to,
                             null, true));
                 }
                 else if (toItemType.equals("Comment")) {

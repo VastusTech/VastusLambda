@@ -45,6 +45,7 @@ abstract public class User extends DatabaseObject{
     public Set<String> sentInvites;
     public Set<String> receivedInvites;
     public Set<String> posts;
+    public Set<String> submissions;
     public Set<String> liked;
     public Set<String> comments;
     public Set<String> groups;
@@ -111,6 +112,8 @@ abstract public class User extends DatabaseObject{
         if (receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
         this.posts = item.getStringSet("posts");
         if (posts == null) { this.posts = new HashSet<>(); }
+        this.submissions = item.getStringSet("submissions");
+        if (submissions == null) { this.submissions = new HashSet<>(); }
         this.liked = item.getStringSet("liked");
         if (liked == null) { this.liked = new HashSet<>(); }
         this.comments = item.getStringSet("comments");

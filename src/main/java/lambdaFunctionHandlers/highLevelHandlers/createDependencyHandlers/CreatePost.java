@@ -49,30 +49,13 @@ public class CreatePost {
                 if (postType != null) {
                     boolean ifType = ItemType.ifItemType(postType);
                     boolean ifNewType = (postType.substring(0, 3).equals("new")) && ItemType.ifItemType(postType.substring(3));
-                    boolean ifSubmission = postType.equals("submission");
-                    if (!ifType && !ifNewType && !ifSubmission) {
-                        throw new Exception("postType must either be empty, \"new\" + <item_type>, just " +
-                                "<item_type>, or \"submission\"!!");
+                    if (!ifType && !ifNewType) {
+                        throw new Exception("postType must either be empty, \"new\" + <item_type>, or just " +
+                                "<item_type>!!");
                     }
                     else {
                         if (createPostRequest.about == null) {
                             throw new Exception("PostType of " + postType + " missing the \"about\" section!");
-                        }
-                        if (ifSubmission) {
-                            Challenge challenge = Challenge.readChallenge(createPostRequest.about);
-                            if (!challenge.members.contains(createPostRequest.by)) {
-                                throw new Exception("You must be a part of the challenge to add a submission!");
-                            }
-//                            if (createPostRequest.picturePaths.length == 0 && createPostRequest.videoPaths.length == 0) {
-//                                throw new Exception("Submissions must have at least one photo or video!");
-//                            }
-                            databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddSubmission
-                                    (createPostRequest.about, null, true));
-
-                            databaseActionCompiler.getNotificationHandler().addAddNotification(
-                                    createPostRequest.about, "submissions", "", true
-                            );
-                            databaseActionCompiler.getNotificationHandler().setCreateFlag(createPostRequest.about);
                         }
                     }
                 }
