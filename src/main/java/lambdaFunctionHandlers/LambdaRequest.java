@@ -528,15 +528,10 @@ public class LambdaRequest {
         return DynamoDBHandler.getInstance().attemptTransaction(CreateReview.getCompilers(fromID, createReviewRequest, workoutID, false));
     }
 
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-    // TODO *  =====================================================================  *
-    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
-    // TODO *  =====================================================================  *
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-
     public void handleUpdateSet(String id) throws Exception {
         // switch all attributes, then if necessary, item type
         SingletonTimer.get().checkpoint("Init compiler for Update Set");
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         String attributeValue = null;
@@ -873,20 +868,14 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        List<DatabaseActionCompiler> compilers = new ArrayList<>();
         compilers.add(databaseActionCompiler);
         DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
 
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-    // TODO *  =====================================================================  *
-    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
-    // TODO *  =====================================================================  *
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-
     public void handleUpdateAdd(String id) throws Exception {
         // switch all attributes, then if necessary, item type
         SingletonTimer.get().checkpoint("Init compiler for Update Add");
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         String attributeValue = null;
@@ -943,7 +932,7 @@ public class LambdaRequest {
                 case challenges:
                     if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
                             .equals("Sponsor")) {
-                        databaseActionCompiler.addAll(UserAddToChallenge.getActions(fromID, id, itemType, attributeValue));
+                        compilers.addAll(UserAddToChallenge.getCompilers(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
@@ -1065,20 +1054,14 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.toString(), e);
         }
 
-        List<DatabaseActionCompiler> compilers = new ArrayList<>();
         compilers.add(databaseActionCompiler);
         DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
 
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-    // TODO *  =====================================================================  *
-    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
-    // TODO *  =====================================================================  *
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-
     public void handleUpdateRemove(String id) throws Exception {
         // switch all attributes, then if necessary, item type
         SingletonTimer.get().checkpoint("Init compiler for Update Remove");
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         String attributeValue = null;
@@ -1226,19 +1209,13 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        List<DatabaseActionCompiler> compilers = new ArrayList<>();
         compilers.add(databaseActionCompiler);
         DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
 
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-    // TODO *  =====================================================================  *
-    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
-    // TODO *  =====================================================================  *
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-
     public void handleDelete(String id) throws Exception {
         SingletonTimer.get().checkpoint("Init compiler for Delete");
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
         //Constants.debugLog("Handling delete actions");
@@ -1293,17 +1270,9 @@ public class LambdaRequest {
             throw new Exception("Item Type: \"" + itemType + "\" not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        //Constants.debugLog("Attempting the transaction");
-        List<DatabaseActionCompiler> compilers = new ArrayList<>();
         compilers.add(databaseActionCompiler);
         DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
-
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-    // TODO *  =====================================================================  *
-    // TODO +  Is there a NEED to allow multiple compilers with update statements???  +
-    // TODO *  =====================================================================  *
-    // TODO +*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 
     public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String
             attributeName, String secondaryIdentifier, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest
