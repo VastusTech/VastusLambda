@@ -1,7 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Post;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
@@ -12,8 +12,9 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import java.util.ArrayList;
 import java.util.List;
 
-import static main.java.databaseObjects.Streak.StreakType.submission;
-
+/**
+ * TODO
+ */
 public class DeletePost {
     public static List<DatabaseAction> getActions(String fromID, String postID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

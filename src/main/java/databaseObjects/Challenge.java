@@ -2,14 +2,15 @@ package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import main.java.databaseOperations.DynamoDBHandler;
 import org.joda.time.DateTime;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * TODO
+ */
 public class Challenge extends DatabaseObject {
     public String title;
     public String description;
@@ -34,6 +35,9 @@ public class Challenge extends DatabaseObject {
     public Set<String> tags;
     public Set<String> submissions;
     public Set<String> streaks;
+    public String streakUpdateSpanType;
+    public String streakUpdateInterval;
+    public String streakN;
 
     public Challenge(Item item) throws Exception {
         super(item);
@@ -71,6 +75,9 @@ public class Challenge extends DatabaseObject {
         if (this.submissions == null) { this.submissions = new HashSet<>(); }
         this.streaks = item.getStringSet("streaks");
         if (this.streaks == null) { this.streaks = new HashSet<>(); }
+        this.streakUpdateSpanType = item.getString("streakUpdateSpanType");
+        this.streakUpdateInterval = item.getString("streakUpdateInterval");
+        this.streakN = item.getString("streakN");
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {

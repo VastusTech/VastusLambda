@@ -2,12 +2,24 @@ package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 
-public interface DatabaseItemBuilder {
+/**
+ * Factory Design Pattern in order to make retrieving from the database a lot easier, switching the
+ * item_type. Independent from which Table it's taken from, so you can put in any valid Item object
+ * and it will build it according to its item type.
+ */
+public interface DatabaseItemFactory {
+    /**
+     * Builds a DatabaseItem based on the "item_type" field in the item object.
+     *
+     * @param item The {@link Item} from the AWS module that represents a row in the database.
+     * @return The fully built {@link DatabaseItem}.
+     * @throws Exception If the item type of the item is unrecognized. TODO Define special exception
+     */
     static DatabaseItem build(Item item) throws Exception {
-        String itemType = (String)item.get("item_type");
+        String itemType = (String)item.get("item_type"); // TODO Check that it actually has this too.
         Constants.debugLog("Building database item with itemType = " + itemType + ", item = " + item.toJSONPretty());
         switch (ItemType.valueOf(itemType)) {
             case Client:

@@ -2,17 +2,14 @@ package main.java.databaseOperations.databaseActionBuilders;
 
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import main.java.Logic.ItemType;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.DatabaseItem;
-import main.java.databaseObjects.DatabaseObject;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateEventRequest;
-import org.joda.time.DateTime;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;

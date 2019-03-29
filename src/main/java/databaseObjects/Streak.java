@@ -7,6 +7,9 @@ import org.joda.time.DateTime;
 
 import java.util.Map;
 
+/**
+ * TODO
+ */
 public class Streak extends DatabaseObject {
     public String owner;
     public String about;
@@ -15,7 +18,9 @@ public class Streak extends DatabaseObject {
     public int currentN;
     public DateTime lastUpdated;
     public String streakType;
-    public String updateType;
+    public UpdateSpanType updateSpanType; // When it updates
+    public int updateInterval; // After how many spans, it updates
+    public int streakN; // The number of times to do tasks to maintain the streak
 
     Streak(Item item) throws Exception {
         super(item);
@@ -26,7 +31,9 @@ public class Streak extends DatabaseObject {
         this.currentN = item.getNumber("currentN").intValueExact();
         this.lastUpdated = new DateTime(item.getString("lastUpdated"));
         this.streakType = item.getString("streakType");
-        this.updateType = item.getString("updateType");
+        this.updateSpanType = UpdateSpanType.valueOf(item.getString("updateSpanType"));
+        this.updateInterval = Integer.parseInt(item.getString("updateInterval"));
+        this.streakN = Integer.parseInt(item.getString("streakN"));
     }
 
     public static Map<String, AttributeValue> getEmptyItem() {
@@ -46,5 +53,13 @@ public class Streak extends DatabaseObject {
 
     public enum StreakType {
         submission
+    }
+
+    public enum UpdateSpanType {
+        hourly,
+        daily,
+        weekly,
+        monthly,
+        yearly
     }
 }

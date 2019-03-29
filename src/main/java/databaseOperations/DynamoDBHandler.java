@@ -1,6 +1,6 @@
 package main.java.databaseOperations;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
@@ -9,8 +9,11 @@ import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.transactions.Transaction;
 import com.amazonaws.services.dynamodbv2.transactions.TransactionManager;
+import com.amazonaws.services.dynamodbv2.transactions.exceptions.TransactionRolledBackException;
+import com.amazonaws.services.dynamodbv2.transactions.exceptions.UnknownCompletedTransactionException;
 
-import main.java.Logic.debugging.SingletonTimer;
+import main.java.logic.TimeHelper;
+import main.java.logic.debugging.SingletonTimer;
 import main.java.databaseObjects.*;
 import main.java.databaseOperations.exceptions.ItemNotFoundException;
 
@@ -18,7 +21,9 @@ import org.joda.time.DateTime;
 
 import java.util.*;
 
-// TODO ALl of these classes should throw specific exceptions (Maybe that we define?)
+/**
+ * TODO DOC
+ */
 public class DynamoDBHandler {
     // Singleton Pattern!
     private static DynamoDBHandler instance;
@@ -31,6 +36,9 @@ public class DynamoDBHandler {
     private Table firebaseTokenTable;
 
     // Used for the singleton pattern!
+    /**
+     * TODO DOC
+     */
     static public DynamoDBHandler getInstance() throws Exception {
         if (DynamoDBHandler.instance == null) {
             DynamoDBHandler.instance = new DynamoDBHandler();
@@ -38,6 +46,9 @@ public class DynamoDBHandler {
         return DynamoDBHandler.instance;
     }
 
+    /**
+     * TODO DOC
+     */
     private DynamoDBHandler() throws Exception {
         // AWS CREDENTIALS GO HERE
         client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
@@ -102,6 +113,9 @@ public class DynamoDBHandler {
 
         SingletonTimer.get().checkpoint("Handling the transactions");
 
+        // List of transactions to commit all of them at the end.
+        List<Transaction> transactions = new ArrayList<>();
+
         // For each transaction
         for (DatabaseActionCompiler databaseActionCompiler : databaseActionCompilers) {
             // Start the new transaction
@@ -118,7 +132,7 @@ public class DynamoDBHandler {
                             // Get the ID!
                             String id = getNewID(databaseAction.itemType);
                             databaseAction.item.put("id", new AttributeValue(id));
-                            databaseAction.item.put("time_created", new AttributeValue(new DateTime().toString()));
+                            databaseAction.item.put("time_created", new AttributeValue(TimeHelper.nowString()));
                             ((CreateDatabaseAction) databaseAction).updateWithIDHandler.updateWithID(databaseAction.item, id);
 
                             if (databaseAction.item.containsKey("username")) {
@@ -146,6 +160,9 @@ public class DynamoDBHandler {
                                     convertFromAttributeValueMap(databaseAction.item));
                         } catch (Exception e) {
                             transaction.rollback();
+                            for (Transaction existingTransaction : transactions) {
+                                existingTransaction.rollback();
+                            }
                             throw new Exception("Error while trying to create item in the database! Error: " + e
                                     .getLocalizedMessage(), e);
                         }
@@ -181,6 +198,9 @@ public class DynamoDBHandler {
                             //(databaseAction.item).withAttributeUpdates(markerUpdate));
                         } catch (Exception e) {
                             transaction.rollback();
+                            for (Transaction existingTransaction : transactions) {
+                                existingTransaction.rollback();
+                            }
                             throw new Exception("Error while trying to update an item in the database. Error: " + e
                                     .getLocalizedMessage(), e);
                         }
@@ -252,11 +272,18 @@ public class DynamoDBHandler {
                                     }
                                 } else {
                                     // If the object is no longer viable, then we need to throw an exception and exit
+//                                    transaction.rollback();
+                                    for (Transaction existingTransaction : transactions) {
+                                        existingTransaction.rollback();
+                                    }
                                     throw new Exception("The item failed the checkHandler: " + errorMessage);
                                 }
                             }
                         } catch (Exception e) {
                             transaction.rollback();
+                            for (Transaction existingTransaction : transactions) {
+                                existingTransaction.rollback();
+                            }
                             throw new Exception("Error while trying to update an item in the database safely. Error: " +
                                     e.getLocalizedMessage(), e);
                         }
@@ -269,6 +296,9 @@ public class DynamoDBHandler {
                             uniqueActionsInCurrentTransaction++;
                         } catch (Exception e) {
                             transaction.rollback();
+                            for (Transaction existingTransaction : transactions) {
+                                existingTransaction.rollback();
+                            }
                             throw new Exception("Error while deleting an item in the database. Error: " + e
                                     .getLocalizedMessage(), e);
                         }
@@ -327,6 +357,9 @@ public class DynamoDBHandler {
                         } catch (Exception e) {
                             // Else if there is another failure, rollback everything
                             transaction.rollback();
+                            for (Transaction existingTransaction : transactions) {
+                                existingTransaction.rollback();
+                            }
                             throw new Exception("Error while trying to conditionally delete an item. Error: " + e
                                     .getLocalizedMessage(), e);
                         }
@@ -335,22 +368,41 @@ public class DynamoDBHandler {
 
                 // If we are over the limit, then we do the transaction and keep going
                 if (uniqueActionsInCurrentTransaction >= transactionActionLimit) {
-                    transaction.commit();
-                    transaction.delete();
+//                    transaction.commit();
+                    transactions.add(transaction);
+//                    transaction.delete();
                     transaction = txManager.newTransaction();
                     uniqueActionsInCurrentTransaction = 0;
                 }
             }
 
             // If it gets here, then the process completed safely.
-            transaction.commit();
-            transaction.delete();
+//            transaction.commit();
+            transactions.add(transaction);
+//            transaction.delete();
 
             SingletonTimer.get().checkpoint("Sending the notifications");
 
             // Then it is safe to use Ably to send the notifications
             databaseActionCompiler.sendNotifications();
         }
+
+        // TODO This is the most dangerous part of the code, where things could actually go really
+        // TODO wrong in an unrecoverable way.
+
+        List<Exception> errors = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            try {
+                transaction.commit();
+                transaction.delete();
+            }
+            catch (TransactionRolledBackException | UnknownCompletedTransactionException e) {
+                errors.add(e);
+                Constants.debugLog("Error occurred, making the database a little worse.... Error: "
+                    + e.getLocalizedMessage());
+            }
+        }
+
 
         return returnString;
     }
@@ -382,6 +434,9 @@ public class DynamoDBHandler {
         return databaseAction.item;
     }
 
+    /**
+     * TODO DOC
+     */
     private Map<String, AttributeValueUpdate> getUpdateItem(DatabaseAction databaseAction,
                                                             String returnString) throws Exception {
         if (databaseAction.ifWithCreate) {
@@ -413,7 +468,10 @@ public class DynamoDBHandler {
         }
     }
 
-    public String getNewID(String itemType) throws Exception {
+    /**
+     * TODO DOC
+     */
+    private String getNewID(String itemType) throws Exception {
         String id = null;
         boolean ifFound = false;
         while (!ifFound) {
@@ -426,7 +484,10 @@ public class DynamoDBHandler {
         return id;
     }
 
-    static public String generateRandomID(String itemType) {
+    /**
+     * TODO DOC
+     */
+    static private String generateRandomID(String itemType) {
         String prefix = itemType.substring(0, Constants.numPrefix).toUpperCase();
         int numDigits = Constants.idLength - Constants.numPrefix;
 
@@ -441,6 +502,9 @@ public class DynamoDBHandler {
         return prefix + idNum;
     }
 
+    /**
+     * TODO DOC
+     */
     public DatabaseItem readItem(String tableName, PrimaryKey primaryKey) throws Exception {
         Item item = tables.get(tableName).getItem(primaryKey);
         Constants.debugLog("Reading item with PrimaryKey = " + primaryKey.toString());
@@ -449,7 +513,7 @@ public class DynamoDBHandler {
         if (item == null) {
             throw new ItemNotFoundException("No item in the database with PrimaryKey = " + primaryKey.toString());
         }
-        return DatabaseItemBuilder.build(item);
+        return DatabaseItemFactory.build(item);
     }
 
     // TODO Way to differentiate between no user showed up and error?
@@ -498,6 +562,9 @@ public class DynamoDBHandler {
 //        return null;
 //    }
 
+    /**
+     * TODO DOC
+     */
     private boolean usernameInDatabase(String username, String item_type) {
         Index index = databaseTable.getIndex("item_type-username-index");
         HashMap<String, String> nameMap = new HashMap<>();
@@ -514,24 +581,27 @@ public class DynamoDBHandler {
         return (iterator.hasNext());
     }
 
-    public Set<String> getFirebaseTokens(String userID) {
-        Item item = firebaseTokenTable.getItem("id", userID);
-        Set<String> tokens = null;
-        if (item != null) {
-            tokens = item.getStringSet("tokens");
-        }
+//    public Set<String> getFirebaseTokens(String userID) {
+//        Item item = firebaseTokenTable.getItem("id", userID);
+//        Set<String> tokens = null;
+//        if (item != null) {
+//            tokens = item.getStringSet("tokens");
+//        }
+//
+//        // String expires = item.getString("expires");
+//        // TODO Make sure that these tokens haven't expired?
+//
+//        if (tokens == null) {
+//            return new HashSet<>();
+//        }
+//        else {
+//            return tokens;
+//        }
+//    }
 
-        // String expires = item.getString("expires");
-        // TODO Make sure that these tokens haven't expired?
-
-        if (tokens == null) {
-            return new HashSet<>();
-        }
-        else {
-            return tokens;
-        }
-    }
-
+    /**
+     * TODO DOC
+     */
     private Map<String, Object> convertFromAttributeValueMap(Map<String, AttributeValue> map) {
         Map<String, Object> returnMap = new HashMap<>();
         for (Map.Entry<String, AttributeValue> entry : map.entrySet()) {

@@ -1,9 +1,8 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseOperations.DatabaseActionCompiler;
-import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateGroupRequest;
@@ -12,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class CreateGroup {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGroupRequest createGroupRequest, boolean ifWithCreate) throws Exception {
         if (createGroupRequest != null) {

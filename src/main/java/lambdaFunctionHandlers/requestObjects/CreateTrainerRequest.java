@@ -1,6 +1,5 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-// TODO Optional parameters at the get go?
 public class CreateTrainerRequest extends CreateObjectRequest {
     // Required
     public String name;

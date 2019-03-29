@@ -1,8 +1,6 @@
 package main.java.notifications;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,12 +16,25 @@ public class Notification {
     private String type;
     private Map<String, Object> payloadFields;
 
+    /**
+     * TODO
+     *
+     * @param channel
+     * @param type
+     */
     public Notification(String channel, String type) {
         this.channel = channel;
         this.type = type;
         this.payloadFields = new HashMap<>();
     }
 
+    /**
+     * TODO
+     *
+     * @param channel
+     * @param type
+     * @param payloadFields
+     */
     public Notification(String channel, String type, Map<String, Object> payloadFields) {
         this.channel = channel;
         this.type = type;
@@ -79,66 +90,158 @@ public class Notification {
         }
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @param field
+     */
     public void addPayloadField(String name, Map<String, Object> field) {
         payloadFields.put(name, field);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @param field
+     */
     public void addPayloadField(String name, boolean field) {
         payloadFields.put(name, field);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @param field
+     * @param value
+     */
     public void addToPayloadField(String name, String field, Object value) {
         getMapField(name).put(field, value);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @param field
+     * @param values
+     */
     public void addToPayloadFieldStringSet(String name, String field, Set<String> values) {
         getSetFromField(name, field).addAll(values);
     }
 
     // Getters for the payload-level
+
+    /**
+     * TODO
+     *
+     * @param name
+     * @return
+     */
     private Object getPayloadField(String name) {
         return payloadFields.get(name);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public Map<String, Object> getMapField(String name) {
         return (Map<String, Object>)getPayloadField(name);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public boolean getBooleanField(String name) {
         return (boolean)getPayloadField(name);
     }
 
     // Getters one level above the payload-level
+
+    /**
+     * TODO
+     *
+     * @param name
+     * @param mapName
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public Map<String, Object> getMapFromField(String name, String mapName) {
         return (Map<String, Object>)getMapField(name).get(mapName);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @param stringName
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public String getStringFromField(String name, String stringName) {
         return (String)getMapField(name).get(stringName);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @param listName
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public Set<Object> getSetFromField(String name, String listName) {
         return (Set<Object>)getMapField(name).get(listName);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @param booleanName
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public boolean getBooleanFromField(String name, String booleanName) {
         return (boolean)getMapField(name).get(booleanName);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @return
+     */
     public boolean payloadContainsKey(String name) {
         return this.payloadFields.containsKey(name);
     }
 
+    /**
+     * TODO
+     *
+     * @param name
+     * @param fieldName
+     * @return
+     */
     public boolean nestedPayloadFieldContainsKey(String name, String fieldName) {
         return getMapField(name).containsKey(fieldName);
     }
 
+    /**
+     * TODO
+     *
+     * @return
+     */
     public JsonObjectBuilder createMessageJSON() {
         return Json.createObjectBuilder()
                 .add("channel", channel)

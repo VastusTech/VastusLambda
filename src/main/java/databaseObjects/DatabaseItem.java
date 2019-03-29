@@ -3,6 +3,9 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import main.java.databaseOperations.DynamoDBHandler;
 
+/**
+ * TODO
+ */
 abstract public class DatabaseItem {
     static public String tableName;
 

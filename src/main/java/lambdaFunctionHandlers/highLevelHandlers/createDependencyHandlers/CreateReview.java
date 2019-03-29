@@ -1,12 +1,9 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.User;
-import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
-import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ReviewDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseActionBuilder;
@@ -14,6 +11,9 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateReviewRequest;
 
 import java.util.*;
 
+/**
+ * TODO
+ */
 public class CreateReview {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateReviewRequest createReviewRequest, String surveyWorkoutID, boolean ifWithCreate) throws Exception {
         if (createReviewRequest != null) {

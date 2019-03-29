@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * TODO
+ */
 public class Sponsor extends User {
     Sponsor(Item item) throws Exception {
         super(item);

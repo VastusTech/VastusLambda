@@ -1,13 +1,15 @@
-package main.java.Logic;
+package main.java.logic;
 
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.util.Optional;
 
+/**
+ * This handles all of the Constants that are retrieved from the Lambda invocation environment
+ * variables. Also stores the logger in order to do debugging statements.
+ */
 public class Constants {
-    // TODO THIS GETS IT FROM THE ENVIRONMENTAL VARIABLES FROM AWS LAMBDA (with encryption ;))
-    // TODO PUT THESE: workoutShortestTimeSectionInterval, idLength, numPrefix, databaseTableName, storageBucketName,
-    // TODO timeoutSeconds, userPoolName, userPoolID, userPoolClientID, userPoolSecretKey, nullAttributeValue
+    // THIS GETS IT FROM THE ENVIRONMENTAL VARIABLES FROM AWS LAMBDA (with encryption ;))
     public static boolean ifTesting = false;
 
     private static LambdaLogger logger;

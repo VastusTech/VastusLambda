@@ -1,4 +1,4 @@
-package main.java.Logic.debugging;
+package main.java.logic.debugging;
 
 /**
  * Wraps the {@link Timer} class in a singleton class wrapper so that we can use the same timer for

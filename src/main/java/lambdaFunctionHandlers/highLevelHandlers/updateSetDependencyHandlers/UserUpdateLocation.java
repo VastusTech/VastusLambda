@@ -3,10 +3,13 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHa
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
+/**
+ * TODO
+ */
 public class UserUpdateLocation {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String location) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

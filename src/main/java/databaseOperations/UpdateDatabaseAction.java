@@ -3,7 +3,6 @@ package main.java.databaseOperations;
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
-import main.java.Logic.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +10,9 @@ import java.util.List;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
+/**
+ * TODO
+ */
 public class UpdateDatabaseAction extends DatabaseAction {
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action) throws Exception {

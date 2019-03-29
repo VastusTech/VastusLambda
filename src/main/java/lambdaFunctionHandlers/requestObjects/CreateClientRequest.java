@@ -1,6 +1,5 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
-// TODO Optional parameters at the get go?
 public class CreateClientRequest extends CreateObjectRequest {
     // Required
     public String name;
@@ -10,9 +9,9 @@ public class CreateClientRequest extends CreateObjectRequest {
     // Optional
     public String gender;
     public String birthday;
+    public String bio;
     public String stripeID;
     public String federatedID;
-    public String bio;
     public String enterpriseID;
 
     public CreateClientRequest(String name, String gender, String birthday, String email, String username, String

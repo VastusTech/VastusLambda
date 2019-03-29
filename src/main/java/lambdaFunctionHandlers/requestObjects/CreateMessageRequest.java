@@ -9,7 +9,7 @@ public class CreateMessageRequest extends CreateObjectRequest {
 
     // Optional
     public String type;
-    public String profileImagePath; // TODO This isn't super efficient from the front-end perspective
+    public String profileImagePath;
 
     public CreateMessageRequest(String board, String from, String name, String profileImagePath, String message, String type) {
         this.board = board;

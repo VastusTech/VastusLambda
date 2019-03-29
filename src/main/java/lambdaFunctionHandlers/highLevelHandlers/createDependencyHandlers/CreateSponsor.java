@@ -9,6 +9,9 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class CreateSponsor {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateSponsorRequest createSponsorRequest, boolean ifWithCreate) throws Exception {
         if (createSponsorRequest != null) {

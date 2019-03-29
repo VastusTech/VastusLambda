@@ -1,6 +1,5 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.ItemType;
 import main.java.databaseObjects.Group;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseAction;
@@ -12,6 +11,9 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class DeleteUser {
     public static List<DatabaseAction> getActions(String fromID, User user) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
@@ -86,6 +88,11 @@ public class DeleteUser {
         // Remove all invites from received
         for (String inviteID : user.receivedInvites) {
             databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+        }
+
+        // Delete all streaks as well
+        for (String streakID : user.streaks) {
+            databaseActions.addAll(DeleteStreak.getActions(fromID, streakID));
         }
 
         return databaseActions;

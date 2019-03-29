@@ -1,13 +1,13 @@
 package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
-import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import main.java.databaseOperations.DynamoDBHandler;
 
-import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * TODO
+ */
 public class Review extends DatabaseObject {
     public String by;
     public String about;

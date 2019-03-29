@@ -1,7 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.Invite;
 import main.java.databaseObjects.User;
@@ -10,11 +10,13 @@ import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActi
 import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.databaseOperations.exceptions.ItemNotFoundException;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.EventUpdateChallenge;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class DeleteChallenge {
     public static List<DatabaseAction> getActions(String fromID, String challengeID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
@@ -87,6 +89,11 @@ public class DeleteChallenge {
             catch (ItemNotFoundException e) {
                 Constants.debugLog("Couldn't delete invite, but it's okay");
             }
+        }
+
+        // Delete all the streaks
+        for (String streakID : challenge.streaks) {
+            databaseActions.addAll(DeleteStreak.getActions(fromID, streakID));
         }
 
         // Delete the challenge

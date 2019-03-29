@@ -9,7 +9,7 @@ import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 
 /**
  * Stores all the Notifications to send after the transaction(s), handles the conversion to a

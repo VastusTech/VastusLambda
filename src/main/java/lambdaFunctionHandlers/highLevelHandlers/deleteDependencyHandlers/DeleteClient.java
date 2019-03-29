@@ -1,17 +1,18 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Client;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
-import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseActionBuilder;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteReview;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class DeleteClient {
     public static List<DatabaseAction> getActions(String fromID, String clientID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

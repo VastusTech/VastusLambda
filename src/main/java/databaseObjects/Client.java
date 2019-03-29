@@ -6,6 +6,9 @@ import main.java.databaseOperations.DynamoDBHandler;
 
 import java.util.*;
 
+/**
+ * TODO
+ */
 public class Client extends User {
     public Set<String> trainersFollowing;
     public Set<String> subscriptions;

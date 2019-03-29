@@ -1,4 +1,4 @@
-package main.java.Logic.debugging;
+package main.java.logic.debugging;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

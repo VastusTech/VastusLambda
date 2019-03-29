@@ -3,14 +3,17 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandl
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Submission;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
+/**
+ * TODO
+ */
 public class DeleteSubmission {
     public static List<DatabaseAction> getActions(String fromID, String submissionID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
@@ -43,7 +46,7 @@ public class DeleteSubmission {
             databaseActions.addAll(DeleteComment.getActions(fromID, commentID));
         }
 
-        // Delete the post
+        // Delete the submission
         databaseActions.add(SubmissionDatabaseActionBuilder.delete(submissionID));
 
         return databaseActions;

@@ -4,12 +4,14 @@ import com.amazonaws.services.dynamodbv2.document.KeyAttribute;
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
-import main.java.Logic.Constants;
-import main.java.notifications.Notification;
+import main.java.logic.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * TODO
+ */
 public abstract class DatabaseAction {
     // This defines what it's doing to the database (CRUD)
     DBAction action;

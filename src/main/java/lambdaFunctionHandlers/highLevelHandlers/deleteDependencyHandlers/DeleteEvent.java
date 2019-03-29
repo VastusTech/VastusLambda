@@ -1,7 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.Invite;
 import main.java.databaseObjects.User;
@@ -11,6 +11,9 @@ import main.java.databaseOperations.databaseActionBuilders.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class DeleteEvent {
     public static List<DatabaseAction> getActions(String fromID, String eventID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

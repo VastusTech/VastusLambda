@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
@@ -8,6 +8,9 @@ import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseAction
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class TrainerAddAvailableTime {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String availableTime) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

@@ -1,8 +1,8 @@
 package main.java.lambdaFunctionHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
-import main.java.Logic.debugging.SingletonTimer;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
+import main.java.logic.debugging.SingletonTimer;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.*;
@@ -15,8 +15,10 @@ import main.java.lambdaFunctionHandlers.requestObjects.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-// TODO MAKE SURE THAT ALL THE CONSTRUCTORS AND SETTERS/GETTERS ARE IN HERE
+/**
+ * This is the main POJO that is called from the lambda. Essentially this becomes the "payload"
+ * object that is inputted from the client app for the AWS Lambda call.
+ */
 public class LambdaRequest {
     private String fromID;
     private String action;
@@ -44,6 +46,9 @@ public class LambdaRequest {
     private CreateStreakRequest createStreakRequest;
     private CreateEnterpriseRequest createEnterpriseRequest;
 
+    /**
+     *
+     */
     private enum Action {
         CREATE,
         READ,
@@ -53,6 +58,9 @@ public class LambdaRequest {
         DELETE
     }
 
+    /**
+     *
+     */
     private enum AttributeName {
         // User ===========================
         stripeID,
@@ -148,6 +156,11 @@ public class LambdaRequest {
     }
 
     // This is where the inputs are handled!
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     public Object process() throws Exception {
         try {
             // First check all of the inputs for the stuff
@@ -287,6 +300,10 @@ public class LambdaRequest {
         }
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void checkInputs() throws Exception {
         // Action, ItemType, SpecifyAction, attributeName
         if (specifyAction == null) {
@@ -436,6 +453,11 @@ public class LambdaRequest {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     private String handleCreate() throws Exception {
         SingletonTimer.get().checkpoint("Get compilers for Create");
         List<DatabaseActionCompiler> compilers;
@@ -1261,6 +1283,8 @@ public class LambdaRequest {
                 case Sponsor:
                     databaseActionCompiler.addAll(DeleteSponsor.getActions(fromID, id));
                     break;
+                case Streak:
+                    databaseActionCompiler.addAll(DeleteStreak.getActions(fromID, id));
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }

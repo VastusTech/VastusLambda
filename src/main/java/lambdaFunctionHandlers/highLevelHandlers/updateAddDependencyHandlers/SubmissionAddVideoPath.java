@@ -3,11 +3,14 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHa
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Submission;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 
+/**
+ * TODO
+ */
 public class SubmissionAddVideoPath {
     public static List<DatabaseAction> getActions(String fromID, String submissionID, String videoPath) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

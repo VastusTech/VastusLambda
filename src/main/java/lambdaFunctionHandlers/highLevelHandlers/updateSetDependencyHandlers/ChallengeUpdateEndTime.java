@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
@@ -9,6 +9,9 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class ChallengeUpdateEndTime {
     public static List<DatabaseAction> getActions(String fromID, String challengeID, String endTime) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

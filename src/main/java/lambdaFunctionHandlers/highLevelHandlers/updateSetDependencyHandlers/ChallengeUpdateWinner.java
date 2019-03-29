@@ -1,7 +1,8 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteStreak;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
@@ -11,6 +12,9 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class ChallengeUpdateWinner {
     public static List<DatabaseAction> getActions(String fromID, String challengeID, String winner) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
@@ -41,8 +45,13 @@ public class ChallengeUpdateWinner {
             databaseActions.add(GroupDatabaseActionBuilder.updateAddCompletedChallenge(challenge.group, challengeID));
         }
 
-        // Set the event if completed to true
+        // Set the challenge if completed to true
         databaseActions.add(ChallengeDatabaseActionBuilder.updateIfCompleted(challengeID, "true"));
+
+        // Delete all the streaks as well!
+        for (String streakID : challenge.streaks) {
+            databaseActions.addAll(DeleteStreak.getActions(fromID, streakID));
+        }
 
         return databaseActions;
     }

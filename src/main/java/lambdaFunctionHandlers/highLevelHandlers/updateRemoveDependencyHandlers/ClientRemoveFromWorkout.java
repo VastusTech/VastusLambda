@@ -1,16 +1,18 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Client;
 import main.java.databaseObjects.Workout;
 import main.java.databaseOperations.DatabaseAction;
-import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.WorkoutDatabaseActionBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class ClientRemoveFromWorkout {
     public static List<DatabaseAction> getActions(String fromID, String clientID, String workoutID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

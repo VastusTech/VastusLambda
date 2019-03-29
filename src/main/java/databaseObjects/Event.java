@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * TODO
+ */
 public class Event extends DatabaseObject {
     public String title;
     public String description;

@@ -3,11 +3,14 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.databaseActionBuilders.EnterpriseDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateEnterpriseRequest;
 
+/**
+ * TODO
+ */
 public class CreateEnterprise {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateEnterpriseRequest createEnterpriseRequest, boolean ifWithCreate) throws Exception {
         if (createEnterpriseRequest != null) {

@@ -3,16 +3,18 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseOperations.DatabaseActionCompiler;
-import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.CommentDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateCommentRequest;
 
+/**
+ * TODO
+ */
 public class CreateComment {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateCommentRequest createCommentRequest, boolean ifWithCreate) throws Exception {
         if (createCommentRequest != null) {

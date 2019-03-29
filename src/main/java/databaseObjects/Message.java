@@ -3,8 +3,8 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,15 +13,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * TODO
+ */
 public class Message extends DatabaseItem {
     final public static String tableName = Constants.messageTableName;
 
     public String id;
     public String board;
     public String item_type;
+    public int marker;
     public String time_created;
-    public String type;
     public String from;
+    public String type;
     public String name;
     public String profileImagePath;
     public String message;
@@ -31,6 +35,7 @@ public class Message extends DatabaseItem {
         id = item.getString("id");
         board = item.getString("board");
         item_type = item.getString("item_type");
+        marker = item.getNumber("marker").intValueExact();
         time_created = item.getString("time_created");
         type = item.getString("type");
         from = item.getString("from");
@@ -44,6 +49,7 @@ public class Message extends DatabaseItem {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue("Message"));
+        key.put("marker", new AttributeValue().withN("0"));
         return key;
     }
 

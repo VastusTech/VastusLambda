@@ -1,10 +1,9 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.Event;
-import main.java.databaseObjects.Group;
 import main.java.databaseObjects.Invite;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -13,12 +12,11 @@ import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBu
 import main.java.databaseOperations.databaseActionBuilders.InviteDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
-
+/**
+ * TODO
+ */
 public class DeleteInvite {
     public static List<DatabaseAction> getActions(String fromID, String inviteID) throws Exception {
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();

@@ -1,10 +1,8 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.TimeInterval;
-import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
-import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateWorkoutRequest;
 
@@ -12,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class CreateWorkout {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateWorkoutRequest createWorkoutRequest, boolean ifWithCreate) throws Exception {
         if (createWorkoutRequest != null) {

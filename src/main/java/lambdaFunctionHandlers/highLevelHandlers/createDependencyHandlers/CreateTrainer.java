@@ -11,6 +11,9 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class CreateTrainer {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateTrainerRequest createTrainerRequest, boolean ifWithCreate) throws Exception {
         if (createTrainerRequest != null) {

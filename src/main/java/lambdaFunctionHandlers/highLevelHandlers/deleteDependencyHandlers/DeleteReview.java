@@ -1,7 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Review;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ReviewDatabaseActionBuilder;
@@ -10,6 +10,9 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class DeleteReview {
     public static List<DatabaseAction> getActions(String fromID, String reviewID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

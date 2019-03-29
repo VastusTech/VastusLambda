@@ -1,8 +1,8 @@
 package main.java.lambdaFunctionHandlers;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import main.java.Logic.Constants;
-import main.java.Logic.debugging.SingletonTimer;
+import main.java.logic.Constants;
+import main.java.logic.debugging.SingletonTimer;
 
 public class LambdaFunctionHandler {
     public LambdaResponse handleRequest(LambdaRequest input, Context context) throws Exception {

@@ -1,17 +1,24 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.StreakAddN;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Challenge;
+import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateSubmissionRequest;
 
+/**
+ * TODO
+ */
 public class CreateSubmission {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateSubmissionRequest createSubmissionRequest, boolean ifWithCreate) throws Exception {
         if (createSubmissionRequest != null) {
@@ -43,6 +50,7 @@ public class CreateSubmission {
                 databaseActionCompiler.getNotificationHandler().addAddNotification(
                         createSubmissionRequest.about, "submissions", "", true
                 );
+
                 databaseActionCompiler.getNotificationHandler().setCreateFlag(createSubmissionRequest.about);
 
                 // Make sure the post isn't too much
@@ -56,6 +64,27 @@ public class CreateSubmission {
                 String by = createSubmissionRequest.by;
                 String byItemType = ItemType.getItemType(by);
                 databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddSubmission(by, byItemType, null, true));
+
+                if (challenge.challengeType != null && challenge.challengeType.equals("streak")) {
+                    // Then we also update this user's streak!
+                    User user = User.readUser(createSubmissionRequest.by);
+                    Set<String> intersection = new HashSet<>(challenge.streaks);
+                    intersection.retainAll(user.streaks);
+                    if (intersection.size() == 0) {
+                        throw new Exception("No streak associated with this user, so cannot "
+                                + "complete this submission!");
+                    }
+                    else if (intersection.size() > 1) {
+                        throw new Exception("Too many streaks associated with this user, cannot "
+                                + "complete this submission!");
+                    }
+                    else {
+                        for (String streakID : intersection) {
+                            // INVARIANT: Will only run once whenever it gets here
+                            databaseActionCompiler.addAll(StreakAddN.getActions(fromID, streakID));
+                        }
+                    }
+                }
 
                 compilers.add(databaseActionCompiler);
 

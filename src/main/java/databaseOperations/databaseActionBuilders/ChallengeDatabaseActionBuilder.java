@@ -3,15 +3,14 @@ package main.java.databaseOperations.databaseActionBuilders;
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.*;
 import main.java.databaseOperations.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateChallengeRequest;
 import org.joda.time.DateTime;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
@@ -305,6 +304,19 @@ public class ChallengeDatabaseActionBuilder {
 
     public static DatabaseAction updateGroup(String id, String group) throws Exception {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "group", new AttributeValue(group), false, PUT);
+    }
+
+    public static DatabaseAction updateAddStreak(String id, String streak, boolean ifWithCreate) throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "streaks", null, true, ADD);
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "streaks", new AttributeValue(streak), false, ADD);
+        }
+    }
+
+    public static DatabaseAction updateRemoveStreak(String id, String streak) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "streaks", new AttributeValue(streak), false, DELETE);
     }
 
     public static DatabaseAction delete(String id) {

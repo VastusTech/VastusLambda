@@ -1,6 +1,6 @@
 package main.java.databaseObjects;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class TimeInterval {
 
     public String isotime;
@@ -99,7 +102,6 @@ public class TimeInterval {
 
             // Check for forbidden timeInterval states
             // From to to has to be positive
-            // TODO Test
             if (fromDateTime.compareTo(toDateTime) >= 0) {
                 throw new Exception("The \"From\" time is at or after the \"to\" time in the time interval! isostring" +
                         " = " + isotime);
@@ -172,7 +174,6 @@ public class TimeInterval {
 
         // Check for forbidden timeInterval states
         // From to to has to be positive
-        // TODO Test
         if (fromDateTime.compareTo(toDateTime) >= 0) {
             throw new Exception("From time is at or after the to time");
         }

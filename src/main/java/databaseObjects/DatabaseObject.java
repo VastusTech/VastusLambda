@@ -2,18 +2,14 @@ package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import org.joda.time.DateTime;
 
-import main.java.databaseOperations.DynamoDBHandler;
-
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * DatabaseObject class represents any object that is in the "Classics" table for the Vastus app
@@ -34,14 +30,13 @@ abstract public class DatabaseObject extends DatabaseItem {
         this.itemType = item.getString("item_type");
         // TODO Surely there must be a better way to do this? Test if you just getString?
         this.marker = item.getNumber("marker").intValueExact();
-        this.timeCreated = new DateTime(item.getString("timeCreated"));
+        this.timeCreated = new DateTime(item.getString("time_created"));
     }
 
     static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = new HashMap<>();
         item.put("id", null);
         item.put("item_type", null);
-        item.put("timeCreated", null);
         item.put("marker", new AttributeValue().withN("0"));
         return item;
     }

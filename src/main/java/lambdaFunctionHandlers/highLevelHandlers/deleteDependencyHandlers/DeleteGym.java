@@ -1,14 +1,15 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Gym;
 import main.java.databaseOperations.DatabaseAction;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteReview;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteTrainer;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class DeleteGym {
     public static List<DatabaseAction> getActions(String fromID, String gymID) throws Exception {
         // TODO This is defintely annoying for people, but the only thing to figure out is deleting users from pools

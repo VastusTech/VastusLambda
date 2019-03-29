@@ -3,10 +3,13 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHa
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.MessageDatabaseActionBuilder;
 
+/**
+ * TODO
+ */
 public class MessageAddLastSeenFor {
     public static List<DatabaseAction> getActions(String fromID, String board, String messageID, String userID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

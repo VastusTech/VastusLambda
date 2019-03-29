@@ -3,12 +3,15 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependenc
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
+/**
+ * TODO
+ */
 public class PostRemoveLike {
     public static List<DatabaseAction> getActions(String fromID, String postID, String like) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

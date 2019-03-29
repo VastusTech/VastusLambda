@@ -1,6 +1,9 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.databaseOperations.DatabaseActionCompiler;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateStreak;
+import main.java.lambdaFunctionHandlers.requestObjects.CreateStreakRequest;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.Invite;
 import main.java.databaseObjects.User;
@@ -12,10 +15,14 @@ import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandle
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class UserAddToChallenge {
-    public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String challengeID)
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, String userID, String itemType, String challengeID)
             throws Exception {
-        List<DatabaseAction> databaseActions = new ArrayList<>();
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
+        DatabaseActionCompiler compiler = new DatabaseActionCompiler();
 
         // Get all the actions for this process
         Challenge challenge = Challenge.readChallenge(challengeID);
@@ -47,27 +54,37 @@ public class UserAddToChallenge {
         }
 
         // Add to user's challenges
-        databaseActions.add(UserDatabaseActionBuilder.updateAddChallenge(userID, itemType,
+        compiler.add(UserDatabaseActionBuilder.updateAddChallenge(userID, itemType,
                 challengeID, false));
 
         // Add to challenge's members
-        databaseActions.add(ChallengeDatabaseActionBuilder.updateAddMember(challengeID, userID, ifAcceptingRequest));
+        compiler.add(ChallengeDatabaseActionBuilder.updateAddMember(challengeID, userID, ifAcceptingRequest));
 
         // Delete any potential invites associated with this
         User user = User.readUser(userID, itemType);
         for (String inviteID : user.receivedInvites) {
             Invite invite = Invite.readInvite(inviteID);
             if (invite.about.equals(challengeID)) {
-                databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+                compiler.addAll(DeleteInvite.getActions(fromID, inviteID));
             }
         }
         for (String inviteID : challenge.receivedInvites) {
             Invite invite = Invite.readInvite(inviteID);
             if (invite.about.equals(userID)) {
-                databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+                compiler.addAll(DeleteInvite.getActions(fromID, inviteID));
             }
         }
 
-        return databaseActions;
+        compilers.add(compiler);
+
+        // If it's a streak challenge, create the streak too!
+        if (challenge.challengeType.equals("streak")) {
+            compilers.addAll(CreateStreak.getCompilers(fromID,
+                    new CreateStreakRequest(userID, challengeID, "submission",
+                            challenge.streakUpdateSpanType, challenge.streakUpdateInterval,
+                            challenge.streakN), false));
+        }
+
+        return compilers;
     }
 }

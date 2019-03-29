@@ -6,6 +6,9 @@ import main.java.databaseOperations.DynamoDBHandler;
 
 import java.util.*;
 
+/**
+ * TODO
+ */
 public class Gym extends User {
     public String address;
     public Set<String> trainers;

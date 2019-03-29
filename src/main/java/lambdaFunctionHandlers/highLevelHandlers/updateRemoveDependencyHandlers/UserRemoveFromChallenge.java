@@ -1,6 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteStreak;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.Invite;
 import main.java.databaseObjects.User;
@@ -10,8 +11,13 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteInvite;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+/**
+ * TODO
+ */
 public class UserRemoveFromChallenge {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String challengeID) throws
             Exception {
@@ -41,6 +47,24 @@ public class UserRemoveFromChallenge {
             Invite invite = Invite.readInvite(inviteID);
             if (invite.about.equals(challengeID)) {
                 databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+            }
+        }
+
+        if (challenge.challengeType.equals("streak")) {
+            // Then we also delete this user's streak!
+            Set<String> intersection = new HashSet<>(challenge.streaks);
+            intersection.retainAll(user.streaks);
+            if (intersection.size() == 0) {
+                throw new Exception("No streak associated with this user!");
+            }
+            else if (intersection.size() > 1) {
+                throw new Exception("Too many streaks associated with this user!");
+            }
+            else {
+                for (String streakID : intersection) {
+                    // INVARIANT: Will only run once whenever it gets here
+                    databaseActions.addAll(DeleteStreak.getActions(fromID, streakID));
+                }
             }
         }
 

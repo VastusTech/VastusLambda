@@ -3,11 +3,14 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHa
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Submission;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 
+/**
+ * TODO
+ */
 public class SubmissionUpdateDescription {
     public static List<DatabaseAction> getActions(String fromID, String submissionID, String description) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

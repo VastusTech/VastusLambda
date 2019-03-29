@@ -5,22 +5,27 @@ public class CreateStreakRequest extends CreateObjectRequest {
     public String owner;
     public String about;
     public String streakType;
+    public String updateSpanType;
+    public String updateInterval;
+    public String streakN;
 
     // Not Required
-    public String updateType;
 
-    public CreateStreakRequest(String owner, String about, String streakType, String updateType) {
+    public CreateStreakRequest(String owner, String about, String streakType, String updateSpanType,
+                               String updateInterval, String streakN) {
         this.owner = owner;
         this.about = about;
         this.streakType = streakType;
-        this.updateType = updateType;
+        this.updateSpanType = updateSpanType;
+        this.updateInterval = updateInterval;
+        this.streakN = streakN;
     }
 
     public CreateStreakRequest() {}
 
     @Override
     public boolean ifHasEmptyString() {
-        return hasEmptyString(owner, about, streakType, updateType);
+        return hasEmptyString(owner, about, streakType, updateInterval, streakN);
     }
 
     public String getOwner() {
@@ -47,11 +52,19 @@ public class CreateStreakRequest extends CreateObjectRequest {
         this.streakType = streakType;
     }
 
-    public String getUpdateType() {
-        return updateType;
+    public String getUpdateInterval() {
+        return updateInterval;
     }
 
-    public void setUpdateType(String updateType) {
-        this.updateType = updateType;
+    public void setUpdateInterval(String updateInterval) {
+        this.updateInterval = updateInterval;
+    }
+
+    public String getStreakN() {
+        return streakN;
+    }
+
+    public void setStreakN(String streakN) {
+        this.streakN = streakN;
     }
 }

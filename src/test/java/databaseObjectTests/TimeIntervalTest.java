@@ -3,7 +3,7 @@ package test.java.databaseObjectTests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.TimeInterval;
 
 import org.joda.time.DateTime;

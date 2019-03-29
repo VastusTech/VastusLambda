@@ -1,16 +1,17 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Workout;
 import main.java.databaseOperations.DatabaseAction;
-import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
-import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers.ClientRemoveFromWorkout;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class DeleteWorkout {
     public static List<DatabaseAction> getActions(String fromID, String workoutID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

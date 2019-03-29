@@ -1,24 +1,21 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.Group;
 import main.java.databaseObjects.Invite;
 import main.java.databaseOperations.DatabaseActionCompiler;
-import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateInviteRequest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
-
+/**
+ * TODO
+ */
 public class CreateInvite {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateInviteRequest createInviteRequest, boolean ifWithCreate) throws Exception {
         if (createInviteRequest != null) {

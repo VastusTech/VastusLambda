@@ -1,5 +1,8 @@
 package main.java.databaseOperations;
 
+/**
+ * TODO
+ */
 enum DBAction {
     CREATE,
     UPDATE,

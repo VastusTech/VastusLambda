@@ -1,7 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Invite;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseAction;
@@ -11,6 +11,9 @@ import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandle
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class UserAddFriend {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String friendID)
             throws Exception {

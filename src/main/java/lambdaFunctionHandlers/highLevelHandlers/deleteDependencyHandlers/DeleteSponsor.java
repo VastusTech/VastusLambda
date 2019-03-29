@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Sponsor;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.SponsorDatabaseActionBuilder;
@@ -8,6 +8,9 @@ import main.java.databaseOperations.databaseActionBuilders.SponsorDatabaseAction
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class DeleteSponsor {
     public static List<DatabaseAction> getActions(String fromID, String sponsorID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

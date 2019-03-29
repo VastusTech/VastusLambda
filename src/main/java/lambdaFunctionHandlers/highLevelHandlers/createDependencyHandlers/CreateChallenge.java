@@ -1,15 +1,15 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Group;
 import main.java.databaseOperations.DatabaseActionCompiler;
-import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateChallengeRequest;
 import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
+import main.java.lambdaFunctionHandlers.requestObjects.CreateStreakRequest;
 
 import org.joda.time.DateTime;
 
@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class CreateChallenge {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateChallengeRequest createChallengeRequest, boolean ifWithCreate) throws Exception {
         if (createChallengeRequest != null) {
@@ -67,6 +70,23 @@ public class CreateChallenge {
                     }
                 }
 
+                boolean ifStreak = false;
+                if (createChallengeRequest.challengeType != null) {
+                    if (createChallengeRequest.challengeType.equals("streak")) {
+                        ifStreak = true;
+                        if (createChallengeRequest.streakUpdateSpanType == null ||
+                                createChallengeRequest.streakUpdateInterval == null ||
+                                createChallengeRequest.streakN == null) {
+                            throw new Exception("If the challenge type is a streak, it needs the " +
+                                    "streak update span type, the streak update interval and the " +
+                                    "streak n to instantiate!");
+                        }
+                    }
+                    else {
+                        throw new Exception("Challenge type must be nothing or \"streak\"!");
+                    }
+                }
+
                 databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest, ifWithCreate));
 
                 // Update owners fields
@@ -96,7 +116,17 @@ public class CreateChallenge {
 
                 compilers.add(databaseActionCompiler);
 
-                // TODO AUTOMATICALLY CREATE A POST FOR THEM!!!!
+                // If it's a streak challenge, create all the streaks too!
+                if (ifStreak && createChallengeRequest.members != null) {
+                    for (String member : createChallengeRequest.members) {
+                        // Create the Streak for each member in the Challenge!
+                        CreateStreakRequest createStreakRequest = new CreateStreakRequest(member,
+                                "", "submission", createChallengeRequest.streakUpdateSpanType,
+                                createChallengeRequest.streakUpdateInterval, createChallengeRequest.streakN);
+                        compilers.addAll(CreateStreak.getCompilers(fromID, createStreakRequest,
+                                true));
+                    }
+                }
 
                 // Manually add a CreatePostRequest, then send it, utilizing the Passover ID functionality!
                 CreatePostRequest createPostRequest = new CreatePostRequest(createChallengeRequest.owner,

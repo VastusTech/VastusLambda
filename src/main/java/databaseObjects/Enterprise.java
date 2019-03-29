@@ -5,6 +5,9 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import java.util.Map;
 
+/**
+ * TODO
+ */
 public class Enterprise extends DatabaseObject {
     public Enterprise(Item item) throws Exception {
         super(item);

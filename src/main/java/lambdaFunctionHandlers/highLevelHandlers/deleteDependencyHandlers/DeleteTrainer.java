@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Trainer;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
@@ -10,6 +10,9 @@ import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseAction
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class DeleteTrainer {
     public static List<DatabaseAction> getActions(String fromID, String trainerID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

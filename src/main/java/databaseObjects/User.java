@@ -1,14 +1,18 @@
 package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
-import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import main.java.databaseOperations.DynamoDBHandler;
+
+import main.java.logic.ItemType;
+
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
 import java.util.*;
 
+/**
+ * TODO
+ */
 abstract public class User extends DatabaseObject{
     public String name;
     public String gender;
@@ -24,8 +28,8 @@ abstract public class User extends DatabaseObject{
     public Set<String> scheduledWorkouts;
     public Set<String> completedWorkouts;
     public List<TimeInterval> scheduledTimes;
-    public Set<String> reviewsAbout;
     public Set<String> reviewsBy;
+    public Set<String> reviewsAbout;
     public float friendlinessRating;
     public float effectivenessRating;
     public float reliabilityRating;
@@ -49,8 +53,8 @@ abstract public class User extends DatabaseObject{
     public Set<String> liked;
     public Set<String> comments;
     public Set<String> groups;
-    public Set<String> invitedGroups;
     public Set<String> ownedGroups;
+    public Set<String> invitedGroups;
     public Set<String> messageBoards;
     public Set<String> streaks;
 
@@ -146,5 +150,16 @@ abstract public class User extends DatabaseObject{
 
     public static User readUser(String id, String itemType) throws Exception {
         return (User) read(tableName, getPrimaryKey(itemType, id));
+    }
+
+    public static User readUser(String id) throws Exception {
+        String itemType = ItemType.getItemType(id);
+        if (itemType.equals("Client") || itemType.equals("Trainer")
+                || itemType.equals("Gym") || itemType.equals("Sponsor")) {
+            return readUser(id, itemType);
+        }
+        else {
+            throw new Exception("Item type of non-user found! Type: " + itemType);
+        }
     }
 }

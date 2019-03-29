@@ -3,18 +3,18 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
-import main.java.databaseObjects.Challenge;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Group;
 import main.java.databaseOperations.DatabaseActionCompiler;
-import main.java.databaseOperations.DynamoDBHandler;
-import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
 
+/**
+ * TODO
+ */
 public class CreatePost {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreatePostRequest createPostRequest, boolean ifWithCreate) throws Exception {
         if (createPostRequest != null) {

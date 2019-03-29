@@ -7,6 +7,9 @@ import main.java.databaseOperations.DynamoDBHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * TODO
+ */
 public class Invite extends DatabaseObject {
     public String from;
     public String to;

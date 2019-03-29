@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 
 /**
  * Compiles the notifications together so that it sends all relevant information to one channel at

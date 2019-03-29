@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * TODO
+ */
 public class Comment extends DatabaseObject {
     public String by;
     public String to;

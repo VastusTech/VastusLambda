@@ -1,11 +1,10 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
-import main.java.Logic.Constants;
-import main.java.Logic.ItemType;
+import main.java.logic.Constants;
+import main.java.logic.ItemType;
 import main.java.databaseObjects.Message;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseActionCompiler;
-import main.java.databaseOperations.DynamoDBHandler;
 import main.java.databaseOperations.databaseActionBuilders.MessageDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateMessageRequest;
@@ -15,11 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
-
-import static main.java.databaseObjects.Message.getNotificationIDsFromBoard;
-
+/**
+ * TODO
+ */
 public class CreateMessage {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateMessageRequest createMessageRequest, boolean ifWithCreate) throws Exception {
         if (createMessageRequest != null) {

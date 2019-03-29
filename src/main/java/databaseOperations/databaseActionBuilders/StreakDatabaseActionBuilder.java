@@ -28,7 +28,9 @@ public class StreakDatabaseActionBuilder {
         item.put("owner", new AttributeValue(createStreakRequest.owner));
         item.put("about", new AttributeValue(createStreakRequest.about));
         item.put("streakType", new AttributeValue(createStreakRequest.streakType));
-        if (createStreakRequest.updateType != null) { item.put("updateType", new AttributeValue(createStreakRequest.updateType)); }
+        item.put("updateSpanType", new AttributeValue(createStreakRequest.updateSpanType));
+        item.put("updateInterval", new AttributeValue(createStreakRequest.updateInterval));
+        item.put("streakN", new AttributeValue(createStreakRequest.streakN));
         return new CreateDatabaseAction(itemType, item, ifWithCreate,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
@@ -44,12 +46,28 @@ public class StreakDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "N", new AttributeValue().withN("1"), false, ADD);
     }
 
-    public static DatabaseAction updateAddBestN(String id) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "bestN", new AttributeValue().withN("1"), false, ADD);
+    public static DatabaseAction resetNToZero(String id) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "N", new AttributeValue().withN("0"), false, PUT);
+    }
+
+    public static DatabaseAction resetNToOne(String id) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "N", new AttributeValue().withN("1"), false, PUT);
+    }
+
+    public static DatabaseAction updateBestN(String id, String N) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "bestN", new AttributeValue().withN(N), false, PUT);
     }
 
     public static DatabaseAction updateAddCurrentN(String id) throws Exception {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "currentN", new AttributeValue().withN("1"), false, ADD);
+    }
+
+    public static DatabaseAction resetCurrentNToZero(String id) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "currentN", new AttributeValue().withN("0"), false, PUT);
+    }
+
+    public static DatabaseAction resetCurrentNToOne(String id) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "currentN", new AttributeValue().withN("1"), false, PUT);
     }
 
     public static DatabaseAction delete(String id) {

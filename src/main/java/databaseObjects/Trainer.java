@@ -1,12 +1,13 @@
 package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
-import main.java.Logic.Constants;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import main.java.databaseOperations.DynamoDBHandler;
 
 import java.util.*;
 
+/**
+ * TODO
+ */
 public class Trainer extends User {
     public String gym;
     public List<TimeInterval> availableTimes;

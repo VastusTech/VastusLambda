@@ -1,6 +1,6 @@
 package main.java;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 
 public class Main {
     public static void main(String[] args) {

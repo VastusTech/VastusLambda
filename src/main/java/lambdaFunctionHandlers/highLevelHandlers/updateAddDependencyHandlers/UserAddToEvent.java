@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 // import main.java.databaseObjects.Client;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.Invite;
@@ -13,6 +13,9 @@ import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandle
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class UserAddToEvent {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String eventID) throws
             Exception {

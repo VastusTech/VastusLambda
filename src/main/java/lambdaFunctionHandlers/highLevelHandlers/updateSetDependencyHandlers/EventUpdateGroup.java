@@ -1,6 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Event;
 import main.java.databaseObjects.Group;
 import main.java.databaseOperations.DatabaseAction;
@@ -10,6 +10,9 @@ import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBu
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO
+ */
 public class EventUpdateGroup {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String groupID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

@@ -3,11 +3,14 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependenc
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.Group;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 
+/**
+ * TODO
+ */
 public class GroupRemoveTag {
   public static List<DatabaseAction> getActions(String fromID, String groupID, String tag) throws Exception {
     List<DatabaseAction> databaseActions = new ArrayList<>();

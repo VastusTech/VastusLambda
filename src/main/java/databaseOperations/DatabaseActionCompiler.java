@@ -2,7 +2,7 @@ package main.java.databaseOperations;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
-import main.java.Logic.Constants;
+import main.java.logic.Constants;
 import main.java.databaseObjects.DatabaseItem;
 import main.java.notifications.NotificationHandler;
 
@@ -11,8 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.json.JsonObjectBuilder;
-
+/**
+ * TODO
+ */
 public class DatabaseActionCompiler {
     private NotificationHandler notificationHandler;
     private List<DatabaseAction> databaseActions;

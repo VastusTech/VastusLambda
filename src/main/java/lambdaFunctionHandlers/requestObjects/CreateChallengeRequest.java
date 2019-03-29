@@ -18,10 +18,14 @@ public class CreateChallengeRequest extends CreateObjectRequest {
     public String restriction;
     public String difficulty;
     public String prize;
+    public String streakUpdateSpanType;
+    public String streakUpdateInterval;
+    public String streakN;
 
     public CreateChallengeRequest(String owner, String endTime, String capacity, String title, String goal, String
             challengeType, String group, String description, String[] tags, String[] members, String access, String
-            restriction, String difficulty, String prize) {
+            restriction, String difficulty, String prize, String streakUpdateSpanType, String streakUpdateInterval,
+                                  String streakN) {
         this.owner = owner;
         this.endTime = endTime;
         this.capacity = capacity;
@@ -36,6 +40,9 @@ public class CreateChallengeRequest extends CreateObjectRequest {
         this.restriction = restriction;
         this.difficulty = difficulty;
         this.prize = prize;
+        this.streakUpdateSpanType = streakUpdateSpanType;
+        this.streakUpdateInterval = streakUpdateInterval;
+        this.streakN = streakN;
     }
 
     public CreateChallengeRequest() {}
@@ -43,7 +50,8 @@ public class CreateChallengeRequest extends CreateObjectRequest {
     @Override
     public boolean ifHasEmptyString() {
         return hasEmptyString(owner, endTime, capacity, title, goal, challengeType, group,
-                description, access, restriction, difficulty, prize)
+                description, access, restriction, difficulty, prize, streakUpdateSpanType,
+                streakUpdateInterval, streakN)
                 || arrayHasEmptyString(tags, members);
     }
 
@@ -157,5 +165,29 @@ public class CreateChallengeRequest extends CreateObjectRequest {
 
     public void setPrize(String prize) {
         this.prize = prize;
+    }
+
+    public String getStreakUpdateSpanType() {
+        return streakUpdateSpanType;
+    }
+
+    public void setStreakUpdateSpanType(String streakUpdateSpanType) {
+        this.streakUpdateSpanType = streakUpdateSpanType;
+    }
+
+    public String getStreakUpdateInterval() {
+        return streakUpdateInterval;
+    }
+
+    public void setStreakUpdateInterval(String streakUpdateInterval) {
+        this.streakUpdateInterval = streakUpdateInterval;
+    }
+
+    public String getStreakN() {
+        return streakN;
+    }
+
+    public void setStreakN(String streakN) {
+        this.streakN = streakN;
     }
 }
