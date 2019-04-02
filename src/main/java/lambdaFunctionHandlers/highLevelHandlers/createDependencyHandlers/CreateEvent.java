@@ -14,7 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * TODO
+ * Creates an Event in the database, checks the inputs, and adds the event to the members, the
+ * owner, and the Challenge/Group that it is a part of.
  */
 public class CreateEvent {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateEventRequest createEventRequest, boolean ifWithCreate) throws Exception {

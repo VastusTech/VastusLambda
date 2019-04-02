@@ -9,7 +9,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 
 /**
- * TODO
+ * Removes a picture path from the Submission.
  */
 public class SubmissionRemovePicturePath {
     public static List<DatabaseAction> getActions(String fromID, String submissionID, String picturePath) throws Exception {

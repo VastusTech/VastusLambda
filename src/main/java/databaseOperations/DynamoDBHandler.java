@@ -17,12 +17,12 @@ import main.java.logic.debugging.SingletonTimer;
 import main.java.databaseObjects.*;
 import main.java.databaseOperations.exceptions.ItemNotFoundException;
 
-import org.joda.time.DateTime;
-
 import java.util.*;
 
 /**
- * TODO DOC
+ * This class uses the Singleton pattern and handles all the intensive specifically AWS DynamoDB
+ * Database operations. Uses the Java Transactional library for DynamoDB in order to increase the
+ * likelihood of atomic creation.
  */
 public class DynamoDBHandler {
     // Singleton Pattern!
@@ -35,11 +35,11 @@ public class DynamoDBHandler {
     private Table messageTable;
     private Table firebaseTokenTable;
 
-    // Used for the singleton pattern!
     /**
-     * TODO DOC
+     * The get instance method for the Singleton design pattern. Ensures that only one instance of
+     * the class is ever created.
      */
-    static public DynamoDBHandler getInstance() throws Exception {
+    static synchronized public DynamoDBHandler getInstance() throws Exception {
         if (DynamoDBHandler.instance == null) {
             DynamoDBHandler.instance = new DynamoDBHandler();
         }
@@ -47,7 +47,8 @@ public class DynamoDBHandler {
     }
 
     /**
-     * TODO DOC
+     * Private constructor for the DynamoDBHandler class. Handles all the initialization of the
+     * connections to the database tables and the initialization of the Transaction library usage.
      */
     private DynamoDBHandler() throws Exception {
         // AWS CREDENTIALS GO HERE
@@ -68,12 +69,6 @@ public class DynamoDBHandler {
         tables.put(Constants.messageTableName, messageTable);
     }
 
-    /*
-    For SAFE operations, we don't necessarily want to have to have to read the marker beforehand.
-    So we first read the object and then we use the checkHandler to make sure that it's okay to do.
-    Then we check to see if it is changed while we are trying to do stuff to it.
-     */
-
     /**
      * Uses the list of database action compilers to perform the operations as indicated in the API
      * and isolates the creation between each compiler. It also tries to determine the ID as close
@@ -86,10 +81,6 @@ public class DynamoDBHandler {
      */
     public String attemptTransaction(List<DatabaseActionCompiler> databaseActionCompilers) throws Exception {
         // Marker retry implemented
-        // TODO ==============================================================================
-        // TODO BECAUSE TRANSACTIONS ARE BROKEN UP, LET'S DO ALL THE CHECKING BEFOREHAND INSTEAD
-        // TODO IN ORDER TO INCREASE THE CHANCE OF AN "ATOMIC" FUNCTIONALITY!!!!!!
-        // TODO ==============================================================================
         final int transactionActionLimit = 10; // Transactions can only handle 10 unique things each
         // This indicates created ID for current compiler and also supports passover between transactions.
         String newlyCreatedID = null; // This indicates the created ID for the current compiler.
@@ -97,7 +88,7 @@ public class DynamoDBHandler {
 
         SingletonTimer.get().checkpoint("Pre-checking the actions check handlers");
 
-        // Pre-checking
+        // Pre-checking all the actions to catch an error earlier.
         for (DatabaseActionCompiler databaseActionCompiler : databaseActionCompilers) {
             for (DatabaseAction databaseAction : databaseActionCompiler.getDatabaseActions()) {
                 if (databaseAction.action == DBAction.UPDATESAFE) {
@@ -144,7 +135,6 @@ public class DynamoDBHandler {
                                 }
                             }
 
-                            // TODO THIS WORKS FOR ONLY IF IT'S a STRING VALUE, NOT INSIDE A STRING SET, if that's a problem, reevaluate...
                             Map<String, AttributeValue> putItem = getPutItem(databaseAction, newlyCreatedID);
 
                             Constants.debugLog("Creating item with item: " + databaseAction.item);
@@ -387,9 +377,8 @@ public class DynamoDBHandler {
             databaseActionCompiler.sendNotifications();
         }
 
-        // TODO This is the most dangerous part of the code, where things could actually go really
-        // TODO wrong in an unrecoverable way.
-
+        // This is the most dangerous part of the code, where things could actually go really wrong
+        // Commit and delete all the transactions at the end.
         List<Exception> errors = new ArrayList<>();
         for (Transaction transaction : transactions) {
             try {
@@ -435,22 +424,30 @@ public class DynamoDBHandler {
     }
 
     /**
-     * TODO DOC
+     * Updates the database action to include all the newly created IDs from the CREATE statement.
+     * Specifically replaces all the "" values with the new ID.
+     *
+     * TODO This only looks inside String values, not String sets. Is that a problem?
+     *
+     * @param databaseAction The {@link DatabaseAction} to update using the ID.
+     * @param newID The newly generated ID to fill all the action's fields with.
+     * @return The new {@link AttributeValueUpdate} map to use in the update statement.
+     * @throws Exception If the update is in the wrong order (and cannot update with the newID).
      */
     private Map<String, AttributeValueUpdate> getUpdateItem(DatabaseAction databaseAction,
-                                                            String returnString) throws Exception {
+                                                            String newID) throws Exception {
         if (databaseAction.ifWithCreate) {
-            if (returnString == null) {
+            if (newID == null) {
                 throw new Exception("The Create statement needs to be first while updating!");
             }
             else {
                 List<String> stringList = new ArrayList<>();
-                stringList.add(returnString);
+                stringList.add(newID);
                 for (AttributeValueUpdate valueUpdate: databaseAction.updateItem.values()) {
                     // For each one that uses the id, switch it to the return string
                     if (valueUpdate.getAction().equals("PUT")) {
                         if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("")) {
-                            valueUpdate.setValue(new AttributeValue(returnString));
+                            valueUpdate.setValue(new AttributeValue(newID));
                         }
                     }
                     else if (valueUpdate.getAction().equals("ADD") || valueUpdate.getAction().equals("DELETE")) {
@@ -469,14 +466,18 @@ public class DynamoDBHandler {
     }
 
     /**
-     * TODO DOC
+     * Calculates a new ID for an item based on the item type, then checks to see if it already
+     * exists or not. It continues to try until it finds a free ID, in which case it returns the new
+     * ID.
+     *
+     * @param itemType The String type of the item to create the new ID for.
+     * @return The newly generated and unique ID for the item.
      */
-    private String getNewID(String itemType) throws Exception {
+    private String getNewID(String itemType) {
         String id = null;
         boolean ifFound = false;
         while (!ifFound) {
             id = generateRandomID(itemType);
-            // TODO Does it just return null if not found?
             if (databaseTable.getItem("item_type", itemType, "id", id) == null) {
                 ifFound = true;
             }
@@ -485,7 +486,11 @@ public class DynamoDBHandler {
     }
 
     /**
-     * TODO DOC
+     * Generates a random String ID based on the item's type. Takes a number of letters from the
+     * type and makes them into a prefix. Then adds a number of random integers onto the end.
+     *
+     * @param itemType The String type of the item to create an ID for.
+     * @return The randomly generated ID for the item.
      */
     static private String generateRandomID(String itemType) {
         String prefix = itemType.substring(0, Constants.numPrefix).toUpperCase();
@@ -494,16 +499,25 @@ public class DynamoDBHandler {
         Random random = new Random();
         double range = random.nextDouble();
         String idNum = Long.toString((long)(range*Math.pow(10, numDigits)));
+        StringBuilder idBuilder = new StringBuilder(idNum);
 
         while (idNum.length() != numDigits) {
-            idNum = "0" + idNum;
+            idBuilder.insert(0, "0");
         }
 
-        return prefix + idNum;
+        idBuilder.insert(0, prefix);
+        return idBuilder.toString();
     }
 
     /**
-     * TODO DOC
+     * Reads an item from the database, using the table name and the primary key of the item (so
+     * that we can read from any table, no matter what the partition and sort key are). Uses the
+     * {@link DatabaseItemFactory} in order to instantiate the item into a valid Java object.
+     *
+     * @param tableName The name of the table to read from.
+     * @param primaryKey The primary key of the item to read from the table.
+     * @return The {@link DatabaseItem} of the item that matches the description given.
+     * @throws Exception If the item was not found or the factory does not recognize the item type.
      */
     public DatabaseItem readItem(String tableName, PrimaryKey primaryKey) throws Exception {
         Item item = tables.get(tableName).getItem(primaryKey);
@@ -516,54 +530,14 @@ public class DynamoDBHandler {
         return DatabaseItemFactory.build(item);
     }
 
-    // TODO Way to differentiate between no user showed up and error?
-    // TODO YES by throwing an exception!
-//    public <T extends DatabaseObject> T usernameQuery(String username, String itemType) throws Exception {
-//        Index index = databaseTable.getIndex("item_type-username-index");
-//
-//        HashMap<String, String> nameMap = new HashMap<>();
-//        nameMap.put("#usr", "username");
-//        nameMap.put("#type", "item_type");
-//
-//        HashMap<String, Object> valueMap = new HashMap<>();
-//        valueMap.put(":usr", username);
-//        valueMap.put(":type", itemType);
-//
-//        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type AND #usr = :usr")
-//                .withNameMap(nameMap).withValueMap(valueMap);
-//
-//        Item resultItem = null;
-//
-//        try {
-//            ItemCollection<QueryOutcome> items = index.query(querySpec);
-//            Iterator<Item> iterator = items.iterator();
-//            int i = 0;
-//            if (!iterator.hasNext()) {
-//                // This means that nothing showed up in the query,
-//                return null;
-//            }
-//            while (iterator.hasNext()) {
-//                if (i > 0) {
-//                    // This means that the query came up with more than one result
-//                    throw new Exception("More than one item has " + username + " as their username!!!!");
-//                }
-//                resultItem = iterator.next();
-//                i++;
-//            }
-//        }
-//        catch (Exception e) {
-//            throw new Exception("Error while username querying. Error: " + e.getLocalizedMessage());
-//        }
-//
-//        if (resultItem != null) {
-//            return (T)DatabaseItemBuilder.build(resultItem);
-//        }
-//
-//        return null;
-//    }
 
     /**
-     * TODO DOC
+     * Checks to see if the inputted username already exists inside of the database, in order to
+     * catch errors earlier.
+     *
+     * @param username The String username to check.
+     * @param item_type The String item type of the item to hold the username.
+     * @return Whether or not the username is inside the database already.
      */
     private boolean usernameInDatabase(String username, String item_type) {
         Index index = databaseTable.getIndex("item_type-username-index");
@@ -581,26 +555,9 @@ public class DynamoDBHandler {
         return (iterator.hasNext());
     }
 
-//    public Set<String> getFirebaseTokens(String userID) {
-//        Item item = firebaseTokenTable.getItem("id", userID);
-//        Set<String> tokens = null;
-//        if (item != null) {
-//            tokens = item.getStringSet("tokens");
-//        }
-//
-//        // String expires = item.getString("expires");
-//        // TODO Make sure that these tokens haven't expired?
-//
-//        if (tokens == null) {
-//            return new HashSet<>();
-//        }
-//        else {
-//            return tokens;
-//        }
-//    }
-
     /**
-     * TODO DOC
+     * Converts from a map of {@link AttributeValue} object to regular Java {@link Object}. Used for
+     * initializing the notifications for real time updates in the notification handler.
      */
     private Map<String, Object> convertFromAttributeValueMap(Map<String, AttributeValue> map) {
         Map<String, Object> returnMap = new HashMap<>();
@@ -619,26 +576,4 @@ public class DynamoDBHandler {
         }
         return returnMap;
     }
-
-    // TODO We usually don't want to send out a null variable without throwing an exception
-//    public <T extends DatabaseObject> List<T> getAll(String itemType) throws Exception {
-//        HashMap<String, String> nameMap = new HashMap<>();
-//        nameMap.put("#type", "item_type");
-//
-//        HashMap<String, Object> valueMap = new HashMap<>();
-//        valueMap.put(":type", itemType);
-//
-//        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#type = :type").withNameMap(nameMap)
-//                .withValueMap(valueMap);
-//
-//        ItemCollection<QueryOutcome> items = databaseTable.query(querySpec);
-//        Iterator<Item> iterator = items.iterator();
-//        List<T> allList = new ArrayList<>();
-//        while (iterator.hasNext()) {
-//            Item item = iterator.next();
-//            allList.add((T)DatabaseItemBuilder.build(item));
-//        }
-//
-//        return allList;
-//    }
 }

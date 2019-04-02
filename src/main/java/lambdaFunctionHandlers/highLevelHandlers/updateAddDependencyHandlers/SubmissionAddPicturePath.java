@@ -9,7 +9,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 
 /**
- * TODO
+ * Adds a picture path to an existing Submission, making sure that there aren't already too many.
  */
 public class SubmissionAddPicturePath {
     public static List<DatabaseAction> getActions(String fromID, String submissionID, String picturePath) throws Exception {

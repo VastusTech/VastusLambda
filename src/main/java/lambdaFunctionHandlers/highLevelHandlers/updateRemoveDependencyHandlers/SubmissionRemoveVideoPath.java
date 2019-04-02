@@ -9,7 +9,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 
 /**
- * TODO
+ * Removes a video path from the Submission.
  */
 public class SubmissionRemoveVideoPath {
     public static List<DatabaseAction> getActions(String fromID, String submissionID, String videoPath) throws Exception {

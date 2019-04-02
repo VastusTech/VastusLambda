@@ -195,7 +195,7 @@ public class UserDatabaseActionBuilder {
                 false, ADD, new CheckHandler() {
             @Override
             public String isViable(DatabaseItem newItem) throws Exception {
-                // TODO Check if the friend request isn't in the requests already either
+                // Check if the friend request isn't in the requests already either
                 User user = (User) newItem;
                 if ((user.friends.contains(friend))) {
                     return "That person already has that friend request as a friend!";

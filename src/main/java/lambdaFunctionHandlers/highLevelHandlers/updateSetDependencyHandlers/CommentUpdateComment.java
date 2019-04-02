@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the comment associated with a Comment.
  */
 public class CommentUpdateComment {
     public static List<DatabaseAction> getActions(String fromID, String commentID, String commentString) throws

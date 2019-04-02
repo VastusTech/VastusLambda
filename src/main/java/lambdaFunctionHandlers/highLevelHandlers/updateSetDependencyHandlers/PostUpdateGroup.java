@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Update which Group is associated with a Post.
  */
 public class PostUpdateGroup {
     public static List<DatabaseAction> getActions(String fromID, String postID, String groupID) throws Exception {

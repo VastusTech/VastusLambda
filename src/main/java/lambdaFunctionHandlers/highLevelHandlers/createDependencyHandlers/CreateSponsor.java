@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Creates a Sponsor in the database and checks the inputs.
  */
 public class CreateSponsor {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateSponsorRequest createSponsorRequest, boolean ifWithCreate) throws Exception {

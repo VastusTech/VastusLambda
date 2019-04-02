@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates a Group's description.
  */
 public class GroupUpdateDescription {
     public static List<DatabaseAction> getActions(String fromID, String groupID, String description) throws Exception {

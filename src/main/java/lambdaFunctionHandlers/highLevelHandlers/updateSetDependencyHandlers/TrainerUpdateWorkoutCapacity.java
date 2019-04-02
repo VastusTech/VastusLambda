@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Update a trainer's Workout capacity (how many people they can handle in one workout).
  */
 public class TrainerUpdateWorkoutCapacity {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String capacity) throws Exception {

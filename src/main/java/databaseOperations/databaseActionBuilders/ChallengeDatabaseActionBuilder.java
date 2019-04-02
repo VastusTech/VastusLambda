@@ -229,7 +229,6 @@ public class ChallengeDatabaseActionBuilder {
                 Challenge challenge = (Challenge) newItem;
                 if (challenge.members.contains(winner)) {
                     // TODO This might be dangerous, given that this could be running in any part of the country.....
-                    // TODO TEST TEST TEST TEST TEST
                     if (TimeInterval.timeHasPassed(new DateTime(challenge.endTime))) {
                         if (challenge.members.size() < 2) {
                             return "The challenge must have at least 2 members to be viable for winning!";

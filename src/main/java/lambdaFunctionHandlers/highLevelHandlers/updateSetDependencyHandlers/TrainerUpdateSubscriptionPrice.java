@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Update a Trainer's monthly price for subscribing to their Portal.
  */
 public class TrainerUpdateSubscriptionPrice {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String subscriptionPrice) throws

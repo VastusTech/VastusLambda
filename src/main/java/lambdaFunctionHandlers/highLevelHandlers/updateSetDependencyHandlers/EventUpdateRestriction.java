@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates an Event's restriction level, which forces User's to request joining the Event.
  */
 public class EventUpdateRestriction {
     static public List<DatabaseAction> getActions(String fromID, String eventID, String restriction) throws Exception {

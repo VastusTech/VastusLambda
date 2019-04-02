@@ -13,7 +13,8 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import main.java.lambdaFunctionHandlers.requestObjects.CreateCommentRequest;
 
 /**
- * TODO
+ * Creates a Comment in the database, checks the inputs, and adds it to the author's comments and
+ * the Post/Comment/Submission's comments.
  */
 public class CreateComment {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateCommentRequest createCommentRequest, boolean ifWithCreate) throws Exception {

@@ -11,7 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * TODO
+ * Creates a Workout in the database, checks the inputs, and adds the workout to the Trainer and the
+ * Client members.
  */
 public class CreateWorkout {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateWorkoutRequest createWorkoutRequest, boolean ifWithCreate) throws Exception {

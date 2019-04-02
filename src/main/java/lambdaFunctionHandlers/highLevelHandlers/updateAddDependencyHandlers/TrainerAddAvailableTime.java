@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds an available time interval to a Trainer, indicating that Clients can schedule workouts with
+ * them during that time. TODO Revisit
  */
 public class TrainerAddAvailableTime {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String availableTime) throws Exception {

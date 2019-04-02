@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates a Challenge's capacity to hold a certain number of members.
  */
 public class ChallengeUpdateCapacity {
     public static List<DatabaseAction> getActions(String fromID, String challengeID, String capacity) throws Exception {
@@ -25,6 +25,8 @@ public class ChallengeUpdateCapacity {
         if (!(cap >= 1)) {
             throw new Exception("Capacity must be greater than zero!");
         }
+
+        // TODO Can't set the capacity lower than its current membership?
 
         // Get all the actions for this process
         databaseActions.add(ChallengeDatabaseActionBuilder.updateDifficulty(challengeID, capacity));

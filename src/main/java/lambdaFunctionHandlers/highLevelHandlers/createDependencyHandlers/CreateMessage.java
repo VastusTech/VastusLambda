@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO
+ * Creates a Message in the database, checks the inputs, adds the board to the Users (if applicable)
+ * and sends a notification to the board.
  */
 public class CreateMessage {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateMessageRequest createMessageRequest, boolean ifWithCreate) throws Exception {

@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a picture path onto an existing Post, making sure there aren't too many pictures in the post
+ * already.
  */
 public class PostAddPicturePath {
     public static List<DatabaseAction> getActions(String fromID, String postID, String picturePath) throws Exception {

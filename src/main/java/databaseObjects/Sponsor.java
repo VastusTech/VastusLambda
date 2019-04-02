@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO
+ * A Sponsor is meant to represent a User on the app that will want to represent a product or brand
+ * that will be advertised on our platform. TODO A lot of details still to figure out here.
  */
 public class Sponsor extends User {
     Sponsor(Item item) throws Exception {

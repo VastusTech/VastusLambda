@@ -6,7 +6,9 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import java.util.*;
 
 /**
- * TODO
+ * A Trainer represents a User that is a fitness expert that is curating content on our platform for
+ * others to utilize. They have a portal that Users can subscribe to and they can also will be able
+ * to sell and schedule their personal training on the platform as well.
  */
 public class Trainer extends User {
     public String gym;

@@ -8,7 +8,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * TODO
+ * Remove a message board from a User's boards, so it won't show up in their feed.
  */
 public class UserRemoveMessageBoard {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String

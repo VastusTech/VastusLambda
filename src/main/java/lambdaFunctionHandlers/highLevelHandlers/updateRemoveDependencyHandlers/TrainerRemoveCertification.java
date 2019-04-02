@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes a certification from a Trainer.
  */
 public class TrainerRemoveCertification {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String certification) throws

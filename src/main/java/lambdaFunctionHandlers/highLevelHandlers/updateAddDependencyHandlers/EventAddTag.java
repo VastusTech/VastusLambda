@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a tag to an Event, indicating what kind of Event it will be.
  */
 public class EventAddTag {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String tag) throws Exception {

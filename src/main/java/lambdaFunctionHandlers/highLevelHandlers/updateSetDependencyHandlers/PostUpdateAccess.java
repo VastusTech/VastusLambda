@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Update the access associated with a Post.
  */
 public class PostUpdateAccess {
     public static List<DatabaseAction> getActions(String fromID, String postID, String access) throws Exception {

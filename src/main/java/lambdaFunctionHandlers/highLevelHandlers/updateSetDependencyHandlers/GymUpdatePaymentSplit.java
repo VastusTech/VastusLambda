@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the amount of payment split that the Gym allocates for itself vs. its Trainers. TODO revisit
  */
 public class GymUpdatePaymentSplit {
     public static List<DatabaseAction> getActions(String fromID, String gymID, String paymentSplit) throws Exception {

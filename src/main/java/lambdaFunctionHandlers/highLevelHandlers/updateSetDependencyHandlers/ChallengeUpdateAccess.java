@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the access for a Challenge as well as all of the Events it contains.
  */
 public class ChallengeUpdateAccess {
     public static List<DatabaseAction> getActions(String fromID, String challengeID, String access) throws Exception {

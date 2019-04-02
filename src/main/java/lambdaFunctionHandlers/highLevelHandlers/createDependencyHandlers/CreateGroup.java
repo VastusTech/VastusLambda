@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * TODO
+ * Creates a Group in the database, checks the inputs, and adds it to the members and the owners.
  */
 public class CreateGroup {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGroupRequest createGroupRequest, boolean ifWithCreate) throws Exception {

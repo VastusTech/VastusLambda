@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the restriction level of the Challenge, which forces Users to request joining instead of
+ * directly joining the Challenge.
  */
 public class ChallengeUpdateRestriction {
     static public List<DatabaseAction> getActions(String fromID, String challengeID, String restriction) throws Exception {

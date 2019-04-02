@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a Client to a scheduled workout and updates all the fields involved in a Client joining the
+ * workout (like missing reviews). TODO Is this applicable in the app still?
  */
 public class ClientAddToWorkout {
     public static List<DatabaseAction> getActions(String fromID, String clientID, String workoutID) throws Exception {

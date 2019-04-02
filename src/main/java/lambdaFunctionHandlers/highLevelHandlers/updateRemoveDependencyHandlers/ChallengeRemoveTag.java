@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes a String tag from a Challenge.
  */
 public class ChallengeRemoveTag {
     public static List<DatabaseAction> getActions(String fromID, String challengeID, String tag) throws Exception {

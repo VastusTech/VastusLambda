@@ -8,7 +8,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * TODO
+ * Adds a message board to a user's message boards, showing up in their message board feed.
  */
 public class UserAddMessageBoard {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String

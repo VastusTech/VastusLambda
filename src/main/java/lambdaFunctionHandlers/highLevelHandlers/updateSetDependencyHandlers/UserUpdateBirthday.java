@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Update a User's birthday.
  */
 public class UserUpdateBirthday {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String birthday) throws Exception {

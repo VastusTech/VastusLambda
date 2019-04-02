@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the access for an Event.
  */
 public class EventUpdateAccess {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String access) throws Exception {

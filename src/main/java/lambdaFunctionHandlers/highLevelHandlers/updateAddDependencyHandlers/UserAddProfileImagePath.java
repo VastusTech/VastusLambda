@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a profile image path to a User.
  */
 public class UserAddProfileImagePath {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String

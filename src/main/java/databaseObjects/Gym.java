@@ -7,7 +7,9 @@ import main.java.databaseOperations.DynamoDBHandler;
 import java.util.*;
 
 /**
- * TODO
+ * Gyms are essentially employers that house a group of Trainers all together in order to allow them
+ * to house Vastus personal training on their premises. They have a location, weekly hours, and a
+ * session capacity.
  */
 public class Gym extends User {
     public String address;
@@ -43,7 +45,6 @@ public class Gym extends User {
         // item.put("trainerIDs", null);
         // item.put("weekly_hours", null);
         // item.put("vacation_times", null);
-        // TODO Put a default session capacity and a default payment split
         item.put("sessionCapacity", new AttributeValue("10"));
         item.put("gymType", new AttributeValue("independent"));
         item.put("paymentSplit", new AttributeValue("50"));

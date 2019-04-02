@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO
+ * A Comment is a sub-post off of a Post (or another comment). This is to comment on something that
+ * someone else had posted or commented. A lot like every social media's commenting system.
  */
 public class Comment extends DatabaseObject {
     public String by;

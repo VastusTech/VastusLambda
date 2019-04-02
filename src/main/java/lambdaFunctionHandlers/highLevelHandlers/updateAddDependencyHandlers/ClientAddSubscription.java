@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a subscription to a Client, allowing the Client to see a Trainer's portal. TODO Review this.
  */
 public class ClientAddSubscription {
     public static List<DatabaseAction> getActions(String fromID, String clientID, String subscriptionToID) throws

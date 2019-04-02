@@ -9,7 +9,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 
 /**
- * TODO
+ * Removes a tag from a Group.
  */
 public class GroupRemoveTag {
   public static List<DatabaseAction> getActions(String fromID, String groupID, String tag) throws Exception {

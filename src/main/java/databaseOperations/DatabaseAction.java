@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO
+ * A DatabaseAction represents any request to the database to alter anything. Can Create, Update,
+ * and Delete, all of which are handled in the sub classes. This class abstracts some of the logic
+ * found in all of them.
  */
 public abstract class DatabaseAction {
     // This defines what it's doing to the database (CRUD)

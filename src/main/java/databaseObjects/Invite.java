@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO
+ * An Invite is whenever someone is requesting something from someone else, be that to join a
+ * Challenge/Event/Group, to invite someone else to join a Challenge/Event/Group, or even to be a
+ * friend. :)
  */
 public class Invite extends DatabaseObject {
     public String from;

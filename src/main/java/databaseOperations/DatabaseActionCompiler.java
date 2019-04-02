@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO
+ * This class takes in database actions and compiles them together so that in a single transaction,
+ * there are no duplicate actions to an item. Also increases the efficiency of the transaction.
  */
 public class DatabaseActionCompiler {
     private NotificationHandler notificationHandler;

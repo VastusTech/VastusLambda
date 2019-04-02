@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a User to the Group Owners, allowing them to have full administrative access to the Group,
+ * checks the requests, and deletes any Invites associated with them. TODO Requests for ownership?
  */
 public class UserAddToGroupOwners {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String groupID) throws

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes a picture path from a Post.
  */
 public class PostRemovePicturePath {
     public static List<DatabaseAction> getActions(String fromID, String postID, String picturePath) throws Exception {

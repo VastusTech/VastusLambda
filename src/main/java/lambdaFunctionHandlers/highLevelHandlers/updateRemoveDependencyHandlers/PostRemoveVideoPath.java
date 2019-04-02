@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes a video path from a Post.
  */
 public class PostRemoveVideoPath {
     public static List<DatabaseAction> getActions(String fromID, String postID, String videoPath) throws Exception {

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates a Challenge's end time.
  */
 public class ChallengeUpdateEndTime {
     public static List<DatabaseAction> getActions(String fromID, String challengeID, String endTime) throws Exception {
@@ -26,6 +26,8 @@ public class ChallengeUpdateEndTime {
 
         // Check the time
         new DateTime(endTime);
+
+        // TODO Make sure that it isn't past right now?
 
         // Get all the actions for this process
         databaseActions.add(ChallengeDatabaseActionBuilder.updateEndTime(challengeID, endTime));

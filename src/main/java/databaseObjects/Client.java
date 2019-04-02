@@ -7,7 +7,9 @@ import main.java.databaseOperations.DynamoDBHandler;
 import java.util.*;
 
 /**
- * TODO
+ * A client is anyone using the app for the Events/Challenges/Groups and other values of the app.
+ * They are people who are the primary targets for our product, and they are the main participators
+ * in Challenges and following Trainers.
  */
 public class Client extends User {
     public Set<String> trainersFollowing;

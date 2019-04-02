@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Creates an Invite in the database, checks the inputs, and adds it to the sender's sent
+ * invitations, the receiver's received invitations, and sends a notification to the receiver.
  */
 public class CreateInvite {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateInviteRequest createInviteRequest, boolean ifWithCreate) throws Exception {
@@ -134,6 +135,7 @@ public class CreateInvite {
                         throw new Exception("Forgot to check for or implement invite type = " + createInviteRequest.inviteType);
                 }
 
+                // TODO This can be done through the regular Create statement for Users.
                 // Send an Ably message! TODO ??
 //                JsonObjectBuilder payload = Json.createObjectBuilder()
 //                        .add("from", createInviteRequest.from)

@@ -17,7 +17,8 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import main.java.lambdaFunctionHandlers.requestObjects.CreateSubmissionRequest;
 
 /**
- * TODO
+ * Creates a Submission in the database, checks the inputs, adds the Submission to the author and
+ * the Challenge it's for, and updates the potential Streak associated with the Submission.
  */
 public class CreateSubmission {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateSubmissionRequest createSubmissionRequest, boolean ifWithCreate) throws Exception {

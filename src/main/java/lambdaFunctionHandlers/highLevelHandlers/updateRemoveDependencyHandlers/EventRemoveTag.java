@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes a tag from an Event.
  */
 public class EventRemoveTag {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String tag) throws Exception {

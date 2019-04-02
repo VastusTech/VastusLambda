@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates a Group's restriction level, which forces Users to request joining the Group.
  */
 public class GroupUpdateRestriction {
     static public List<DatabaseAction> getActions(String fromID, String groupID, String restriction) throws Exception {

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a designated vacation time to a gym, saying that there can be no workouts during that time.
  */
 public class GymAddVacationTime {
     public static List<DatabaseAction> getActions(String fromID, String gymID, String vacationTime) throws Exception {

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Creates a Gym in the database and checks the inputs.
  */
 public class CreateGym {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGymRequest createGymRequest, boolean ifWithCreate) throws Exception {

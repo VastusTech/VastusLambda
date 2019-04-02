@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the Challenge that an Event is associated with.
  */
 public class EventUpdateChallenge {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String challengeID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        // TODO Revisit
         // Get the event
         Event event = Event.readEvent(eventID);
         Challenge challenge = null;

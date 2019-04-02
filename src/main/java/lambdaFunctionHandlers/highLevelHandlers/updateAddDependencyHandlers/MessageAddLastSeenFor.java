@@ -8,7 +8,8 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.MessageDatabaseActionBuilder;
 
 /**
- * TODO
+ * Adds a user to a Message's last seen for, indicating that at one point, this was the last message
+ * that the User has seen. Used for figuring out unread messages.
  */
 public class MessageAddLastSeenFor {
     public static List<DatabaseAction> getActions(String fromID, String board, String messageID, String userID) throws Exception {

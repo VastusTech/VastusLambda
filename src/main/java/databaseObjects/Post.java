@@ -11,7 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO
+ * A Post is an amount of content that a User has posted out for others to see. It can be sharing
+ * other objects, using it's own description, and including pictures and videos.
  */
 public class Post extends DatabaseObject {
     public String by;

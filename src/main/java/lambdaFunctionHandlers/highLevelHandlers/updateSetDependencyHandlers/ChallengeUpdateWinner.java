@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates a Challenge's winner, completing the Challenge, and finishing all the Streaks involved.
  */
 public class ChallengeUpdateWinner {
     public static List<DatabaseAction> getActions(String fromID, String challengeID, String winner) throws Exception {

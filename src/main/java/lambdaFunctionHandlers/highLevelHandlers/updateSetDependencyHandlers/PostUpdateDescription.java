@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Update a Post's description.
  */
 public class PostUpdateDescription {
     public static List<DatabaseAction> getActions(String fromID, String postID, String description) throws Exception {

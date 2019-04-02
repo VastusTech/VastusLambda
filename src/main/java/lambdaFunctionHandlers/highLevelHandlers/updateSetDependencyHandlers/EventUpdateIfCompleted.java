@@ -12,7 +12,7 @@ import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBu
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * TODO
+ * Updates whether an Event is completed or not in all the Event's dependencies.
  */
 public class EventUpdateIfCompleted {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String ifCompleted) throws Exception {

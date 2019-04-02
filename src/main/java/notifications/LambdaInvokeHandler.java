@@ -20,11 +20,9 @@ public class LambdaInvokeHandler {
     /**
      * Get instance method that gets the single instance of the Singleton class.
      *
-     * TODO This gets problematic if we ever have multi-threading.
-     *
      * @return The LambdaInvokeHandler instance of the execution.
      */
-    static public LambdaInvokeHandler getInstance() {
+    static public synchronized LambdaInvokeHandler getInstance() {
         if (LambdaInvokeHandler.instance == null) {
             LambdaInvokeHandler.instance = new LambdaInvokeHandler();
         }

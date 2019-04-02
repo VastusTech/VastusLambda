@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a tag to a Group, indicating what kind of a Group it is.
  */
 public class GroupAddTag {
     public static List<DatabaseAction> getActions(String fromID, String groupID, String tag) throws Exception {

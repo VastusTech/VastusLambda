@@ -10,7 +10,7 @@ import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBui
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * TODO
+ * Removes a User from a Post's likes, and the Post from the User's liked.
  */
 public class PostRemoveLike {
     public static List<DatabaseAction> getActions(String fromID, String postID, String like) throws Exception {

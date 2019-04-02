@@ -11,7 +11,9 @@ import java.util.List;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * An UpdateDatabaseAction specifies an action that updates an existing item in the database. Also
+ * gives the ability to check the values of the item very close to when it is pushed into the
+ * database, so that we decrease the chance of any weird database errors.
  */
 public class UpdateDatabaseAction extends DatabaseAction {
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
@@ -24,8 +26,6 @@ public class UpdateDatabaseAction extends DatabaseAction {
         this.updateItem = new HashMap<>();
 
         initWithErrorCheck(attributeName, attributeValue, action);
-
-        // TODO LOG HERE
     }
 
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
@@ -39,8 +39,6 @@ public class UpdateDatabaseAction extends DatabaseAction {
         this.updateItem = new HashMap<>();
 
         initWithErrorCheck(attributeName, attributeValue, action);
-
-        // TODO LOG HERE
     }
 
     private void initWithErrorCheck(String attributeName, AttributeValue attributeValue, UpdateAction action) throws

@@ -10,7 +10,7 @@ import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseAct
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * TODO
+ * Removes a User from a Submission's likes and the Submission from the User's liked.
  */
 public class SubmissionRemoveLike {
     public static List<DatabaseAction> getActions(String fromID, String submissionID, String like) throws Exception {

@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO
+ * A Group is a social hub of people where they can participate in Challenges together and do Events
+ * and schedule things. There are multiple owners to a Group and a Group can house Challenges,
+ * Events, and Posts.
  */
 public class Group extends DatabaseObject {
     public String title;

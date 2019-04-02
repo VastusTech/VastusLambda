@@ -10,7 +10,9 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.logic.TimeHelper;
 
 /**
- * TODO
+ * Indicates that a task for a Streak has been completed and that the Streak needs to be updated.
+ * Checks that the Streak hasn't been expired yet and that it is still in the correct span to update
+ * correctly. Includes sub-task logic, for N tasks in a span of time.
  */
 public class StreakAddN {
     public static List<DatabaseAction> getActions(String fromID, String streakID) throws Exception {

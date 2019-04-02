@@ -18,7 +18,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * TODO
+ * Creates a Challenge in the database, checks the inputs, adds the Challenge to the members, to the
+ * owner, creates {@link main.java.databaseObjects.Streak}s for relevant Challenge, adds to the
+ * group (if applicable), and automatically creates a {@link main.java.databaseObjects.Post} for the
+ * owner.
  */
 public class CreateChallenge {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateChallengeRequest createChallengeRequest, boolean ifWithCreate) throws Exception {

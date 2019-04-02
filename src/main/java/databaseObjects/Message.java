@@ -14,7 +14,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO
+ * A Message is a direct message to a specific message board. Messages are housed on a different
+ * table to make queries on Messages faster and more reliable. They can include a video or a picture
+ * as well.
  */
 public class Message extends DatabaseItem {
     final public static String tableName = Constants.messageTableName;

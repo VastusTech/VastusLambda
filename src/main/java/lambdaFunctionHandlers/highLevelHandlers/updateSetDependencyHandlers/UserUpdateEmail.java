@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Update a User's email. TODO This might not mix well with Cognito User Pool?
  */
 public class UserUpdateEmail {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String email) throws Exception {

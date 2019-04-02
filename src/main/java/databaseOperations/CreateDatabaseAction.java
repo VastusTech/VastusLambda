@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO
+ * A CreateDatabaseAction represents a request to the database to create a new item. This also gives
+ * the power to update with the ID once it has been decided.
  */
 public class CreateDatabaseAction extends DatabaseAction {
     public UpdateWithIDHandler updateWithIDHandler;

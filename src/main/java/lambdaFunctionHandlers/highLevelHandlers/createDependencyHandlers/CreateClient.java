@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Creates a Client in the database, checks the inputs, and checks the enterprise ID to make
+ * sure that it is real.
  */
 public class CreateClient {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateClientRequest createClientRequest, boolean ifWithCreate) throws Exception {

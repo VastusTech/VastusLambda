@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes a Trainer Portal Subscription from a Client and from the Trainer's subscribers.
  */
 public class ClientRemoveSubscription {
     public static List<DatabaseAction> getActions(String fromID, String clientID, String subscriptionToID) throws

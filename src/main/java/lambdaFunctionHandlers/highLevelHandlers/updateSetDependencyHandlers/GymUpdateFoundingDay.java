@@ -6,7 +6,7 @@ import main.java.databaseOperations.DatabaseAction;
 import java.util.List;
 
 /**
- * TODO
+ * Updates a gym's founding day (which is pretty much its birthday).
  */
 public class GymUpdateFoundingDay {
     public static List<DatabaseAction> getActions(String fromID, String gymID, String foundingDay) throws Exception {

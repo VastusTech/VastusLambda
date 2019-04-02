@@ -13,7 +13,8 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
 
 /**
- * TODO
+ * Creates a Post in the database, checks the inputs, and adds the post to the by's posts and the
+ * group's post (if applicable).
  */
 public class CreatePost {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreatePostRequest createPostRequest, boolean ifWithCreate) throws Exception {

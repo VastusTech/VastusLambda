@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO
+ * An Event is a specific thing at a place and a time. It is just a gathering of people somewhere to
+ * do something. It can be a part of a Challenge, but it is largely separate from that. An owner has
+ * control of the Event but TODO how do we get owners to "complete" an event?
  */
 public class Event extends DatabaseObject {
     public String title;

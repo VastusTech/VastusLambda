@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the address associated with an Event.
  */
 public class EventUpdateAddress {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String address) throws Exception {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the Group that the Challenge is a part of.
  */
 public class ChallengeUpdateGroup {
     public static List<DatabaseAction> getActions(String fromID, String challengeID, String groupID) throws Exception {
@@ -28,6 +28,7 @@ public class ChallengeUpdateGroup {
             throw new Exception("PERMISSIONS ERROR: You can only update a challenge that you own!");
         }
 
+        // TODO Is this sufficient?
         if (challenge.group != null) {
             databaseActions.add(GroupDatabaseActionBuilder.updateRemoveChallenge(challenge.group, challengeID));
         }

@@ -6,7 +6,8 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import java.util.Map;
 
 /**
- * TODO
+ * A DeleteDatabaseAction represents the action to delete an item in the database, conditionally or
+ * otherwise. Conditionally means that if it passes the condition, then we delete the item.
  */
 public class DeleteDatabaseAction extends DatabaseAction {
     public DeleteDatabaseAction(String id, String itemType, PrimaryKey primaryKey) {

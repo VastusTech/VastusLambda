@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes a User from a Group and deletes any potential Invites the User sent for the Group.
  */
 public class UserRemoveFromGroup {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String groupID) throws

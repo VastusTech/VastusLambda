@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Update a Trainer's preferred intensity for a Workout.
  */
 public class TrainerUpdatePreferredIntensity {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String intensity) throws Exception {

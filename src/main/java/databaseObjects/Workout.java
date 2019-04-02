@@ -6,7 +6,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import java.util.*;
 
 /**
- * TODO
+ * A Workout represents a single/group personal training session with a single Trainer in a Gym.
  */
 public class Workout extends DatabaseObject {
     public TimeInterval time;

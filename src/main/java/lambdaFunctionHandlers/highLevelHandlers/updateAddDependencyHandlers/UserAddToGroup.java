@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a User to a Group, checking the validity, and deleting any Invites associated with them.
  */
 public class UserAddToGroup {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String groupID) throws

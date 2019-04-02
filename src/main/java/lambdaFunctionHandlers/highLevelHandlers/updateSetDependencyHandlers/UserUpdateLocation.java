@@ -8,7 +8,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * TODO
+ * Update a User's general location.
  */
 public class UserUpdateLocation {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String location) throws Exception {

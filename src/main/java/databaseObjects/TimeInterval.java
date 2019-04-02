@@ -11,7 +11,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * TODO
+ * A Time Interval represents a specific time frame, from and to, at a specific from date to end
+ * date. This class also provides a bunch helpful methods to do calculations with relation to time.
  */
 public class TimeInterval {
 

@@ -1,9 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
-import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DatabaseActionCompiler;
-import main.java.databaseOperations.DynamoDBHandler;
-import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateTrainerRequest;
 import org.joda.time.DateTime;
@@ -12,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Creates a Trainer in the database, checks the inputs, and adds the Trainer to the applicable Gym.
  */
 public class CreateTrainer {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateTrainerRequest createTrainerRequest, boolean ifWithCreate) throws Exception {

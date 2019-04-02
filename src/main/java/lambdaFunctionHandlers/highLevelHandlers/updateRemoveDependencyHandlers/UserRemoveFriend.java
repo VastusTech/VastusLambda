@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes a User from a User's friend list and vice versa.
  */
 public class UserRemoveFriend {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String friendID)

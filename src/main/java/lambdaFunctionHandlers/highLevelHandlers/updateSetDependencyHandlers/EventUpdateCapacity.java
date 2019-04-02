@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the capacity of an Event.
  */
 public class EventUpdateCapacity {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String capacity) throws Exception {
@@ -21,6 +21,8 @@ public class EventUpdateCapacity {
 
         // Check the capacity
         Integer.parseInt(capacity);
+
+        // TODO Make sure that the Event doesn't already have this many members?
 
         // Get all the actions for this process
         databaseActions.add(EventDatabaseActionBuilder.updateCapacity(eventID, capacity));

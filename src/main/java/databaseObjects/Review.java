@@ -6,7 +6,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import java.util.Map;
 
 /**
- * TODO
+ * A Review is meant to represent a rating and description of another User by a User.
  */
 public class Review extends DatabaseObject {
     public String by;

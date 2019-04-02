@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates an Event's title.
  */
 public class EventUpdateTitle {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String title) throws Exception {

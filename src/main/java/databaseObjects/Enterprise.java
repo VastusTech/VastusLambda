@@ -6,7 +6,8 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import java.util.Map;
 
 /**
- * TODO
+ * An Enterprise Object represents a Company that is signing up their entire staff to be on the app,
+ * this is a half-baked concept right now, but TODO finish the design of this?
  */
 public class Enterprise extends DatabaseObject {
     public Enterprise(Item item) throws Exception {

@@ -8,7 +8,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * TODO
+ * Update a User's Stripe ID.
  */
 public class UserUpdateStripeID {
   public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String stripeID) throws Exception {

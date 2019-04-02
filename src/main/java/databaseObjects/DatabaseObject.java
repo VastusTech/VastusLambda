@@ -28,7 +28,6 @@ abstract public class DatabaseObject extends DatabaseItem {
         // Set the rest of the object
         this.id = item.getString("id");
         this.itemType = item.getString("item_type");
-        // TODO Surely there must be a better way to do this? Test if you just getString?
         this.marker = item.getNumber("marker").intValueExact();
         this.timeCreated = new DateTime(item.getString("time_created"));
     }

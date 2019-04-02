@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates a Challenge's description.
  */
 public class ChallengeUpdateDescription {
     public static List<DatabaseAction> getActions(String fromID, String challengeID, String description) throws

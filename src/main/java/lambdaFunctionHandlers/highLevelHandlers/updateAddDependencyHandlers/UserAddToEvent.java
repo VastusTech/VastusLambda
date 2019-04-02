@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a User to an Event, checking the validity, deleting any Invites associated with them, and
+ * adds the Event to the User's schedule.
  */
 public class UserAddToEvent {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String eventID) throws

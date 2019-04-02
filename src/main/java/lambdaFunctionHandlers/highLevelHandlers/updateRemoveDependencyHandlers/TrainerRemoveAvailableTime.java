@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes an available time interval from the Trainer.
  */
 public class TrainerRemoveAvailableTime {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String availableTime) throws Exception {

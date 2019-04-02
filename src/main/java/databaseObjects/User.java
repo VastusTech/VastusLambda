@@ -11,7 +11,10 @@ import org.joda.time.Years;
 import java.util.*;
 
 /**
- * TODO
+ * A User is an object that represents someone using our application. They have an AWS Cognito User
+ * Pool user associated with the object and can use their credentials to log in and access this
+ * User. Users can do essentially anything on the platform, like create challenges, events, and
+ * groups, post content, invite other Users, and message anyone on the platform.
  */
 abstract public class User extends DatabaseObject{
     public String name;

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates a Gym's session capacity, or how many workouts can be happening at one time in the Gym.
  */
 public class GymUpdateSessionCapacity {
     public static List<DatabaseAction> getActions(String fromID, String gymID, String sessionCapacity) throws Exception {

@@ -8,7 +8,9 @@ import org.joda.time.DateTime;
 import java.util.Map;
 
 /**
- * TODO
+ * A Streak is a specific recurring numerical event keeper. This keeps track of how large someone's
+ * streak is by updating it at a specific span of a specific interval, having to complete a task
+ * streakN times before it is counted toward the N of the streak, or the main number.
  */
 public class Streak extends DatabaseObject {
     public String owner;

@@ -12,7 +12,8 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateReviewRequest;
 import java.util.*;
 
 /**
- * TODO
+ * Creates a Review in the database, checks the inputs, adds the Review to the sender's authored
+ * reviews and the receiver's reviews, and updates the receiver's current rating.
  */
 public class CreateReview {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateReviewRequest createReviewRequest, String surveyWorkoutID, boolean ifWithCreate) throws Exception {
@@ -74,7 +75,7 @@ public class CreateReview {
                         aboutItemType, Float.toString(newReliabilityRating)));
 
                 if (surveyWorkoutID != null) {
-                    // TODO THIS SHOULD ALSO MOVE THE WORKOUT FROM SCHEDULED TO COMPLETED
+                    // TODO THIS SHOULD ALSO MOVE THE WORKOUT FROM SCHEDULED TO COMPLETED?
                     databaseActionCompiler.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(surveyWorkoutID, byID,
                             true));
                 }

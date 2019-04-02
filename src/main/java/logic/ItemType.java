@@ -1,5 +1,8 @@
 package main.java.logic;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This enum represents the item types that are possible within our entire application. Also
  * includes logic to infer the item type from the ID.
@@ -22,9 +25,14 @@ public enum ItemType {
     Streak,
     Enterprise,;
 
+    private static Map<String, String> prefixes = new HashMap<String, String>(){{
+        for (ItemType itemType : ItemType.values()) {
+            put(itemType.name().substring(0, Constants.numPrefix).toUpperCase(), itemType.name());
+        }
+    }};
+
     /**
      * Gets the item type from the given ID. Infers using the prefix at the beginning of the id.
-     * TODO Use a static map and get a constant time retrieval!!!
      *
      * @param id The ID of the item in the database.
      * @return The string of the item type that corresponds to this ID value.
@@ -32,16 +40,11 @@ public enum ItemType {
      */
     public static String getItemType(String id) throws Exception {
         String prefix = id.substring(0, Constants.numPrefix);
-        ItemType[] itemTypes = ItemType.values();
-
-        for (ItemType itemType : itemTypes) {
-            String type = itemType.name();
-            if (prefix.equals(type.substring(0, Constants.numPrefix).toUpperCase())) {
-                return type;
-            }
+        String itemType = prefixes.get(prefix);
+        if (itemType == null) {
+            throw new Exception("Couldn't recognize the item type of the ID = " + id);
         }
-
-        throw new Exception("Couldn't recognize the item type of the ID = " + id);
+        return itemType;
     }
 
     /**

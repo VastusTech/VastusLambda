@@ -9,7 +9,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO
+ * This Challenge object represents an ongoing challenge that takes in submissions in order to rank
+ * the competitors. Challenges have an end date and a winner is declared at the end of it by the
+ * owner.
+ *
+ * Streak challenges are pretty much based on who has the highest {@link Streak} at the end of the
+ * challenge.
  */
 public class Challenge extends DatabaseObject {
     public String title;

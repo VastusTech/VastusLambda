@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a video path onto an existing Post, making sure that the Post doesn't already have too many
+ * videos in it.
  */
 public class PostAddVideoPath {
     public static List<DatabaseAction> getActions(String fromID, String postID, String videoPath) throws Exception {

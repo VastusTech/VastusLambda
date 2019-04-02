@@ -9,7 +9,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 
 /**
- * TODO
+ * Update a Submission's description.
  */
 public class SubmissionUpdateDescription {
     public static List<DatabaseAction> getActions(String fromID, String submissionID, String description) throws Exception {

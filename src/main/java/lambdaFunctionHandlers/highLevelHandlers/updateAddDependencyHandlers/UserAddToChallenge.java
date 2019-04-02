@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a User to a Challenge, checking the validity, deleting any Invites associated with them, and
+ * creates a Streak for the User (if applicable).
  */
 public class UserAddToChallenge {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, String userID, String itemType, String challengeID)

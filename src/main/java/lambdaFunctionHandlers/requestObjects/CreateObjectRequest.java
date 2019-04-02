@@ -7,6 +7,12 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 public abstract class CreateObjectRequest {
     public abstract boolean ifHasEmptyString();
 
+    /**
+     * Determines if any fields are empty Strings.
+     *
+     * @param fields The fields for the request.
+     * @return Whether any fields are empty Strings.
+     */
     public boolean hasEmptyString(String... fields) {
         for (String field : fields) {
             if (field != null && field.equals("")) {
@@ -16,6 +22,12 @@ public abstract class CreateObjectRequest {
         return false;
     }
 
+    /**
+     * Determines whether if any array fields in the request have empty Strings.
+     *
+     * @param arrayFields The String array fields in the request.
+     * @return Whether the array fields have any empty Strings.
+     */
     public boolean arrayHasEmptyString(String[]... arrayFields) {
         for (String[] field : arrayFields) {
             for (String arrayField : field) {

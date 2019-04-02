@@ -13,7 +13,8 @@ import main.java.logic.Constants;
 import main.java.logic.ItemType;
 
 /**
- * TODO
+ * Creates a Streak in the database, checks the inputs, and adds the streak to the owner's streaks
+ * and the about's streaks.
  */
 public class CreateStreak {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateStreakRequest createStreakRequest, boolean ifWithCreate) throws Exception {

@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * TODO
+ * Removes a User from a Challenge, deleting their sent invites for the Challenge, and deleting
+ * their Streak potentially.
  */
 public class UserRemoveFromChallenge {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String challengeID) throws

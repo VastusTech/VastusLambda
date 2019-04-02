@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Adds a Friend directly to a User and vice versa, checking to make sure that the User actually has
+ * the Friend in their requests already.
  */
 public class UserAddFriend {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String friendID)

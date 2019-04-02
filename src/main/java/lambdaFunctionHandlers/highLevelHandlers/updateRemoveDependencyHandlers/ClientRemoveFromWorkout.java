@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Removes a Client from a Workout, deleting the Workout if it is empty. TODO Revisit
  */
 public class ClientRemoveFromWorkout {
     public static List<DatabaseAction> getActions(String fromID, String clientID, String workoutID) throws Exception {

@@ -10,7 +10,7 @@ import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseAct
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * TODO
+ * Adds a User to a Submission's likes and a Submission to a User's likes.
  */
 public class SubmissionAddLike {
     public static List<DatabaseAction> getActions(String fromID, String submissionID, String like) throws Exception {

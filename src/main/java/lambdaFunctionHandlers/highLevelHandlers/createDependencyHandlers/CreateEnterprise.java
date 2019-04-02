@@ -9,7 +9,7 @@ import main.java.databaseOperations.databaseActionBuilders.EnterpriseDatabaseAct
 import main.java.lambdaFunctionHandlers.requestObjects.CreateEnterpriseRequest;
 
 /**
- * TODO
+ * Creates an Enterprise in the database. TODO More details needed to finish this.
  */
 public class CreateEnterprise {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateEnterpriseRequest createEnterpriseRequest, boolean ifWithCreate) throws Exception {

@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO
+ * A Submission represents a specific posting to a Challenge that represents an attempt to win the
+ * Challenge. Acts like a special Post right now.
  */
 public class Submission extends DatabaseObject {
     public String by;

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates the Gym's weekly hours, indicating when the Gym is open for business and workouts.
  */
 public class GymUpdateWeeklyHours {
     public static List<DatabaseAction> getActions(String fromID, String gymID, String[] weeklyHours) throws Exception {

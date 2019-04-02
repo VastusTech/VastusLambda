@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Update a User's gender.
  */
 public class UserUpdateGender {
     public static List<DatabaseAction> getActions(String fromID, String userID, String itemType, String gender) throws Exception {

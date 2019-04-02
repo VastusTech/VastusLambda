@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates a Gym's address.
  */
 public class GymUpdateAddress {
     public static List<DatabaseAction> getActions(String fromID, String gymID, String address) throws Exception {

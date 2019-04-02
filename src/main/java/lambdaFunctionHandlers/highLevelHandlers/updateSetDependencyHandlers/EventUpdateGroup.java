@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Updates an Event's associated Group.
  */
 public class EventUpdateGroup {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String groupID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
+        // TODO Revisit
         Event event = Event.readEvent(eventID);
         Group group = null;
         if (groupID != null) {
