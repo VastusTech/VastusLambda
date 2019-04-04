@@ -4,6 +4,7 @@ import main.java.databaseObjects.Group;
 import main.java.databaseObjects.User;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
+import main.java.databaseOperations.databaseActionBuilders.CommentDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.EventDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.GroupDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBuilder;
@@ -88,6 +89,9 @@ public class DeleteUser {
             }
             else if (likeItemType.equals("Submission")) {
                 databaseActions.add(SubmissionDatabaseActionBuilder.updateRemoveLike(likeID, user.id));
+            }
+            else if (likeItemType.equals("Comment")) {
+                databaseActions.add(CommentDatabaseActionBuilder.updateRemoveLike(likeID, user.id));
             }
             else {
                 throw new Exception("Could not use like ID of item type = " + likeItemType);

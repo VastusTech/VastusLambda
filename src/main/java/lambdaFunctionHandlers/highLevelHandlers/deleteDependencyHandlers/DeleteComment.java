@@ -49,7 +49,11 @@ public class DeleteComment {
             databaseActions.addAll(DeleteComment.getActions(fromID, replyCommentID));
         }
 
-        // TODO Delete likes
+        // Delete all the likes
+        for (String likeID : comment.likes) {
+            String likeItemType = ItemType.getItemType(likeID);
+            databaseActions.add(UserDatabaseActionBuilder.updateRemoveLike(likeID, likeItemType, commentID));
+        }
 
         // Delete the Client
         databaseActions.add(CommentDatabaseActionBuilder.delete(commentID));

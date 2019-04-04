@@ -1033,6 +1033,8 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(PostAddLike.getActions(fromID, id, attributeValue));
                     } else if (itemType.equals("Submission")) {
                         databaseActionCompiler.addAll(SubmissionAddLike.getActions(fromID, id, attributeValue));
+                    } else if (itemType.equals("Comment")) {
+                        databaseActionCompiler.addAll(CommentAddLike.getActions(fromID, id, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");
@@ -1196,6 +1198,8 @@ public class LambdaRequest {
                         databaseActionCompiler.addAll(PostRemoveLike.getActions(fromID, id, attributeValue));
                     } else if (itemType.equals("Submission")) {
                         databaseActionCompiler.addAll(SubmissionRemoveLike.getActions(fromID, id, attributeValue));
+                    } else if (itemType.equals("Comment")) {
+                        databaseActionCompiler.addAll(CommentRemoveLike.getActions(fromID, id, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");

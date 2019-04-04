@@ -34,6 +34,14 @@ public class CommentDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "comment", new AttributeValue(comment), false, PUT);
     }
 
+    public static DatabaseAction updateAddLike(String id, String like) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "likes", new AttributeValue(like), false, ADD);
+    }
+
+    public static DatabaseAction updateRemoveLike(String id, String like) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "likes", new AttributeValue(like), false, DELETE);
+    }
+
     public static DatabaseAction updateAddComment(String id, String comment, boolean ifWithCreate) throws Exception {
         if (ifWithCreate) {
             return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "comments", null, true, ADD);

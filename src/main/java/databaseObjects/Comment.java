@@ -16,6 +16,7 @@ public class Comment extends DatabaseObject {
     public String by;
     public String to;
     public String comment;
+    public Set<String> likes;
     public Set<String> comments;
 
     public Comment(Item item) throws Exception {
@@ -23,6 +24,7 @@ public class Comment extends DatabaseObject {
         this.by = item.getString("by");
         this.to = item.getString("to");
         this.comment = item.getString("comment");
+        this.likes = item.getStringSet("likes");
         this.comments = item.getStringSet("comments");
     }
 
