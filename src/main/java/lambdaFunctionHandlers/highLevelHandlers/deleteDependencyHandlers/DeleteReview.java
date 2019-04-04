@@ -22,10 +22,6 @@ public class DeleteReview {
             throw new Exception("PERMISSIONS ERROR: You can only delete a review you authored!");
         }
 
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
-
         // Remove from reviews about field
         String by = review.by;
         String byItemType = ItemType.getItemType(by);

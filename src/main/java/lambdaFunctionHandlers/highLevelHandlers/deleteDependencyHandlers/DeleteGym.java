@@ -8,23 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Deletes a Gym from the database as well as most dependencies on its Gym ID.
  */
 public class DeleteGym {
     public static List<DatabaseAction> getActions(String fromID, String gymID) throws Exception {
         // TODO This is defintely annoying for people, but the only thing to figure out is deleting users from pools
         // TODO SEE IF WE CAN GO INTO AWS COGNITO AND DELETE USERS FROM A USER POOL FOR THIS
         List<DatabaseAction> databaseActions = new ArrayList<>();
+        Gym gym = Gym.readGym(gymID);
 
         if (!fromID.equals(gymID) && !fromID.equals(Constants.adminKey)) {
             throw new Exception("PERMISSIONS ERROR: You can only delete a gym you own!");
         }
-
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
-
-        Gym gym = Gym.readGym(gymID);
 
         databaseActions.addAll(DeleteUser.getActions(fromID, gym));
 
@@ -33,6 +28,7 @@ public class DeleteGym {
 //        for (String trainerID : gym.trainerIDs) {
 //            databaseActions.addAll(DeleteTrainer.getActions(fromID, trainerID));
 //        }
+        // TODO REvisit
 
         return databaseActions;
 

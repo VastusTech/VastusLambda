@@ -52,7 +52,7 @@ public class ObjectUpdateNotificationCompiler {
      *
      * @param id The id of the object to be notified of the creation of the object.
      */
-    public void setCreateObjectFlag(String id) {
+    void setCreateObjectFlag(String id) {
         String updateType = "CREATE";
         String channel = getChannelNameForID(id);
         Notification notification = notifications.get(channel);
@@ -71,7 +71,7 @@ public class ObjectUpdateNotificationCompiler {
      *
      * @param createObject The object to send through each notification.
      */
-    public void fillCreateObjectFields(String id, Map<String, Object> createObject) {
+    void fillCreateObjectFields(String id, Map<String, Object> createObject) {
         for (Notification notification : getNotifications()) {
             Constants.debugLog("Notification before being filled = " + notification.toString() + "\n");
             if (notification.payloadContainsKey("SET")) {
@@ -91,33 +91,6 @@ public class ObjectUpdateNotificationCompiler {
         }
     }
 
-    /**
-     * Adds a "CREATE" message to the notification to send to an object's updates. This will allow
-     * an object to "know" about an ID that is incoming as an update. For instance, if an object
-     * gets a new Invite for them, we also want them to know about the details of the object!
-     *
-     * @param id The object ID to send the object to.
-     * @param jsonObject The JSON object to send through to the ID as a newly created object.
-     */
-//    public void addCreateObjectNotification(String id, Map<String, Object> jsonObject) throws Exception {
-//        String updateType = "CREATE";
-//        String channel = getChannelNameForID(id);
-//        Notification notification = notifications.get(channel);
-//        if (notification == null) {
-//            addUpdateType(channel, updateType, jsonObject);
-//        }
-//        else {
-//            // Check to see if this was already updated
-//            if (notification.payloadContainsKey(updateType)) {
-//                // Then we want to throw an exception because we're trying to overwrite a CREATE
-//                throw new Exception("INTERNAL: Trying to send two create objects with one message!");
-//            }
-//            else {
-//                // Otherwise, we just add onto it
-//                notification.addPayloadField(updateType, jsonObject);
-//            }
-//        }
-//    }
 
     /**
      * Adds a SET update expression to the notifications to an object channel. Tells the object to
@@ -127,7 +100,7 @@ public class ObjectUpdateNotificationCompiler {
      * @param attributeName The name of the field in the object.
      * @param attributeValue The value to switch the field in the object to.
      */
-    public void addSetObjectFieldNotification(String id, String attributeName, String attributeValue) {
+    void addSetObjectFieldNotification(String id, String attributeName, String attributeValue) {
         setUpdateTypeField(getChannelNameForID(id), attributeName, attributeValue);
     }
 
@@ -139,7 +112,7 @@ public class ObjectUpdateNotificationCompiler {
      * @param attributeName The name of the field in the object.
      * @param attributeValues The values to set to that object's field.
      */
-    public void addSetObjectFieldArrayNotification(String id, String attributeName, Set<String> attributeValues) {
+    void addSetObjectFieldArrayNotification(String id, String attributeName, Set<String> attributeValues) {
         setUpdateTypeField(getChannelNameForID(id), attributeName, attributeValues);
     }
 
@@ -151,7 +124,7 @@ public class ObjectUpdateNotificationCompiler {
      * @param attributeName The name of the field in that object to update.
      * @param attributeValues The values to add to that object's field.
      */
-    public void addAddToObjectFieldNotification(String id, String attributeName, Set<String> attributeValues) {
+    void addAddToObjectFieldNotification(String id, String attributeName, Set<String> attributeValues) {
         addToUpdateTypeFieldSet(getChannelNameForID(id), "ADD", attributeName, attributeValues);
     }
 
@@ -163,16 +136,18 @@ public class ObjectUpdateNotificationCompiler {
      * @param attributeName The name of the field in that object to update.
      * @param attributeValues The values to remove from that object's field.
      */
-    public void addRemoveFromObjectFieldNotification(String id, String attributeName, Set<String> attributeValues) {
+    void addRemoveFromObjectFieldNotification(String id, String attributeName, Set<String> attributeValues) {
         addToUpdateTypeFieldSet(getChannelNameForID(id), "REMOVE", attributeName, attributeValues);
     }
 
 
     /**
+     * Adds a DELETE expression to the notifications to an object channel. Tells the object to be
+     * deleted from the client.
      *
-     * @param id
+     * @param id The object ID to send the DELETE to.
      */
-    public void setDeleteObjectNotification(String id) {
+    void setDeleteObjectNotification(String id) {
         String channel = getChannelNameForID(id);
         Notification notification = notifications.get(channel);
         if (notification == null) {
@@ -187,10 +162,11 @@ public class ObjectUpdateNotificationCompiler {
     }
 
     /**
+     * Adds a update type with a "JSON" to the payload and the notifications.
      *
-     * @param channel
-     * @param updateType
-     * @param updateJSON
+     * @param channel The channel to send the update to.
+     * @param updateType The type of the update to add to the payload.
+     * @param updateJSON The "JSON" to add to the payload and the notification.
      */
     private void addUpdateType(String channel, String updateType, Map<String, Object> updateJSON) {
         Map<String, Object> payload = new HashMap<>();
@@ -199,11 +175,12 @@ public class ObjectUpdateNotificationCompiler {
     }
 
     /**
+     * Adds a update type with an Object field to the payload and the notifications.
      *
-     * @param channel
-     * @param updateType
-     * @param fieldName
-     * @param value
+     * @param channel The channel to send the update to.
+     * @param updateType The type of the update to add to the payload.
+     * @param fieldName The field name to initialize the payload and notification with.
+     * @param value The value to initialize the payload and notification with.
      */
     private void addUpdateTypeWithField(String channel, String updateType, String fieldName, Object value) {
         Map<String, Object> updateMap = new HashMap<>();
@@ -212,10 +189,12 @@ public class ObjectUpdateNotificationCompiler {
     }
 
     /**
+     * Adds a "SET" expression to the payload for an object. Potentially creates a new
+     * notification. Otherwise interpolates the existing values together.
      *
-     * @param channel
-     * @param fieldName
-     * @param value
+     * @param channel The channel to send the notification update to.
+     * @param fieldName The field name to update with.
+     * @param value The value to update the field with.
      */
     private void setUpdateTypeField(String channel, String fieldName, Object value) {
         String updateType = "SET";
@@ -239,11 +218,13 @@ public class ObjectUpdateNotificationCompiler {
     }
 
     /**
+     * Adds a "ADD" or "REMOVE" update expression to a payload for an object. Potentially creates a
+     * new notification. Otherwise interpolates the values together.
      *
-     * @param channel
-     * @param updateType
-     * @param fieldName
-     * @param values
+     * @param channel The channel to send the the notification update to.
+     * @param updateType The type of update to use. ("ADD" or "REMOVE").
+     * @param fieldName The name of the field to include in the update statement.
+     * @param values The Set of String values to include with the update to the field.
      */
     private void addToUpdateTypeFieldSet(String channel, String updateType, String fieldName, Set<String> values) {
         Notification notification = notifications.get(channel);

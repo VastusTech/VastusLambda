@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Deletes a Workout object from the database, from the Clients, from the Trainers, and from the
+ * Gym. TODO Also handle refund stuff?
  */
 public class DeleteWorkout {
     public static List<DatabaseAction> getActions(String fromID, String workoutID) throws Exception {

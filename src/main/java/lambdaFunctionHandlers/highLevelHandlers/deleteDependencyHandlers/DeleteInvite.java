@@ -15,13 +15,18 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import java.util.List;
 
 /**
- * TODO
+ * Deletes an Invite from the database and removes all the dependencies on its Invite ID.
  */
 public class DeleteInvite {
     public static List<DatabaseAction> getActions(String fromID, String inviteID) throws Exception {
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
         Invite invite = Invite.readInvite(inviteID);
         Invite.InviteType inviteType = Invite.InviteType.valueOf(invite.inviteType);
+
+//        public String from;
+//        public String to;
+//        public String inviteType;
+//        public String about;
 
         // TODO Check permissions
         switch (Invite.InviteType.valueOf(invite.inviteType)) {
@@ -62,10 +67,6 @@ public class DeleteInvite {
                 break;
             }
         }
-
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
 
         String fromItemType = ItemType.getItemType(invite.from);
         String toItemType = ItemType.getItemType(invite.to);

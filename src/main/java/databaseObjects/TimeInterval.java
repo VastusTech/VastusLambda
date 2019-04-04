@@ -13,6 +13,8 @@ import java.util.List;
 /**
  * A Time Interval represents a specific time frame, from and to, at a specific from date to end
  * date. This class also provides a bunch helpful methods to do calculations with relation to time.
+ *
+ * TODO Revisit once/if we reimplement Gym / Workout logic.
  */
 public class TimeInterval {
 
@@ -133,6 +135,11 @@ public class TimeInterval {
                 (ISODateTimeFormat.dateTimeNoMillis()).print(new DateTime(to, timeZone)));
     }
 
+    /**
+     *
+     * @param stringTimeArray
+     * @throws Exception
+     */
     public TimeInterval(String[] stringTimeArray) throws Exception {
         if (stringTimeArray.length != 10) {
             throw new Exception("String Time Array is incorrectly formatted");
@@ -186,6 +193,13 @@ public class TimeInterval {
         }
     }
 
+    /**
+     *  TODO Revisit
+     *
+     * @param times
+     * @return
+     * @throws Exception
+     */
     public static List<TimeInterval> getTimeIntervals(Collection<String> times) throws Exception {
         List<TimeInterval> timeIntervals = new ArrayList<>();
         for (String isotime : times) {
@@ -195,6 +209,13 @@ public class TimeInterval {
         return timeIntervals;
     }
 
+    /**
+     *  TODO Revisit
+     *
+     * @param timeInterval
+     * @param potentialWorkoutLengths
+     * @return
+     */
     public List<TimeInterval> potentialWorkoutTimes(TimeInterval timeInterval, int[] potentialWorkoutLengths) {
         List<TimeInterval> workoutTimes = new ArrayList<>();
 
@@ -334,6 +355,11 @@ public class TimeInterval {
         return !toDateTime.isAfterNow();
     }
 
+    /**
+     *
+     * @param time
+     * @return
+     */
     public static Boolean timeHasPassed(DateTime time) {
         return !time.isAfterNow();
     }

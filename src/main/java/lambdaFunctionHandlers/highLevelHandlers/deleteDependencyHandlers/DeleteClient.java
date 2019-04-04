@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Deletes a Client from the database and most dependencies from its Client ID and its User ID.
  */
 public class DeleteClient {
     public static List<DatabaseAction> getActions(String fromID, String clientID) throws Exception {
@@ -21,32 +21,32 @@ public class DeleteClient {
             throw new Exception("PERMISSIONS ERROR: You can only delete a client if it's yourself!");
         }
 
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
-
         Client client = Client.readClient(clientID);
 
         // Delete the user associated with the client
         databaseActions.addAll(DeleteUser.getActions(fromID, client));
 
-        // TODO Don't remove people from workouts, we CAN have empty workouts
-        // Remove from all scheduled workouts and completed workouts
-        // Also remove from missing reviews in the workouts
-        for (String workoutID : client.scheduledWorkouts) {
-            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
-            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
-        }
-//        for (String workoutID: client.completedWorkouts) {
-//            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
-//            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
-//        }
-
+        // public Set<String> trainersFollowing;
+        // TODO Revisit
 
         // Also remove from subscribers in trainers
         for (String subscriptionID: client.subscriptions) {
             databaseActions.add(TrainerDatabaseActionBuilder.updateRemoveSubscriber(subscriptionID, clientID));
         }
+
+
+        // TODO Don't remove people from workouts, we CAN have empty workouts
+        // Remove from all scheduled workouts and completed workouts
+        // Also remove from missing reviews in the workouts
+//        for (String workoutID : client.scheduledWorkouts) {
+//            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
+//            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
+//        }
+//        for (String workoutID: client.completedWorkouts) {
+//            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveClient(workoutID, clientID));
+//            databaseActions.add(WorkoutDatabaseActionBuilder.updateRemoveMissingReview(workoutID, clientID, false));
+//        }
+        // TODO Revisit
 
         // Delete the Client
         databaseActions.add(ClientDatabaseActionBuilder.delete(clientID));

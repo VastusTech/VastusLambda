@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Deletes a Sponsor from the database as well as any dependencies there may be to its Sponsor ID.
  */
 public class DeleteSponsor {
     public static List<DatabaseAction> getActions(String fromID, String sponsorID) throws Exception {

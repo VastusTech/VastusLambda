@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Deletes the Event from the database as well as remove any dependencies on its Event ID.
  */
 public class DeleteEvent {
     public static List<DatabaseAction> getActions(String fromID, String eventID) throws Exception {
@@ -23,10 +23,6 @@ public class DeleteEvent {
             throw new Exception("PERMISSIONS ERROR: You can only delete an event you own!");
         }
 
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
-
         // remove from owner's fields
         String ownerItemType = ItemType.getItemType(event.owner);
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveOwnedEvent(event.owner, ownerItemType, eventID));
@@ -36,15 +32,18 @@ public class DeleteEvent {
             String memberItemType = ItemType.getItemType(member);
             User user = User.readUser(member, memberItemType);
 
-            // Remove the scheduled event
-            databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledEvent(member, memberItemType, eventID));
+            if (!event.ifCompleted) {
+                // Remove the scheduled event if it's not completed
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledEvent(member, memberItemType, eventID));
 
-            // Remove the scheduled time
-            databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledTime(member, memberItemType, event.time
-                    .toString()));
-
-            // Remove the completed event as well to cover our bases
-            databaseActions.add(UserDatabaseActionBuilder.updateRemoveCompletedEvent(member, memberItemType, eventID));
+                // Remove the scheduled time
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledTime(member, memberItemType, event.time
+                        .toString()));
+            }
+            else {
+                // Remove the completed event if it is completed
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveCompletedEvent(member, memberItemType, eventID));
+            }
 
             // Also check their sentInvites and check to see if they sent any invites for this event
             for (String inviteID : user.sentInvites) {
@@ -55,19 +54,21 @@ public class DeleteEvent {
             }
         }
 
-        // Remove from the challenge and from the group
+        // Remove the receivedInvites
+        for (String inviteID : event.receivedInvites) {
+            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+        }
+
+        // Remove from the parent challenge
         if (event.challenge != null) {
             databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveEvent(event.challenge, eventID));
             databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveCompletedEvent(event.challenge, eventID));
         }
+
+        // Remove from the parent group
         if (event.group != null) {
             databaseActions.add(GroupDatabaseActionBuilder.updateRemoveEvent(event.group, eventID));
             databaseActions.add(GroupDatabaseActionBuilder.updateRemoveCompletedEvent(event.group, eventID));
-        }
-
-        // Remove the receivedInvites
-        for (String inviteID : event.receivedInvites) {
-            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
         }
 
         // Delete the challenge

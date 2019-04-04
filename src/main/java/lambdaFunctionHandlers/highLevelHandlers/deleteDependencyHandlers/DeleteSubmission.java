@@ -12,7 +12,8 @@ import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseAct
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * TODO
+ * Deletes a Submission from the database, and all of the dependencies that use the Submission ID in
+ * any way.
  */
 public class DeleteSubmission {
     public static List<DatabaseAction> getActions(String fromID, String submissionID) throws Exception {
@@ -23,16 +24,12 @@ public class DeleteSubmission {
             throw new Exception("PERMISSIONS ERROR: You can only delete a submission you created!");
         }
 
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
-
         // Remove from posts by field
         String by = submission.by;
         String byItemType = ItemType.getItemType(by);
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveSubmission(by, byItemType, submissionID));
 
-        // Check if we are also removing this post from the challenge submissions
+        // Also remove this post from the challenge submissions
         databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveSubmission(submission.about, submissionID));
 
         // Remove from liked
@@ -41,7 +38,7 @@ public class DeleteSubmission {
             databaseActions.add(UserDatabaseActionBuilder.updateRemoveLike(likedID, likeItemType, submissionID));
         }
 
-        // Remove from comments
+        // Delete all the comments
         for (String commentID : submission.comments) {
             databaseActions.addAll(DeleteComment.getActions(fromID, commentID));
         }

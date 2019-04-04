@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Deletes a Trainer from the database as well as most dependencies that rely on its TrainerID or
+ * its UserID.
  */
 public class DeleteTrainer {
     public static List<DatabaseAction> getActions(String fromID, String trainerID) throws Exception {
@@ -23,27 +24,25 @@ public class DeleteTrainer {
             throw new Exception("PERMISSIONS ERROR: You can only delete a trainer if it's yourself or your gym!");
         }
 
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
-
         // Delete the user associated with the trainer
         databaseActions.addAll(DeleteUser.getActions(fromID, trainer));
 
-        // Remove all workouts in scheduled workouts and completed workouts (Cancel them)
-        for (String workoutID : trainer.scheduledWorkouts) {
-            databaseActions.addAll(DeleteWorkout.getActions(trainerID, workoutID));
-        }
-//        for (String workoutID : trainer.completedWorkouts) {
-//            databaseActions.addAll(DeleteWorkout.getActions(trainerID, workoutID));
-//        }
+        // Remove from gym's trainers field
+        databaseActions.add(GymDatabaseActionBuilder.updateRemoveTrainer(trainer.gym, trainerID));
 
+        // public Set<String> followers;
+        // TODO Revisit
+
+        // public Set<String> subscribers;
         for (String subscriberID : trainer.subscribers) {
             databaseActions.add(ClientDatabaseActionBuilder.updateRemoveSubscription(trainerID, subscriberID));
         }
 
-        // Remove from gym's trainers field
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveTrainer(trainer.gym, trainerID));
+        // Remove all workouts in scheduled workouts and completed workouts (Cancel them)
+//        for (String workoutID : trainer.scheduledWorkouts) {
+//            databaseActions.addAll(DeleteWorkout.getActions(trainerID, workoutID));
+//        }
+        // TODO Revisit
 
         // Delete the Trainer
         databaseActions.add(TrainerDatabaseActionBuilder.delete(trainerID));

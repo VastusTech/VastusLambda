@@ -13,7 +13,7 @@ import main.java.logic.Constants;
 import main.java.logic.ItemType;
 
 /**
- * TODO
+ * Deletes a Streak from the database, as well as any dependencies there may be to its Streak ID.
  */
 public class DeleteStreak {
     public static List<DatabaseAction> getActions(String fromID, String streakID) throws Exception {
@@ -22,17 +22,14 @@ public class DeleteStreak {
 
         // TODO This permission might be bum????????????/
         if (!fromID.equals(streak.owner) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a streak for yourself!");
+            throw new Exception("PERMISSIONS ERROR: You can only update a Streak for yourself!");
         }
 
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
-
-        // Remove from the owner and the about
+        // Remove from the owner
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveStreak(streak.owner,
                 ItemType.getItemType(streak.owner), streakID));
 
+        // Remove from the about
         if (streak.about != null && ItemType.getItemType(streak.about).equals("Challenge")) {
             databaseActions.add(ChallengeDatabaseActionBuilder.updateRemoveStreak(streak.about, streakID));
         }

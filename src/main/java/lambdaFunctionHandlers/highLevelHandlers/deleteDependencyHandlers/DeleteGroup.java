@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.databaseObjects.Invite;
+import main.java.databaseObjects.User;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Group;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Deletes a Group from the database as well as removes any dependencies on its Group ID.
  */
 public class DeleteGroup {
     public static List<DatabaseAction> getActions(String fromID, String groupID) throws Exception {
@@ -24,32 +26,64 @@ public class DeleteGroup {
             throw new Exception("PERMISSIONS ERROR: You can only delete a comment if you authored it!");
         }
 
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
-
-        // When you delete a Group, all the stuff inside the Group removes their "group" attribute.
+        // Remove from the owners
         for (String ownerID : group.owners) {
             String ownerItemType = ItemType.getItemType(ownerID);
             databaseActions.add(UserDatabaseActionBuilder.updateRemoveOwnedGroup(ownerID, ownerItemType, groupID));
         }
+
+        // Remove from the group members
         for (String memberID : group.members) {
+            User user = User.readUser(memberID);
             String memberItemType = ItemType.getItemType(memberID);
             databaseActions.add(UserDatabaseActionBuilder.updateRemoveGroup(memberID, memberItemType, groupID));
+
+            // Also check their sentInvites and check to see if they sent any invites for this group
+            for (String inviteID : user.sentInvites) {
+                Invite invite = Invite.readInvite(inviteID);
+                if (invite.about.equals(groupID)) {
+                    databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+                }
+            }
         }
+
+        // Remove the received invites for the Group
+        for (String inviteID : group.receivedInvites) {
+            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+        }
+
+        // Delete the Events inside the Group
         for (String eventID : group.events) {
             // TODO Instead of deleting maybe we can just complete them?
             databaseActions.addAll(DeleteEvent.getActions(fromID, eventID));
         }
+
+        // Delete the completed events inside the Group
+        for (String eventID : group.completedEvents) {
+            // TODO Instead of deleting maybe we can just complete them?
+            databaseActions.addAll(DeleteEvent.getActions(fromID, eventID));
+        }
+
+        // Delete the Challenges inside the Group
         for (String challengeID : group.challenges) {
             // TODO Instead of deleting maybe we can just complete them?
             databaseActions.addAll(DeleteChallenge.getActions(fromID, challengeID));
         }
-        for (String postID : group.posts) {
-            databaseActions.addAll(PostUpdateGroup.getActions(fromID, postID, null));
+
+        // Delete the completed Challenge inside the Group
+        for (String challengeID : group.completedChallenges) {
+            // TODO Instead of deleting maybe we can just complete them?
+            databaseActions.addAll(DeleteChallenge.getActions(fromID, challengeID));
         }
-        for (String inviteID : group.receivedInvites) {
-            databaseActions.addAll(DeleteInvite.getActions(fromID, inviteID));
+
+        // Delete all posts for this Group
+        for (String postID : group.posts) {
+            databaseActions.addAll(DeletePost.getActions(fromID, postID));
+        }
+
+        // Delete all streaks associated with this group
+        for (String streakID : group.streaks) {
+            databaseActions.addAll(DeleteStreak.getActions(fromID, streakID));
         }
 
         // Delete the Group

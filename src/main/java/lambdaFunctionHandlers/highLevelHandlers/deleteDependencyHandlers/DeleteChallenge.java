@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Deletes the Challenge from the database and from any dependencies on its Challenge ID.
  */
 public class DeleteChallenge {
     public static List<DatabaseAction> getActions(String fromID, String challengeID) throws Exception {
@@ -26,15 +26,6 @@ public class DeleteChallenge {
             throw new Exception("PERMISSIONS ERROR: You can only delete an challenge you own!");
         }
 
-        // TODO Should this actually be allowed?
-//        if (challenge.ifCompleted) {
-//            throw new Exception("Cannot delete a challenge that has already been completed!");
-//        }
-
-        // TODO =======================================================================================================
-        // TODO We should be deleting far fewer "dependencies" in order to make sure as little info as possible is lost
-        // TODO =======================================================================================================
-
         // remove from owner's fields
         String ownerItemType = ItemType.getItemType(challenge.owner);
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveOwnedChallenge(challenge.owner, ownerItemType, challengeID));
@@ -44,16 +35,15 @@ public class DeleteChallenge {
             String memberItemType = ItemType.getItemType(member);
             User user = User.readUser(member, memberItemType);
 
-            // Remove the challenge
-            databaseActions.add(UserDatabaseActionBuilder.updateRemoveChallenge(member, memberItemType, challengeID));
-
-            // Remove the completed challenge as well to cover our bases
-            databaseActions.add(UserDatabaseActionBuilder.updateRemoveCompletedChallenge(member, memberItemType,
-                    challengeID));
-
-            // Remove the won challenge as well for the same reason
-            databaseActions.add(UserDatabaseActionBuilder.updateRemoveChallengeWon(member, memberItemType,
-                    challengeID));
+            if (!challenge.ifCompleted) {
+                // Remove the challenge if it's not completed
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveChallenge(member, memberItemType, challengeID));
+            }
+            else {
+                // Remove the completed challenge if it is completed
+                databaseActions.add(UserDatabaseActionBuilder.updateRemoveCompletedChallenge(member, memberItemType,
+                        challengeID));
+            }
 
             // Also check their sentInvites and check to see if they sent any invites for this challenge
             for (String inviteID : user.sentInvites) {
@@ -70,17 +60,6 @@ public class DeleteChallenge {
             }
         }
 
-        // Remove from the events and from the group
-        for (String eventID : challenge.events) {
-            // TODO Instead of deleting maybe we can just complete them?
-            databaseActions.addAll(DeleteEvent.getActions(fromID, eventID));
-        }
-
-        if (challenge.group != null) {
-            databaseActions.add(GroupDatabaseActionBuilder.updateRemoveChallenge(challenge.group, challengeID));
-            databaseActions.add(GroupDatabaseActionBuilder.updateRemoveCompletedChallenge(challenge.group, challengeID));
-        }
-
         // Delete all the receivedInvites
         for (String inviteID : challenge.receivedInvites) {
             try {
@@ -89,6 +68,35 @@ public class DeleteChallenge {
             catch (ItemNotFoundException e) {
                 Constants.debugLog("Couldn't delete invite, but it's okay");
             }
+        }
+
+        // Remove from the events and from the group
+        for (String eventID : challenge.events) {
+            // TODO Instead of deleting maybe we can just complete them?
+            databaseActions.addAll(DeleteEvent.getActions(fromID, eventID));
+        }
+
+        // Remove from the completed events
+        for (String eventID : challenge.completedEvents) {
+            databaseActions.addAll(DeleteEvent.getActions(fromID, eventID));
+        }
+
+        // Remove from the potential group
+        if (challenge.group != null) {
+            databaseActions.add(GroupDatabaseActionBuilder.updateRemoveChallenge(challenge.group, challengeID));
+            databaseActions.add(GroupDatabaseActionBuilder.updateRemoveCompletedChallenge(challenge.group, challengeID));
+        }
+
+        // Remove from the winner's challenge
+        if (challenge.winner != null) {
+            String winnerType = ItemType.getItemType(challenge.winner);
+            databaseActions.add(UserDatabaseActionBuilder.updateRemoveChallengeWon(challenge.winner,
+                    winnerType, challengeID));
+        }
+
+        // Delete all the submissions
+        for (String submissionID : challenge.submissions) {
+            databaseActions.addAll(DeleteSubmission.getActions(fromID, submissionID));
         }
 
         // Delete all the streaks
