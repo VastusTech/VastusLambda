@@ -9,6 +9,9 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 
+/**
+ * Removes a User from the Comment's likes and a Comment from the User's liked.
+ */
 public class CommentRemoveLike {
     public static List<DatabaseAction> getActions(String fromID, String commentID, String like) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

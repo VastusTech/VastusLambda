@@ -9,6 +9,9 @@ import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBui
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 
+/**
+ * Adds a User to a Comment's liked and a Comment to a User's liked.
+ */
 public class CommentAddLike {
     public static List<DatabaseAction> getActions(String fromID, String commentID, String like) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();

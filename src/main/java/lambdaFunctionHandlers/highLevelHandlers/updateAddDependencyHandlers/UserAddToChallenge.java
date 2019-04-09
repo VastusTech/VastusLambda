@@ -79,7 +79,7 @@ public class UserAddToChallenge {
         compilers.add(compiler);
 
         // If it's a streak challenge, create the streak too!
-        if (challenge.challengeType.equals("streak")) {
+        if (challenge.challengeType != null && challenge.challengeType.equals("streak")) {
             compilers.addAll(CreateStreak.getCompilers(fromID,
                     new CreateStreakRequest(userID, challengeID, "submission",
                             challenge.streakUpdateSpanType, challenge.streakUpdateInterval,

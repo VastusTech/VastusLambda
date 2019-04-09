@@ -10,7 +10,7 @@ import main.java.databaseOperations.databaseActionBuilders.PostDatabaseActionBui
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 
 /**
- * Adds a User to a Post's liked and a post to a User's liked.
+ * Adds a User to a Post's liked and a Post to a User's liked.
  */
 public class PostAddLike {
     public static List<DatabaseAction> getActions(String fromID, String postID, String like) throws Exception {
