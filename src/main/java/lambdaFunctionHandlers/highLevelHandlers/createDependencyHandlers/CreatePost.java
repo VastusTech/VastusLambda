@@ -1,7 +1,9 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
@@ -17,7 +19,7 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreatePostRequest;
  * group's post (if applicable).
  */
 public class CreatePost {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreatePostRequest createPostRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreatePostRequest createPostRequest, int depth, String aboutIdentifier) throws Exception {
         if (createPostRequest != null) {
             // Check required fields
             if (createPostRequest.by != null && createPostRequest.description != null) {
@@ -43,7 +45,14 @@ public class CreatePost {
                 }
 
                 // Create post (with createPostRequest)
-                databaseActionCompiler.add(PostDatabaseActionBuilder.create(createPostRequest, ifWithCreate));
+                if (depth == 0) {
+                    databaseActionCompiler.add(PostDatabaseActionBuilder.create(createPostRequest, null));
+                }
+                else {
+                    Map<String, String> passoverIdentifiers = new HashMap<>();
+                    passoverIdentifiers.put("about", aboutIdentifier);
+                    databaseActionCompiler.add(PostDatabaseActionBuilder.create(createPostRequest, passoverIdentifiers));
+                }
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)
                 String postType = createPostRequest.postType;
@@ -55,6 +64,9 @@ public class CreatePost {
                                 "<item_type>!!");
                     }
                     else {
+                        if (depth == 0 && ifNewType) {
+                            throw new Exception("The User cannot directly create a new Item Post");
+                        }
                         if (createPostRequest.about == null) {
                             throw new Exception("PostType of " + postType + " missing the \"about\" section!");
                         }

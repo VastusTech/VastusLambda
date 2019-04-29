@@ -12,7 +12,7 @@ import java.util.List;
  * Creates a Trainer in the database, checks the inputs, and adds the Trainer to the applicable Gym.
  */
 public class CreateTrainer {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateTrainerRequest createTrainerRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateTrainerRequest createTrainerRequest, int depth) throws Exception {
         if (createTrainerRequest != null) {
             // Check required fields
             if (createTrainerRequest.name != null && createTrainerRequest.email != null &&
@@ -30,7 +30,9 @@ public class CreateTrainer {
                         .workoutCapacity); }
 
                 // Create trainer (with createTrainerRequest)
-                databaseActionCompiler.add(TrainerDatabaseActionBuilder.create(createTrainerRequest, ifWithCreate));
+                // TODO If we ever try to create Trainers automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(TrainerDatabaseActionBuilder.create(createTrainerRequest, null));
 
                 // Add to gym (with gymID and true for fromCreate
 //                databaseActionCompiler.add(GymDatabaseActionBuilder.updateAddTrainer(createTrainerRequest.gym,

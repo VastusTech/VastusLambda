@@ -17,7 +17,7 @@ public class PostDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreatePostRequest createPostRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreatePostRequest createPostRequest, Map<String, String> passoverIdentifiers) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Post.getEmptyItem();
         item.put("by", new AttributeValue(createPostRequest.by));
@@ -30,7 +30,7 @@ public class PostDatabaseActionBuilder {
         if (createPostRequest.videoPaths != null) { item.put("videoPaths", new AttributeValue(Arrays.asList
                 (createPostRequest.videoPaths))); }
         if (createPostRequest.group != null) { item.put("group", new AttributeValue(createPostRequest.group)); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 if (createPostRequest.picturePaths != null && createPostRequest.picturePaths.length > 0) {
                     List<String> picturePaths = new ArrayList<>();

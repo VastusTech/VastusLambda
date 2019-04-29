@@ -21,7 +21,7 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateSubmissionRequest;
  * the Challenge it's for, and updates the potential Streak associated with the Submission.
  */
 public class CreateSubmission {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateSubmissionRequest createSubmissionRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateSubmissionRequest createSubmissionRequest, int depth) throws Exception {
         if (createSubmissionRequest != null) {
             // Check required fields
             if (createSubmissionRequest.by != null && createSubmissionRequest.description != null &&
@@ -35,7 +35,9 @@ public class CreateSubmission {
                 }
 
                 // Create post (with createPostRequest)
-                databaseActionCompiler.add(SubmissionDatabaseActionBuilder.create(createSubmissionRequest, ifWithCreate));
+                // TODO If we ever try to create Submissions automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(SubmissionDatabaseActionBuilder.create(createSubmissionRequest, null));
 
                 Challenge challenge = Challenge.readChallenge(createSubmissionRequest.about);
                 if (!challenge.members.contains(createSubmissionRequest.by)) {

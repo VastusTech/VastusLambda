@@ -16,7 +16,7 @@ import java.util.List;
  * sure that it is real.
  */
 public class CreateClient {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateClientRequest createClientRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateClientRequest createClientRequest, int depth) throws Exception {
         if (createClientRequest != null) {
             // Create client
             if (createClientRequest.name != null && createClientRequest.email != null && createClientRequest.username != null) {
@@ -32,7 +32,14 @@ public class CreateClient {
                     Enterprise.readEnterprise(createClientRequest.enterpriseID);
                 }
 
-                databaseActionCompiler.add(ClientDatabaseActionBuilder.create(createClientRequest, ifWithCreate));
+                if (depth == 0) {
+                    databaseActionCompiler.add(ClientDatabaseActionBuilder.create(createClientRequest, null));
+                }
+                else {
+                    // TODO If we ever try to create Clients automatically, figure out which
+                    // TODO attributes need which passover Identifiers.
+                    databaseActionCompiler.add(ClientDatabaseActionBuilder.create(createClientRequest, null));
+                }
 
                 compilers.add(databaseActionCompiler);
 

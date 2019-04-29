@@ -3,6 +3,7 @@ package main.java.databaseOperations;
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,6 +16,7 @@ public class DeleteDatabaseAction extends DatabaseAction {
         this.itemType = itemType;
         this.action = DBAction.DELETE;
         this.primaryKey = primaryKey;
+        this.passoverIdentifiers = new HashMap<>();
     }
 
     public DeleteDatabaseAction(String id, String itemType, PrimaryKey primaryKey, CheckHandler
@@ -23,6 +25,7 @@ public class DeleteDatabaseAction extends DatabaseAction {
         this.itemType = itemType;
         this.action = DBAction.DELETECONDITIONAL;
         this.primaryKey = primaryKey;
+        this.passoverIdentifiers = new HashMap<>();
         this.checkHandler = checkHandler;
     }
 }

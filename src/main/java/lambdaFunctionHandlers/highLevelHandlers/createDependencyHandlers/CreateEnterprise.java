@@ -12,7 +12,7 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateEnterpriseRequest;
  * Creates an Enterprise in the database. TODO More details needed to finish this.
  */
 public class CreateEnterprise {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateEnterpriseRequest createEnterpriseRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateEnterpriseRequest createEnterpriseRequest, int depth) throws Exception {
         if (createEnterpriseRequest != null) {
             // Create enterprise
             if (true) { // TODO Check the Create Request
@@ -25,7 +25,9 @@ public class CreateEnterprise {
                 }
 
                 // Create the object
-                databaseActionCompiler.add(EnterpriseDatabaseActionBuilder.create(createEnterpriseRequest, ifWithCreate));
+                // TODO If we ever try to create Enterprises automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(EnterpriseDatabaseActionBuilder.create(createEnterpriseRequest, null));
 
                 // TODO Add the Enterprise to anything that it is required to be added to.
 

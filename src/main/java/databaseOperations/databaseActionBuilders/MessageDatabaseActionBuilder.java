@@ -22,7 +22,7 @@ public class MessageDatabaseActionBuilder {
         return new PrimaryKey("board", board, "id", id);
     }
 
-    public static DatabaseAction create(CreateMessageRequest createMessageRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreateMessageRequest createMessageRequest, Map<String, String> passoverIdentifiers) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Message.getEmptyItem();
         item.put("board", new AttributeValue(createMessageRequest.board));
@@ -33,7 +33,7 @@ public class MessageDatabaseActionBuilder {
         if (createMessageRequest.profileImagePath != null) {
             item.put("profileImagePath", new AttributeValue(createMessageRequest.profileImagePath));
         }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 if (createMessageRequest.type != null) {
                     if (createMessageRequest.type.equals("picture") || createMessageRequest.type.equals("video")) {

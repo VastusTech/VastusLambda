@@ -18,7 +18,7 @@ import java.util.List;
  * invitations, the receiver's received invitations, and sends a notification to the receiver.
  */
 public class CreateInvite {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateInviteRequest createInviteRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateInviteRequest createInviteRequest, int depth) throws Exception {
         if (createInviteRequest != null) {
             // Create client
             if (createInviteRequest.from != null && createInviteRequest.to != null && createInviteRequest
@@ -45,7 +45,9 @@ public class CreateInvite {
                 }
 
                 // Add the create statement
-                databaseActionCompiler.add(InviteDatabaseActionBuilder.create(createInviteRequest, ifWithCreate));
+                // TODO If we ever try to create Invites automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(InviteDatabaseActionBuilder.create(createInviteRequest, null));
 
                 // Then we add it to the object's stuff
                 // Add to the from's sentInvites

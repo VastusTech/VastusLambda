@@ -15,7 +15,7 @@ import java.util.List;
  * Creates a Gym in the database and checks the inputs.
  */
 public class CreateGym {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGymRequest createGymRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGymRequest createGymRequest, int depth) throws Exception {
         if (createGymRequest != null) {
             if (createGymRequest.name != null && createGymRequest.foundingDay != null && createGymRequest.email !=
                     null && createGymRequest.username != null && createGymRequest.address != null && createGymRequest
@@ -35,7 +35,9 @@ public class CreateGym {
 
 
                 // Create Gym
-                databaseActionCompiler.add(GymDatabaseActionBuilder.create(createGymRequest, ifWithCreate));
+                // TODO If we ever try to create Gyms automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(GymDatabaseActionBuilder.create(createGymRequest, null));
 
                 compilers.add(databaseActionCompiler);
 

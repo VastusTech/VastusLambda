@@ -9,12 +9,12 @@ public class CreateEventRequest extends CreateObjectRequest {
     public String title;
 
     // Optional
-    public String challenge;
     public String description;
     public String[] tags;
     public String[] members;
     public String access;
     public String restriction;
+    public String challenge;
     public String group;
 
     public CreateEventRequest(String owner, String time, String capacity, String address, String title, String

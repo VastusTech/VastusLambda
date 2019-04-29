@@ -22,7 +22,7 @@ public class StreakDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateStreakRequest createStreakRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreateStreakRequest createStreakRequest, Map<String, String> passoverIdentifiers) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Streak.getEmptyItem();
         item.put("owner", new AttributeValue(createStreakRequest.owner));
@@ -31,7 +31,7 @@ public class StreakDatabaseActionBuilder {
         item.put("updateSpanType", new AttributeValue(createStreakRequest.updateSpanType));
         item.put("updateInterval", new AttributeValue(createStreakRequest.updateInterval));
         item.put("streakN", new AttributeValue(createStreakRequest.streakN));
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }

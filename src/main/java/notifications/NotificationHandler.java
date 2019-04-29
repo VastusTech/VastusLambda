@@ -17,6 +17,7 @@ import main.java.logic.Constants;
  */
 public class NotificationHandler {
     private final static String messageEventType = "Message";
+    private boolean toSend;
     private ObjectUpdateNotificationCompiler objectUpdateNotificationCompiler;
     private List<Notification> messageNotifications;
 
@@ -24,6 +25,7 @@ public class NotificationHandler {
      * The default constructor, simply initializes the HashMap to being empty.
      */
     public NotificationHandler() {
+        toSend = false;
         messageNotifications = new ArrayList<>();
         objectUpdateNotificationCompiler = new ObjectUpdateNotificationCompiler();
     }
@@ -35,6 +37,7 @@ public class NotificationHandler {
      * @param payload The json payload to be sent through (for this, should be the message object).
      */
     public void addMessageNotification(String board, Map<String, Object> payload) {
+        toSend = true;
         messageNotifications.add(new Notification(board + "-Board", messageEventType, payload));
     }
 
@@ -44,6 +47,7 @@ public class NotificationHandler {
      * @param id The id of the object to add the creation to.
      */
     public void setCreateFlag(String id) {
+        toSend = true;
         objectUpdateNotificationCompiler.setCreateObjectFlag(id);
     }
 
@@ -67,6 +71,7 @@ public class NotificationHandler {
      * @param ifWithCreate If the attributeValue to put in is the ID of the object to be created.
      */
     public void addSetNotification(String id, String attributeName, String attributeValue, boolean ifWithCreate) {
+        toSend = true;
         if (ifWithCreate) { attributeValue = ""; } // Make sure that the attributeValue is empty
         objectUpdateNotificationCompiler.addSetObjectFieldNotification(id, attributeName, attributeValue);
     }
@@ -80,6 +85,7 @@ public class NotificationHandler {
      * @param attributeValues The value to set in the attribute.
      */
     public void addSetNotification(String id, String attributeName, Set<String> attributeValues) {
+        toSend = true;
         objectUpdateNotificationCompiler.addSetObjectFieldArrayNotification(id, attributeName, attributeValues);
     }
 
@@ -93,6 +99,7 @@ public class NotificationHandler {
      * @param ifWithCreate If the attributeValue to add is the ID of the object to be created.
      */
     public void addAddNotification(String id, String attributeName, String attributeValue, boolean ifWithCreate) {
+        toSend = true;
         if (ifWithCreate) { attributeValue = ""; }
         Set<String> set = new HashSet<>();
         set.add(attributeValue);
@@ -108,6 +115,7 @@ public class NotificationHandler {
      * @param attributeValues The value to add to the attribute.
      */
     public void addAddNotification(String id, String attributeName, Set<String> attributeValues) {
+        toSend = true;
         objectUpdateNotificationCompiler.addAddToObjectFieldNotification(id, attributeName, attributeValues);
     }
 
@@ -121,6 +129,7 @@ public class NotificationHandler {
      * @param ifWithCreate If the attributeValue to remove is the ID of the object to be created.
      */
     public void addRemoveNotification(String id, String attributeName, String attributeValue, boolean ifWithCreate) {
+        toSend = true;
         if (ifWithCreate) { attributeValue = ""; }
         Set<String> set = new HashSet<>();
         set.add(attributeValue);
@@ -136,6 +145,7 @@ public class NotificationHandler {
      * @param attributeValues The value to add to the attribute.
      */
     public void addRemoveNotification(String id, String attributeName, Set<String> attributeValues) {
+        toSend = true;
         objectUpdateNotificationCompiler.addRemoveFromObjectFieldNotification(id, attributeName, attributeValues);
     }
 
@@ -146,6 +156,7 @@ public class NotificationHandler {
      * @param id The id of the object to delete.
      */
     public void setDeleteNotification(String id) {
+        toSend = true;
         objectUpdateNotificationCompiler.setDeleteObjectNotification(id);
     }
 
@@ -163,9 +174,14 @@ public class NotificationHandler {
      * Sends the messages to the Ably Lambda Function with the notifications payload.
      */
     public void sendMessages() {
-        String payload = getNotificationsPayload();
-        Constants.debugLog("Sending payload to ABLY. Payload = \n" + payload);
-        LambdaInvokeHandler.getInstance().invokeLambda(Constants.ablyFunctionName, payload);
+        if (toSend) {
+            String payload = getNotificationsPayload();
+            Constants.debugLog("Sending payload to ABLY. Payload = \n" + payload);
+            LambdaInvokeHandler.getInstance().invokeLambda(Constants.ablyFunctionName, payload);
+        }
+        else {
+            Constants.debugLog("Nothing to send to ABLY. Skipping...");
+        }
     }
 
     /**

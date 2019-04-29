@@ -17,13 +17,13 @@ public class CommentDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateCommentRequest createCommentRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreateCommentRequest createCommentRequest, Map<String, String> passoverIdentifiers) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Comment.getEmptyItem();
         item.put("by", new AttributeValue(createCommentRequest.by));
         item.put("to", new AttributeValue(createCommentRequest.to));
         item.put("comment", new AttributeValue(createCommentRequest.comment));
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }

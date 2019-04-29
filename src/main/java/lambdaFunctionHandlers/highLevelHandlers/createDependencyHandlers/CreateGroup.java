@@ -15,7 +15,7 @@ import java.util.List;
  * Creates a Group in the database, checks the inputs, and adds it to the members and the owners.
  */
 public class CreateGroup {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGroupRequest createGroupRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGroupRequest createGroupRequest, int depth) throws Exception {
         if (createGroupRequest != null) {
             // Create client
             if (createGroupRequest.title != null && createGroupRequest.description != null
@@ -50,7 +50,9 @@ public class CreateGroup {
                 }
 
                 // Create the group
-                databaseActionCompiler.add(GroupDatabaseActionBuilder.create(createGroupRequest, ifWithCreate));
+                // TODO If we ever try to create Groups automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(GroupDatabaseActionBuilder.create(createGroupRequest, null));
 
                 // Add to the owners' ownedGroups
                 for (String ownerID : createGroupRequest.owners) {

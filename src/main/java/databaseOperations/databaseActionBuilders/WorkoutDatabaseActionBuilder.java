@@ -21,7 +21,7 @@ public class WorkoutDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateWorkoutRequest createWorkoutRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreateWorkoutRequest createWorkoutRequest, Map<String, String> passoverIdentifiers) {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Workout.getEmptyItem();
         item.put("time", new AttributeValue(createWorkoutRequest.time));
@@ -33,7 +33,7 @@ public class WorkoutDatabaseActionBuilder {
         item.put("sticker", new AttributeValue(createWorkoutRequest.sticker));
         item.put("intensity", new AttributeValue(createWorkoutRequest.intensity));
         item.put("price", new AttributeValue(createWorkoutRequest.price));
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }

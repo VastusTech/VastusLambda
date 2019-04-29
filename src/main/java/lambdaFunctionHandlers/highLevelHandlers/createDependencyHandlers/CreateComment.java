@@ -17,7 +17,7 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateCommentRequest;
  * the Post/Comment/Submission's comments.
  */
 public class CreateComment {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateCommentRequest createCommentRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateCommentRequest createCommentRequest, int depth) throws Exception {
         if (createCommentRequest != null) {
             // Create client
             if (createCommentRequest.by != null && createCommentRequest.to != null && createCommentRequest.comment
@@ -30,7 +30,14 @@ public class CreateComment {
                 }
 
                 // Create the object
-                databaseActionCompiler.add(CommentDatabaseActionBuilder.create(createCommentRequest, ifWithCreate));
+                if (depth == 0) {
+                    databaseActionCompiler.add(CommentDatabaseActionBuilder.create(createCommentRequest, null));
+                }
+                else {
+                    // TODO If we ever try to create Comments automatically, figure out which
+                    // TODO attributes need which passover Identifiers.
+                    databaseActionCompiler.add(CommentDatabaseActionBuilder.create(createCommentRequest, null));
+                }
 
                 // Add it to the author's comments
                 String byItemType = ItemType.getItemType(createCommentRequest.by);

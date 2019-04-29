@@ -22,7 +22,7 @@ public class ChallengeDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateChallengeRequest createChallengeRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreateChallengeRequest createChallengeRequest, Map<String, String> passoverIdentifiers) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Challenge.getEmptyItem();
         item.put("owner", new AttributeValue(createChallengeRequest.owner));
@@ -48,7 +48,7 @@ public class ChallengeDatabaseActionBuilder {
                 .restriction)); }
         if (createChallengeRequest.tags != null) { item.put("tags", new AttributeValue
                 (Arrays.asList(createChallengeRequest.tags))); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }
@@ -312,6 +312,10 @@ public class ChallengeDatabaseActionBuilder {
         else {
             return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "streaks", new AttributeValue(streak), false, ADD);
         }
+    }
+
+    public static DatabaseAction updateAddStreak(String aboutIdentifier) throws Exception {
+        return new UpdateDatabaseAction(itemType, aboutIdentifier, "streaks", ADD, null);
     }
 
     public static DatabaseAction updateRemoveStreak(String id, String streak) throws Exception {

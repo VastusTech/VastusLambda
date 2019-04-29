@@ -39,6 +39,9 @@ public enum ItemType {
      * @throws Exception If the prefix of the ID was unrecognized. TODO Define exception?
      */
     public static String getItemType(String id) throws Exception {
+        if (id == null || id.length() < 2) {
+            throw new Exception("ID null or not large enough to get item type for. ID = " + id);
+        }
         String prefix = id.substring(0, Constants.numPrefix);
         String itemType = prefixes.get(prefix);
         if (itemType == null) {

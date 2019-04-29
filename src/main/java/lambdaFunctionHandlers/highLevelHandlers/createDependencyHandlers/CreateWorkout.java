@@ -15,7 +15,7 @@ import java.util.List;
  * Client members.
  */
 public class CreateWorkout {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateWorkoutRequest createWorkoutRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateWorkoutRequest createWorkoutRequest, int depth) throws Exception {
         if (createWorkoutRequest != null) {
             if (createWorkoutRequest.time != null && createWorkoutRequest.trainer != null && createWorkoutRequest
                     .clients != null && createWorkoutRequest.gym != null && createWorkoutRequest.capacity != null
@@ -35,7 +35,9 @@ public class CreateWorkout {
                 Float.parseFloat(createWorkoutRequest.price);
 
                 // Create Workout
-                databaseActionCompiler.add(WorkoutDatabaseActionBuilder.create(createWorkoutRequest, ifWithCreate));
+                // TODO If we ever try to create Workouts automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(WorkoutDatabaseActionBuilder.create(createWorkoutRequest, null));
 
                 // Add to clients' scheduled workouts
                 // Add to clients' scheduled workout times

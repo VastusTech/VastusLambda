@@ -9,7 +9,6 @@ public class CreateChallengeRequest extends CreateObjectRequest {
     public String goal;
 
     // Optional
-    public String challengeType;
     public String group;
     public String description;
     public String[] tags;
@@ -18,6 +17,7 @@ public class CreateChallengeRequest extends CreateObjectRequest {
     public String restriction;
     public String difficulty;
     public String prize;
+    public String challengeType;
     public String streakUpdateSpanType;
     public String streakUpdateInterval;
     public String streakN;

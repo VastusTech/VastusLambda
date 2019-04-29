@@ -22,10 +22,17 @@ public abstract class DatabaseAction {
     String id;
     String itemType;
 
-    // These should only be used for UPDATE and UPDATESAFE main.java.databaseOperations.DBAction's
-    // String updateAttributeName;
-    // AttributeValue updateAttribute;
-    // String updateAction;
+    // The ID passover identifier essentially allows the compiler to still compile the actions
+    // together when the IDs are not determined yet.
+    String idIdentifier = null;
+
+    // The map of passover identifiers identifies which attributes in the item correspond with which
+    // passover IDs. To find out which one it belongs to, while finding the "" empty strings that
+    // correspond to a placement of an ID, you then have to go into the DatabaseAction's
+    // passoverIdentifiers. If it is not in there, then the ID is for the current compiler's created
+    // ID. Otherwise, the ID is for the found passover ID.
+    // Map<AttributeNameString, PassoverIdentifier>
+    Map<String, String> passoverIdentifiers;
 
     Map<String, AttributeValueUpdate> updateItem;
 
@@ -34,6 +41,10 @@ public abstract class DatabaseAction {
 
     // This determines whether the ID will be given through item or through the CREATE statment
     boolean ifWithCreate;
+
+    public void setPrimaryKey(PrimaryKey primaryKey) {
+        this.primaryKey = primaryKey;
+    }
 
     // TODO There's gotta be a better way to do this
     public String getTableName() {
@@ -47,7 +58,7 @@ public abstract class DatabaseAction {
     public Map<String, AttributeValue> getKey() {
         Map<String, AttributeValue> item = new HashMap<>();
         for (KeyAttribute keyAttribute : primaryKey.getComponents()) {
-            item.put(keyAttribute.getName(), new AttributeValue((String)keyAttribute.getValue()));
+            item.put(keyAttribute.getName(), new AttributeValue((String) keyAttribute.getValue()));
         }
         return item;
     }

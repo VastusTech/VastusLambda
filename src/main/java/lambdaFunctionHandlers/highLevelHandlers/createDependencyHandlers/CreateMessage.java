@@ -19,9 +19,8 @@ import java.util.Map;
  * and sends a notification to the board.
  */
 public class CreateMessage {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateMessageRequest createMessageRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateMessageRequest createMessageRequest, int depth) throws Exception {
         if (createMessageRequest != null) {
-            // Create client
             if (createMessageRequest.from != null && createMessageRequest.board != null && createMessageRequest
                     .message != null && createMessageRequest.name != null) {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
@@ -63,7 +62,9 @@ public class CreateMessage {
                 }
 
                 // Add the create statement
-                databaseActionCompiler.add(MessageDatabaseActionBuilder.create(createMessageRequest, ifWithCreate));
+                // TODO If we ever try to create Messages automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(MessageDatabaseActionBuilder.create(createMessageRequest, null));
 
                 // Send an Ably message!
                 Map<String, Object> payload = new HashMap<>();

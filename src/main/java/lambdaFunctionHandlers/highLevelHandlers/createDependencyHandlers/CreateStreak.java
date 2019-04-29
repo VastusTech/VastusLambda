@@ -1,7 +1,9 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import main.java.databaseObjects.Streak;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -17,7 +19,7 @@ import main.java.logic.ItemType;
  * and the about's streaks.
  */
 public class CreateStreak {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateStreakRequest createStreakRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateStreakRequest createStreakRequest, int depth, String aboutIdentifier) throws Exception {
         if (createStreakRequest != null) {
             // Create Streak
             if (createStreakRequest.owner != null && createStreakRequest.about != null
@@ -66,21 +68,35 @@ public class CreateStreak {
                 }
 
                 // Add the create statement
-                databaseActionCompiler.add(StreakDatabaseActionBuilder.create(createStreakRequest,
-                        ifWithCreate));
+                if (depth == 0) {
+                    databaseActionCompiler.add(StreakDatabaseActionBuilder.create(createStreakRequest,
+                            null));
+                }
+                else {
+                    Map<String, String> passoverIdentifiers = new HashMap<>();
+                    passoverIdentifiers.put("about", aboutIdentifier);
+                    databaseActionCompiler.add(StreakDatabaseActionBuilder.create(createStreakRequest,
+                            passoverIdentifiers));
+                }
 
                 // Add to owner and about
                 String ownerItemType = ItemType.getItemType(createStreakRequest.owner);
                 databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddStreak(
                         createStreakRequest.owner, ownerItemType, null, true));
 
-                String aboutItemType = ItemType.getItemType(createStreakRequest.about);
-                if (aboutItemType.equals("Challenge")) {
+                if (depth != 0) {
+                    // Passover!
                     databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddStreak(
-                            createStreakRequest.about, null, true));
+                            aboutIdentifier));
                 }
                 else {
-                    throw new Exception("About item type not recognized for a Streak! Type: " + aboutItemType);
+                    String aboutItemType = ItemType.getItemType(createStreakRequest.about);
+                    if (aboutItemType.equals("Challenge")) {
+                        databaseActionCompiler.add(ChallengeDatabaseActionBuilder.updateAddStreak(
+                                createStreakRequest.about, null, true));
+                    } else {
+                        throw new Exception("About item type not recognized for a Streak! Type: " + aboutItemType);
+                    }
                 }
 
                 compilers.add(databaseActionCompiler);

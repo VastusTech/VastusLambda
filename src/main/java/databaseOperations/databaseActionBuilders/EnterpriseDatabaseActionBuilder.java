@@ -18,10 +18,10 @@ public class EnterpriseDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateEnterpriseRequest createEnterpriseRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreateEnterpriseRequest createEnterpriseRequest, Map<String, String> passoverIdentifiers) {
         Map<String, AttributeValue> item = Enterprise.getEmptyItem();
         // TODO Update with Enterprise creation process!
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }

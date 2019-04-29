@@ -16,6 +16,8 @@ import java.util.Map;
  * there are no duplicate actions to an item. Also increases the efficiency of the transaction.
  */
 public class DatabaseActionCompiler {
+    // TODO JAVADOC ALL METHODS
+    private String passoverIdentifier;
     private NotificationHandler notificationHandler;
     private List<DatabaseAction> databaseActions;
     private Map<String, DatabaseAction> databaseActionMap;
@@ -37,7 +39,12 @@ public class DatabaseActionCompiler {
     public void add(DatabaseAction databaseAction) throws Exception {
         String id;
         if (databaseAction.action != DBAction.CREATE) {
-            id = databaseAction.id;
+            if (databaseAction.id.equals("")) {
+                id = databaseAction.idIdentifier;
+            }
+            else {
+                id = databaseAction.id;
+            }
         }
         else {
             id = "create";
@@ -231,6 +238,14 @@ public class DatabaseActionCompiler {
 
     public NotificationHandler getNotificationHandler() {
         return this.notificationHandler;
+    }
+
+    public void setPassoverIdentifier(String passoverIdentifier) {
+        this.passoverIdentifier = passoverIdentifier;
+    }
+
+    public String getPassoverIdentifier() {
+        return this.passoverIdentifier;
     }
 
 //    public void addMessage(String to, String type, JsonObjectBuilder payload) throws Exception {

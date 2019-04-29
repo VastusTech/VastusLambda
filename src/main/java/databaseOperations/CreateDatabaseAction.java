@@ -12,9 +12,17 @@ import java.util.Map;
 public class CreateDatabaseAction extends DatabaseAction {
     public UpdateWithIDHandler updateWithIDHandler;
 
-    public CreateDatabaseAction(String itemType, Map<String, AttributeValue> item, boolean ifWithCreate,
-                                UpdateWithIDHandler updateWithIDHandler) {
-        this.ifWithCreate = ifWithCreate;
+    public CreateDatabaseAction(String itemType, Map<String, AttributeValue> item,
+                                Map<String, String> passoverIdentifiers, UpdateWithIDHandler
+                                        updateWithIDHandler) {
+        if (passoverIdentifiers != null) {
+            this.ifWithCreate = true;
+            this.passoverIdentifiers = passoverIdentifiers;
+        }
+        else {
+            this.ifWithCreate = false;
+            this.passoverIdentifiers = new HashMap<>();
+        }
         action = DBAction.CREATE;
         this.itemType = itemType;
         this.item = new HashMap<>();
@@ -22,8 +30,8 @@ public class CreateDatabaseAction extends DatabaseAction {
             String key = entry.getKey();
             AttributeValue attributeValue = entry.getValue();
             if (attributeValue != null) {
-                if ((attributeValue.getS() != null && attributeValue.getS().equals("")) || (attributeValue.getSS() !=
-                        null && attributeValue.getSS().size() == 0)) {
+                if ((!this.ifWithCreate && attributeValue.getS() != null && attributeValue.getS().equals(""))
+                        || (attributeValue.getSS() != null && attributeValue.getSS().size() == 0)) {
                     this.item.put(key, null);
                 }
                 else {

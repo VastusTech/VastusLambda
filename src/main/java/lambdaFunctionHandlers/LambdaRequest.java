@@ -153,6 +153,7 @@ public class LambdaRequest {
         // Message =========================
         lastSeenFor,
         // Streak =========================
+        N
     }
 
     // This is where the inputs are handled!
@@ -464,53 +465,53 @@ public class LambdaRequest {
         try {
             switch (ItemType.valueOf(itemType)) {
                 case Client:
-                    compilers = CreateClient.getCompilers(fromID, createClientRequest, false);
+                    compilers = CreateClient.getCompilers(fromID, createClientRequest, 0);
                     break;
                 case Trainer:
-                    compilers = CreateTrainer.getCompilers(fromID, createTrainerRequest, false);
+                    compilers = CreateTrainer.getCompilers(fromID, createTrainerRequest, 0);
                     break;
                 case Gym:
-                    compilers = CreateGym.getCompilers(fromID, createGymRequest, false);
+                    compilers = CreateGym.getCompilers(fromID, createGymRequest, 0);
                     break;
                 case Workout:
-                    compilers = CreateWorkout.getCompilers(fromID, createWorkoutRequest, false);
+                    compilers = CreateWorkout.getCompilers(fromID, createWorkoutRequest, 0);
                     break;
                 case Review:
                     // Send a null for surveyWorkoutID because we're not creating it for a survey
-                    compilers = CreateReview.getCompilers(fromID, createReviewRequest, null, false);
+                    compilers = CreateReview.getCompilers(fromID, createReviewRequest, null, 0);
                     break;
                 case Event:
-                    compilers = CreateEvent.getCompilers(fromID, createEventRequest, false);
+                    compilers = CreateEvent.getCompilers(fromID, createEventRequest, 0);
                     break;
                 case Challenge:
-                    compilers = CreateChallenge.getCompilers(fromID, createChallengeRequest, false);
+                    compilers = CreateChallenge.getCompilers(fromID, createChallengeRequest, 0);
                     break;
                 case Invite:
-                    compilers = CreateInvite.getCompilers(fromID, createInviteRequest, false);
+                    compilers = CreateInvite.getCompilers(fromID, createInviteRequest, 0);
                     break;
                 case Post:
-                    compilers = CreatePost.getCompilers(fromID, createPostRequest, false);
+                    compilers = CreatePost.getCompilers(fromID, createPostRequest, 0, null);
                     break;
                 case Submission:
-                    compilers = CreateSubmission.getCompilers(fromID, createSubmissionRequest, false);
+                    compilers = CreateSubmission.getCompilers(fromID, createSubmissionRequest, 0);
                     break;
                 case Group:
-                    compilers = CreateGroup.getCompilers(fromID, createGroupRequest, false);
+                    compilers = CreateGroup.getCompilers(fromID, createGroupRequest, 0);
                     break;
                 case Comment:
-                    compilers = CreateComment.getCompilers(fromID, createCommentRequest, false);
+                    compilers = CreateComment.getCompilers(fromID, createCommentRequest, 0);
                     break;
                 case Sponsor:
-                    compilers = CreateSponsor.getCompilers(fromID, createSponsorRequest, false);
+                    compilers = CreateSponsor.getCompilers(fromID, createSponsorRequest, 0);
                     break;
                 case Message:
-                    compilers = CreateMessage.getCompilers(fromID, createMessageRequest, false);
+                    compilers = CreateMessage.getCompilers(fromID, createMessageRequest, 0);
                     break;
                 case Streak:
-                    compilers = CreateStreak.getCompilers(fromID, createStreakRequest, false);
+                    compilers = CreateStreak.getCompilers(fromID, createStreakRequest, 0, null);
                     break;
                 case Enterprise:
-                    compilers = CreateEnterprise.getCompilers(fromID, createEnterpriseRequest, false);
+                    compilers = CreateEnterprise.getCompilers(fromID, createEnterpriseRequest, 0);
                     break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
@@ -525,7 +526,7 @@ public class LambdaRequest {
     }
 
     private String handleSurveyCreate(String workoutID) throws Exception {
-        return DynamoDBHandler.getInstance().attemptTransaction(CreateReview.getCompilers(fromID, createReviewRequest, workoutID, false));
+        return DynamoDBHandler.getInstance().attemptTransaction(CreateReview.getCompilers(fromID, createReviewRequest, workoutID, 0));
     }
 
     public void handleUpdateSet(String id) throws Exception {
@@ -1048,6 +1049,14 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case N:
+                    if (itemType.equals("Streak")) {
+                        databaseActionCompiler.addAll(StreakAddN.getActions(fromID, id));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEADD operation on " + attributeName + "!");
             }
@@ -1221,8 +1230,6 @@ public class LambdaRequest {
         SingletonTimer.get().checkpoint("Init compiler for Delete");
         List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
-
-        //Constants.debugLog("Handling delete actions");
         try {
             switch (ItemType.valueOf(itemType)) {
                 case Client:
@@ -1264,8 +1271,12 @@ public class LambdaRequest {
                 case Sponsor:
                     databaseActionCompiler.addAll(DeleteSponsor.getActions(fromID, id));
                     break;
+                case Message:
+                    databaseActionCompiler.addAll(DeleteMessage.getActions(fromID, secondaryIdentifier, id));
+                    break;
                 case Streak:
                     databaseActionCompiler.addAll(DeleteStreak.getActions(fromID, id));
+                    break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }

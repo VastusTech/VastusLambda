@@ -16,6 +16,8 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
  * database, so that we decrease the chance of any weird database errors.
  */
 public class UpdateDatabaseAction extends DatabaseAction {
+    // Use when you know the ID of the object and the value of the attribute
+    // Use when you know the ID of the object, but not of the self ID attribute to update
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action) throws Exception {
         this.id = id;
@@ -23,11 +25,13 @@ public class UpdateDatabaseAction extends DatabaseAction {
         this.action = DBAction.UPDATE;
         this.primaryKey = primaryKey;
         this.ifWithCreate = ifWithCreate;
+        this.passoverIdentifiers = new HashMap<>();
         this.updateItem = new HashMap<>();
 
         initWithErrorCheck(attributeName, attributeValue, action);
     }
 
+    // Use when you also want to verify something
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action, CheckHandler checkHandler) throws Exception {
         this.id = id;
@@ -35,10 +39,74 @@ public class UpdateDatabaseAction extends DatabaseAction {
         this.action = DBAction.UPDATESAFE;
         this.primaryKey = primaryKey;
         this.ifWithCreate = ifWithCreate;
+        this.passoverIdentifiers = new HashMap<>();
         this.checkHandler = checkHandler;
         this.updateItem = new HashMap<>();
 
         initWithErrorCheck(attributeName, attributeValue, action);
+    }
+
+    // Use when you know the ID of the object, but not of the passover attribute to update
+    public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName,
+                                String passoverIdentifier, UpdateAction action, CheckHandler checkHandler) throws Exception {
+        this.id = id;
+        this.itemType = itemType;
+        if (checkHandler != null) {
+            this.action = DBAction.UPDATESAFE;
+        }
+        else {
+            this.action = DBAction.UPDATE;
+        }
+        this.primaryKey = primaryKey;
+        this.ifWithCreate = true;
+        this.passoverIdentifiers = new HashMap<>();
+        this.passoverIdentifiers.put(attributeName, passoverIdentifier);
+        this.checkHandler = checkHandler;
+        this.updateItem = new HashMap<>();
+
+        initWithErrorCheck(attributeName, new AttributeValue(""), action);
+    }
+
+    // Use when you don't know the ID of the object, but you do know the value of the attribute.
+    public UpdateDatabaseAction(String itemType, String passoverIdentifier,
+                                String attributeName, AttributeValue attributeValue, UpdateAction action, CheckHandler checkHandler) throws Exception {
+        this.id = "";
+        this.idIdentifier = passoverIdentifier;
+        this.itemType = itemType;
+        if (checkHandler != null) {
+            this.action = DBAction.UPDATESAFE;
+        }
+        else {
+            this.action = DBAction.UPDATE;
+        }
+        this.primaryKey = null;
+        this.ifWithCreate = false;
+        this.passoverIdentifiers = new HashMap<>();
+        this.checkHandler = checkHandler;
+        this.updateItem = new HashMap<>();
+
+        initWithErrorCheck(attributeName, attributeValue, action);
+    }
+
+    // User when you don't know the passover ID of the object and you don't know the self ID of
+    // the attribute.
+    public UpdateDatabaseAction(String itemType, String passoverIdentifier, String attributeName, UpdateAction action, CheckHandler checkHandler) throws Exception {
+        this.id = "";
+        this.idIdentifier = passoverIdentifier;
+        this.itemType = itemType;
+        if (checkHandler != null) {
+            this.action = DBAction.UPDATESAFE;
+        }
+        else {
+            this.action = DBAction.UPDATE;
+        }
+        this.primaryKey = null;
+        this.ifWithCreate = true;
+        this.passoverIdentifiers = new HashMap<>();
+        this.checkHandler = checkHandler;
+        this.updateItem = new HashMap<>();
+
+        initWithErrorCheck(attributeName, new AttributeValue(""), action);
     }
 
     private void initWithErrorCheck(String attributeName, AttributeValue attributeValue, UpdateAction action) throws

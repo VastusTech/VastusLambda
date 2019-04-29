@@ -82,6 +82,9 @@ public class DynamoDBHandler {
     public String attemptTransaction(List<DatabaseActionCompiler> databaseActionCompilers) throws Exception {
         // Marker retry implemented
         final int transactionActionLimit = 10; // Transactions can only handle 10 unique things each
+        // This represents the current passoverIDs for the current transaction. Supports inputting
+        // passover IDs from any other compiler. PassoverIdentifer -> passoverID.
+        Map<String, String> passoverIDs = new HashMap<>();
         // This indicates created ID for current compiler and also supports passover between transactions.
         String newlyCreatedID = null; // This indicates the created ID for the current compiler.
         String returnString = null; // This indicates the created ID for the first compiler
@@ -126,6 +129,11 @@ public class DynamoDBHandler {
                             databaseAction.item.put("time_created", new AttributeValue(TimeHelper.nowString()));
                             ((CreateDatabaseAction) databaseAction).updateWithIDHandler.updateWithID(databaseAction.item, id);
 
+                            // Place in the passover identifier if applicable...
+                            if (databaseActionCompiler.getPassoverIdentifier() != null) {
+                                passoverIDs.put(databaseActionCompiler.getPassoverIdentifier(), id);
+                            }
+
                             if (databaseAction.item.containsKey("username")) {
                                 if (this.usernameInDatabase(databaseAction.item.get("username").getS(), databaseAction.item
                                         .get("item_type").getS())) {
@@ -135,7 +143,8 @@ public class DynamoDBHandler {
                                 }
                             }
 
-                            Map<String, AttributeValue> putItem = getPutItem(databaseAction, newlyCreatedID);
+                            Map<String, AttributeValue> putItem = getPutItem(databaseAction,
+                                    newlyCreatedID, passoverIDs);
 
                             Constants.debugLog("Creating item with item: " + databaseAction.item);
 
@@ -149,6 +158,7 @@ public class DynamoDBHandler {
                             databaseActionCompiler.getNotificationHandler().fillCreateObject(id,
                                     convertFromAttributeValueMap(databaseAction.item));
                         } catch (Exception e) {
+                            Constants.debugLog("ROLLING BACK TRANSACTION FROM ERROR = " + e.getLocalizedMessage());
                             transaction.rollback();
                             for (Transaction existingTransaction : transactions) {
                                 existingTransaction.rollback();
@@ -159,8 +169,15 @@ public class DynamoDBHandler {
                         break;
                     case UPDATE:
                         try {
+                            // If the primary key is undetermined from passover, set it.
+                            if (databaseAction.primaryKey == null) {
+                                databaseAction.setPrimaryKey(getPrimaryKeyFromPassover(
+                                        databaseAction.itemType, databaseAction.idIdentifier,
+                                        passoverIDs));
+                            }
+
                             // This is the actual update item statement
-                            Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, newlyCreatedID);
+                            Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, newlyCreatedID, passoverIDs);
 
                             // This is the updating marker statement
                             updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
@@ -175,6 +192,7 @@ public class DynamoDBHandler {
                                             .getAction() + " using value " + entry.getValue().getValue().toString() + "!");
                                 }
                             }
+
                             Constants.debugLog("Using primary key = " + databaseAction.primaryKey.toString());
                             Constants.debugLog("On table = " + databaseAction.getTableName());
 
@@ -187,6 +205,7 @@ public class DynamoDBHandler {
                             //transaction.updateItem(new UpdateItemRequest().withTableName(tableName).withKey
                             //(databaseAction.item).withAttributeUpdates(markerUpdate));
                         } catch (Exception e) {
+                            Constants.debugLog("ROLLING BACK TRANSACTION FROM ERROR = " + e.getLocalizedMessage());
                             transaction.rollback();
                             for (Transaction existingTransaction : transactions) {
                                 existingTransaction.rollback();
@@ -208,8 +227,14 @@ public class DynamoDBHandler {
                             // conditionalExpressionNames.put("#mark", "marker");
                             // Map<String, AttributeValue> conditionalExpressionValues = new HashMap<>();
 
+                            if (databaseAction.primaryKey == null) {
+                                databaseAction.setPrimaryKey(getPrimaryKeyFromPassover(
+                                        databaseAction.itemType, databaseAction.idIdentifier,
+                                        passoverIDs));
+                            }
+
                             // This is the actual update item statement
-                            Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, newlyCreatedID);
+                            Map<String, AttributeValueUpdate> updateItem = getUpdateItem(databaseAction, newlyCreatedID, passoverIDs);
 
                             // This is the marker update statement
                             updateItem.put("marker", new AttributeValueUpdate(new AttributeValue().withN("1"), "ADD"));
@@ -229,11 +254,10 @@ public class DynamoDBHandler {
                             boolean ifFinished = false;
                             while (!ifFinished) {
                                 // Read and check the expression
-                                DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
+                                Constants.debugLog("Checking the viability of the item received");
 
                                 // Use the checkHandler
-                                Constants.debugLog("Checking the viability of the item received");
-                                String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
+                                String errorMessage = databaseAction.checkHandler.isViable(readItem(databaseAction.getTableName(), databaseAction.primaryKey));
                                 if (errorMessage == null) {
                                     Constants.debugLog("The item is viable!!!");
                                     // Put the newly read marker value into the conditional statement
@@ -262,6 +286,7 @@ public class DynamoDBHandler {
                                     }
                                 } else {
                                     // If the object is no longer viable, then we need to throw an exception and exit
+                                    Constants.debugLog("ROLLING BACK TRANSACTION FROM ERROR = " + errorMessage);
 //                                    transaction.rollback();
                                     for (Transaction existingTransaction : transactions) {
                                         existingTransaction.rollback();
@@ -270,6 +295,7 @@ public class DynamoDBHandler {
                                 }
                             }
                         } catch (Exception e) {
+                            Constants.debugLog("ROLLING BACK TRANSACTION FROM ERROR = " + e.getLocalizedMessage());
                             transaction.rollback();
                             for (Transaction existingTransaction : transactions) {
                                 existingTransaction.rollback();
@@ -281,10 +307,17 @@ public class DynamoDBHandler {
                     case DELETE:
                         try {
                             // Delete the item
+                            // If the primary key is undetermined from passover, set it.
+                            if (databaseAction.primaryKey == null) {
+                                databaseAction.setPrimaryKey(getPrimaryKeyFromPassover(
+                                        databaseAction.itemType, databaseAction.idIdentifier,
+                                        passoverIDs));
+                            }
                             transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName()).withKey
                                     (databaseAction.getKey()));
                             uniqueActionsInCurrentTransaction++;
                         } catch (Exception e) {
+                            Constants.debugLog("ROLLING BACK TRANSACTION FROM ERROR = " + e.getLocalizedMessage());
                             transaction.rollback();
                             for (Transaction existingTransaction : transactions) {
                                 existingTransaction.rollback();
@@ -296,6 +329,13 @@ public class DynamoDBHandler {
                     case DELETECONDITIONAL:
                         // Delete conditional essentially will use a checkHandler for the situation, but will only fail
                         // itself if it fails that checkHandler, it won't rollback the entire transaction.
+
+                        // If the primary key is undetermined from passover, set it.
+                        if (databaseAction.primaryKey == null) {
+                            databaseAction.setPrimaryKey(getPrimaryKeyFromPassover(
+                                    databaseAction.itemType, databaseAction.idIdentifier,
+                                    passoverIDs));
+                        }
 
                         try {
                             // This allows us to get the key
@@ -346,6 +386,7 @@ public class DynamoDBHandler {
                             }
                         } catch (Exception e) {
                             // Else if there is another failure, rollback everything
+                            Constants.debugLog("ROLLING BACK TRANSACTION FROM ERROR = " + e.getLocalizedMessage());
                             transaction.rollback();
                             for (Transaction existingTransaction : transactions) {
                                 existingTransaction.rollback();
@@ -358,9 +399,14 @@ public class DynamoDBHandler {
 
                 // If we are over the limit, then we do the transaction and keep going
                 if (uniqueActionsInCurrentTransaction >= transactionActionLimit) {
-//                    transaction.commit();
-                    transactions.add(transaction);
-//                    transaction.delete();
+                    try {
+                        transaction.commit();
+                        transaction.delete();
+                    }
+                    catch (TransactionRolledBackException | UnknownCompletedTransactionException e) {
+                        Constants.debugLog("Error occurred, making the database a little worse.... Error: "
+                                + e.getLocalizedMessage());
+                    }
                     transaction = txManager.newTransaction();
                     uniqueActionsInCurrentTransaction = 0;
                 }
@@ -368,8 +414,16 @@ public class DynamoDBHandler {
 
             // If it gets here, then the process completed safely.
 //            transaction.commit();
-            transactions.add(transaction);
+////            transactions.add(transaction);
 //            transaction.delete();
+            try {
+                transaction.commit();
+                transaction.delete();
+            }
+            catch (TransactionRolledBackException | UnknownCompletedTransactionException e) {
+                Constants.debugLog("Error occurred, making the database a little worse.... Error: "
+                    + e.getLocalizedMessage());
+            }
 
             SingletonTimer.get().checkpoint("Sending the notifications");
 
@@ -379,21 +433,35 @@ public class DynamoDBHandler {
 
         // This is the most dangerous part of the code, where things could actually go really wrong
         // Commit and delete all the transactions at the end.
-        List<Exception> errors = new ArrayList<>();
-        for (Transaction transaction : transactions) {
-            try {
-                transaction.commit();
-                transaction.delete();
-            }
-            catch (TransactionRolledBackException | UnknownCompletedTransactionException e) {
-                errors.add(e);
-                Constants.debugLog("Error occurred, making the database a little worse.... Error: "
-                    + e.getLocalizedMessage());
-            }
-        }
+//        List<Exception> errors = new ArrayList<>();
+//        for (Transaction transaction : transactions) {
+//            try {
+//                transaction.commit();
+//                transaction.delete();
+//            }
+//            catch (TransactionRolledBackException | UnknownCompletedTransactionException e) {
+//                errors.add(e);
+//                Constants.debugLog("Error occurred, making the database a little worse.... Error: "
+//                    + e.getLocalizedMessage());
+//            }
+//        }
+//        if (errors.size() > 0) {
+//            throw errors.get(0);
+//        }
 
 
         return returnString;
+    }
+
+    private PrimaryKey getPrimaryKeyFromPassover(String itemType, String idIdentifier, Map<String, String> passoverIDs) throws Exception {
+        if (itemType.equals("Message")) {
+            throw new Exception("Cannot get primary key for Message from passover yet");
+        }
+        if (!passoverIDs.containsKey(idIdentifier)) {
+            throw new Exception("Passover Identifier not recognized for update action. " +
+                    "identifier = " + idIdentifier);
+        }
+        return new PrimaryKey("item_type", itemType, "id", passoverIDs.get(idIdentifier));
     }
 
     /**
@@ -403,19 +471,31 @@ public class DynamoDBHandler {
      *
      * @param databaseAction The CREATE database action.
      * @param passoverID The potential ID from the previous created item.
+     * @param passoverIDs The map of passoverIdentifiers to passoverIDs for the current transaction.
      * @return The Map that indicates the Put Item.
      * @throws Exception If the statement is malformed or done in the wrong order.
      */
     private Map<String, AttributeValue> getPutItem(DatabaseAction databaseAction,
-                                                            String passoverID) throws Exception {
+                                                            String passoverID, Map<String, String>
+                                                           passoverIDs) throws Exception {
         if (databaseAction.ifWithCreate) {
             if (passoverID == null) {
                 throw new Exception("An ifWithCreate CREATE statement must be after an initial CREATE statement!");
             }
             else {
-                for (AttributeValue value : databaseAction.item.values()) {
+                for (Map.Entry<String, AttributeValue> entry : databaseAction.item.entrySet()) {
+                    String name = entry.getKey();
+                    AttributeValue value = entry.getValue();
                     if (value.getS() != null && value.getS().equals("")) {
-                        value.setS(passoverID);
+                        if (databaseAction.passoverIdentifiers.containsKey(name)) {
+                            // This means that the database action has specifically specified
+                            // this ID to be used for this passover ID.
+                            value.setS(passoverIDs.get(databaseAction.passoverIdentifiers.
+                                    get(name)));
+                        }
+                        else {
+                            value.setS(passoverID);
+                        }
                     }
                 }
             }
@@ -431,11 +511,14 @@ public class DynamoDBHandler {
      *
      * @param databaseAction The {@link DatabaseAction} to update using the ID.
      * @param newID The newly generated ID to fill all the action's fields with.
+     * @param passoverIDs The map of passoverIdentifiers to passoverIDs for the current transaction.
      * @return The new {@link AttributeValueUpdate} map to use in the update statement.
      * @throws Exception If the update is in the wrong order (and cannot update with the newID).
      */
     private Map<String, AttributeValueUpdate> getUpdateItem(DatabaseAction databaseAction,
-                                                            String newID) throws Exception {
+                                                            String newID,
+                                                            Map<String, String> passoverIDs)
+                                                            throws Exception {
         if (databaseAction.ifWithCreate) {
             if (newID == null) {
                 throw new Exception("The Create statement needs to be first while updating!");
@@ -443,16 +526,28 @@ public class DynamoDBHandler {
             else {
                 List<String> stringList = new ArrayList<>();
                 stringList.add(newID);
-                for (AttributeValueUpdate valueUpdate: databaseAction.updateItem.values()) {
+                for (Map.Entry<String, AttributeValueUpdate> entry: databaseAction.updateItem.entrySet()) {
+                    String attributeName = entry.getKey();
+                    AttributeValueUpdate valueUpdate = entry.getValue();
                     // For each one that uses the id, switch it to the return string
-                    if (valueUpdate.getAction().equals("PUT")) {
-                        if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("")) {
-                            valueUpdate.setValue(new AttributeValue(newID));
+                    if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("")) {
+                        if (databaseAction.passoverIdentifiers.containsKey(attributeName)) {
+                            // This means that the database action has specifically specified
+                            // this ID to be used for this passover ID.
+                            String passoverID = passoverIDs.get(databaseAction.
+                                    passoverIdentifiers.get(attributeName));
+                            valueUpdate.setValue(new AttributeValue(passoverID));
                         }
-                    }
-                    else if (valueUpdate.getAction().equals("ADD") || valueUpdate.getAction().equals("DELETE")) {
-                        if (valueUpdate.getValue().getS() != null && valueUpdate.getValue().getS().equals("")) {
-                            valueUpdate.setValue(new AttributeValue(stringList));
+                        else {
+                            // There are no passoverIDs claiming it, therefore it is purely a in-
+                            // compiler created ID.
+                            if (valueUpdate.getAction().equals("PUT")) {
+                                valueUpdate.setValue(new AttributeValue(newID));
+                            }
+                            else if (valueUpdate.getAction().equals("ADD") || valueUpdate.getAction()
+                                .equals("DELETE")) {
+                                valueUpdate.setValue(new AttributeValue(stringList));
+                            }
                         }
                     }
                 }

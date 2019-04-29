@@ -16,6 +16,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Creates a Challenge in the database, checks the inputs, adds the Challenge to the members, to the
@@ -24,7 +25,19 @@ import java.util.List;
  * owner.
  */
 public class CreateChallenge {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateChallengeRequest createChallengeRequest, boolean ifWithCreate) throws Exception {
+    /**
+     * Gets the list of {@link DatabaseActionCompiler}s representing the overall transaction for the
+     * operation.
+     *
+     * @param fromID The ID of the User invoking the Lambda request.
+     * @param createChallengeRequest The {@link CreateChallengeRequest} representing the creation of
+     *                               the {@link main.java.databaseObjects.Challenge}.
+     * @param depth The current depth for the transaction. AKA how many compilers came directly
+     *              before it.
+     * @return The list of {@link DatabaseActionCompiler}s representing the overall transaction.
+     * @throws Exception If anything goes wrong... TODO bad answer
+     */
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateChallengeRequest createChallengeRequest, int depth) throws Exception {
         if (createChallengeRequest != null) {
             // Create challenge
             if (createChallengeRequest.owner != null && createChallengeRequest.endTime != null && createChallengeRequest
@@ -32,6 +45,7 @@ public class CreateChallenge {
                     null) {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
+                databaseActionCompiler.setPassoverIdentifier("Challenge" + Integer.toString(depth));
 
                 if (!fromID.equals(createChallengeRequest.owner) && !fromID.equals(Constants.adminKey)) {
                     throw new Exception("PERMISSIONS ERROR: You can only create challenges you're going to own!");
@@ -90,7 +104,14 @@ public class CreateChallenge {
                     }
                 }
 
-                databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest, ifWithCreate));
+                if (depth == 0) {
+                    databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest, null));
+                }
+                else {
+                    // TODO If we ever try to create Challenges automatically, figure out which
+                    // TODO attributes need which passover Identifiers.
+                    databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest, null));
+                }
 
                 // Update owners fields
                 String ownerItemType = ItemType.getItemType(createChallengeRequest.owner);
@@ -127,15 +148,17 @@ public class CreateChallenge {
                                 "", "submission", createChallengeRequest.streakUpdateSpanType,
                                 createChallengeRequest.streakUpdateInterval, createChallengeRequest.streakN);
                         compilers.addAll(CreateStreak.getCompilers(fromID, createStreakRequest,
-                                true));
+                                depth + 1, databaseActionCompiler.getPassoverIdentifier()));
                     }
                 }
 
                 // Manually add a CreatePostRequest, then send it, utilizing the Passover ID functionality!
                 CreatePostRequest createPostRequest = new CreatePostRequest(createChallengeRequest.owner,
-                        null, "", createChallengeRequest.access, "newChallenge", null, null,
+                        createChallengeRequest.owner + " created a new challenge", "",
+                        createChallengeRequest.access, "newChallenge", null, null,
                         createChallengeRequest.group);
-                compilers.addAll(CreatePost.getCompilers(fromID, createPostRequest, true));
+                compilers.addAll(CreatePost.getCompilers(fromID, createPostRequest, depth + 1,
+                        databaseActionCompiler.getPassoverIdentifier()));
 
                 return compilers;
             }

@@ -16,7 +16,7 @@ import java.util.*;
  * reviews and the receiver's reviews, and updates the receiver's current rating.
  */
 public class CreateReview {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateReviewRequest createReviewRequest, String surveyWorkoutID, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateReviewRequest createReviewRequest, String surveyWorkoutID, int depth) throws Exception {
         if (createReviewRequest != null) {
             if (createReviewRequest.by != null && createReviewRequest.about != null && createReviewRequest
                     .friendlinessRating != null && createReviewRequest.effectivenessRating != null &&
@@ -29,7 +29,9 @@ public class CreateReview {
                 }
 
                 // Create Review
-                databaseActionCompiler.add(ReviewDatabaseActionBuilder.create(createReviewRequest, ifWithCreate));
+                // TODO If we ever try to create Reviews automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(ReviewDatabaseActionBuilder.create(createReviewRequest, null));
 
                 // Add to by's reviews by
                 String byID = createReviewRequest.by;

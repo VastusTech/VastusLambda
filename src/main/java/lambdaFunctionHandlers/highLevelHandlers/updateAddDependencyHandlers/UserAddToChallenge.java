@@ -83,7 +83,7 @@ public class UserAddToChallenge {
             compilers.addAll(CreateStreak.getCompilers(fromID,
                     new CreateStreakRequest(userID, challengeID, "submission",
                             challenge.streakUpdateSpanType, challenge.streakUpdateInterval,
-                            challenge.streakN), false));
+                            challenge.streakN), 0, null));
         }
 
         return compilers;

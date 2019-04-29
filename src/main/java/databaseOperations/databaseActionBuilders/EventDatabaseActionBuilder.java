@@ -21,7 +21,7 @@ public class EventDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateEventRequest createEventRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreateEventRequest createEventRequest, Map<String, String> passoverIdentifiers) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Event.getEmptyItem();
         item.put("owner", new AttributeValue(createEventRequest.owner));
@@ -41,7 +41,7 @@ public class EventDatabaseActionBuilder {
                 .restriction)); }
         if (createEventRequest.tags != null) { item.put("tags", new AttributeValue
                 (Arrays.asList(createEventRequest.tags))); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }

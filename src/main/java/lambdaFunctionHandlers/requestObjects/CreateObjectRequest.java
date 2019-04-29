@@ -30,9 +30,11 @@ public abstract class CreateObjectRequest {
      */
     public boolean arrayHasEmptyString(String[]... arrayFields) {
         for (String[] field : arrayFields) {
-            for (String arrayField : field) {
-                if (arrayField != null && arrayField.equals("")) {
-                    return true;
+            if (field != null) {
+                for (String arrayField : field) {
+                    if (arrayField != null && arrayField.equals("")) {
+                        return true;
+                    }
                 }
             }
         }

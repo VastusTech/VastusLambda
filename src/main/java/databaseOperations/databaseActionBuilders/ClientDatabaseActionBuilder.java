@@ -21,7 +21,7 @@ public class ClientDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateClientRequest createClientRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreateClientRequest createClientRequest, Map<String, String> passoverIdentifiers) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Client.getEmptyItem();
         item.put("name", new AttributeValue(createClientRequest.name));
@@ -39,7 +39,7 @@ public class ClientDatabaseActionBuilder {
                 new AttributeValue(createClientRequest.federatedID)); }
         if (createClientRequest.enterpriseID != null) { item.put("enterpriseID",
                 new AttributeValue(createClientRequest.enterpriseID)); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
                 (Map<String, AttributeValue> createdItem, String id) -> {
                     return;
                 }

@@ -15,7 +15,7 @@ public class SponsorDatabaseActionBuilder {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
 
-    public static DatabaseAction create(CreateSponsorRequest createSponsorRequest, boolean ifWithCreate) {
+    public static DatabaseAction create(CreateSponsorRequest createSponsorRequest, Map<String, String> passoverIdentifiers) {
         // Handle the setting of the items!
         Map<String, AttributeValue> item = Sponsor.getEmptyItem();
         item.put("name", new AttributeValue(createSponsorRequest.name));
@@ -28,7 +28,7 @@ public class SponsorDatabaseActionBuilder {
                 .stripeID)); }
         if (createSponsorRequest.federatedID != null) { item.put("federatedID", new AttributeValue(createSponsorRequest
                 .federatedID)); }
-        return new CreateDatabaseAction(itemType, item, ifWithCreate,
+        return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 return;
             }

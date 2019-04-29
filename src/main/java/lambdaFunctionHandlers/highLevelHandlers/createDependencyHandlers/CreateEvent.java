@@ -18,7 +18,7 @@ import java.util.List;
  * owner, and the Challenge/Group that it is a part of.
  */
 public class CreateEvent {
-    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateEventRequest createEventRequest, boolean ifWithCreate) throws Exception {
+    public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateEventRequest createEventRequest, int depth) throws Exception {
         if (createEventRequest != null) {
             // Create event
             if (createEventRequest.owner != null && createEventRequest.time != null && createEventRequest
@@ -75,7 +75,9 @@ public class CreateEvent {
                     }
                 }
 
-                databaseActionCompiler.add(EventDatabaseActionBuilder.create(createEventRequest, ifWithCreate));
+                // TODO If we ever try to create Events automatically, figure out which
+                // TODO attributes need which passover Identifiers.
+                databaseActionCompiler.add(EventDatabaseActionBuilder.create(createEventRequest, null));
 
                 // Update owners fields
                 String ownerItemType = ItemType.getItemType(createEventRequest.owner);
