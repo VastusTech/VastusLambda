@@ -100,6 +100,9 @@ public class DatabaseActionCompiler {
         DBAction intoAction = intoDatabaseAction.action;
         DBAction fromAction = fromDatabaseAction.action;
 
+        // Add all the passover identifiers from one to the next
+        intoDatabaseAction.passoverIdentifiers.putAll(fromDatabaseAction.passoverIdentifiers);
+
         // For DatabaseAction, update all of these:
 
 //        Map<String, AttributeValue> item;
