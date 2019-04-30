@@ -89,7 +89,7 @@ public class DynamoDBHandler {
         String newlyCreatedID = null; // This indicates the created ID for the current compiler.
         String returnString = null; // This indicates the created ID for the first compiler
 
-        SingletonTimer.get().checkpoint("Pre-checking the actions check handlers");
+        SingletonTimer.get().endAndPushCheckpoint("Pre-checking the actions check handlers");
 
         // Pre-checking all the actions to catch an error earlier.
         for (DatabaseActionCompiler databaseActionCompiler : databaseActionCompilers) {
@@ -105,7 +105,7 @@ public class DynamoDBHandler {
             }
         }
 
-        SingletonTimer.get().checkpoint("Handling the transactions");
+        SingletonTimer.get().endAndPushCheckpoint("Handling the transactions");
 
         // List of transactions to commit all of them at the end.
         List<Transaction> transactions = new ArrayList<>();
@@ -425,7 +425,7 @@ public class DynamoDBHandler {
                     + e.getLocalizedMessage());
             }
 
-            SingletonTimer.get().checkpoint("Sending the notifications");
+            SingletonTimer.get().endAndPushCheckpoint("Sending the notifications");
 
             // Then it is safe to use Ably to send the notifications
             databaseActionCompiler.sendNotifications();

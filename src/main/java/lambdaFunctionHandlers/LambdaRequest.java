@@ -166,7 +166,7 @@ public class LambdaRequest {
         try {
             // First check all of the inputs for the stuff
             checkInputs();
-            SingletonTimer.get().checkpoint("Switch for action");
+            SingletonTimer.get().endAndPushCheckpoint("Switch for action");
 
             switch (Action.valueOf(action)) {
                 case CREATE:
@@ -460,7 +460,7 @@ public class LambdaRequest {
      * @throws Exception
      */
     private String handleCreate() throws Exception {
-        SingletonTimer.get().checkpoint("Get compilers for Create");
+        SingletonTimer.get().endAndPushCheckpoint("Get compilers for Create");
         List<DatabaseActionCompiler> compilers;
         try {
             switch (ItemType.valueOf(itemType)) {
@@ -521,7 +521,7 @@ public class LambdaRequest {
             throw new Exception("Item Type: " + itemType + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
-        SingletonTimer.get().checkpoint("Attempt the transaction");
+        SingletonTimer.get().endAndPushCheckpoint("Attempt the transaction");
         return DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
 
@@ -531,7 +531,7 @@ public class LambdaRequest {
 
     public void handleUpdateSet(String id) throws Exception {
         // switch all attributes, then if necessary, item type
-        SingletonTimer.get().checkpoint("Init compiler for Update Set");
+        SingletonTimer.get().endAndPushCheckpoint("Init compiler for Update Set");
         List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
@@ -875,7 +875,7 @@ public class LambdaRequest {
 
     public void handleUpdateAdd(String id) throws Exception {
         // switch all attributes, then if necessary, item type
-        SingletonTimer.get().checkpoint("Init compiler for Update Add");
+        SingletonTimer.get().endAndPushCheckpoint("Init compiler for Update Add");
         List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
@@ -1071,7 +1071,7 @@ public class LambdaRequest {
 
     public void handleUpdateRemove(String id) throws Exception {
         // switch all attributes, then if necessary, item type
-        SingletonTimer.get().checkpoint("Init compiler for Update Remove");
+        SingletonTimer.get().endAndPushCheckpoint("Init compiler for Update Remove");
         List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
@@ -1227,7 +1227,7 @@ public class LambdaRequest {
     }
 
     public void handleDelete(String id) throws Exception {
-        SingletonTimer.get().checkpoint("Init compiler for Delete");
+        SingletonTimer.get().endAndPushCheckpoint("Init compiler for Delete");
         List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
         try {
