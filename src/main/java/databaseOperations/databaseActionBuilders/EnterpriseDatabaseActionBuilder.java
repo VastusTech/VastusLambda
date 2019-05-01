@@ -11,6 +11,9 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.DeleteDatabaseAction;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateEnterpriseRequest;
 
+/**
+ * TODO
+ */
 public class EnterpriseDatabaseActionBuilder {
     final static private String itemType = "Enterprise";
 

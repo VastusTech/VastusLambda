@@ -10,6 +10,9 @@ import java.util.Map;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
+/**
+ * TODO
+ */
 public class ReviewDatabaseActionBuilder {
     final static private String itemType = "Review";
 

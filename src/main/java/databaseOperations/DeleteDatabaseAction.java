@@ -11,6 +11,13 @@ import java.util.Map;
  * otherwise. Conditionally means that if it passes the condition, then we delete the item.
  */
 public class DeleteDatabaseAction extends DatabaseAction {
+    /**
+     * TODO
+     *
+     * @param id
+     * @param itemType
+     * @param primaryKey
+     */
     public DeleteDatabaseAction(String id, String itemType, PrimaryKey primaryKey) {
         this.id = id;
         this.itemType = itemType;
@@ -19,6 +26,14 @@ public class DeleteDatabaseAction extends DatabaseAction {
         this.passoverIdentifiers = new HashMap<>();
     }
 
+    /**
+     * TODO
+     *
+     * @param id
+     * @param itemType
+     * @param primaryKey
+     * @param checkHandler
+     */
     public DeleteDatabaseAction(String id, String itemType, PrimaryKey primaryKey, CheckHandler
                                 checkHandler) {
         this.id = id;

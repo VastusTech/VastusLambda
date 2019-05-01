@@ -1,4 +1,4 @@
-package test.java.logicTests;
+package test.java.logic;
 
 import org.joda.time.DateTime;
 import org.junit.Test;

@@ -22,20 +22,41 @@ public class DatabaseActionCompiler {
     private List<DatabaseAction> databaseActions;
     private Map<String, DatabaseAction> databaseActionMap;
 
+    /**
+     * TODO
+     *
+     * @throws Exception
+     */
     public DatabaseActionCompiler() throws Exception {
         databaseActions = new ArrayList<>();
         databaseActionMap = new HashMap<>();
         notificationHandler = new NotificationHandler();
     }
 
+    /**
+     * TODO
+     *
+     * @return
+     */
     public List<DatabaseAction> getDatabaseActions() {
         return databaseActions;
     }
 
+    /**
+     * TODO
+     *
+     * @throws Exception
+     */
     public void sendNotifications() throws Exception {
         notificationHandler.sendMessages();
     }
 
+    /**
+     * TODO
+     *
+     * @param databaseAction
+     * @throws Exception
+     */
     public void add(DatabaseAction databaseAction) throws Exception {
         String id;
         if (databaseAction.action != DBAction.CREATE) {
@@ -95,6 +116,13 @@ public class DatabaseActionCompiler {
         }
     }
 
+    /**
+     * TODO
+     *
+     * @param intoDatabaseAction
+     * @param fromDatabaseAction
+     * @throws Exception
+     */
     private void consolidateDatabaseActions(DatabaseAction intoDatabaseAction, DatabaseAction fromDatabaseAction)
             throws Exception {
         DBAction intoAction = intoDatabaseAction.action;
@@ -165,6 +193,12 @@ public class DatabaseActionCompiler {
     }
 
     // This will use the updateItem from the databaseAction to adjust the item that will be created
+    /**
+     * TODO
+     *
+     * @param intoItem
+     * @param fromUpdateItem
+     */
     private void updateCreateItem(Map<String, AttributeValue> intoItem, Map<String, AttributeValueUpdate>
             fromUpdateItem) {
         for (Map.Entry<String, AttributeValueUpdate> entry: fromUpdateItem.entrySet()) {
@@ -204,6 +238,13 @@ public class DatabaseActionCompiler {
     }
 
     // This will adjust the updateItem of the databaseAction to reflect both databaseActions
+    /**
+     * TODO
+     *
+     * @param intoUpdateItem
+     * @param fromUpdateItem
+     * @throws Exception
+     */
     private void updateUpdateItem(Map<String, AttributeValueUpdate> intoUpdateItem, Map<String, AttributeValueUpdate>
             fromUpdateItem) throws Exception {
         for (Map.Entry<String, AttributeValueUpdate> entry: fromUpdateItem.entrySet()) {
@@ -233,25 +274,42 @@ public class DatabaseActionCompiler {
         }
     }
 
+    /**
+     * TODO
+     *
+     * @param databaseActions
+     * @throws Exception
+     */
     public void addAll(List<DatabaseAction> databaseActions) throws Exception {
         for (DatabaseAction databaseAction: databaseActions) {
             add(databaseAction);
         }
     }
 
+    /**
+     * TODO
+     *
+     * @return
+     */
     public NotificationHandler getNotificationHandler() {
         return this.notificationHandler;
     }
 
+    /**
+     * TODO
+     *
+     * @param passoverIdentifier
+     */
     public void setPassoverIdentifier(String passoverIdentifier) {
         this.passoverIdentifier = passoverIdentifier;
     }
 
+    /**
+     * TODO
+     *
+     * @return
+     */
     public String getPassoverIdentifier() {
         return this.passoverIdentifier;
     }
-
-//    public void addMessage(String to, String type, JsonObjectBuilder payload) throws Exception {
-////        notificationHandler.addMessage(to, type, payload);
-//    }
 }

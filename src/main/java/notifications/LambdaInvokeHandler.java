@@ -7,6 +7,7 @@ import com.amazonaws.services.lambda.model.InvokeRequest;
 import com.amazonaws.services.lambda.model.InvokeResult;
 
 import main.java.logic.Constants;
+import main.java.testing.TestHelper;
 
 /**
  * Handles all of the Lambda invocation logic
@@ -35,7 +36,12 @@ public class LambdaInvokeHandler {
      */
     private LambdaInvokeHandler() {
         // Initialize the handler
-        client = AWSLambdaClientBuilder.standard().withRegion(Regions.fromName("us-east-1")).build();
+        if (TestHelper.getIfTesting()) {
+            client = null;
+        }
+        else {
+            client = AWSLambdaClientBuilder.standard().withRegion(Regions.fromName("us-east-1")).build();
+        }
     }
 
     /**
@@ -47,8 +53,10 @@ public class LambdaInvokeHandler {
     void invokeLambda(String functionName, String payload) {
         Constants.debugLog("SENDING LAMBDA TO FUNCTION = " + functionName + ", PAYLOAD: \n" + payload);
         InvokeRequest request = new InvokeRequest().withFunctionName(functionName).withPayload(payload);
-        // TODO How to skip the response?
-        InvokeResult result = client.invoke(request);
-        Constants.debugLog("LOG RESULT FROM " + functionName + " LAMBDA: \n" + result.getLogResult());
+        if (client != null) {
+            // TODO How to skip the response?
+            InvokeResult result = client.invoke(request);
+            Constants.debugLog("LOG RESULT FROM " + functionName + " LAMBDA: \n" + result.getLogResult());
+        }
     }
 }

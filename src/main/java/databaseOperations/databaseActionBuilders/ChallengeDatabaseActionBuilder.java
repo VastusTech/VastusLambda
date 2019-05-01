@@ -15,6 +15,9 @@ import java.util.Map;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
+/**
+ * TODO
+ */
 public class ChallengeDatabaseActionBuilder {
     private static final String itemType = "Challenge";
 
@@ -48,6 +51,12 @@ public class ChallengeDatabaseActionBuilder {
                 .restriction)); }
         if (createChallengeRequest.tags != null) { item.put("tags", new AttributeValue
                 (Arrays.asList(createChallengeRequest.tags))); }
+        if (createChallengeRequest.streakN != null) { item.put("streakN", new AttributeValue(
+                createChallengeRequest.streakN)); }
+        if (createChallengeRequest.streakUpdateInterval != null) { item.put("streakUpdateInterval",
+                new AttributeValue(createChallengeRequest.streakUpdateInterval)); }
+        if (createChallengeRequest.streakUpdateSpanType != null) { item.put("streakUpdateSpanType",
+                new AttributeValue(createChallengeRequest.streakUpdateSpanType)); }
         return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 return;

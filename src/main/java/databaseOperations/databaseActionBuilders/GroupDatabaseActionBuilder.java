@@ -14,6 +14,9 @@ import java.util.Map;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
+/**
+ * TODO
+ */
 public class GroupDatabaseActionBuilder {
     final static private String itemType = "Group";
 

@@ -1,4 +1,4 @@
-package test.java.notificationTests;
+package test.java.notifications;
 
 import org.junit.Test;
 

@@ -1,8 +1,14 @@
 package main.java.databaseOperations;
 
 import main.java.logic.Constants;
+
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
@@ -16,6 +22,8 @@ import main.java.logic.TimeHelper;
 import main.java.logic.debugging.SingletonTimer;
 import main.java.databaseObjects.*;
 import main.java.databaseOperations.exceptions.ItemNotFoundException;
+import main.java.testing.TestHelper;
+import main.java.testing.TestTableHelper;
 
 import java.util.*;
 
@@ -33,7 +41,7 @@ public class DynamoDBHandler {
     private Map<String, Table> tables;
     private Table databaseTable;
     private Table messageTable;
-    private Table firebaseTokenTable;
+//    private Table firebaseTokenTable;
 
     /**
      * The get instance method for the Singleton design pattern. Ensures that only one instance of
@@ -51,22 +59,54 @@ public class DynamoDBHandler {
      * connections to the database tables and the initialization of the Transaction library usage.
      */
     private DynamoDBHandler() throws Exception {
+        SingletonTimer.get().pushCheckpoint("Instantiate DynamoDB Handler");
         // AWS CREDENTIALS GO HERE
-        client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
+
+        if (TestHelper.getIfTesting()) {
+            SingletonTimer.get().pushCheckpoint("Connect DynamoDB Local client");
+            client = AmazonDynamoDBClientBuilder.standard().withEndpointConfiguration(
+                    new AwsClientBuilder.EndpointConfiguration("http://localhost:" +
+                            TestHelper.getPort() +  "/", "us-east-1")).build();
+        }
+        else {
+            SingletonTimer.get().pushCheckpoint("Connect DynamoDB client");
+            client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
+        }
 
         long waitTimeSeconds = 10 * 60;
 
+        SingletonTimer.get().endAndPushCheckpoint("Verify or Create Transactions table");
         TransactionManager.verifyOrCreateTransactionTable(client, "Transactions", 10, 10, waitTimeSeconds);
+        SingletonTimer.get().endAndPushCheckpoint("Verify or Create Transaction Images table");
         TransactionManager.verifyOrCreateTransactionImagesTable(client, "TransactionImages", 10, 10, waitTimeSeconds);
 
+        SingletonTimer.get().endAndPushCheckpoint("Create the transaction manager");
         txManager = new TransactionManager(client, "Transactions", "TransactionImages");
 
+        if (TestHelper.getIfTesting()) {
+            SingletonTimer.get().endAndPushCheckpoint("Create the test database table");
+            databaseTable = TestTableHelper.getInstance().createAndFillDatabaseTable(client,
+                    TestHelper.getDatabaseTableJsonPath());
+            SingletonTimer.get().endAndPushCheckpoint("Connect to the message table");
+            messageTable = TestTableHelper.getInstance().createAndFillMessageTable(client,
+                    TestHelper.getMessagesTableJsonPath());
+//            SingletonTimer.get().endAndPushCheckpoint("Connect to the firebase token table");
+//            firebaseTokenTable = new Table(client, Constants.firebaseTokenTableName);
+        }
+        else {
+            SingletonTimer.get().endAndPushCheckpoint("Connect to the database table");
+            databaseTable = new Table(client, Constants.databaseTableName);
+            SingletonTimer.get().endAndPushCheckpoint("Connect to the message table");
+            messageTable = new Table(client, Constants.messageTableName);
+//            SingletonTimer.get().endAndPushCheckpoint("Connect to the firebase token table");
+//            firebaseTokenTable = new Table(client, Constants.firebaseTokenTableName);
+        }
+
         tables = new HashMap<>();
-        databaseTable = new Table(client, Constants.databaseTableName);
-        messageTable = new Table(client, Constants.messageTableName);
-        firebaseTokenTable = new Table(client, Constants.firebaseTokenTableName);
         tables.put(Constants.databaseTableName, databaseTable);
         tables.put(Constants.messageTableName, messageTable);
+
+        SingletonTimer.get().endCheckpoints(2);
     }
 
     /**
@@ -431,6 +471,8 @@ public class DynamoDBHandler {
             databaseActionCompiler.sendNotifications();
         }
 
+        SingletonTimer.get().endCheckpoint();
+
         // This is the most dangerous part of the code, where things could actually go really wrong
         // Commit and delete all the transactions at the end.
 //        List<Exception> errors = new ArrayList<>();
@@ -453,6 +495,15 @@ public class DynamoDBHandler {
         return returnString;
     }
 
+    /**
+     * TODO
+     *
+     * @param itemType
+     * @param idIdentifier
+     * @param passoverIDs
+     * @return
+     * @throws Exception
+     */
     private PrimaryKey getPrimaryKeyFromPassover(String itemType, String idIdentifier, Map<String, String> passoverIDs) throws Exception {
         if (itemType.equals("Message")) {
             throw new Exception("Cannot get primary key for Message from passover yet");

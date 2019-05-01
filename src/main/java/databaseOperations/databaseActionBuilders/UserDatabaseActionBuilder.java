@@ -9,6 +9,9 @@ import main.java.databaseOperations.UpdateDatabaseAction;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
+/**
+ * TODO
+ */
 public class UserDatabaseActionBuilder {
     private static PrimaryKey getPrimaryKey(String itemType, String id) {
         return new PrimaryKey("item_type", itemType, "id", id);

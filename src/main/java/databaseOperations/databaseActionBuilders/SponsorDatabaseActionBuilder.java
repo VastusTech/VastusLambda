@@ -8,6 +8,9 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateSponsorRequest;
 
 import java.util.Map;
 
+/**
+ * TODO
+ */
 public class SponsorDatabaseActionBuilder {
     final static private String itemType = "Sponsor";
 

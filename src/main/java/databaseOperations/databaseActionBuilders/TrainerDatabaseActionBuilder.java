@@ -16,6 +16,9 @@ import java.util.Map;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
+/**
+ * TODO
+ */
 public class TrainerDatabaseActionBuilder {
     final static private String itemType = "Trainer";
 

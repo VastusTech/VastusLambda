@@ -1,6 +1,8 @@
 package main.java.lambdaFunctionHandlers;
 
 import com.amazonaws.services.lambda.runtime.Context;
+
+import main.java.databaseOperations.DynamoDBHandler;
 import main.java.logic.Constants;
 import main.java.logic.debugging.SingletonTimer;
 
@@ -9,6 +11,7 @@ public class LambdaFunctionHandler {
         // LambdaResponse is initialized at the very end, before the return is sent
         // Put in a ping response to return as quickly as possible
         if (input.getAction() != null && input.getAction().equals("PING")) {
+            DynamoDBHandler.getInstance();
             return new LambdaResponse(null);
         }
         Constants.setLogger(context.getLogger());

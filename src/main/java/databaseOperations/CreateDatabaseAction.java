@@ -12,6 +12,14 @@ import java.util.Map;
 public class CreateDatabaseAction extends DatabaseAction {
     public UpdateWithIDHandler updateWithIDHandler;
 
+    /**
+     * TODO
+     *
+     * @param itemType
+     * @param item
+     * @param passoverIdentifiers
+     * @param updateWithIDHandler
+     */
     public CreateDatabaseAction(String itemType, Map<String, AttributeValue> item,
                                 Map<String, String> passoverIdentifiers, UpdateWithIDHandler
                                         updateWithIDHandler) {

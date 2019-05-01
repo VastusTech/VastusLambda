@@ -15,6 +15,9 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateStreakRequest;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
+/**
+ * TODO
+ */
 public class StreakDatabaseActionBuilder {
     final static private String itemType = "Streak";
 

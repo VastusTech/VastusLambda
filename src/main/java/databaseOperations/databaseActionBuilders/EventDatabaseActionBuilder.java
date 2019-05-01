@@ -14,6 +14,9 @@ import java.util.Map;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
+/**
+ * TODO
+ */
 public class EventDatabaseActionBuilder {
     private static final String itemType = "Event";
 

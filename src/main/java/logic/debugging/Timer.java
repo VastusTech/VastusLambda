@@ -97,7 +97,7 @@ public class Timer {
             if (parentSectionTime != -1) {
                 sb.append(", ");
                 sb.append(percentage);
-                sb.append("%):\n");
+                sb.append("%");
             }
             sb.append("):\n");
             for (int i = 0; i < subSections.size(); i++) {
@@ -145,9 +145,11 @@ public class Timer {
      * @param nextSectionName The name of the next section to be timed.
      */
     public void pushCheckpoint(String nextSectionName) {
-        TimeSection newTimeSection = new TimeSection(nextSectionName);
-        timeSectionStack.peek().add(newTimeSection);
-        timeSectionStack.push(newTimeSection);
+        if (fullTimeSection != null) {
+            TimeSection newTimeSection = new TimeSection(nextSectionName);
+            timeSectionStack.peek().add(newTimeSection);
+            timeSectionStack.push(newTimeSection);
+        }
     }
 
     /**
@@ -177,9 +179,11 @@ public class Timer {
      * @param nextSectionNames The array next section names to add onto the stack.
      */
     public void pushCheckpoints(String... nextSectionNames) {
-        long currentTime = getCurrentTime();
-        for (String nextSectionName : nextSectionNames) {
-            pushCheckpoint(nextSectionName, currentTime);
+        if (fullTimeSection != null) {
+            long currentTime = getCurrentTime();
+            for (String nextSectionName : nextSectionNames) {
+                pushCheckpoint(nextSectionName, currentTime);
+            }
         }
     }
 
@@ -191,9 +195,11 @@ public class Timer {
      * @param nextSectionName The next section name to start.
      */
     public void endAndPushCheckpoint(String nextSectionName) {
-        long currentTime = getCurrentTime();
-        endCheckpoint(currentTime);
-        pushCheckpoint(nextSectionName, currentTime);
+        if (fullTimeSection != null) {
+            long currentTime = getCurrentTime();
+            endCheckpoint(currentTime);
+            pushCheckpoint(nextSectionName, currentTime);
+        }
     }
 
     /**
@@ -205,12 +211,14 @@ public class Timer {
      * @param nextSectionNames The next section names for the next sections.
      */
     public void endAndPushCheckpoints(int numberOfCheckpoints, String... nextSectionNames) {
-        long currentTime = getCurrentTime();
-        for (int i = 0; i < numberOfCheckpoints; i++) {
-            endCheckpoint(currentTime);
-        }
-        for (String nextSectionName : nextSectionNames) {
-            pushCheckpoint(nextSectionName, currentTime);
+        if (fullTimeSection != null) {
+            long currentTime = getCurrentTime();
+            for (int i = 0; i < numberOfCheckpoints; i++) {
+                endCheckpoint(currentTime);
+            }
+            for (String nextSectionName : nextSectionNames) {
+                pushCheckpoint(nextSectionName, currentTime);
+            }
         }
     }
 
@@ -218,7 +226,9 @@ public class Timer {
      * Ends a section and goes up the stack.
      */
     public void endCheckpoint() {
-        timeSectionStack.pop().finish();
+        if (fullTimeSection != null) {
+            timeSectionStack.pop().finish();
+        }
     }
 
     /**
@@ -227,9 +237,11 @@ public class Timer {
      * @param numberOfCheckpoints The number of checkpoints to finish at the same time.
      */
     public void endCheckpoints(int numberOfCheckpoints) {
-        long currentTime = getCurrentTime();
-        for (int i = 0; i < numberOfCheckpoints; i++) {
-            endCheckpoint(currentTime);
+        if (fullTimeSection != null) {
+            long currentTime = getCurrentTime();
+            for (int i = 0; i < numberOfCheckpoints; i++) {
+                endCheckpoint(currentTime);
+            }
         }
     }
 

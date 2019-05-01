@@ -42,11 +42,21 @@ public abstract class DatabaseAction {
     // This determines whether the ID will be given through item or through the CREATE statment
     boolean ifWithCreate;
 
+    /**
+     * TODO
+     *
+     * @param primaryKey
+     */
     public void setPrimaryKey(PrimaryKey primaryKey) {
         this.primaryKey = primaryKey;
     }
 
     // TODO There's gotta be a better way to do this
+    /**
+     * TODO
+     *
+     * @return
+     */
     public String getTableName() {
         if (itemType != null && itemType.equals("Message")) {
             return Constants.messageTableName;
@@ -55,6 +65,11 @@ public abstract class DatabaseAction {
     }
 
     // TODO IMPORTANT: This only works with primary key attributes that are strings
+    /**
+     * TODO
+     *
+     * @return
+     */
     public Map<String, AttributeValue> getKey() {
         Map<String, AttributeValue> item = new HashMap<>();
         for (KeyAttribute keyAttribute : primaryKey.getComponents()) {

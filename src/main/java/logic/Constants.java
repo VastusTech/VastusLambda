@@ -13,32 +13,43 @@ public class Constants {
     public static boolean ifTesting = false;
 
     private static LambdaLogger logger;
-    public static boolean ifDebug = Boolean.parseBoolean(System.getenv("ifDebug"));
+    public static boolean ifDebug = Boolean.parseBoolean(Optional.ofNullable(
+            System.getenv("ifDebug")).orElse("false"));
 
-    public static int workoutShortestTimeSectionInterval = Integer.parseInt(Optional.ofNullable(System.getenv
-            ("workoutShortestTimeSectionInterval")).orElse("15"));
+    public static int workoutShortestTimeSectionInterval = Integer.parseInt(Optional.ofNullable(
+            System.getenv("workoutShortestTimeSectionInterval")).orElse("15"));
 
     // ID Creation stuff
-    public static int idLength = Integer.parseInt(Optional.ofNullable(System.getenv("idLength")).orElse("14"));
-    public static int numPrefix = Integer.parseInt(Optional.ofNullable(System.getenv("numPrefix")).orElse("2"));
+    public static int idLength = Integer.parseInt(Optional.ofNullable(
+            System.getenv("idLength")).orElse("14"));
+    public static int numPrefix = Integer.parseInt(Optional.ofNullable(
+            System.getenv("numPrefix")).orElse("2"));
 
     // Access Materials
-    public static String databaseTableName = System.getenv("databaseTableName");
-    public static String firebaseTokenTableName = System.getenv("firebaseTokenTableName");
-    public static String messageTableName = System.getenv("messageTableName");
-    public static String firebaseFunctionName = System.getenv("firebaseFunctionName");
-    public static String ablyFunctionName = System.getenv("ablyFunctionName");
-    public static String storageBucketName = System.getenv("storageBucketName");
+    public static String databaseTableName = Optional.ofNullable(System.getenv(
+            "databaseTableName")).orElse("Classics");
+    public static String firebaseTokenTableName = Optional.ofNullable(System.getenv(
+            "firebaseTokenTableName")).orElse("FirebaseTokens");
+    public static String messageTableName = Optional.ofNullable(System.getenv(
+            "messageTableName")).orElse("Messages");
+//    public static String firebaseFunctionName = Optional.ofNullable(System.getenv(
+//            "firebaseFunctionName")).orElse("VastusFirebaseLambdaFunction");
+    public static String ablyFunctionName = Optional.ofNullable(System.getenv(
+            "ablyFunctionName")).orElse("VastusAblyLambdaFunction");
+//    public static String storageBucketName = Optional.ofNullable(System.getenv(
+//            "storageBucketName")).orElse("vastusofficial");
 
     // Potential usage????
-    public static int timeoutSeconds = Integer.parseInt(Optional.ofNullable(System.getenv("timeoutSeconds")).orElse("10"));
+//    public static int timeoutSeconds = Integer.parseInt(Optional.ofNullable(System.getenv("timeoutSeconds")).orElse("10"));
 
     // Secret Information????
-    public static String userPoolName = System.getenv("userPoolName");
-    public static String userPoolID = System.getenv("userPoolID");
-    public static String userPoolClientID = System.getenv("userPoolClientID");
-    public static String userPoolSecretKey = System.getenv("userPoolSecretKey");
-    public static String adminKey = System.getenv("adminKey");
+    // TODO If we ever want to handle Cognito stuff here?
+//    public static String userPoolName = System.getenv("userPoolName");
+//    public static String userPoolID = System.getenv("userPoolID");
+//    public static String userPoolClientID = System.getenv("userPoolClientID");
+//    public static String userPoolSecretKey = System.getenv("userPoolSecretKey");
+    public static String adminKey = Optional.ofNullable(System.getenv("adminKey")).
+            orElse("admin");
 
     // Database Limits
     public static int userProfileImagePathsLimit = Integer.parseInt(Optional.ofNullable(System.getenv

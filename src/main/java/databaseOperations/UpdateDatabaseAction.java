@@ -18,6 +18,18 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 public class UpdateDatabaseAction extends DatabaseAction {
     // Use when you know the ID of the object and the value of the attribute
     // Use when you know the ID of the object, but not of the self ID attribute to update
+    /**
+     * TODO
+     *
+     * @param id
+     * @param itemType
+     * @param primaryKey
+     * @param attributeName
+     * @param attributeValue
+     * @param ifWithCreate
+     * @param action
+     * @throws Exception
+     */
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action) throws Exception {
         this.id = id;
@@ -32,6 +44,19 @@ public class UpdateDatabaseAction extends DatabaseAction {
     }
 
     // Use when you also want to verify something
+    /**
+     * TODO
+     *
+     * @param id
+     * @param itemType
+     * @param primaryKey
+     * @param attributeName
+     * @param attributeValue
+     * @param ifWithCreate
+     * @param action
+     * @param checkHandler
+     * @throws Exception
+     */
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action, CheckHandler checkHandler) throws Exception {
         this.id = id;
@@ -47,6 +72,18 @@ public class UpdateDatabaseAction extends DatabaseAction {
     }
 
     // Use when you know the ID of the object, but not of the passover attribute to update
+    /**
+     * TODO
+     *
+     * @param id
+     * @param itemType
+     * @param primaryKey
+     * @param attributeName
+     * @param passoverIdentifier
+     * @param action
+     * @param checkHandler
+     * @throws Exception
+     */
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName,
                                 String passoverIdentifier, UpdateAction action, CheckHandler checkHandler) throws Exception {
         this.id = id;
@@ -68,6 +105,17 @@ public class UpdateDatabaseAction extends DatabaseAction {
     }
 
     // Use when you don't know the ID of the object, but you do know the value of the attribute.
+    /**
+     * TODO
+     *
+     * @param itemType
+     * @param passoverIdentifier
+     * @param attributeName
+     * @param attributeValue
+     * @param action
+     * @param checkHandler
+     * @throws Exception
+     */
     public UpdateDatabaseAction(String itemType, String passoverIdentifier,
                                 String attributeName, AttributeValue attributeValue, UpdateAction action, CheckHandler checkHandler) throws Exception {
         this.id = "";
@@ -90,6 +138,16 @@ public class UpdateDatabaseAction extends DatabaseAction {
 
     // User when you don't know the passover ID of the object and you don't know the self ID of
     // the attribute.
+    /**
+     * TODO
+     *
+     * @param itemType
+     * @param passoverIdentifier
+     * @param attributeName
+     * @param action
+     * @param checkHandler
+     * @throws Exception
+     */
     public UpdateDatabaseAction(String itemType, String passoverIdentifier, String attributeName, UpdateAction action, CheckHandler checkHandler) throws Exception {
         this.id = "";
         this.idIdentifier = passoverIdentifier;
@@ -109,6 +167,14 @@ public class UpdateDatabaseAction extends DatabaseAction {
         initWithErrorCheck(attributeName, new AttributeValue(""), action);
     }
 
+    /**
+     * TODO
+     *
+     * @param attributeName
+     * @param attributeValue
+     * @param action
+     * @throws Exception
+     */
     private void initWithErrorCheck(String attributeName, AttributeValue attributeValue, UpdateAction action) throws
             Exception {
         if (attributeName != null && (ifWithCreate || attributeValue != null) && action != null) {
@@ -156,6 +222,10 @@ public class UpdateDatabaseAction extends DatabaseAction {
         }
     }
 
+    /**
+     * TODO
+     *
+     */
     public enum UpdateAction {
         PUT,
         ADD,

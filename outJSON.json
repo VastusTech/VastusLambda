@@ -1,0 +1,10 @@
+[ {
+  "item_type" : "Client",
+  "marker" : 1,
+  "reliabilityRating" : 0,
+  "time_created" : "2019-05-01T03:09:35+0000",
+  "id" : "CL0001",
+  "friends" : [ "CL0002", "CL0003", "CL0004" ],
+  "friendlinessRating" : 0,
+  "effectivenessRating" : 0
+} ]
