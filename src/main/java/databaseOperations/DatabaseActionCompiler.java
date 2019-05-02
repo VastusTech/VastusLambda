@@ -7,6 +7,7 @@ import main.java.databaseObjects.DatabaseItem;
 import main.java.notifications.NotificationHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,38 @@ public class DatabaseActionCompiler {
         databaseActions = new ArrayList<>();
         databaseActionMap = new HashMap<>();
         notificationHandler = new NotificationHandler();
+    }
+
+    /**
+     * TODO
+     *
+     * @param action
+     * @throws Exception
+     */
+    public DatabaseActionCompiler(DatabaseAction action) throws Exception {
+        this();
+        add(action);
+    }
+
+    /**
+     * TODO
+     *
+     * @param actions
+     * @throws Exception
+     */
+    public DatabaseActionCompiler(DatabaseAction... actions) throws Exception {
+        this(Arrays.asList(actions));
+    }
+
+    /**
+     * TODO
+     *
+     * @param actions
+     * @throws Exception
+     */
+    public DatabaseActionCompiler(List<DatabaseAction> actions) throws Exception {
+        this();
+        addAll(actions);
     }
 
     /**

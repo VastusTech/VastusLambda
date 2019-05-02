@@ -2,18 +2,18 @@ package main.java.testing;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.ItemCollection;
-import com.amazonaws.services.dynamodbv2.document.ScanOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
+import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DeleteTableRequest;
+import com.amazonaws.services.dynamodbv2.model.GlobalSecondaryIndex;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
+import com.amazonaws.services.dynamodbv2.model.Projection;
+import com.amazonaws.services.dynamodbv2.model.ProjectionType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanResult;
-import com.amazonaws.services.dynamodbv2.xspec.ExpressionSpecBuilder;
-import com.amazonaws.services.dynamodbv2.xspec.ScanExpressionSpec;
+import com.amazonaws.services.dynamodbv2.util.TableUtils;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,8 +27,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,13 +48,60 @@ public class TestTableHelper {
 
     private TestTableHelper() {}
 
-    public Table createAndFillDatabaseTable(AmazonDynamoDB client, String jsonPath)
+    public Table reinitTestDatabaseTable(AmazonDynamoDB client, String jsonPath) throws
+            IllegalArgumentException, IOException {
+        TableUtils.deleteTableIfExists(client, new DeleteTableRequest(Constants.databaseTableName));
+        return createAndFillDatabaseTable(client, jsonPath);
+    }
+
+    public Table reinitTestMessagesTable(AmazonDynamoDB client, String jsonPath) throws
+            IllegalArgumentException, IOException {
+        TableUtils.deleteTableIfExists(client, new DeleteTableRequest(Constants.messageTableName));
+        return createAndFillMessageTable(client, jsonPath);
+    }
+
+//    private Table createTestDatabaseTable(AmazonDynamoDB client) throws IllegalArgumentException {
+//        return createTable(client, Constants.databaseTableName, "item_type",
+//                "id");
+//    }
+//
+//    private Table createTestMessagesTable(AmazonDynamoDB client) throws IllegalArgumentException {
+//        return createTable(client, Constants.messageTableName, "board",
+//                "id");
+//    }
+
+//    public Table replaceTableWithInfoFromJSON(AmazonDynamoDB client, String tableName,
+//                                              String jsonPath) throws IOException {
+//        Table table = new Table(client, tableName);
+//        String hashKeyName = null;
+//        String rangeKeyName = null;
+//        for (KeySchemaElement element : table.describe().getKeySchema()) {
+//            switch (element.getKeyType()) {
+//                case "HASH":
+//                    hashKeyName = element.getAttributeName();
+//                    break;
+//                case "RANGE":
+//                    rangeKeyName = element.getAttributeName();
+//                    break;
+//                default:
+//                    throw new IllegalStateException("Unrecognized key type = " + element.getKeyType());
+//            }
+//        }
+//        if (hashKeyName == null || rangeKeyName == null) {
+//            throw new IllegalStateException("Table does not contain both a hash and range key " +
+//                    "for replacement!");
+//        }
+//        client.deleteTable(tableName);
+//        return createAndFillTable(client, jsonPath, tableName, hashKeyName, rangeKeyName);
+//    }
+
+    private Table createAndFillDatabaseTable(AmazonDynamoDB client, String jsonPath)
             throws IllegalArgumentException, IOException {
         return createAndFillTable(client, jsonPath, Constants.databaseTableName,
                 "item_type", "id");
     }
 
-    public Table createAndFillMessageTable(AmazonDynamoDB client, String jsonPath)
+    private Table createAndFillMessageTable(AmazonDynamoDB client, String jsonPath)
             throws IllegalArgumentException, IOException {
         return createAndFillTable(client, jsonPath, Constants.messageTableName, "board",
                 "id");
@@ -64,7 +111,7 @@ public class TestTableHelper {
         saveTableToJSON(new Table(client, tableName), outFilePath);
     }
 
-    public void saveTableToJSON(Table table, String filePath) throws IOException {
+    private void saveTableToJSON(Table table, String filePath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode rootNode = mapper.createArrayNode();
         for (Item item : table.scan()) {
@@ -146,12 +193,31 @@ public class TestTableHelper {
     }
 
     private Table createTable(AmazonDynamoDB client, String tableName, String hashKeyName, String rangeKeyName) {
-        client.createTable(Arrays.asList(new AttributeDefinition(hashKeyName,
-                        ScalarAttributeType.S), new AttributeDefinition(rangeKeyName,
-                        ScalarAttributeType.S)), tableName, Arrays.asList(new
-                        KeySchemaElement(hashKeyName, KeyType.HASH),
-                        new KeySchemaElement(rangeKeyName, KeyType.RANGE)),
+        CreateTableRequest request = new CreateTableRequest(Arrays.asList(new
+                AttributeDefinition(hashKeyName, ScalarAttributeType.S),
+                new AttributeDefinition(rangeKeyName, ScalarAttributeType.S)),
+                tableName, Arrays.asList(new KeySchemaElement(hashKeyName, KeyType.HASH),
+                new KeySchemaElement(rangeKeyName, KeyType.RANGE)),
                 new ProvisionedThroughput(10L, 10L));
+        if (tableName.equals(Constants.databaseTableName)) {
+            request.setAttributeDefinitions(Arrays.asList(new
+                            AttributeDefinition("item_type", ScalarAttributeType.S),
+                    new AttributeDefinition("username", ScalarAttributeType.S),
+                    new AttributeDefinition("id", ScalarAttributeType.S)));
+            request = request.withGlobalSecondaryIndexes(
+                    new GlobalSecondaryIndex()
+                    .withIndexName("item_type-username-index")
+                    .withProvisionedThroughput(new ProvisionedThroughput()
+                            .withReadCapacityUnits((long) 10)
+                            .withWriteCapacityUnits((long) 10))
+                    .withProjection(new Projection().withProjectionType(ProjectionType.ALL))
+                    .withKeySchema(Arrays.asList(new KeySchemaElement("item_type", KeyType.HASH),
+                    new KeySchemaElement("username", KeyType.RANGE)))
+            );
+        }
+
+        client.createTable(request);
+
         return new Table(client, tableName);
     }
 }

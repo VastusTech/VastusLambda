@@ -8,7 +8,6 @@ import org.junit.rules.ExternalResource;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import main.java.databaseOperations.DynamoDBHandler;
 import main.java.testing.TestHelper;
 
 public class LocalDynamoDBCreationRule extends ExternalResource {
@@ -33,7 +32,8 @@ public class LocalDynamoDBCreationRule extends ExternalResource {
 
     @Override
     protected void after() {
-        this.stopUnchecked(server);
+        // This makes the tests stop being able to access the server after the first rule run???
+//        this.stopUnchecked(server);
     }
 
     protected void stopUnchecked(DynamoDBProxyServer dynamoDbServer) {

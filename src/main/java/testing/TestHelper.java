@@ -1,10 +1,20 @@
 package main.java.testing;
 
+import main.java.databaseOperations.DynamoDBHandler;
+
 public class TestHelper {
     private static boolean ifTesting = false;
     private static String port = "8000";
-    private static String databaseTableJsonPath = "src/test/resources/databaseTestTables/table1.json";
-    private static String messagesTableJsonPath = "src/test/resources/messagesTestTables/table1.json";
+
+    public static void reinitTablesFromJSON(String databaseJsonName, String messagesTableJsonName)
+            throws Exception {
+        DynamoDBHandler.getInstance().setDatabaseTable(TestTableHelper.getInstance().
+                reinitTestDatabaseTable(DynamoDBHandler.getInstance().client,
+                        "src/test/resources/databaseTestTables/" + databaseJsonName));
+        DynamoDBHandler.getInstance().setMessageTable(TestTableHelper.getInstance().
+                reinitTestMessagesTable(DynamoDBHandler.getInstance().client,
+                        "src/test/resources/messagesTestTables/" + messagesTableJsonName));
+    }
 
     public static boolean getIfTesting() {
         return TestHelper.ifTesting;
@@ -20,21 +30,5 @@ public class TestHelper {
 
     public synchronized static void setPort(String port) {
         TestHelper.port = port;
-    }
-
-    public static String getDatabaseTableJsonPath() {
-        return databaseTableJsonPath;
-    }
-
-    public static void setDatabaseTableJsonPath(String databaseTableJsonPath) {
-        TestHelper.databaseTableJsonPath = databaseTableJsonPath;
-    }
-
-    public static String getMessagesTableJsonPath() {
-        return messagesTableJsonPath;
-    }
-
-    public static void setMessagesTableJsonPath(String messagesTableJsonPath) {
-        TestHelper.messagesTableJsonPath = messagesTableJsonPath;
     }
 }

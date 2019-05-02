@@ -16,9 +16,12 @@ import org.junit.ClassRule;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import main.java.databaseObjects.Client;
+import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.UserUpdateName;
 import main.java.logic.Constants;
 import main.java.testing.TestHelper;
 import main.java.testing.TestTableHelper;
@@ -30,10 +33,18 @@ public class DynamoDBHandlerTest {
     @ClassRule
     public static final LocalDynamoDBCreationRule dynamoDB = new LocalDynamoDBCreationRule();
 
+    @Before
+    public void init() throws Exception {
+        TestHelper.reinitTablesFromJSON("table1.json", "table1.json");
+    }
+
     @Test
-    public void testInit() throws Exception {
-//        DynamoDBHandler.getInstance().readItem(Constants.databaseTableName, new PrimaryKey());
+    public void test1() throws Exception {
+        DatabaseActionCompiler compiler = new DatabaseActionCompiler();
+        compiler.addAll(UserUpdateName.getActions("admin", "CL0001", "Client", "Leonid"));
+        DynamoDBHandler.getInstance().attemptTransaction(Collections.singletonList(compiler));
         Client client = Client.readClient("CL0001");
+        assertEquals("Leonid", client.name);
         TestTableHelper.getInstance().saveTableToJSON(DynamoDBHandler.getInstance().client,
                 Constants.databaseTableName, "outJSON.json");
     }

@@ -84,12 +84,14 @@ public class DynamoDBHandler {
         txManager = new TransactionManager(client, "Transactions", "TransactionImages");
 
         if (TestHelper.getIfTesting()) {
-            SingletonTimer.get().endAndPushCheckpoint("Create the test database table");
-            databaseTable = TestTableHelper.getInstance().createAndFillDatabaseTable(client,
-                    TestHelper.getDatabaseTableJsonPath());
-            SingletonTimer.get().endAndPushCheckpoint("Connect to the message table");
-            messageTable = TestTableHelper.getInstance().createAndFillMessageTable(client,
-                    TestHelper.getMessagesTableJsonPath());
+            databaseTable = null;
+            messageTable = null;
+//            SingletonTimer.get().endAndPushCheckpoint("Create the test database table");
+//            databaseTable = TestTableHelper.getInstance().createAndFillDatabaseTable(client,
+//                    TestHelper.getDatabaseTableJsonPath());
+//            SingletonTimer.get().endAndPushCheckpoint("Connect to the message table");
+//            messageTable = TestTableHelper.getInstance().createAndFillMessageTable(client,
+//                    TestHelper.getMessagesTableJsonPath());
 //            SingletonTimer.get().endAndPushCheckpoint("Connect to the firebase token table");
 //            firebaseTokenTable = new Table(client, Constants.firebaseTokenTableName);
         }
@@ -721,5 +723,15 @@ public class DynamoDBHandler {
             }
         }
         return returnMap;
+    }
+
+    public void setDatabaseTable(Table table) {
+        this.databaseTable = table;
+        tables.put(Constants.databaseTableName, table);
+    }
+
+    public void setMessageTable(Table table) {
+        this.messageTable = table;
+        tables.put(Constants.messageTableName, table);
     }
 }

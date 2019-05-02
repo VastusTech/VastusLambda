@@ -12,7 +12,7 @@ public class Constants {
     // THIS GETS IT FROM THE ENVIRONMENTAL VARIABLES FROM AWS LAMBDA (with encryption ;))
     public static boolean ifTesting = false;
 
-    private static LambdaLogger logger;
+    private static LambdaLogger logger = null;
     public static boolean ifDebug = Boolean.parseBoolean(Optional.ofNullable(
             System.getenv("ifDebug")).orElse("false"));
 
@@ -63,11 +63,16 @@ public class Constants {
 
     public static void debugLog(String message) {
         if (ifDebug) {
-            if (message != null) {
-                Constants.logger.log(message + "\n");
+            if (Constants.logger == null) {
+                System.out.println(message);
             }
             else {
-                Constants.logger.log("Tried to log a null message!\n");
+                if (message != null) {
+                    Constants.logger.log(message + '\n');
+                }
+                else {
+                    Constants.logger.log("Tried to log a null message!\n");
+                }
             }
         }
     }
