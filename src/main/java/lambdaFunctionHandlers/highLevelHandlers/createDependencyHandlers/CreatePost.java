@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import main.java.databaseObjects.DatabaseObject;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Group;
@@ -67,10 +68,17 @@ public class CreatePost {
                         if (depth == 0 && ifNewType) {
                             throw new Exception("The User cannot directly create a new Item Post");
                         }
-                        if (createPostRequest.about == null) {
-                            throw new Exception("PostType of " + postType + " missing the \"about\" section!");
+                        if (!ifNewType) {
+                            if (createPostRequest.about == null) {
+                                throw new Exception("PostType of " + postType + " missing the \"about\" section!");
+                            } else {
+                                DatabaseObject.readDatabaseObject(createPostRequest.about, postType);
+                            }
                         }
                     }
+                }
+                else if (createPostRequest.about != null) {
+                    throw new Exception("Post with about must have a non-null post type!");
                 }
 
                 // Make sure the post isn't too much
@@ -83,10 +91,18 @@ public class CreatePost {
                 // Add the post to the by's
                 String by = createPostRequest.by;
                 String byItemType = ItemType.getItemType(by);
+
+                if (byItemType.equals("Client") && createPostRequest.access.equals("public")) {
+                    throw new Exception("Clients cannot create public posts!");
+                }
+
                 databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddPost(by, byItemType, null, true));
 
                 // Add to the post's group
                 if (createPostRequest.group != null) {
+                    if (!Group.readGroup(createPostRequest.group).members.contains(createPostRequest.by)) {
+                        throw new Exception("Cannot create a post for a Group you are not a part of");
+                    }
                     databaseActionCompiler.add(GroupDatabaseActionBuilder.updateAddPost(createPostRequest.group,
                             null, true));
                 }

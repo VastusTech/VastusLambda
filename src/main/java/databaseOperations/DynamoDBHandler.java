@@ -2,13 +2,9 @@ package main.java.databaseOperations;
 
 import main.java.logic.Constants;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
@@ -23,7 +19,6 @@ import main.java.logic.debugging.SingletonTimer;
 import main.java.databaseObjects.*;
 import main.java.databaseOperations.exceptions.ItemNotFoundException;
 import main.java.testing.TestHelper;
-import main.java.testing.TestTableHelper;
 
 import java.util.*;
 
@@ -647,14 +642,11 @@ public class DynamoDBHandler {
         Random random = new Random();
         double range = random.nextDouble();
         String idNum = Long.toString((long)(range*Math.pow(10, numDigits)));
-        StringBuilder idBuilder = new StringBuilder(idNum);
 
-        while (idNum.length() != numDigits) {
-            idBuilder.insert(0, "0");
-        }
+        String zeros = new String(new char[numDigits - idNum.length()])
+                .replace('\0', '0');
 
-        idBuilder.insert(0, prefix);
-        return idBuilder.toString();
+        return prefix + zeros + idNum;
     }
 
     /**

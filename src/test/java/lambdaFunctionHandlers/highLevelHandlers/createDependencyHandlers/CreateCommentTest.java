@@ -6,6 +6,8 @@ import org.junit.ClassRule;
 import main.java.testing.TestHelper;
 import test.java.LocalDynamoDBCreationRule;
 
+
+
 public class CreateCommentTest {
     @ClassRule
     public static LocalDynamoDBCreationRule rule = new LocalDynamoDBCreationRule();

@@ -6,6 +6,8 @@ import org.junit.ClassRule;
 import main.java.testing.TestHelper;
 import test.java.LocalDynamoDBCreationRule;
 
+// TODO REVISIT ONCE WE IMPLEMENT AGAIN
+
 public class CreateEnterpriseTest {
     @ClassRule
     public static LocalDynamoDBCreationRule rule = new LocalDynamoDBCreationRule();

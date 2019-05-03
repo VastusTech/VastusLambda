@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.databaseObjects.User;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Group;
@@ -45,6 +46,9 @@ public class CreateChallenge {
                     null) {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
+
+                // TODO This needs to be a more foolproof system for getting a completely unique
+                // TODO identifier
                 databaseActionCompiler.setPassoverIdentifier("Challenge" + Integer.toString(depth));
 
                 if (!fromID.equals(createChallengeRequest.owner) && !fromID.equals(Constants.adminKey)) {
@@ -55,6 +59,12 @@ public class CreateChallenge {
                 new DateTime(createChallengeRequest.endTime);
                 if (Integer.parseInt(createChallengeRequest.capacity) <= 0) {
                     throw new Exception("The capacity must be greater than 1!!");
+                }
+                if (createChallengeRequest.difficulty != null) {
+                    int difficulty = Integer.parseInt(createChallengeRequest.difficulty);
+                    if (difficulty < 1 || difficulty > 3) {
+                        throw new Exception("Difficulty must be 1, 2, or 3!");
+                    }
                 }
 
                 if (createChallengeRequest.access != null) {
@@ -103,6 +113,12 @@ public class CreateChallenge {
                         throw new Exception("Challenge type must be nothing or \"streak\"!");
                     }
                 }
+                else if (createChallengeRequest.streakN != null || createChallengeRequest
+                            .streakUpdateSpanType != null || createChallengeRequest
+                            .streakUpdateInterval != null) {
+                    throw new Exception("Non-streak Challenge cannot have streak attributes like " +
+                            "\"streakN\", \"streakUpdateSpanType\", or \"streakUpdateInterval\"");
+                }
 
                 if (depth == 0) {
                     databaseActionCompiler.add(ChallengeDatabaseActionBuilder.create(createChallengeRequest, null));
@@ -125,7 +141,11 @@ public class CreateChallenge {
 
                 // Update each members fields
                 if (createChallengeRequest.members != null) {
+                    User owner = User.readUser(createChallengeRequest.owner);
                     for (String member : createChallengeRequest.members) {
+                        if (!(member.equals(createChallengeRequest.owner) || owner.friends.contains(member))) {
+                            throw new Exception("Existing members contains a user not in the owner's friends");
+                        }
                         String memberItemType = ItemType.getItemType(member);
                         databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddChallenge
                                 (member, memberItemType, null, true));
@@ -134,6 +154,9 @@ public class CreateChallenge {
 
                 // Add to the challenge's group
                 if (createChallengeRequest.group != null) {
+                    if (!Group.readGroup(createChallengeRequest.group).owners.contains(createChallengeRequest.owner)) {
+                        throw new Exception("Group Challenge owner must also be an owner of the Group");
+                    }
                     databaseActionCompiler.add(GroupDatabaseActionBuilder.updateAddChallenge(createChallengeRequest.group,
                             null, true));
                 }

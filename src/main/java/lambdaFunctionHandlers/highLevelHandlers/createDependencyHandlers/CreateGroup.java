@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.databaseObjects.User;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -47,6 +48,30 @@ public class CreateGroup {
                         }
                     }
                     createGroupRequest.members = members.toArray(new String[]{});
+                }
+
+                if (!fromID.equals(Constants.adminKey)) {
+                    User from = User.readUser(fromID);
+                    for (String owner : createGroupRequest.owners) {
+                        if (!owner.equals(fromID) && !from.friends.contains(owner)) {
+                            throw new Exception("Cannot make a Group with an owner who is not your friend!");
+                        }
+                    }
+                    for (String member : createGroupRequest.members) {
+                        if (!member.equals(fromID) && !from.friends.contains(member)) {
+                            throw new Exception("Cannot make a Group with a member who is not your friend!");
+                        }
+                    }
+                }
+
+                if (!(createGroupRequest.access.equals("public")
+                        || createGroupRequest.access.equals("private"))) {
+                    throw new Exception("Unrecognized access = " + createGroupRequest.access);
+                }
+
+                if (!(createGroupRequest.restriction == null
+                        || createGroupRequest.restriction.equals("invite"))) {
+                    throw new Exception("Unrecognized restriction = " + createGroupRequest.restriction);
                 }
 
                 // Create the group
