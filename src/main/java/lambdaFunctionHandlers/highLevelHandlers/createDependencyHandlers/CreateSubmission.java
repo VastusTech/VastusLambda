@@ -15,6 +15,7 @@ import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActi
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateSubmissionRequest;
+import main.java.logic.TimeHelper;
 
 /**
  * Creates a Submission in the database, checks the inputs, adds the Submission to the author and
@@ -84,7 +85,8 @@ public class CreateSubmission {
                     else {
                         for (String streakID : intersection) {
                             // INVARIANT: Will only run once whenever it gets here
-                            databaseActionCompiler.addAll(StreakAddN.getActions(fromID, streakID));
+                            databaseActionCompiler.addAll(StreakAddN.getActions(fromID, streakID,
+                                    TimeHelper.now()));
                         }
                     }
                 }

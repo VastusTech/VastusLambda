@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 
 import java.util.Map;
 
+import main.java.logic.TimeHelper;
+
 /**
  * A Streak is a specific recurring numerical event keeper. This keeps track of how large someone's
  * streak is by updating it at a specific span of a specific interval, having to complete a task
@@ -19,6 +21,7 @@ public class Streak extends DatabaseObject {
     public int bestN;
     public int currentN;
     public DateTime lastUpdated;
+    public DateTime lastAttemptStarted;
     public String streakType;
     public UpdateSpanType updateSpanType; // When it updates
     public int updateInterval; // After how many spans, it updates
@@ -32,6 +35,7 @@ public class Streak extends DatabaseObject {
         this.bestN = item.getNumber("bestN").intValueExact();
         this.currentN = item.getNumber("currentN").intValueExact();
         this.lastUpdated = new DateTime(item.getString("lastUpdated"));
+        this.lastAttemptStarted = new DateTime(item.getString("lastAttemptStarted"));
         this.streakType = item.getString("streakType");
         this.updateSpanType = UpdateSpanType.valueOf(item.getString("updateSpanType"));
         this.updateInterval = Integer.parseInt(item.getString("updateInterval"));
@@ -44,7 +48,8 @@ public class Streak extends DatabaseObject {
         item.put("N", new AttributeValue().withN("0"));
         item.put("bestN", new AttributeValue().withN("0"));
         item.put("currentN", new AttributeValue().withN("0"));
-        item.put("lastUpdated", new AttributeValue(new DateTime().toString()));
+        item.put("lastUpdated", new AttributeValue(TimeHelper.nowString()));
+        item.put("lastAttemptStarted", new AttributeValue(TimeHelper.nowString()));
         return item;
     }
 

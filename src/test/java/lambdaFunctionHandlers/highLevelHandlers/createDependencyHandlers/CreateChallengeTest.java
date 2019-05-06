@@ -18,6 +18,7 @@ import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandle
 import main.java.lambdaFunctionHandlers.requestObjects.CreateChallengeRequest;
 import main.java.logic.Constants;
 import main.java.testing.TestHelper;
+import main.java.testing.TestTableHelper;
 import test.java.LocalDynamoDBCreationRule;
 
 import static junit.framework.TestCase.assertTrue;
@@ -290,6 +291,8 @@ public class CreateChallengeTest {
         assertTrue(post.videoPaths.isEmpty());
         assertTrue(post.likes.isEmpty());
         assertTrue(post.comments.isEmpty());
+        TestTableHelper.getInstance().saveTableToJSON(DynamoDBHandler.getInstance().client,
+                Constants.databaseTableName, "out.json");
     }
     @Test
     public void createStreakChallengeWithExtraInfo() throws Exception {

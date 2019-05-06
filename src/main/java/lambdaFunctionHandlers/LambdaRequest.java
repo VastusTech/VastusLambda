@@ -2,6 +2,7 @@ package main.java.lambdaFunctionHandlers;
 
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
+import main.java.logic.TimeHelper;
 import main.java.logic.debugging.SingletonTimer;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.DynamoDBHandler;
@@ -11,6 +12,7 @@ import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHan
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.requestObjects.*;
+import main.java.testing.TestHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1051,7 +1053,7 @@ public class LambdaRequest {
                     break;
                 case N:
                     if (itemType.equals("Streak")) {
-                        databaseActionCompiler.addAll(StreakAddN.getActions(fromID, id));
+                        databaseActionCompiler.addAll(StreakAddN.getActions(fromID, id, TimeHelper.now()));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
                                 itemType + "!");

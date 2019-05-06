@@ -42,7 +42,15 @@ public class CreateStreak {
                 }
                 try {
                     switch (Streak.UpdateSpanType.valueOf(createStreakRequest.updateSpanType)) {
+                        case hourly:
+                            break;
                         case daily:
+                            break;
+                        case weekly:
+                            break;
+                        case monthly:
+                            break;
+                        case yearly:
                             break;
                         default:
                             throw new Exception("Update Span Type: " + createStreakRequest.updateSpanType
@@ -54,7 +62,9 @@ public class CreateStreak {
                             createStreakRequest.updateSpanType);
                 }
                 try {
-                    Integer.parseInt(createStreakRequest.updateInterval);
+                    if (Integer.parseInt(createStreakRequest.updateInterval) != 1) {
+                        throw new Exception("Non-single update intervals not implemented yet!");
+                    }
                 }
                 catch (NumberFormatException e) {
                     throw new Exception("Could not read updateInterval: "

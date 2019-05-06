@@ -45,6 +45,10 @@ public class StreakDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "lastUpdated", new AttributeValue(lastUpdated), false, PUT);
     }
 
+    public static DatabaseAction updateLastAttemptStarted(String id, String lastAttemptStarted) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "lastAttemptStarted", new AttributeValue(lastAttemptStarted), false, PUT);
+    }
+
     public static DatabaseAction updateAddN(String id) throws Exception {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "N", new AttributeValue().withN("1"), false, ADD);
     }
@@ -65,9 +69,10 @@ public class StreakDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "currentN", new AttributeValue().withN("1"), false, ADD);
     }
 
-    public static DatabaseAction resetCurrentNToZero(String id) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "currentN", new AttributeValue().withN("0"), false, PUT);
-    }
+    // Will never be used?
+//    public static DatabaseAction resetCurrentNToZero(String id) throws Exception {
+//        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "currentN", new AttributeValue().withN("0"), false, PUT);
+//    }
 
     public static DatabaseAction resetCurrentNToOne(String id) throws Exception {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "currentN", new AttributeValue().withN("1"), false, PUT);
