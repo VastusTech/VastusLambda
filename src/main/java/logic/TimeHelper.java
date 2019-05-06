@@ -87,6 +87,22 @@ public class TimeHelper {
         return firstDatesOfYearBetween(since, now());
     }
 
+    public static DateTime hoursAfter(DateTime time, int numberOfHours) {
+        return time.plusHours(numberOfHours);
+    }
+    public static DateTime daysAfter(DateTime time, int numberOfDays) {
+        return time.plusDays(numberOfDays);
+    }
+    public static DateTime weeksAfter(DateTime time, int numberOfWeeks) {
+        return time.plusWeeks(numberOfWeeks);
+    }
+    public static DateTime monthsAfter(DateTime time, int numberOfMonths) {
+        return time.plusMonths(numberOfMonths);
+    }
+    public static DateTime yearsAfter(DateTime time, int numberOfYears) {
+        return time.plusYears(numberOfYears);
+    }
+
 
 
     /**

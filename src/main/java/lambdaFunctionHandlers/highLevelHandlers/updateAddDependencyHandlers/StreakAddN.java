@@ -68,9 +68,36 @@ public class StreakAddN {
                 // Then this is also in a new span, so we reset currentN
                 currentN = 0;
 
+                // We need to spoof the next attempt started so that it actually indicates the
+                // beginning of the time interval that it is started in. This is for multiple
+                // spanned Streaks and for multiple sub task Streaks. This way, someone cannot
+                // complete the first task late and give themselves extra time.
+                DateTime attemptStarted = streak.lastAttemptStarted;
+                DateTime spoofNextAttemptStarted;
+                int interval = streak.updateInterval;
+                switch (streak.updateSpanType) {
+                    case hourly:
+                        spoofNextAttemptStarted = TimeHelper.hoursAfter(attemptStarted, interval);
+                        break;
+                    case daily:
+                        spoofNextAttemptStarted = TimeHelper.daysAfter(attemptStarted, interval);
+                        break;
+                    case weekly:
+                        spoofNextAttemptStarted = TimeHelper.weeksAfter(attemptStarted, interval);
+                        break;
+                    case monthly:
+                        spoofNextAttemptStarted = TimeHelper.monthsAfter(attemptStarted, interval);
+                        break;
+                    case yearly:
+                        spoofNextAttemptStarted = TimeHelper.yearsAfter(attemptStarted, interval);
+                        break;
+                    default:
+                        throw new Exception("Unhandled streak span type!");
+                }
+
                 // The new attempt was started, so update the last attempt started value
                 databaseActions.add(StreakDatabaseActionBuilder.updateLastAttemptStarted(streakID,
-                        TimeHelper.isoString(now)));
+                        TimeHelper.isoString(spoofNextAttemptStarted)));
             }
             // Then we check to see if the currentN is where it needs to be to update the N.
             if (currentN + 1 == streak.streakN) {

@@ -44,16 +44,16 @@ public class StreakAddNTest {
     @Test
     public void testAddFirstStreakNAfterABit() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 25);
-        testStreakAttributes(getStreakAfterUpdates(id, 25),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 24);
+        testStreakAttributes(getStreakAfterUpdates(id, 24),
                 1, 1, 1, lastAttemptStarted);
     }
 
     @Test
     public void testAddFirstStreakNAfterALongerWhile() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 50);
-        testStreakAttributes(getStreakAfterUpdates(id, 50),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 48);
+        testStreakAttributes(getStreakAfterUpdates(id, 48),
                 1, 1, 1, lastAttemptStarted);
     }
 
@@ -62,7 +62,7 @@ public class StreakAddNTest {
     public void testAddStreakNEarlyEarly() throws Exception {
         String id = "ST408476013919";
         DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 0);
-        testStreakAttributes(getStreakAfterUpdates(id, 0, 2),
+        testStreakAttributes(getStreakAfterUpdates(id, 0, 1),
                 1, 1, 2, lastAttemptStarted);
     }
 
@@ -78,53 +78,53 @@ public class StreakAddNTest {
     @Test
     public void testAddStreakNEarlyLate() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 50);
-        testStreakAttributes(getStreakAfterUpdates(id, 0, 50),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 48);
+        testStreakAttributes(getStreakAfterUpdates(id, 0, 48),
                 1, 1, 1, lastAttemptStarted);
     }
     // On Time Early
     @Test
     public void testAddStreakNOnTimeEarly() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 25);
-        testStreakAttributes(getStreakAfterUpdates(id, 25, 26),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 24);
+        testStreakAttributes(getStreakAfterUpdates(id, 24, 25),
                 1, 1, 2, lastAttemptStarted);
     }
     // On Time On Time
     @Test
     public void testAddStreakNOnTimeOnTime() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 40);
-        testStreakAttributes(getStreakAfterUpdates(id, 25, 40),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 48);
+        testStreakAttributes(getStreakAfterUpdates(id, 24, 48),
                 2, 2, 1, lastAttemptStarted);
     }
     // On Time Late
     @Test
     public void testAddStreakNOnTimeLate() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 70);
-        testStreakAttributes(getStreakAfterUpdates(id, 25, 70),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 72);
+        testStreakAttributes(getStreakAfterUpdates(id, 24, 72),
                 1, 1, 1, lastAttemptStarted);
     }
     @Test
     public void testAddStreakNEarlyEarlyEarly() throws Exception {
         String id = "ST408476013919";
         DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 0);
-        testStreakAttributes(getStreakAfterUpdates(id, 0, 2, 3),
+        testStreakAttributes(getStreakAfterUpdates(id, 0, 1, 2),
                 1, 1, 3, lastAttemptStarted);
     }
     @Test
     public void testAddStreakNEarlyEarlyOnTime() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 20);
-        testStreakAttributes(getStreakAfterUpdates(id, 0, 2, 20),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 24);
+        testStreakAttributes(getStreakAfterUpdates(id, 0, 1, 24),
                 2, 2, 1, lastAttemptStarted);
     }
     @Test
     public void testAddStreakNEarlyEarlyLate() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 70);
-        testStreakAttributes(getStreakAfterUpdates(id, 0, 2, 70),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 48);
+        testStreakAttributes(getStreakAfterUpdates(id, 0, 1, 48),
                 1, 1, 1, lastAttemptStarted);
     }
     @Test
@@ -144,50 +144,50 @@ public class StreakAddNTest {
     @Test
     public void testAddStreakNEarlyOnTimeLate() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 80);
-        testStreakAttributes(getStreakAfterUpdates(id, 0, 24, 80),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 72);
+        testStreakAttributes(getStreakAfterUpdates(id, 0, 24, 72),
                 1, 2, 1, lastAttemptStarted);
     }
     @Test
     public void testAddStreakNOnTimeEarlyEarly() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 10);
-        testStreakAttributes(getStreakAfterUpdates(id, 10, 11, 12),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 24);
+        testStreakAttributes(getStreakAfterUpdates(id, 24, 25, 26),
                 1, 1, 3, lastAttemptStarted);
     }
     @Test
     public void testAddStreakNOnTimeEarlyOnTime() throws Exception {
         String id = "ST408476013919";
         DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 48);
-        testStreakAttributes(getStreakAfterUpdates(id, 10, 11, 48),
+        testStreakAttributes(getStreakAfterUpdates(id, 24, 25, 48),
                 2, 2, 1, lastAttemptStarted);
     }
     @Test
     public void testAddStreakNOnTimeEarlyLate() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 80);
-        testStreakAttributes(getStreakAfterUpdates(id, 10, 11, 80),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 72);
+        testStreakAttributes(getStreakAfterUpdates(id, 24, 25, 72),
                 1, 1, 1, lastAttemptStarted);
     }
     @Test
     public void testAddStreakNOnTimeOnTimeEarly() throws Exception {
         String id = "ST408476013919";
         DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 48);
-        testStreakAttributes(getStreakAfterUpdates(id, 10, 48, 49),
+        testStreakAttributes(getStreakAfterUpdates(id, 24, 48, 49),
                 2, 2, 2, lastAttemptStarted);
     }
     @Test
     public void testAddStreakNOnTimeOnTimeOnTime() throws Exception {
         String id = "ST408476013919";
         DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 72);
-        testStreakAttributes(getStreakAfterUpdates(id, 10, 48, 72),
+        testStreakAttributes(getStreakAfterUpdates(id, 24, 48, 72),
                 3, 3, 1, lastAttemptStarted);
     }
     @Test
     public void testAddStreakNOnTimeOnTimeLate() throws Exception {
         String id = "ST408476013919";
-        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 100);
-        testStreakAttributes(getStreakAfterUpdates(id, 10, 48, 100),
+        DateTime lastAttemptStarted = TimeHelper.hoursFrom(Streak.readStreak(id).lastUpdated, 96);
+        testStreakAttributes(getStreakAfterUpdates(id, 10, 48, 96),
                 1, 2, 1, lastAttemptStarted);
     }
 
