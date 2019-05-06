@@ -20,6 +20,12 @@ public class Gym extends User {
     public String gymType;
     public float paymentSplit;
 
+    /**
+     * The main constructor for the Gym class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     Gym(Item item) throws Exception {
         super(item);
         this.address = item.getString("address");
@@ -38,6 +44,11 @@ public class Gym extends User {
         if (paymentSplit != null) { this.paymentSplit = Float.parseFloat(paymentSplit); }
     }
 
+    /**
+     * Gets the empty item with the default values for the Gym object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("item_type", new AttributeValue("Gym"));
@@ -51,7 +62,15 @@ public class Gym extends User {
         return item;
     }
 
-    // TODO Implement cache system here again?
+    /**
+     * Reads a Gym from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Gym object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static Gym readGym(String id) throws Exception {
         return (Gym) read(tableName, getPrimaryKey("Gym", id));
     }

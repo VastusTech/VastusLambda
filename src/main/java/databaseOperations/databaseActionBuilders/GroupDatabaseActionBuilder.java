@@ -15,7 +15,8 @@ import java.util.Map;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Group} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Groups.
  */
 public class GroupDatabaseActionBuilder {
     final static private String itemType = "Group";

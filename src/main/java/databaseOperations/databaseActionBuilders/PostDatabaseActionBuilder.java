@@ -11,7 +11,8 @@ import java.util.*;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Post} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Posts.
  */
 public class PostDatabaseActionBuilder {
     final static private String itemType = "Post";

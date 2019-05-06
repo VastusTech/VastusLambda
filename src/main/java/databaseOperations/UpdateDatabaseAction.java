@@ -16,19 +16,18 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
  * database, so that we decrease the chance of any weird database errors.
  */
 public class UpdateDatabaseAction extends DatabaseAction {
-    // Use when you know the ID of the object and the value of the attribute
-    // Use when you know the ID of the object, but not of the self ID attribute to update
     /**
-     * TODO
+     * Initializes a update database action when you know both the ID of the object to update, but
+     * you may or may not know the value of the attribute.
      *
-     * @param id
-     * @param itemType
-     * @param primaryKey
-     * @param attributeName
-     * @param attributeValue
-     * @param ifWithCreate
-     * @param action
-     * @throws Exception
+     * @param id The ID of the item to update.
+     * @param itemType The type of the item to update.
+     * @param primaryKey The {@link PrimaryKey} to find the item with.
+     * @param attributeName The name of the attribute to update in the item.
+     * @param attributeValue The value to update the attribute with.
+     * @param ifWithCreate If the update action is with a create and will need to updated.
+     * @param action The action to update the item with.
+     * @throws Exception If there are any problems with the update database action.
      */
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action) throws Exception {
@@ -45,17 +44,19 @@ public class UpdateDatabaseAction extends DatabaseAction {
 
     // Use when you also want to verify something
     /**
-     * TODO
+     * Initializes a update database action when you know both the ID of the object to update, but
+     * you may or may not know the value of the attribute. Also allows you to determine a
+     * check handler for if the update is still valid.
      *
-     * @param id
-     * @param itemType
-     * @param primaryKey
-     * @param attributeName
-     * @param attributeValue
-     * @param ifWithCreate
-     * @param action
-     * @param checkHandler
-     * @throws Exception
+     * @param id The ID of the item to update.
+     * @param itemType The type of the item to update.
+     * @param primaryKey The {@link PrimaryKey} to find the item with.
+     * @param attributeName The name of the attribute to update in the item.
+     * @param attributeValue The value to update the attribute with.
+     * @param ifWithCreate If the update action is with a create and will need to updated.
+     * @param action The action to update the item with.
+     * @param checkHandler The handler to check the viability of the action.
+     * @throws Exception If there are any problems with the update database action.
      */
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName, AttributeValue attributeValue,
                                 boolean ifWithCreate, UpdateAction action, CheckHandler checkHandler) throws Exception {
@@ -71,18 +72,19 @@ public class UpdateDatabaseAction extends DatabaseAction {
         initWithErrorCheck(attributeName, attributeValue, action);
     }
 
-    // Use when you know the ID of the object, but not of the passover attribute to update
     /**
-     * TODO
+     * Initializes a update database action when you know the ID of the object to update, but
+     * the value needs to be determined by a passover identifier. Also allows you to determine a
+     * check handler for if the update is still valid.
      *
-     * @param id
-     * @param itemType
-     * @param primaryKey
-     * @param attributeName
-     * @param passoverIdentifier
-     * @param action
-     * @param checkHandler
-     * @throws Exception
+     * @param id The id of the item to update.
+     * @param itemType The type of the item to update.
+     * @param primaryKey The {@link PrimaryKey} to find the item with.
+     * @param attributeName The name of the attribute to update in the item.
+     * @param passoverIdentifier The passover identifier to identify the value to update with.
+     * @param action The action to update the item with.
+     * @param checkHandler The handler to check the viability of the action.
+     * @throws Exception If there are any problems with the update database action.
      */
     public UpdateDatabaseAction(String id, String itemType, PrimaryKey primaryKey, String attributeName,
                                 String passoverIdentifier, UpdateAction action, CheckHandler checkHandler) throws Exception {
@@ -104,17 +106,18 @@ public class UpdateDatabaseAction extends DatabaseAction {
         initWithErrorCheck(attributeName, new AttributeValue(""), action);
     }
 
-    // Use when you don't know the ID of the object, but you do know the value of the attribute.
     /**
-     * TODO
+     * Initializes a update database action when you don't know the ID of the object to update and
+     * must determine it using a passover identifier, but you do know the value of the attribute to
+     * update with. Also allows you to determine a check handler for if the update is still valid.
      *
-     * @param itemType
-     * @param passoverIdentifier
-     * @param attributeName
-     * @param attributeValue
-     * @param action
-     * @param checkHandler
-     * @throws Exception
+     * @param itemType The type of the item to update.
+     * @param passoverIdentifier The passover identifier to get the id of the item to update for.
+     * @param attributeName The name of the attribute to update in the item.
+     * @param attributeValue The value to update the attribute with.
+     * @param action The action to update the item with.
+     * @param checkHandler The handler to check the viability of the action.
+     * @throws Exception If there are any problems with the update database action.
      */
     public UpdateDatabaseAction(String itemType, String passoverIdentifier,
                                 String attributeName, AttributeValue attributeValue, UpdateAction action, CheckHandler checkHandler) throws Exception {
@@ -139,14 +142,17 @@ public class UpdateDatabaseAction extends DatabaseAction {
     // User when you don't know the passover ID of the object and you don't know the self ID of
     // the attribute.
     /**
-     * TODO
+     * Initializes a update database action when you don't know the ID of the object to update and
+     * must determine it using a passover identifier, and you don't know the value of the attribute
+     * to update with and it will be determined by the created ID of the compiler. Also allows you
+     * to determine a check handler for if the update is still valid.
      *
-     * @param itemType
-     * @param passoverIdentifier
-     * @param attributeName
-     * @param action
-     * @param checkHandler
-     * @throws Exception
+     * @param itemType The type of the item to update.
+     * @param passoverIdentifier The passover identifier to get the id of the item to update for.
+     * @param attributeName The name of the attribute to update in the item.
+     * @param action The action to update the item with.
+     * @param checkHandler The handler to check the viability of the action.
+     * @throws Exception If there are any problems with the update database action.
      */
     public UpdateDatabaseAction(String itemType, String passoverIdentifier, String attributeName, UpdateAction action, CheckHandler checkHandler) throws Exception {
         this.id = "";
@@ -168,12 +174,13 @@ public class UpdateDatabaseAction extends DatabaseAction {
     }
 
     /**
-     * TODO
+     * Initializes the update database action values, checking for improper values and potential
+     * typos. Also switches ADD and REMOVE updates to correctly formatted values.
      *
-     * @param attributeName
-     * @param attributeValue
-     * @param action
-     * @throws Exception
+     * @param attributeName The attribute name of the attribute to update.
+     * @param attributeValue The {@link AttributeValue} object to update the attribute with.
+     * @param action The action to update the attribute with.
+     * @throws Exception If there are any errors in the update.
      */
     private void initWithErrorCheck(String attributeName, AttributeValue attributeValue, UpdateAction action) throws
             Exception {
@@ -223,8 +230,7 @@ public class UpdateDatabaseAction extends DatabaseAction {
     }
 
     /**
-     * TODO
-     *
+     * A value of a specific update action that can be done for an item.
      */
     public enum UpdateAction {
         PUT,

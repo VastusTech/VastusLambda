@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+/**
+ * The POJO for the request if the Lambda caller wants to create a Message in the database.
+ */
 public class CreateMessageRequest extends CreateObjectRequest {
     // Required
     public String board;

@@ -2,10 +2,21 @@ package main.java.testing;
 
 import main.java.databaseOperations.DynamoDBHandler;
 
+/**
+ * Class to keep track of testing values and to help initialize the environment for full testing.
+ */
 public class TestHelper {
     private static boolean ifTesting = false;
     private static String port = "8000";
 
+    /**
+     * Initializes database tables for the {@link DynamoDBHandler} instance as DynamoDB Local tables
+     * from local JSON files.
+     *
+     * @param databaseJsonName The JSON file to indicate the value of the Database Table.
+     * @param messagesTableJsonName The JSON file to indicate the value of the Messages Table.
+     * @throws Exception If anything goes wrong in the initialization.
+     */
     public static void reinitTablesFromJSON(String databaseJsonName, String messagesTableJsonName)
             throws Exception {
         DynamoDBHandler.getInstance().setDatabaseTable(TestTableHelper.getInstance().

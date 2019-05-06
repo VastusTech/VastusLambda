@@ -11,7 +11,8 @@ import java.util.Map;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Comment} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Comments.
  */
 public class CommentDatabaseActionBuilder {
     final static private String itemType = "Comment";

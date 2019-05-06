@@ -22,6 +22,12 @@ public class Trainer extends User {
     public String subscriptionPrice;
     public Set<String> certifications;
 
+    /**
+     * The main constructor for the Trainer class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     Trainer(Item item) throws Exception {
         super(item);
         this.gym = item.getString("gym");
@@ -43,6 +49,11 @@ public class Trainer extends User {
         if (certifications == null) { this.certifications = new HashSet<>(); }
     }
 
+    /**
+     * Gets the empty item with the default values for the Trainer object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = User.getEmptyItem();
         item.put("item_type", new AttributeValue("Trainer"));
@@ -59,7 +70,15 @@ public class Trainer extends User {
         return item;
     }
 
-    // TODO Implement cache system here again?
+    /**
+     * Reads a Trainer from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Trainer object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static Trainer readTrainer(String id) throws Exception {
         return (Trainer) read(tableName, getPrimaryKey("Trainer", id));
     }

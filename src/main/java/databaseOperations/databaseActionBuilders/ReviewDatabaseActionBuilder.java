@@ -11,7 +11,8 @@ import java.util.Map;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Review} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Reviews.
  */
 public class ReviewDatabaseActionBuilder {
     final static private String itemType = "Review";

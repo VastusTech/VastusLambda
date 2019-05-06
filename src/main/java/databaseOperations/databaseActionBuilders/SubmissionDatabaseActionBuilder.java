@@ -18,7 +18,8 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateSubmissionRequest;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Submission} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Submissions.
  */
 public class SubmissionDatabaseActionBuilder {
     final static private String itemType = "Submission";

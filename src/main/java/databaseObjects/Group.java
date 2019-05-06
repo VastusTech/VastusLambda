@@ -34,6 +34,12 @@ public class Group extends DatabaseObject {
     public Set<String> tags;
     public Set<String> streaks;
 
+    /**
+     * The main constructor for the Group class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     Group(Item item) throws Exception {
         super(item);
         this.title = item.getString("title");
@@ -68,13 +74,26 @@ public class Group extends DatabaseObject {
         if (this.streaks == null) { this.streaks = new HashSet<>(); }
     }
 
+    /**
+     * Gets the empty item with the default values for the Group object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Group"));
         return item;
     }
 
-    // TODO Implement cache system here again?
+    /**
+     * Reads a Group from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Group object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static Group readGroup(String id) throws Exception {
         return (Group) read(tableName, getPrimaryKey("Group", id));
     }

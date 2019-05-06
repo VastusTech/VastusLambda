@@ -3,6 +3,8 @@ package main.java.logic;
 import java.util.HashMap;
 import java.util.Map;
 
+import main.java.databaseOperations.exceptions.BadIDException;
+
 /**
  * This enum represents the item types that are possible within our entire application. Also
  * includes logic to infer the item type from the ID.
@@ -36,16 +38,16 @@ public enum ItemType {
      *
      * @param id The ID of the item in the database.
      * @return The string of the item type that corresponds to this ID value.
-     * @throws Exception If the prefix of the ID was unrecognized. TODO Define exception?
+     * @throws BadIDException If the prefix of the ID was unrecognized or the ID is malformed.
      */
-    public static String getItemType(String id) throws Exception {
+    public static String getItemType(String id) throws BadIDException {
         if (id == null || id.length() < 2) {
-            throw new Exception("ID null or not large enough to get item type for. ID = " + id);
+            throw new BadIDException("ID null or not large enough to get item type for. ID = " + id);
         }
         String prefix = id.substring(0, Constants.numPrefix);
         String itemType = prefixes.get(prefix);
         if (itemType == null) {
-            throw new Exception("Couldn't recognize the item type of the ID = " + id);
+            throw new BadIDException("Couldn't recognize the item type of the ID = " + id);
         }
         return itemType;
     }

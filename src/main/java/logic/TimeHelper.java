@@ -21,89 +21,165 @@ public class TimeHelper {
         return new DateTime();
     }
 
+    /**
+     * Finds how many 0 minute marks are in the "from" and the "to" variable interval.
+     *
+     * @param from The {@link DateTime} object indicating the beginning of the interval.
+     * @param to The {@link DateTime} object indicating the end of the interval.
+     * @return The amount of 0 minute marks in the interval.
+     */
     public static int hourStartsBetween(DateTime from, DateTime to) {
         return Hours.hoursBetween(from.toLocalDate(), to.toLocalDate()).getHours();
     }
 
+    /**
+     * Finds how many 0 minute marks have passed since a certain time until now.
+     *
+     * @param since The {@link DateTime} object indicating the beginning of the interval.
+     * @return The amount of 0 minute marks since the given time object.
+     */
     public static int hourStartsPassed(DateTime since) {
         return hourStartsBetween(since, now());
     }
 
     /**
-     * Finds how many midnights have passed between the "from" and the "to" variables.
+     * Finds how many midnights are in the "from" and the "to" variable interval.
      *
-     * @param from The from time
-     * @param to The to time.
-     * @return The number of midnights between the two {@link DateTime} objects.
+     * @param from The {@link DateTime} object indicating the beginning of the interval.
+     * @param to The {@link DateTime} object indicating the end of the interval.
+     * @return The amount of midnights in the interval.
      */
     public static int midnightsBetween(DateTime from, DateTime to) {
         return Days.daysBetween(from.toLocalDate(), to.toLocalDate()).getDays();
     }
 
     /**
-     * How many midnights have passed between now and the since datetime given.
+     * Finds how many midnights have passed since a certain time until now.
      *
-     * @param since The start of this interval that we measure.
-     * @return
+     * @param since The {@link DateTime} object indicating the beginning of the interval.
+     * @return The amount of midnights since the given time object.
      */
     public static int midnightsPassed(DateTime since) {
         return midnightsBetween(since, now());
     }
 
     /**
-     * TODO
+     * Finds how many Mondays are in the "from" and the "to" variable interval.
      *
-     * @param from
-     * @param to
-     * @return
+     * @param from The {@link DateTime} object indicating the beginning of the interval.
+     * @param to The {@link DateTime} object indicating the end of the interval.
+     * @return The amount of Mondays in the interval.
      */
     public static int mondaysBetween(DateTime from, DateTime to) {
         return Weeks.weeksBetween(from.toLocalDate(), to.toLocalDate()).getWeeks();
     }
 
     /**
-     * TODO
+     * Finds how many Mondays have passed since a certain time until now.
      *
-     * @param since
-     * @return
+     * @param since The {@link DateTime} object indicating the beginning of the interval.
+     * @return The amount of Mondays since the given time object.
      */
     public static int mondaysPassed(DateTime since) {
         return mondaysBetween(since, now());
     }
 
+    /**
+     * Finds how many 1sts of the month are in the "from" and the "to" variable interval.
+     *
+     * @param from The {@link DateTime} object indicating the beginning of the interval.
+     * @param to The {@link DateTime} object indicating the end of the interval.
+     * @return The amount of 1st of the month in the interval.
+     */
     public static int firstDatesOfMonthBetween(DateTime from, DateTime to) {
         return Months.monthsBetween(from.toLocalDate(), to.toLocalDate()).getMonths();
     }
 
+    /**
+     * Finds how many 1sts of the month have passed since a certain time until now.
+     *
+     * @param since The {@link DateTime} object indicating the beginning of the interval.
+     * @return The amount of 1sts of the month since the given time object.
+     */
     public static int firstDatesOfMonthPassed(DateTime since) {
         return firstDatesOfMonthBetween(since, now());
     }
 
+    /**
+     * Finds how many 1sts of the year are in the "from" and the "to" variable interval.
+     *
+     * @param from The {@link DateTime} object indicating the beginning of the interval.
+     * @param to The {@link DateTime} object indicating the end of the interval.
+     * @return The amount of 1sts of the year in the interval.
+     */
     public static int firstDatesOfYearBetween(DateTime from, DateTime to) {
         return Years.yearsBetween(from.toLocalDate(), to.toLocalDate()).getYears();
     }
 
+    /**
+     * Finds how many 1sts of the year have passed since a certain time until now.
+     *
+     * @param since The {@link DateTime} object indicating the beginning of the interval.
+     * @return The amount of 1sts of the year since the given time object.
+     */
     public static int firstDatesOfYearPassed(DateTime since) {
         return firstDatesOfYearBetween(since, now());
     }
 
+    /**
+     * Calculates a {@link DateTime} a certain number of hours after the given time.
+     *
+     * @param time The initial {@link DateTime} object to calculate.
+     * @param numberOfHours The number of hours to add to it.
+     * @return The {@link DateTime} representing a number of hours after the given time.
+     */
     public static DateTime hoursAfter(DateTime time, int numberOfHours) {
         return time.plusHours(numberOfHours);
     }
+
+    /**
+     * Calculates a {@link DateTime} a certain number of days after the given time.
+     *
+     * @param time The initial {@link DateTime} object to calculate.
+     * @param numberOfDays The number of days to add to it.
+     * @return The {@link DateTime} representing a number of days after the given time.
+     */
     public static DateTime daysAfter(DateTime time, int numberOfDays) {
         return time.plusDays(numberOfDays);
     }
+
+    /**
+     * Calculates a {@link DateTime} a certain number of weeks after the given time.
+     *
+     * @param time The initial {@link DateTime} object to calculate.
+     * @param numberOfWeeks The number of weeks to add to it.
+     * @return The {@link DateTime} representing a number of weeks after the given time.
+     */
     public static DateTime weeksAfter(DateTime time, int numberOfWeeks) {
         return time.plusWeeks(numberOfWeeks);
     }
+
+    /**
+     * Calculates a {@link DateTime} a certain number of months after the given time.
+     *
+     * @param time The initial {@link DateTime} object to calculate.
+     * @param numberOfMonths The number of months to add to it.
+     * @return The {@link DateTime} representing a number of months after the given time.
+     */
     public static DateTime monthsAfter(DateTime time, int numberOfMonths) {
         return time.plusMonths(numberOfMonths);
     }
+
+    /**
+     * Calculates a {@link DateTime} a certain number of years after the given time.
+     *
+     * @param time The initial {@link DateTime} object to calculate.
+     * @param numberOfYears The number of years to add to it.
+     * @return The {@link DateTime} representing a number of years after the given time.
+     */
     public static DateTime yearsAfter(DateTime time, int numberOfYears) {
         return time.plusYears(numberOfYears);
     }
-
-
 
     /**
      * Calculates the properly formatted ISO string for the current date and time.

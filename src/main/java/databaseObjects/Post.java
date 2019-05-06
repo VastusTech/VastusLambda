@@ -26,6 +26,12 @@ public class Post extends DatabaseObject {
     public Set<String> comments;
     public String group;
 
+    /**
+     * The main constructor for the Post class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     Post(Item item) throws Exception {
         super(item);
         this.by = item.getString("by");
@@ -44,6 +50,11 @@ public class Post extends DatabaseObject {
         this.group = item.getString("group");
     }
 
+    /**
+     * Gets the empty item with the default values for the Post object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Post"));
@@ -51,7 +62,15 @@ public class Post extends DatabaseObject {
         return item;
     }
 
-    // TODO Implement cache system here again?
+    /**
+     * Reads a Post from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Post object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static Post readPost(String id) throws Exception {
         return (Post) read(tableName, getPrimaryKey("Post", id));
     }

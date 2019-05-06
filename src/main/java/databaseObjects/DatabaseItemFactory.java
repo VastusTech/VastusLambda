@@ -2,6 +2,7 @@ package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 
+import main.java.databaseOperations.exceptions.ItemTypeNotRecognizedException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 
@@ -16,10 +17,13 @@ public interface DatabaseItemFactory {
      *
      * @param item The {@link Item} from the AWS module that represents a row in the database.
      * @return The fully built {@link DatabaseItem}.
-     * @throws Exception If the item type of the item is unrecognized. TODO Define special exception
+     * @throws Exception If the item type of the item is unrecognized.
      */
     static DatabaseItem build(Item item) throws Exception {
-        String itemType = (String)item.get("item_type"); // TODO Check that it actually has this too.
+        String itemType = (String)item.get("item_type");
+        if (itemType == null) {
+            throw new Exception("Item does not have the item_type attribute!!!");
+        }
         Constants.debugLog("Building database item with itemType = " + itemType + ", item = " + item.toJSONPretty());
         switch (ItemType.valueOf(itemType)) {
             case Client:
@@ -53,7 +57,7 @@ public interface DatabaseItemFactory {
             case Enterprise:
                 return new Enterprise(item);
             default:
-                throw new Exception("Item type = " + itemType + " not implemented in DatabaseItemBuilder");
+                throw new ItemTypeNotRecognizedException("Item type = " + itemType + " not implemented in DatabaseItemBuilder");
         }
     }
 }

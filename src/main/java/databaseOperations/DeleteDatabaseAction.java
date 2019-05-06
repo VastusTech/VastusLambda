@@ -12,11 +12,11 @@ import java.util.Map;
  */
 public class DeleteDatabaseAction extends DatabaseAction {
     /**
-     * TODO
+     * Constructor for the delete database action.
      *
-     * @param id
-     * @param itemType
-     * @param primaryKey
+     * @param id The ID of the item to delete in the database.
+     * @param itemType The type of the item to delete in the database.
+     * @param primaryKey The {@link PrimaryKey} to reference the item with.
      */
     public DeleteDatabaseAction(String id, String itemType, PrimaryKey primaryKey) {
         this.id = id;
@@ -27,12 +27,13 @@ public class DeleteDatabaseAction extends DatabaseAction {
     }
 
     /**
-     * TODO
+     * Constructor for the delete database action for a delete conditional action, where an object
+     * will get deleted only if the delete handler is satisfied.
      *
-     * @param id
-     * @param itemType
-     * @param primaryKey
-     * @param checkHandler
+     * @param id The ID of the item to delete in the database.
+     * @param itemType The type of the item to delete in the database.
+     * @param primaryKey The {@link PrimaryKey} to reference the item with.
+     * @param checkHandler The check handler to tell if the item should be deleted or not.
      */
     public DeleteDatabaseAction(String id, String itemType, PrimaryKey primaryKey, CheckHandler
                                 checkHandler) {

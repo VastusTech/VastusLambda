@@ -9,7 +9,8 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateSponsorRequest;
 import java.util.Map;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Sponsor} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Sponsors.
  */
 public class SponsorDatabaseActionBuilder {
     final static private String itemType = "Sponsor";

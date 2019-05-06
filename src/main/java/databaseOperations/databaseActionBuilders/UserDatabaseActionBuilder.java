@@ -10,7 +10,9 @@ import main.java.databaseOperations.UpdateDatabaseAction;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link User} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Users. Used to eliminate some
+ * common logic between specific User subtypes.
  */
 public class UserDatabaseActionBuilder {
     private static PrimaryKey getPrimaryKey(String itemType, String id) {

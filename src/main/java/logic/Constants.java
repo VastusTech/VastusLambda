@@ -61,6 +61,11 @@ public class Constants {
 
     // public static String nullAttributeValue = System.getenv("nullAttributeValue");
 
+    /**
+     * Logs to the AWS Lambda logger, using the logger obtained from the context of the call.
+     *
+     * @param message The message to log.
+     */
     public static void debugLog(String message) {
         if (ifDebug) {
             if (Constants.logger == null) {
@@ -77,6 +82,11 @@ public class Constants {
         }
     }
 
+    /**
+     * Sets the AWS Lambda logger from the Context of the Lambda execution.
+     *
+     * @param logger The logger from the context to initialize the local logger with.
+     */
     public static void setLogger(LambdaLogger logger) {
         Constants.logger = logger;
     }

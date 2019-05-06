@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+/**
+ * The POJO for the request if the Lambda caller wants to create a Workout in the database.
+ */
 public class CreateWorkoutRequest extends CreateObjectRequest {
     // Required
     public String time;

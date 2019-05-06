@@ -12,7 +12,8 @@ import main.java.databaseOperations.DeleteDatabaseAction;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateEnterpriseRequest;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Enterprise} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Enterprises.
  */
 public class EnterpriseDatabaseActionBuilder {
     final static private String itemType = "Enterprise";

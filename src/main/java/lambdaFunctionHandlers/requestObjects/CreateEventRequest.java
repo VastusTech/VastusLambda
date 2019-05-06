@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+/**
+ * The POJO for the request if the Lambda caller wants to create a Event in the database.
+ */
 public class CreateEventRequest extends CreateObjectRequest {
     // Required
     public String owner;

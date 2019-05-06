@@ -32,6 +32,12 @@ public class Event extends DatabaseObject {
     public String group;
     public Set<String> tags;
 
+    /**
+     * The main constructor for the Event class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     public Event(Item item) throws Exception {
         super(item);
         this.owner = item.getString("owner");
@@ -56,6 +62,11 @@ public class Event extends DatabaseObject {
         this.tags = item.getStringSet("tags");
     }
 
+    /**
+     * Gets the empty item with the default values for the Event object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Event"));
@@ -65,6 +76,15 @@ public class Event extends DatabaseObject {
         return item;
     }
 
+    /**
+     * Reads an Event from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Event object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static Event readEvent(String id) throws Exception {
         return (Event) read(tableName, getPrimaryKey("Event", id));
     }

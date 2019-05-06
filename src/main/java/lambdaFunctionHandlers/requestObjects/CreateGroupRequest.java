@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+/**
+ * The POJO for the request if the Lambda caller wants to create a Group in the database.
+ */
 public class CreateGroupRequest extends CreateObjectRequest {
     // Required
     public String title;

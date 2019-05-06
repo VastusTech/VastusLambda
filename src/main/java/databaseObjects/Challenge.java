@@ -44,6 +44,12 @@ public class Challenge extends DatabaseObject {
     public String streakUpdateInterval;
     public String streakN;
 
+    /**
+     * The main constructor for the Challenge class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     public Challenge(Item item) throws Exception {
         super(item);
         this.owner = item.getString("owner");
@@ -85,6 +91,11 @@ public class Challenge extends DatabaseObject {
         this.streakN = item.getString("streakN");
     }
 
+    /**
+     * Gets the empty item with the default values for the Challenge object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Challenge"));
@@ -95,6 +106,15 @@ public class Challenge extends DatabaseObject {
         return item;
     }
 
+    /**
+     * Reads a Challenge from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Challenge object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static Challenge readChallenge(String id) throws Exception {
         return (Challenge) read(tableName, getPrimaryKey("Challenge", id));
     }

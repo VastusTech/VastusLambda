@@ -15,7 +15,8 @@ import java.util.Map;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Event} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Events.
  */
 public class EventDatabaseActionBuilder {
     private static final String itemType = "Event";

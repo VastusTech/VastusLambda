@@ -19,6 +19,12 @@ public class Invite extends DatabaseObject {
     public String about;
     public String description;
 
+    /**
+     * The main constructor for the Invite class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     Invite(Item item) throws Exception {
         super(item);
         this.from = item.getString("from");
@@ -28,13 +34,26 @@ public class Invite extends DatabaseObject {
         this.description = item.getString("description");
     }
 
+    /**
+     * Gets the empty item with the default values for the Invite object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Invite"));
         return item;
     }
 
-    // TODO Implement cache system here again?
+    /**
+     * Reads an Invite from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Invite object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static Invite readInvite(String id) throws Exception {
         return (Invite) read(tableName, getPrimaryKey("Invite", id));
     }

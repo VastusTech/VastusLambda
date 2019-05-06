@@ -493,13 +493,14 @@ public class DynamoDBHandler {
     }
 
     /**
-     * TODO
+     * Gets the primary key for a object using the passover identifiers for the execution. Allows
+     * for the primary key to be set for an update once it has been dynamically decided.
      *
-     * @param itemType
-     * @param idIdentifier
-     * @param passoverIDs
-     * @return
-     * @throws Exception
+     * @param itemType The type of the item to get the primary key for.
+     * @param idIdentifier The passover identifier for the item to update.
+     * @param passoverIDs The map of passover IDs to evaluated IDs.
+     * @return The {@link PrimaryKey} to get for the passover.
+     * @throws Exception If the item type is a Message or the passover ID wasn't determined yet.
      */
     private PrimaryKey getPrimaryKeyFromPassover(String itemType, String idIdentifier, Map<String, String> passoverIDs) throws Exception {
         if (itemType.equals("Message")) {
@@ -717,12 +718,30 @@ public class DynamoDBHandler {
         return returnMap;
     }
 
-    public void setDatabaseTable(Table table) {
+    /**
+     * Sets the database table for the DB handler.
+     *
+     * @param table The {@link Table} object to set to the database table.
+     * @throws Exception If the app is not currently testing.
+     */
+    public void setDatabaseTable(Table table) throws Exception {
+        if (!TestHelper.getIfTesting()) {
+            throw new Exception("SHOULD NOT BE SETTING TABLE IF NOT TESTING!");
+        }
         this.databaseTable = table;
         tables.put(Constants.databaseTableName, table);
     }
 
-    public void setMessageTable(Table table) {
+    /**
+     * Sets the message table for the DB handler.
+     *
+     * @param table The {@link Table} object to set to the message table.
+     * @throws Exception If the app is not currently testing.
+     */
+    public void setMessageTable(Table table) throws Exception {
+        if (!TestHelper.getIfTesting()) {
+            throw new Exception("SHOULD NOT BE SETTING TABLE IF NOT TESTING!");
+        }
         this.messageTable = table;
         tables.put(Constants.messageTableName, table);
     }

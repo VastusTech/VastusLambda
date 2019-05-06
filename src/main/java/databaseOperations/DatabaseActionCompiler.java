@@ -17,28 +17,25 @@ import java.util.Map;
  * there are no duplicate actions to an item. Also increases the efficiency of the transaction.
  */
 public class DatabaseActionCompiler {
-    // TODO JAVADOC ALL METHODS
     private String passoverIdentifier;
     private NotificationHandler notificationHandler;
     private List<DatabaseAction> databaseActions;
     private Map<String, DatabaseAction> databaseActionMap;
 
     /**
-     * TODO
-     *
-     * @throws Exception
+     * The main constructor for the DatabaseActionCompiler.
      */
-    public DatabaseActionCompiler() throws Exception {
+    public DatabaseActionCompiler() {
         databaseActions = new ArrayList<>();
         databaseActionMap = new HashMap<>();
         notificationHandler = new NotificationHandler();
     }
 
     /**
-     * TODO
+     * An extra constructor for the DatabaseActionCompiler, starting with a {@link DatabaseAction}.
      *
-     * @param action
-     * @throws Exception
+     * @param action The {@link DatabaseAction} action to start the compiler with.
+     * @throws Exception If anything goes wrong in the add.
      */
     public DatabaseActionCompiler(DatabaseAction action) throws Exception {
         this();
@@ -46,20 +43,20 @@ public class DatabaseActionCompiler {
     }
 
     /**
-     * TODO
+     * Extra constructor for the DatabaseActionCompiler, starting with some {@link DatabaseAction}s.
      *
-     * @param actions
-     * @throws Exception
+     * @param actions The list of {@link DatabaseAction} objects to start the compiler with.
+     * @throws Exception If anything goes wrong in the adds.
      */
     public DatabaseActionCompiler(DatabaseAction... actions) throws Exception {
         this(Arrays.asList(actions));
     }
 
     /**
-     * TODO
+     * Extra constructor for the DatabaseActionCompiler, starting with some {@link DatabaseAction}s.
      *
-     * @param actions
-     * @throws Exception
+     * @param actions The list of {@link DatabaseAction} objects to start the compiler with.
+     * @throws Exception If anything goes wrong in the adds.
      */
     public DatabaseActionCompiler(List<DatabaseAction> actions) throws Exception {
         this();
@@ -67,28 +64,28 @@ public class DatabaseActionCompiler {
     }
 
     /**
-     * TODO
+     * Gets the database actions compiled from the compiler after being added.
      *
-     * @return
+     * @return The list of {@link DatabaseAction} objects indicating the compiled transaction.
      */
     public List<DatabaseAction> getDatabaseActions() {
         return databaseActions;
     }
 
     /**
-     * TODO
-     *
-     * @throws Exception
+     * Sends the notifications for the object updates indicated during the construction of the
+     * database actions.
      */
-    public void sendNotifications() throws Exception {
+    void sendNotifications() {
         notificationHandler.sendMessages();
     }
 
     /**
-     * TODO
+     * Adds a {@link DatabaseAction} to the DatabaseActionCompiler, compressing actions together if
+     * they are for the same object.
      *
-     * @param databaseAction
-     * @throws Exception
+     * @param databaseAction The {@link DatabaseAction} to add to the database actions.
+     * @throws Exception If anything goes wrong.
      */
     public void add(DatabaseAction databaseAction) throws Exception {
         String id;
@@ -150,11 +147,12 @@ public class DatabaseActionCompiler {
     }
 
     /**
-     * TODO
+     * Consolidates two {@link DatabaseAction} objects together based on their actions and what they
+     * are updating.
      *
-     * @param intoDatabaseAction
-     * @param fromDatabaseAction
-     * @throws Exception
+     * @param intoDatabaseAction The {@link DatabaseAction} to combine the database action into.
+     * @param fromDatabaseAction The {@link DatabaseAction} to add the information into the other.
+     * @throws Exception If the actions are invalid together.
      */
     private void consolidateDatabaseActions(DatabaseAction intoDatabaseAction, DatabaseAction fromDatabaseAction)
             throws Exception {
@@ -227,10 +225,11 @@ public class DatabaseActionCompiler {
 
     // This will use the updateItem from the databaseAction to adjust the item that will be created
     /**
-     * TODO
+     * Updates the create item object for a CREATE database action object using the attribute value
+     * update object from the UPDATE database action.
      *
-     * @param intoItem
-     * @param fromUpdateItem
+     * @param intoItem The map of values indicating the item to create.
+     * @param fromUpdateItem The map of value updates to update the create item with.
      */
     private void updateCreateItem(Map<String, AttributeValue> intoItem, Map<String, AttributeValueUpdate>
             fromUpdateItem) {
@@ -270,13 +269,13 @@ public class DatabaseActionCompiler {
         }
     }
 
-    // This will adjust the updateItem of the databaseAction to reflect both databaseActions
     /**
-     * TODO
+     * This will adjust the updateItem of the databaseAction to reflect both databaseActions
+     * updateItems.
      *
-     * @param intoUpdateItem
-     * @param fromUpdateItem
-     * @throws Exception
+     * @param intoUpdateItem The map of attribute value updates to update from the other.
+     * @param fromUpdateItem The map of attribute value updates to update the other with.
+     * @throws Exception If the update items are incompatible.
      */
     private void updateUpdateItem(Map<String, AttributeValueUpdate> intoUpdateItem, Map<String, AttributeValueUpdate>
             fromUpdateItem) throws Exception {
@@ -308,9 +307,9 @@ public class DatabaseActionCompiler {
     }
 
     /**
-     * TODO
+     * Helpful method to add a list of database actions to the compiler.
      *
-     * @param databaseActions
+     * @param databaseActions The {@link DatabaseAction} objects to add for the compiler.
      * @throws Exception
      */
     public void addAll(List<DatabaseAction> databaseActions) throws Exception {
@@ -320,29 +319,33 @@ public class DatabaseActionCompiler {
     }
 
     /**
-     * TODO
+     * Gets the notification handler for the compiler in order to update it.
      *
-     * @return
+     * @return The {@link NotificationHandler} object for the compiler.
      */
     public NotificationHandler getNotificationHandler() {
         return this.notificationHandler;
     }
 
     /**
-     * TODO
+     * Sets the passover identifier for the compiler, allowing to reference the created ID before
+     * it is determined.
      *
-     * @param passoverIdentifier
+     * @param passoverIdentifier The unique passover identifier for the compiler.
      */
     public void setPassoverIdentifier(String passoverIdentifier) {
         this.passoverIdentifier = passoverIdentifier;
     }
 
     /**
-     * TODO
+     * Gets the passover identifier from the compiler to reference the passover ID with.
      *
-     * @return
+     * @return The unique passover identifier for the compiler.
      */
-    public String getPassoverIdentifier() {
+    public String getPassoverIdentifier() throws Exception {
+        if (this.passoverIdentifier == null) {
+            throw new Exception("The passover identifier has not been determined for the compiler yet!");
+        }
         return this.passoverIdentifier;
     }
 }

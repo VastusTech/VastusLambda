@@ -43,7 +43,7 @@ public abstract class DatabaseAction {
     boolean ifWithCreate;
 
     /**
-     * TODO
+     * Sets the primary key for a
      *
      * @param primaryKey
      */

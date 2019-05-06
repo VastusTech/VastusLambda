@@ -10,6 +10,14 @@ import main.java.databaseOperations.DynamoDBHandler;
 abstract public class DatabaseItem {
     static public String tableName;
 
+    /**
+     * Reads an item from any table in the database using a {@link PrimaryKey}.
+     *
+     * @param tableName The name of the table to get the item from.
+     * @param primaryKey The {@link PrimaryKey} to identify the item with.
+     * @return The DatabaseItem object received from the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     static DatabaseItem read(String tableName, PrimaryKey primaryKey) throws Exception {
         return DynamoDBHandler.getInstance().readItem(tableName, primaryKey);
     }

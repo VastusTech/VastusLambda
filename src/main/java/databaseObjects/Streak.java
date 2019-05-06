@@ -27,6 +27,12 @@ public class Streak extends DatabaseObject {
     public int updateInterval; // After how many spans, it updates
     public int streakN; // The number of times to do tasks to maintain the streak
 
+    /**
+     * The main constructor for the Streak class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     Streak(Item item) throws Exception {
         super(item);
         this.owner = item.getString("owner");
@@ -42,6 +48,11 @@ public class Streak extends DatabaseObject {
         this.streakN = Integer.parseInt(item.getString("streakN"));
     }
 
+    /**
+     * Gets the empty item with the default values for the Streak object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Streak"));
@@ -53,15 +64,29 @@ public class Streak extends DatabaseObject {
         return item;
     }
 
-    // TODO Implement cache system here again?
+    /**
+     * Reads a Streak from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Streak object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static Streak readStreak(String id) throws Exception {
         return (Streak) read(tableName, getPrimaryKey("Streak", id));
     }
 
+    /**
+     * The values that indicate what kind of a Streak a specific Streak object is.
+     */
     public enum StreakType {
         submission
     }
 
+    /**
+     * The values that indicate the potential updating span types for a Streak.
+     */
     public enum UpdateSpanType {
         hourly,
         daily,

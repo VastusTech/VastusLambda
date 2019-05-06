@@ -17,6 +17,12 @@ public class Review extends DatabaseObject {
     public float overallRating;
     public String description;
 
+    /**
+     * The main constructor for the Review class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     Review(Item item) throws Exception {
         super(item);
         this.by = item.getString("by");
@@ -28,6 +34,11 @@ public class Review extends DatabaseObject {
         this.description = item.getString("description");
     }
 
+    /**
+     * Gets the empty item with the default values for the Review object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Review"));
@@ -43,7 +54,15 @@ public class Review extends DatabaseObject {
         return item;
     }
 
-    // TODO Implement cache system here again?
+    /**
+     * Reads a Review from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Review object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static Review readReview(String id) throws Exception {
         return (Review) read(tableName, getPrimaryKey("Review", id));
     }

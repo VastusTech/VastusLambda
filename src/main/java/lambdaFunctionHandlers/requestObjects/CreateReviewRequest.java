@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+/**
+ * The POJO for the request if the Lambda caller wants to create a Review in the database.
+ */
 public class CreateReviewRequest extends CreateObjectRequest {
     // Required
     public String by;

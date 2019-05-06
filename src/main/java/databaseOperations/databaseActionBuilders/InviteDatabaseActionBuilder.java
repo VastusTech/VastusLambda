@@ -13,7 +13,8 @@ import java.util.Map;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Invite} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Invites.
  */
 public class InviteDatabaseActionBuilder {
     final static private String itemType = "Invite";

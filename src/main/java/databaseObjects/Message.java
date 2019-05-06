@@ -33,6 +33,12 @@ public class Message extends DatabaseItem {
     public String message;
     public Set<String> lastSeenFor;
 
+    /**
+     * The main constructor for the Message class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     public Message(Item item) throws Exception {
         id = item.getString("id");
         board = item.getString("board");
@@ -48,6 +54,11 @@ public class Message extends DatabaseItem {
         if (lastSeenFor == null) { lastSeenFor = new HashSet<>(); }
     }
 
+    /**
+     * Gets the empty item with the default values for the Message object.
+     *
+     * @return The map of attribute values for the item.
+     */
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("item_type", new AttributeValue("Message"));
@@ -55,14 +66,39 @@ public class Message extends DatabaseItem {
         return key;
     }
 
-    static public PrimaryKey getPrimaryKey(String board, String id) {
-        return new PrimaryKey("board", board, "id", id);
-    }
-
+    /**
+     * Reads a Message from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param board The name of the board containing the Message object.
+     * @param id The ID to read from the database.
+     * @return The Message object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     static public Message readMessage(String board, String id) throws Exception {
         return (Message)read(tableName, getPrimaryKey(board, id));
     }
 
+    /**
+     * Gets the {@link PrimaryKey} to identify the Message object.
+     *
+     * @param board The board containing the Message object.
+     * @param id The ID of the Message to fetch.
+     * @return The {@link PrimaryKey} indicating the database object for reading.
+     */
+    static public PrimaryKey getPrimaryKey(String board, String id) {
+        return new PrimaryKey("board", board, "id", id);
+    }
+
+    /**
+     * Gets the IDs of the Users to notify about the creation of a message based on where it is
+     * being sent to.
+     *
+     * @param board The name of the board to send the Message to.
+     * @return The list of User IDs to notify about the creation of the board.
+     * @throws Exception If the board name is malformed.
+     */
     static public List<String> getNotificationIDsFromBoard(String board) throws Exception {
         List<String> sendIDs = new ArrayList<>();
         String[] ids = board.split("_");
@@ -96,6 +132,9 @@ public class Message extends DatabaseItem {
         return sendIDs;
     }
 
+    /**
+     * The values of types of messages that a Message object can be.
+     */
     public enum MessageType {
         picture,
         video

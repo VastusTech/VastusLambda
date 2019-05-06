@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+/**
+ * The POJO for the request if the Lambda caller wants to create a Streak in the database.
+ */
 public class CreateStreakRequest extends CreateObjectRequest {
     // Required
     public String owner;

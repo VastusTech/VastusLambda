@@ -16,7 +16,8 @@ import java.util.Map;
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 /**
- * TODO
+ * The Database Action Builder for the {@link Challenge} object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Challenges.
  */
 public class ChallengeDatabaseActionBuilder {
     private static final String itemType = "Challenge";

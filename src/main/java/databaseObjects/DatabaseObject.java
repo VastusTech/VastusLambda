@@ -24,6 +24,12 @@ abstract public class DatabaseObject extends DatabaseItem {
     public int marker;
     public DateTime timeCreated;
 
+    /**
+     * The main constructor for the DatabaseObject class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
     public DatabaseObject(Item item) throws Exception {
         // Set the rest of the object
         this.id = item.getString("id");
@@ -32,6 +38,11 @@ abstract public class DatabaseObject extends DatabaseItem {
         this.timeCreated = new DateTime(item.getString("time_created"));
     }
 
+    /**
+     * Gets the empty item with the default values for the DatabaseObject object.
+     *
+     * @return The map of attribute values for the item.
+     */
     static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = new HashMap<>();
         item.put("id", null);
@@ -40,10 +51,27 @@ abstract public class DatabaseObject extends DatabaseItem {
         return item;
     }
 
+    /**
+     * Reads a DatabaseObject from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @param itemType The item type of the item to read from the database.
+     * @return The DatabaseObject object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
     public static DatabaseObject readDatabaseObject(String id, String itemType) throws Exception {
         return (DatabaseObject)DatabaseItem.read(tableName, getPrimaryKey(itemType, id));
     }
 
+    /**
+     * Gets the {@link PrimaryKey} to identify the database object.
+     *
+     * @param itemType The type of the object to read in the database.
+     * @param id The ID of the object to read.
+     * @return The {@link PrimaryKey} indicating the database object for reading.
+     */
     static public PrimaryKey getPrimaryKey(String itemType, String id) {
         return new PrimaryKey("item_type", itemType, "id", id);
     }

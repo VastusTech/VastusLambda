@@ -5,6 +5,11 @@ package main.java.lambdaFunctionHandlers.requestObjects;
  * inputted through Lambda.
  */
 public abstract class CreateObjectRequest {
+    /**
+     * The method that will be called to check if the create object request has any empty strings.
+     *
+     * @return Whether the request contains empty strings or not.
+     */
     public abstract boolean ifHasEmptyString();
 
     /**

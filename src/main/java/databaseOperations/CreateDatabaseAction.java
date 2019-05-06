@@ -13,12 +13,16 @@ public class CreateDatabaseAction extends DatabaseAction {
     public UpdateWithIDHandler updateWithIDHandler;
 
     /**
-     * TODO
+     * The main constructor for the CreateDatabaseAction class, indicating what kind of item to add,
+     * and allowing the functionality for the Passover of ids.
      *
-     * @param itemType
-     * @param item
-     * @param passoverIdentifiers
-     * @param updateWithIDHandler
+     * @param itemType The item type for the item to create.
+     * @param item The map of attribute names and values to create the item as.
+     * @param passoverIdentifiers The map of attribute names to passover identifiers to indicate
+     *                            which attributes will need to take the IDs from which passover
+     *                            identifier.
+     * @param updateWithIDHandler The handler to update the item with once the program has
+     *                            determined the ID.
      */
     public CreateDatabaseAction(String itemType, Map<String, AttributeValue> item,
                                 Map<String, String> passoverIdentifiers, UpdateWithIDHandler

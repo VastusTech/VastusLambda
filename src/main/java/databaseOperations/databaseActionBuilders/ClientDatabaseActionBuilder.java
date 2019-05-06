@@ -16,7 +16,8 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
 
 /**
- * TODO
+ * The Database Action Builder for the Client object, getting the {@link DatabaseAction} objects
+ * that dictate the individual actions to do in the database for Clients.
  */
 public class ClientDatabaseActionBuilder {
     final static private String itemType = "Client";

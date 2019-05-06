@@ -15,6 +15,10 @@ import main.java.logic.TimeHelper;
 import main.java.testing.TestHelper;
 import main.java.testing.TestTableHelper;
 
+/**
+ * The JUnit Test Class for creating a local database JSON isolated from the rest of the testing
+ * suite.
+ */
 public class CreateLocalDatabaseJSON {
     @ClassRule
     public static LocalDynamoDBCreationRule rule = new LocalDynamoDBCreationRule();

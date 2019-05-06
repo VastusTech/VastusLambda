@@ -49,7 +49,7 @@ public class LambdaRequest {
     private CreateEnterpriseRequest createEnterpriseRequest;
 
     /**
-     *
+     * The values for an action to do for a single Lambda request.
      */
     private enum Action {
         CREATE,
@@ -61,7 +61,7 @@ public class LambdaRequest {
     }
 
     /**
-     *
+     * The potential values for the name of an attribute to indicate.
      */
     private enum AttributeName {
         // User ===========================
@@ -158,11 +158,13 @@ public class LambdaRequest {
         N
     }
 
-    // This is where the inputs are handled!
     /**
+     * Processes the inputs from the lambda request and executes it accordingly, updating the
+     * database and sending notifications when applicable. Also thoroughly check the inputs and
+     * current states of the database for integrity.
      *
-     * @return
-     * @throws Exception
+     * @return Any information to return from the execution. For CREATE, it's the created ID.
+     * @throws Exception If anything goes wrong in the execution.
      */
     public Object process() throws Exception {
         try {
@@ -304,8 +306,10 @@ public class LambdaRequest {
     }
 
     /**
+     * Checks the inputs for initial viability of the JSON payload. Ensures that there are no empty
+     * strings that will be rejected by DynamoDB.
      *
-     * @throws Exception
+     * @throws Exception If there are any problems with the inputs.
      */
     private void checkInputs() throws Exception {
         // Action, ItemType, SpecifyAction, attributeName
@@ -457,9 +461,10 @@ public class LambdaRequest {
     }
 
     /**
+     * Handles a CREATE action for the given item type.
      *
-     * @return
-     * @throws Exception
+     * @return The ID of the newly created item.
+     * @throws Exception If anything goes wrong in the creation.
      */
     private String handleCreate() throws Exception {
         SingletonTimer.get().endAndPushCheckpoint("Get compilers for Create");
@@ -531,6 +536,12 @@ public class LambdaRequest {
         return DynamoDBHandler.getInstance().attemptTransaction(CreateReview.getCompilers(fromID, createReviewRequest, workoutID, 0));
     }
 
+    /**
+     * Handles a UPDATESET action for the given item.
+     *
+     * @param id The id of the item to update.
+     * @throws Exception If anything goes wrong in the update.
+     */
     public void handleUpdateSet(String id) throws Exception {
         // switch all attributes, then if necessary, item type
         SingletonTimer.get().endAndPushCheckpoint("Init compiler for Update Set");
@@ -875,6 +886,12 @@ public class LambdaRequest {
         DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
 
+    /**
+     * Handles a UPDATEADD action for the given item.
+     *
+     * @param id The id of the item to update.
+     * @throws Exception If anything goes wrong in the update.
+     */
     public void handleUpdateAdd(String id) throws Exception {
         // switch all attributes, then if necessary, item type
         SingletonTimer.get().endAndPushCheckpoint("Init compiler for Update Add");
@@ -1071,7 +1088,13 @@ public class LambdaRequest {
         DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
 
-    public void handleUpdateRemove(String id) throws Exception {
+    /**
+     * Handles a UPDATEREMOVE action for the given item.
+     *
+     * @param id The id of the item to update.
+     * @throws Exception If anything goes wrong in the update.
+     */
+    private void handleUpdateRemove(String id) throws Exception {
         // switch all attributes, then if necessary, item type
         SingletonTimer.get().endAndPushCheckpoint("Init compiler for Update Remove");
         List<DatabaseActionCompiler> compilers = new ArrayList<>();
@@ -1228,7 +1251,13 @@ public class LambdaRequest {
         DynamoDBHandler.getInstance().attemptTransaction(compilers);
     }
 
-    public void handleDelete(String id) throws Exception {
+    /**
+     * Handles a DELETE action for the given item.
+     *
+     * @param id The id of the item to delete.
+     * @throws Exception If anything goes wrong in the deletion.
+     */
+    private void handleDelete(String id) throws Exception {
         SingletonTimer.get().endAndPushCheckpoint("Init compiler for Delete");
         List<DatabaseActionCompiler> compilers = new ArrayList<>();
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();

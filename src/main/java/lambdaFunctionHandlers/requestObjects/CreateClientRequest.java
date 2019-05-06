@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+/**
+ * The POJO for the request if the Lambda caller wants to create a Client in the database.
+ */
 public class CreateClientRequest extends CreateObjectRequest {
     // Required
     public String name;

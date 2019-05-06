@@ -10,6 +10,10 @@ import java.net.ServerSocket;
 
 import main.java.testing.TestHelper;
 
+/**
+ * The JUnit Class Rule for initializing the DynamoDB Local instance. Every integration test must
+ * include this in order to use the Local DynamoDB instance.
+ */
 public class LocalDynamoDBCreationRule extends ExternalResource {
     private DynamoDBProxyServer server;
     private String port;

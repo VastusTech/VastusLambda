@@ -1,5 +1,8 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+/**
+ * The POJO for the request if the Lambda caller wants to create a Post in the database.
+ */
 public class CreatePostRequest extends CreateObjectRequest {
     // Required
     public String by;

@@ -36,9 +36,18 @@ import java.util.Set;
 
 import main.java.logic.Constants;
 
+/**
+ * Class to help with the creation and initialization of a DynamoDB Local instance and its tables.
+ */
 public class TestTableHelper {
     private static TestTableHelper instance = null;
 
+    /**
+     * Gets the instance, using the singleton design pattern to ensure that only one instance exists
+     * at a given time.
+     *
+     * @return The only instance for the TestTableHelper class.
+     */
     public synchronized static TestTableHelper getInstance() {
         if (instance == null) {
             instance = new TestTableHelper();
@@ -46,71 +55,96 @@ public class TestTableHelper {
         return instance;
     }
 
+    /**
+     * The empty constructor for the test table helper.
+     */
     private TestTableHelper() {}
 
-    public Table reinitTestDatabaseTable(AmazonDynamoDB client, String jsonPath) throws
+    /**
+     * Initializes or re-initializes a test database table from a JSON file.
+     *
+     * @param client The {@link AmazonDynamoDB} client to initialize the table for.
+     * @param jsonPath The relative path from the test "resources/databaseTestTables" directory for
+     *                 the JSON file to initialize the table with.
+     * @return The newly created or reinitialized {@link Table}.
+     * @throws IllegalArgumentException If the JSON path is bad or the JSON file is malformed.
+     * @throws IOException If anything goes wrong in the table creation or initialization.
+     */
+    Table reinitTestDatabaseTable(AmazonDynamoDB client, String jsonPath) throws
             IllegalArgumentException, IOException {
         TableUtils.deleteTableIfExists(client, new DeleteTableRequest(Constants.databaseTableName));
         return createAndFillDatabaseTable(client, jsonPath);
     }
 
-    public Table reinitTestMessagesTable(AmazonDynamoDB client, String jsonPath) throws
+    /**
+     * Initializes or re-initializes a test messages table from a JSON file.
+     *
+     * @param client The {@link AmazonDynamoDB} client to initialize the table for.
+     * @param jsonPath The relative path from the test "resources/messagesTestTables" directory for
+     *                 the JSON file to initialize the table with.
+     * @return The newly created or reinitialized {@link Table}.
+     * @throws IllegalArgumentException If the JSON path is bad or the JSON file is malformed.
+     * @throws IOException If anything goes wrong in the table creation or initialization.
+     */
+    Table reinitTestMessagesTable(AmazonDynamoDB client, String jsonPath) throws
             IllegalArgumentException, IOException {
         TableUtils.deleteTableIfExists(client, new DeleteTableRequest(Constants.messageTableName));
         return createAndFillMessageTable(client, jsonPath);
     }
 
-//    private Table createTestDatabaseTable(AmazonDynamoDB client) throws IllegalArgumentException {
-//        return createTable(client, Constants.databaseTableName, "item_type",
-//                "id");
-//    }
-//
-//    private Table createTestMessagesTable(AmazonDynamoDB client) throws IllegalArgumentException {
-//        return createTable(client, Constants.messageTableName, "board",
-//                "id");
-//    }
-
-//    public Table replaceTableWithInfoFromJSON(AmazonDynamoDB client, String tableName,
-//                                              String jsonPath) throws IOException {
-//        Table table = new Table(client, tableName);
-//        String hashKeyName = null;
-//        String rangeKeyName = null;
-//        for (KeySchemaElement element : table.describe().getKeySchema()) {
-//            switch (element.getKeyType()) {
-//                case "HASH":
-//                    hashKeyName = element.getAttributeName();
-//                    break;
-//                case "RANGE":
-//                    rangeKeyName = element.getAttributeName();
-//                    break;
-//                default:
-//                    throw new IllegalStateException("Unrecognized key type = " + element.getKeyType());
-//            }
-//        }
-//        if (hashKeyName == null || rangeKeyName == null) {
-//            throw new IllegalStateException("Table does not contain both a hash and range key " +
-//                    "for replacement!");
-//        }
-//        client.deleteTable(tableName);
-//        return createAndFillTable(client, jsonPath, tableName, hashKeyName, rangeKeyName);
-//    }
-
+    /**
+     * Creates and fills the database table for the given client using the given JSON file.
+     *
+     * @param client The {@link AmazonDynamoDB} client to initialize the table for.
+     * @param jsonPath The relative path from the test "resources/databaseTestTables" directory for
+     *                 the JSON file to initialize the table with.
+     * @return The newly created {@link Table} object.
+     * @throws IllegalArgumentException If the JSON path is bad or the JSON file is malformed.
+     * @throws IOException If anything goes wrong in the table creation or initialization.
+     */
     private Table createAndFillDatabaseTable(AmazonDynamoDB client, String jsonPath)
             throws IllegalArgumentException, IOException {
         return createAndFillTable(client, jsonPath, Constants.databaseTableName,
                 "item_type", "id");
     }
 
+    /**
+     * Creates and fills the message table for the given client using the given JSON file.
+     *
+     * @param client The {@link AmazonDynamoDB} client to initialize the table for.
+     * @param jsonPath The relative path from the test "resources/messagesTestTables" directory for
+     *                 the JSON file to initialize the table with.
+     * @return The newly created {@link Table} object.
+     * @throws IllegalArgumentException If the JSON path is bad or the JSON file is malformed.
+     * @throws IOException If anything goes wrong in the table creation or initialization.
+     */
     private Table createAndFillMessageTable(AmazonDynamoDB client, String jsonPath)
             throws IllegalArgumentException, IOException {
         return createAndFillTable(client, jsonPath, Constants.messageTableName, "board",
                 "id");
     }
 
+    /**
+     * Saves the table to a JSON file to a path given, which is related to the entire project
+     * directory.
+     *
+     * @param client The {@link AmazonDynamoDB} client to get the table from.
+     * @param tableName The name of the table to save.
+     * @param outFilePath The path of the file to print the table to.
+     * @throws IOException
+     */
     public void saveTableToJSON(AmazonDynamoDB client, String tableName, String outFilePath) throws IOException {
         saveTableToJSON(new Table(client, tableName), outFilePath);
     }
 
+    /**
+     * Saves the table to a JSON file to a path given, which is related to the entire project
+     * directory.
+     *
+     * @param table The {@link Table} object to print.
+     * @param filePath The path of the file to print the table to.
+     * @throws IOException
+     */
     private void saveTableToJSON(Table table, String filePath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode rootNode = mapper.createArrayNode();
@@ -123,6 +157,19 @@ public class TestTableHelper {
         writer.close();
     }
 
+    /**
+     * Creates and fills a table with the given schema and the given JSON file. The file must be
+     * valid syntax so that the {@link Table} can properly store its attributes.
+     *
+     * @param client The {@link AmazonDynamoDB} client to initialize the table for.
+     * @param jsonPath The absolute file path from the project directory to get the JSON file from.
+     * @param tableName The name of the table to create.
+     * @param hashKeyName The name of the hash key to create the table with.
+     * @param rangeKeyName The name of the range key to create the table with.
+     * @return The newly created {@link Table} object.
+     * @throws IllegalArgumentException If the JSON path is bad or the JSON file is malformed.
+     * @throws IOException If anything goes wrong in the table creation or initialization.
+     */
     private Table createAndFillTable(AmazonDynamoDB client, String jsonPath, String tableName,
                                     String hashKeyName, String rangeKeyName) throws
             IllegalArgumentException, IOException {
@@ -192,6 +239,16 @@ public class TestTableHelper {
         return table;
     }
 
+    /**
+     * Creates a Table for the given client using the given schema and potentially adds Global
+     * indexes if it's the database table.
+     *
+     * @param client The {@link AmazonDynamoDB} client to initialize the table for.
+     * @param tableName The name of the table to create.
+     * @param hashKeyName The name of the hash key to create the table with.
+     * @param rangeKeyName The name of the range key to create the table with.
+     * @return The created {@link Table} object.
+     */
     private Table createTable(AmazonDynamoDB client, String tableName, String hashKeyName, String rangeKeyName) {
         CreateTableRequest request = new CreateTableRequest(Arrays.asList(new
                 AttributeDefinition(hashKeyName, ScalarAttributeType.S),
