@@ -62,9 +62,7 @@ public class CreateStreak {
                             createStreakRequest.updateSpanType);
                 }
                 try {
-                    if (Integer.parseInt(createStreakRequest.updateInterval) != 1) {
-                        throw new Exception("Non-single update intervals not implemented yet!");
-                    }
+                    Integer.parseInt(createStreakRequest.updateInterval);
                 }
                 catch (NumberFormatException e) {
                     throw new Exception("Could not read updateInterval: "
