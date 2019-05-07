@@ -342,10 +342,7 @@ public class DatabaseActionCompiler {
      *
      * @return The unique passover identifier for the compiler.
      */
-    public String getPassoverIdentifier() throws Exception {
-        if (this.passoverIdentifier == null) {
-            throw new Exception("The passover identifier has not been determined for the compiler yet!");
-        }
+    public String getPassoverIdentifier() {
         return this.passoverIdentifier;
     }
 }

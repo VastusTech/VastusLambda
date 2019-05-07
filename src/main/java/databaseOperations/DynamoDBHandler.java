@@ -719,6 +719,41 @@ public class DynamoDBHandler {
     }
 
     /**
+     * Gets whether there is an item in the database table with the id and type.
+     *
+     * @param id The id of the object to get.
+     * @param itemType The type of the object to get.
+     * @return Whether there is an item in the given table that matches the given key.
+     */
+    public boolean existsInDatabaseTable(String id, String itemType) {
+        return isInTable(Constants.databaseTableName, new PrimaryKey("item_type",
+                itemType, "id", id));
+    }
+
+    /**
+     * Gets whether there is a message in the messages table with the id and board.
+     *
+     * @param id The id of the message to get.
+     * @param board The name of the board containing the message.
+     * @return Whether there is a message in the given table that matches the given key.
+     */
+    public boolean existsInMessagesTable(String id, String board) {
+        return isInTable(Constants.messageTableName, new PrimaryKey("board", board,
+                "id", id));
+    }
+
+    /**
+     * Gets whether there is an item in a table that is identified by the primary key given.
+     *
+     * @param tableName The name of the table to query.
+     * @param key The {@link PrimaryKey} object to identify the object by.
+     * @return Whether there is an item in the given table that matches the given key.
+     */
+    private boolean isInTable(String tableName, PrimaryKey key) {
+        return tables.get(tableName).getItem(key) != null;
+    }
+
+    /**
      * Sets the database table for the DB handler.
      *
      * @param table The {@link Table} object to set to the database table.
