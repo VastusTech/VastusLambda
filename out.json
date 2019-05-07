@@ -2,16 +2,16 @@
   "owner" : "CL0001",
   "streakN" : "1",
   "item_type" : "Streak",
-  "about" : "CH446199552102",
+  "about" : "CH669200798722",
   "N" : 0,
-  "lastAttemptStarted" : "2019-05-06T22:59:19.927-04:00",
-  "lastUpdated" : "2019-05-06T22:59:19.927-04:00",
+  "lastAttemptStarted" : "2019-05-07T11:30:16.970-04:00",
+  "lastUpdated" : "2019-05-07T11:30:16.970-04:00",
   "updateInterval" : "1",
   "streakType" : "submission",
   "marker" : 0,
   "updateSpanType" : "daily",
-  "time_created" : "2019-05-06T22:59:20.085-04:00",
-  "id" : "ST488366988424",
+  "time_created" : "2019-05-07T11:30:17.147-04:00",
+  "id" : "ST183136999911",
   "bestN" : 0,
   "currentN" : 0
 }, {
@@ -28,7 +28,7 @@
   "capacity" : "10"
 }, {
   "owner" : "CL0001",
-  "streaks" : [ "ST488366988424" ],
+  "streaks" : [ "ST183136999911" ],
   "access" : "private",
   "goal" : "GOAL",
   "streakN" : "1",
@@ -42,9 +42,9 @@
   "streakUpdateSpanType" : "daily",
   "marker" : 1,
   "members" : [ "CL0001" ],
-  "time_created" : "2019-05-06T22:59:19.939-04:00",
+  "time_created" : "2019-05-07T11:30:16.982-04:00",
   "endTime" : "1998-09-05",
-  "id" : "CH446199552102"
+  "id" : "CH669200798722"
 }, {
   "item_type" : "Trainer",
   "marker" : 1,
@@ -55,16 +55,16 @@
   "friendlinessRating" : 0,
   "effectivenessRating" : 0
 }, {
-  "streaks" : [ "ST488366988424" ],
-  "challenges" : [ "CH446199552102" ],
+  "streaks" : [ "ST183136999911" ],
+  "challenges" : [ "CH669200798722" ],
   "item_type" : "Client",
   "marker" : 4,
   "reliabilityRating" : 0,
   "time_created" : "2019-05-01T03:09:35+0000",
   "id" : "CL0001",
-  "posts" : [ "PO341977224651" ],
+  "posts" : [ "PO054499065887" ],
   "friends" : [ "CL0002" ],
-  "ownedChallenges" : [ "CH446199552102" ],
+  "ownedChallenges" : [ "CH669200798722" ],
   "friendlinessRating" : 0,
   "effectivenessRating" : 0
 }, {
@@ -91,10 +91,10 @@
   "item_type" : "Post",
   "marker" : 0,
   "by" : "CL0001",
-  "about" : "CH446199552102",
+  "about" : "CH669200798722",
   "description" : "CL0001 created a new challenge",
-  "time_created" : "2019-05-06T22:59:20.303-04:00",
-  "id" : "PO341977224651"
+  "time_created" : "2019-05-07T11:30:17.361-04:00",
+  "id" : "PO054499065887"
 }, {
   "access" : "private",
   "item_type" : "Group",
