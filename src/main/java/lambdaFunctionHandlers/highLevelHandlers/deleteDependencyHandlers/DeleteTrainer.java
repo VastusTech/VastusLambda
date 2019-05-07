@@ -27,8 +27,10 @@ public class DeleteTrainer {
         // Delete the user associated with the trainer
         databaseActions.addAll(DeleteUser.getActions(fromID, trainer));
 
-        // Remove from gym's trainers field
-        databaseActions.add(GymDatabaseActionBuilder.updateRemoveTrainer(trainer.gym, trainerID));
+        if (trainer.gym != null) {
+            // Remove from gym's trainers field
+            databaseActions.add(GymDatabaseActionBuilder.updateRemoveTrainer(trainer.gym, trainerID));
+        }
 
         // public Set<String> followers;
         // TODO Revisit
