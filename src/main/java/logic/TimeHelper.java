@@ -7,6 +7,8 @@ import org.joda.time.Months;
 import org.joda.time.Weeks;
 import org.joda.time.Years;
 
+import java.time.DayOfWeek;
+
 /**
  * This class to handle all of our time specific logic for our app that does not have to do with
  * time intervals.
@@ -29,7 +31,9 @@ public class TimeHelper {
      * @return The amount of 0 minute marks in the interval.
      */
     public static int hourStartsBetween(DateTime from, DateTime to) {
-        return Hours.hoursBetween(from.toLocalDate(), to.toLocalDate()).getHours();
+        from = from.withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);
+        to = to.withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);
+        return Hours.hoursBetween(from, to).getHours();
     }
 
     /**
@@ -71,7 +75,11 @@ public class TimeHelper {
      * @return The amount of Mondays in the interval.
      */
     public static int mondaysBetween(DateTime from, DateTime to) {
-        return Weeks.weeksBetween(from.toLocalDate(), to.toLocalDate()).getWeeks();
+        // Calculated mathematically based on the total days between and the current day of week
+        // If we wanted a different day of the week, we simply add however many days from monday it
+        // is to the day of week property and modulo it to 7.
+        return 1 + (midnightsBetween(from, to) - ((7 - from.dayOfWeek().get()) +
+                (to.dayOfWeek().get() + 1))) / 7;
     }
 
     /**
@@ -92,7 +100,8 @@ public class TimeHelper {
      * @return The amount of 1st of the month in the interval.
      */
     public static int firstDatesOfMonthBetween(DateTime from, DateTime to) {
-        return Months.monthsBetween(from.toLocalDate(), to.toLocalDate()).getMonths();
+        return Months.monthsBetween(from.toLocalDate().withDayOfMonth(1), to.toLocalDate()
+                .withDayOfMonth(1)).getMonths();
     }
 
     /**
@@ -113,7 +122,8 @@ public class TimeHelper {
      * @return The amount of 1sts of the year in the interval.
      */
     public static int firstDatesOfYearBetween(DateTime from, DateTime to) {
-        return Years.yearsBetween(from.toLocalDate(), to.toLocalDate()).getYears();
+        return Years.yearsBetween(from.toLocalDate().withMonthOfYear(1).withDayOfMonth(1),
+                to.toLocalDate().withMonthOfYear(1).withDayOfMonth(1)).getYears();
     }
 
     /**
