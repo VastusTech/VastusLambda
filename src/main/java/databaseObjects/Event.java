@@ -86,6 +86,6 @@ public class Event extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Event readEvent(String id) throws Exception {
-        return (Event) read(tableName, getPrimaryKey("Event", id));
+        return (Event) read(getTableName(), getPrimaryKey("Event", id));
     }
 }

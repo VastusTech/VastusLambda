@@ -17,8 +17,6 @@ import java.util.Map;
  * make up the primary key: id and item_type.
  */
 abstract public class DatabaseObject extends DatabaseItem {
-    final public static String tableName = Constants.databaseTableName;
-
     public String id;
     public String itemType;
     public int marker;
@@ -62,7 +60,7 @@ abstract public class DatabaseObject extends DatabaseItem {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static DatabaseObject readDatabaseObject(String id, String itemType) throws Exception {
-        return (DatabaseObject)DatabaseItem.read(tableName, getPrimaryKey(itemType, id));
+        return (DatabaseObject)DatabaseItem.read(getTableName(), getPrimaryKey(itemType, id));
     }
 
     /**
@@ -74,5 +72,17 @@ abstract public class DatabaseObject extends DatabaseItem {
      */
     static public PrimaryKey getPrimaryKey(String itemType, String id) {
         return new PrimaryKey("item_type", itemType, "id", id);
+    }
+
+    /**
+     * Gets the table name based on the development status of the application at the moment.
+     *
+     * @return The name of the table to grab from.
+     */
+    static public String getTableName() {
+        if (Constants.ifDevelopment) {
+            return Constants.developmentDatabaseTableName;
+        }
+        return Constants.databaseTableName;
     }
 }

@@ -26,6 +26,8 @@ public class Constants {
             System.getenv("numPrefix")).orElse("2"));
 
     // Access Materials
+    public static boolean ifDevelopment = false;
+
     // Database Tables
     public static String databaseTableName = Optional.ofNullable(System.getenv(
             "databaseTableName")).orElse("Classics");
@@ -68,7 +70,10 @@ public class Constants {
     public static int postVideoPathsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
             ("postVideoPathsLimit")).orElse("5"));
 
-    // public static String nullAttributeValue = System.getenv("nullAttributeValue");
+
+    public static void setIfDevelopment(boolean ifDevelopment) {
+        Constants.ifDevelopment = ifDevelopment;
+    }
 
     /**
      * Logs to the AWS Lambda logger, using the logger obtained from the context of the call.

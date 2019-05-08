@@ -116,6 +116,6 @@ public class Challenge extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Challenge readChallenge(String id) throws Exception {
-        return (Challenge) read(tableName, getPrimaryKey("Challenge", id));
+        return (Challenge) read(getTableName(), getPrimaryKey("Challenge", id));
     }
 }

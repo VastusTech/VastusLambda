@@ -50,6 +50,6 @@ public class Client extends User {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Client readClient(String id) throws Exception {
-        return (Client) read(tableName, getPrimaryKey("Client", id));
+        return (Client) read(getTableName(), getPrimaryKey("Client", id));
     }
 }

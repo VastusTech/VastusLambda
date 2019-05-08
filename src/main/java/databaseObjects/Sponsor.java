@@ -46,7 +46,7 @@ public class Sponsor extends User {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Sponsor readSponsor(String id) throws Exception {
-        return (Sponsor) read(tableName, getPrimaryKey("Sponsor", id));
+        return (Sponsor) read(getTableName(), getPrimaryKey("Sponsor", id));
     }
 
 //    public static Client querySponsor(String username) throws Exception {

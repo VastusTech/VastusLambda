@@ -1321,7 +1321,7 @@ public class LambdaRequest {
         DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
     }
 
-    private boolean ifDevelopment() {
+    public boolean ifDevelopment() {
         return (environmentType != null) && (environmentType.equals("development"));
     }
 

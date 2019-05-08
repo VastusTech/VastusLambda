@@ -8,8 +8,6 @@ import main.java.databaseOperations.DynamoDBHandler;
  * table. Essentially is only given the ability to read and define the table name.
  */
 abstract public class DatabaseItem {
-    static public String tableName;
-
     /**
      * Reads an item from any table in the database using a {@link PrimaryKey}.
      *

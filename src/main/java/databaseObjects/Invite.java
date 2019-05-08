@@ -55,7 +55,7 @@ public class Invite extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Invite readInvite(String id) throws Exception {
-        return (Invite) read(tableName, getPrimaryKey("Invite", id));
+        return (Invite) read(getTableName(), getPrimaryKey("Invite", id));
     }
 
     public enum InviteType {

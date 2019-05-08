@@ -80,7 +80,7 @@ public class Trainer extends User {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Trainer readTrainer(String id) throws Exception {
-        return (Trainer) read(tableName, getPrimaryKey("Trainer", id));
+        return (Trainer) read(getTableName(), getPrimaryKey("Trainer", id));
     }
 
 //    public static Trainer queryTrainer(String username) throws Exception {

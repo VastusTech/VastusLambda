@@ -62,6 +62,6 @@ public class Submission extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Submission readSubmission(String id) throws Exception {
-        return (Submission) read(tableName, getPrimaryKey("Submission", id));
+        return (Submission) read(getTableName(), getPrimaryKey("Submission", id));
     }
 }

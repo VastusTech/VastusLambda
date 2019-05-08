@@ -72,7 +72,7 @@ public class Gym extends User {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Gym readGym(String id) throws Exception {
-        return (Gym) read(tableName, getPrimaryKey("Gym", id));
+        return (Gym) read(getTableName(), getPrimaryKey("Gym", id));
     }
 
 //    public static Gym queryGym(String username) throws Exception {

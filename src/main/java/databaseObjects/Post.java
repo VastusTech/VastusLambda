@@ -72,6 +72,6 @@ public class Post extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Post readPost(String id) throws Exception {
-        return (Post) read(tableName, getPrimaryKey("Post", id));
+        return (Post) read(getTableName(), getPrimaryKey("Post", id));
     }
 }

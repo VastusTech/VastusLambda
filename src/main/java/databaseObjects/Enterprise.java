@@ -41,6 +41,6 @@ public class Enterprise extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Enterprise readEnterprise(String id) throws Exception {
-        return (Enterprise) read(tableName, getPrimaryKey("Enterprise", id));
+        return (Enterprise) read(getTableName(), getPrimaryKey("Enterprise", id));
     }
 }

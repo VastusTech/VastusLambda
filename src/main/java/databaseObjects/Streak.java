@@ -74,7 +74,7 @@ public class Streak extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Streak readStreak(String id) throws Exception {
-        return (Streak) read(tableName, getPrimaryKey("Streak", id));
+        return (Streak) read(getTableName(), getPrimaryKey("Streak", id));
     }
 
     /**

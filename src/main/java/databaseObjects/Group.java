@@ -95,6 +95,6 @@ public class Group extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Group readGroup(String id) throws Exception {
-        return (Group) read(tableName, getPrimaryKey("Group", id));
+        return (Group) read(getTableName(), getPrimaryKey("Group", id));
     }
 }

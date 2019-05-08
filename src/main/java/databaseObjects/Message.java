@@ -19,8 +19,6 @@ import java.util.Set;
  * as well.
  */
 public class Message extends DatabaseItem {
-    final public static String tableName = Constants.messageTableName;
-
     public String id;
     public String board;
     public String item_type;
@@ -77,7 +75,7 @@ public class Message extends DatabaseItem {
      * @throws Exception If anything goes wrong in the fetch.
      */
     static public Message readMessage(String board, String id) throws Exception {
-        return (Message)read(tableName, getPrimaryKey(board, id));
+        return (Message)read(getTableName(), getPrimaryKey(board, id));
     }
 
     /**
@@ -130,6 +128,18 @@ public class Message extends DatabaseItem {
             throw new Exception("Board contains no IDs!");
         }
         return sendIDs;
+    }
+
+    /**
+     * Gets the table name based on the development status of the application at the moment.
+     *
+     * @return The name of the table to grab from.
+     */
+    static public String getTableName() {
+        if (Constants.ifDevelopment) {
+            return Constants.developmentMessageTableName;
+        }
+        return Constants.messageTableName;
     }
 
     /**

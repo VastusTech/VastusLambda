@@ -64,6 +64,6 @@ public class Review extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Review readReview(String id) throws Exception {
-        return (Review) read(tableName, getPrimaryKey("Review", id));
+        return (Review) read(getTableName(), getPrimaryKey("Review", id));
     }
 }

@@ -55,6 +55,6 @@ public class Comment extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Comment readComment(String id) throws Exception {
-        return (Comment) read(tableName, getPrimaryKey("Comment", id));
+        return (Comment) read(getTableName(), getPrimaryKey("Comment", id));
     }
 }

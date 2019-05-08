@@ -173,7 +173,7 @@ abstract public class User extends DatabaseObject{
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static User readUser(String id, String itemType) throws Exception {
-        return (User) read(tableName, getPrimaryKey(itemType, id));
+        return (User) read(getTableName(), getPrimaryKey(itemType, id));
     }
 
     public static User readUser(String id) throws Exception {

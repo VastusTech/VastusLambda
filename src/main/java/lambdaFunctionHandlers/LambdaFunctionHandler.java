@@ -27,6 +27,7 @@ public class LambdaFunctionHandler {
             DynamoDBHandler.getInstance();
             return new LambdaResponse(null);
         }
+        Constants.setIfDevelopment(input.ifDevelopment());
         Constants.setLogger(context.getLogger());
         Constants.debugLog(input.toString());
         // Start the time testing

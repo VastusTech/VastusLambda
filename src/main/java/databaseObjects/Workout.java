@@ -66,6 +66,6 @@ public class Workout extends DatabaseObject {
      * @throws Exception If anything goes wrong in the fetch.
      */
     public static Workout readWorkout(String id) throws Exception {
-        return (Workout) read(tableName, getPrimaryKey("Workout", id));
+        return (Workout) read(getTableName(), getPrimaryKey("Workout", id));
     }
 }
