@@ -78,8 +78,7 @@ public class TimeHelper {
         // Calculated mathematically based on the total days between and the current day of week
         // If we wanted a different day of the week, we simply add however many days from monday it
         // is to the day of week property and modulo it to 7.
-        return 1 + (midnightsBetween(from, to) - ((7 - from.dayOfWeek().get()) +
-                (to.dayOfWeek().get() + 1))) / 7;
+        return (midnightsBetween(from, to) + from.dayOfWeek().get() - to.dayOfWeek().get()) / 7;
     }
 
     /**
