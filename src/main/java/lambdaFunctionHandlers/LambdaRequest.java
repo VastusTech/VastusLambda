@@ -12,7 +12,6 @@ import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHan
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers.*;
 import main.java.lambdaFunctionHandlers.requestObjects.*;
-import main.java.testing.TestHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,7 @@ public class LambdaRequest {
     private String secondaryIdentifier;
     private String attributeName;
     private String[] attributeValues;
+    private String environmentType;
 
     private CreateClientRequest createClientRequest;
     private CreateTrainerRequest createTrainerRequest;
@@ -529,11 +529,12 @@ public class LambdaRequest {
         }
 
         SingletonTimer.get().endAndPushCheckpoint("Attempt the transaction");
-        return DynamoDBHandler.getInstance().attemptTransaction(compilers);
+        return DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
     }
 
     private String handleSurveyCreate(String workoutID) throws Exception {
-        return DynamoDBHandler.getInstance().attemptTransaction(CreateReview.getCompilers(fromID, createReviewRequest, workoutID, 0));
+        return DynamoDBHandler.getInstance().attemptTransaction(CreateReview.getCompilers(fromID,
+                createReviewRequest, workoutID, 0), ifDevelopment());
     }
 
     /**
@@ -883,7 +884,7 @@ public class LambdaRequest {
         }
 
         compilers.add(databaseActionCompiler);
-        DynamoDBHandler.getInstance().attemptTransaction(compilers);
+        DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
     }
 
     /**
@@ -1085,7 +1086,7 @@ public class LambdaRequest {
         }
 
         compilers.add(databaseActionCompiler);
-        DynamoDBHandler.getInstance().attemptTransaction(compilers);
+        DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
     }
 
     /**
@@ -1248,7 +1249,7 @@ public class LambdaRequest {
         }
 
         compilers.add(databaseActionCompiler);
-        DynamoDBHandler.getInstance().attemptTransaction(compilers);
+        DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
     }
 
     /**
@@ -1317,12 +1318,17 @@ public class LambdaRequest {
         }
 
         compilers.add(databaseActionCompiler);
-        DynamoDBHandler.getInstance().attemptTransaction(compilers);
+        DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
     }
 
-    public LambdaRequest(String fromID, String action, String specifyAction, String itemType, String[] identifiers, String
-            attributeName, String secondaryIdentifier, String[] attributeValues, CreateClientRequest createClientRequest, CreateTrainerRequest
-            createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
+    private boolean ifDevelopment() {
+        return (environmentType != null) && (environmentType.equals("development"));
+    }
+
+    public LambdaRequest(String fromID, String action, String specifyAction, String itemType,
+                         String[] identifiers, String attributeName, String secondaryIdentifier,
+                         String[] attributeValues, String environmentType, CreateClientRequest
+                                 createClientRequest, CreateTrainerRequest createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
                          CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest,
                          CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest,
                          CreatePostRequest createPostRequest, CreateSubmissionRequest createSubmissionRequest,
@@ -1337,6 +1343,7 @@ public class LambdaRequest {
         this.secondaryIdentifier = secondaryIdentifier;
         this.attributeName = attributeName;
         this.attributeValues = attributeValues;
+        this.environmentType = environmentType;
         this.createClientRequest = createClientRequest;
         this.createTrainerRequest = createTrainerRequest;
         this.createGymRequest = createGymRequest;
@@ -1419,6 +1426,14 @@ public class LambdaRequest {
 
     public void setAttributeValues(String[] attributeValues) {
         this.attributeValues = attributeValues;
+    }
+
+    public String getEnvironmentType() {
+        return environmentType;
+    }
+
+    public void setEnvironmentType(String environmentType) {
+        this.environmentType = environmentType;
     }
 
     public CreateClientRequest getCreateClientRequest() {

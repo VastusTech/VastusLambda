@@ -26,12 +26,21 @@ public class Constants {
             System.getenv("numPrefix")).orElse("2"));
 
     // Access Materials
+    // Database Tables
     public static String databaseTableName = Optional.ofNullable(System.getenv(
             "databaseTableName")).orElse("Classics");
-    public static String firebaseTokenTableName = Optional.ofNullable(System.getenv(
-            "firebaseTokenTableName")).orElse("FirebaseTokens");
+//    public static String firebaseTokenTableName = Optional.ofNullable(System.getenv(
+//            "firebaseTokenTableName")).orElse("FirebaseTokens");
     public static String messageTableName = Optional.ofNullable(System.getenv(
             "messageTableName")).orElse("Messages");
+
+    // Development Database Tables
+    public static String developmentDatabaseTableName = Optional.ofNullable(System.getenv(
+            "developmentDatabaseTableName")).orElse("ClassicsTest");
+    public static String developmentMessageTableName = Optional.ofNullable(System.getenv(
+            "developmentMessageTableName")).orElse("MessagesTest");
+
+
 //    public static String firebaseFunctionName = Optional.ofNullable(System.getenv(
 //            "firebaseFunctionName")).orElse("VastusFirebaseLambdaFunction");
     public static String ablyFunctionName = Optional.ofNullable(System.getenv(

@@ -57,11 +57,11 @@ public abstract class DatabaseAction {
      *
      * @return
      */
-    public String getTableName() {
+    public String getTableName(boolean ifDevelopment) {
         if (itemType != null && itemType.equals("Message")) {
-            return Constants.messageTableName;
+            return ifDevelopment ? Constants.developmentMessageTableName : Constants.messageTableName;
         }
-        return Constants.databaseTableName;
+        return ifDevelopment ? Constants.developmentDatabaseTableName : Constants.databaseTableName;
     }
 
     // TODO IMPORTANT: This only works with primary key attributes that are strings

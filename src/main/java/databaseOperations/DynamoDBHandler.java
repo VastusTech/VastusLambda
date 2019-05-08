@@ -36,6 +36,8 @@ public class DynamoDBHandler {
     private Map<String, Table> tables;
     private Table databaseTable;
     private Table messageTable;
+    private Table developmentDatabaseTable;
+    private Table developmentMessageTable;
 //    private Table firebaseTokenTable;
 
     /**
@@ -81,6 +83,8 @@ public class DynamoDBHandler {
         if (TestHelper.getIfTesting()) {
             databaseTable = null;
             messageTable = null;
+            developmentDatabaseTable = null;
+            developmentMessageTable = null;
 //            SingletonTimer.get().endAndPushCheckpoint("Create the test database table");
 //            databaseTable = TestTableHelper.getInstance().createAndFillDatabaseTable(client,
 //                    TestHelper.getDatabaseTableJsonPath());
@@ -95,15 +99,31 @@ public class DynamoDBHandler {
             databaseTable = new Table(client, Constants.databaseTableName);
             SingletonTimer.get().endAndPushCheckpoint("Connect to the message table");
             messageTable = new Table(client, Constants.messageTableName);
-//            SingletonTimer.get().endAndPushCheckpoint("Connect to the firebase token table");
-//            firebaseTokenTable = new Table(client, Constants.firebaseTokenTableName);
+            SingletonTimer.get().endAndPushCheckpoint("Connect to the development database table");
+            developmentDatabaseTable = new Table(client, Constants.developmentDatabaseTableName);
+            SingletonTimer.get().endAndPushCheckpoint("Connect to the development message table");
+            developmentMessageTable = new Table(client, Constants.developmentMessageTableName);
         }
 
         tables = new HashMap<>();
         tables.put(Constants.databaseTableName, databaseTable);
         tables.put(Constants.messageTableName, messageTable);
+        tables.put(Constants.developmentDatabaseTableName, developmentDatabaseTable);
+        tables.put(Constants.developmentMessageTableName, developmentMessageTable);
 
         SingletonTimer.get().endCheckpoints(2);
+    }
+
+    /**
+     * Helper method for doing a transactions for automated tests, because it will never be acting
+     * on any "development" tables.
+     *
+     * @param databaseActionCompilers The List of compilers for all the database actions.
+     * @return The first newly created ID if the transaction included a CREATE statement.
+     * @throws Exception If any of the transactions fail or the pre-transaction checks fail.
+     */
+    public String attemptTransaction(List<DatabaseActionCompiler> databaseActionCompilers) throws Exception {
+        return attemptTransaction(databaseActionCompilers, false);
     }
 
     /**
@@ -113,10 +133,13 @@ public class DynamoDBHandler {
      * duplicate IDs in the database. Also sends notifications after the transaction is complete.
      *
      * @param databaseActionCompilers The List of compilers for all the database actions.
+     * @param ifDevelopment Whether this transaction is acting on the development DB or the
+     *                      production one.
      * @return The first newly created ID if the transaction included a CREATE statement.
      * @throws Exception If any of the transactions fail or the pre-transaction checks fail.
      */
-    public String attemptTransaction(List<DatabaseActionCompiler> databaseActionCompilers) throws Exception {
+    public String attemptTransaction(List<DatabaseActionCompiler> databaseActionCompilers,
+                                     boolean ifDevelopment) throws Exception {
         // Marker retry implemented
         final int transactionActionLimit = 10; // Transactions can only handle 10 unique things each
         // This represents the current passoverIDs for the current transaction. Supports inputting
@@ -132,7 +155,8 @@ public class DynamoDBHandler {
         for (DatabaseActionCompiler databaseActionCompiler : databaseActionCompilers) {
             for (DatabaseAction databaseAction : databaseActionCompiler.getDatabaseActions()) {
                 if (databaseAction.action == DBAction.UPDATESAFE) {
-                    DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
+                    DatabaseItem databaseItem = readItem(databaseAction.getTableName(ifDevelopment),
+                            databaseAction.primaryKey);
                     String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
                     if (errorMessage != null) {
                         throw new Exception("Unable to perform database action. Item failed runtime checker: " +
@@ -161,7 +185,7 @@ public class DynamoDBHandler {
                     case CREATE:
                         try {
                             // Get the ID!
-                            String id = getNewID(databaseAction.itemType);
+                            String id = getNewID(databaseAction.itemType, ifDevelopment);
                             databaseAction.item.put("id", new AttributeValue(id));
                             databaseAction.item.put("time_created", new AttributeValue(TimeHelper.nowString()));
                             ((CreateDatabaseAction) databaseAction).updateWithIDHandler.updateWithID(databaseAction.item, id);
@@ -173,7 +197,7 @@ public class DynamoDBHandler {
 
                             if (databaseAction.item.containsKey("username")) {
                                 if (this.usernameInDatabase(databaseAction.item.get("username").getS(), databaseAction.item
-                                        .get("item_type").getS())) {
+                                        .get("item_type").getS(), ifDevelopment)) {
                                     // This means that the database already has this username, we should not do this
                                     throw new Exception("Attempted to put repeat username: " + databaseAction.item.get
                                             ("username").getS() + " into the database!");
@@ -185,8 +209,8 @@ public class DynamoDBHandler {
 
                             Constants.debugLog("Creating item with item: " + databaseAction.item);
 
-                            transaction.putItem(new PutItemRequest().withTableName(databaseAction.getTableName()).withItem
-                                    (putItem));
+                            transaction.putItem(new PutItemRequest().withTableName(databaseAction
+                                    .getTableName(ifDevelopment)).withItem(putItem));
                             uniqueActionsInCurrentTransaction++;
                             newlyCreatedID = id;
                             if (returnString == null) { returnString = newlyCreatedID; }
@@ -231,10 +255,11 @@ public class DynamoDBHandler {
                             }
 
                             Constants.debugLog("Using primary key = " + databaseAction.primaryKey.toString());
-                            Constants.debugLog("On table = " + databaseAction.getTableName());
+                            Constants.debugLog("On table = " + databaseAction.getTableName(ifDevelopment));
 
                             // This updates the object and the marker
-                            transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName()).withKey
+                            transaction.updateItem(new UpdateItemRequest().withTableName(
+                                    databaseAction.getTableName(ifDevelopment)).withKey
                                     (databaseAction.getKey()).withAttributeUpdates(updateItem));
                             uniqueActionsInCurrentTransaction++;
 
@@ -294,7 +319,9 @@ public class DynamoDBHandler {
                                 Constants.debugLog("Checking the viability of the item received");
 
                                 // Use the checkHandler
-                                String errorMessage = databaseAction.checkHandler.isViable(readItem(databaseAction.getTableName(), databaseAction.primaryKey));
+                                String errorMessage = databaseAction.checkHandler.isViable(readItem(
+                                        databaseAction.getTableName(ifDevelopment),
+                                        databaseAction.primaryKey));
                                 if (errorMessage == null) {
                                     Constants.debugLog("The item is viable!!!");
                                     // Put the newly read marker value into the conditional statement
@@ -302,8 +329,10 @@ public class DynamoDBHandler {
 
                                     try {
                                         // Try to update the item and the marker with the conditional check
-                                        transaction.updateItem(new UpdateItemRequest().withTableName(databaseAction.getTableName())
-                                                .withKey(databaseAction.getKey()).withAttributeUpdates(updateItem));
+                                        transaction.updateItem(new UpdateItemRequest().withTableName(
+                                                databaseAction.getTableName(ifDevelopment))
+                                                .withKey(databaseAction.getKey())
+                                                .withAttributeUpdates(updateItem));
                                         uniqueActionsInCurrentTransaction++;
 
                                             /* TRANSACTIONS CONDITIONS NOT SUPPORTED
@@ -350,7 +379,8 @@ public class DynamoDBHandler {
                                         databaseAction.itemType, databaseAction.idIdentifier,
                                         passoverIDs));
                             }
-                            transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName()).withKey
+                            transaction.deleteItem(new DeleteItemRequest().withTableName(
+                                    databaseAction.getTableName(ifDevelopment)).withKey
                                     (databaseAction.getKey()));
                             uniqueActionsInCurrentTransaction++;
                         } catch (Exception e) {
@@ -388,7 +418,8 @@ public class DynamoDBHandler {
 
                             boolean ifFinished = false;
                             while (!ifFinished) {
-                                DatabaseItem databaseItem = readItem(databaseAction.getTableName(), databaseAction.primaryKey);
+                                DatabaseItem databaseItem = readItem(databaseAction.getTableName(
+                                        ifDevelopment), databaseAction.primaryKey);
                                 // Perform the checkHandler check
                                 String errorMessage = databaseAction.checkHandler.isViable(databaseItem);
                                 if (errorMessage == null) {
@@ -396,7 +427,8 @@ public class DynamoDBHandler {
 
                                     try {
                                         // try to delete the item
-                                        transaction.deleteItem(new DeleteItemRequest().withTableName(databaseAction.getTableName())
+                                        transaction.deleteItem(new DeleteItemRequest().withTableName(
+                                                databaseAction.getTableName(ifDevelopment))
                                                 .withKey(databaseAction.getKey()));
                                         uniqueActionsInCurrentTransaction++;
 
@@ -617,12 +649,13 @@ public class DynamoDBHandler {
      * @param itemType The String type of the item to create the new ID for.
      * @return The newly generated and unique ID for the item.
      */
-    private String getNewID(String itemType) {
+    private String getNewID(String itemType, boolean ifDevelopment) {
         String id = null;
         boolean ifFound = false;
+        Table table = ifDevelopment ? developmentDatabaseTable : databaseTable;
         while (!ifFound) {
             id = generateRandomID(itemType);
-            if (databaseTable.getItem("item_type", itemType, "id", id) == null) {
+            if (table.getItem("item_type", itemType, "id", id) == null) {
                 ifFound = true;
             }
         }
@@ -680,8 +713,9 @@ public class DynamoDBHandler {
      * @param item_type The String item type of the item to hold the username.
      * @return Whether or not the username is inside the database already.
      */
-    private boolean usernameInDatabase(String username, String item_type) {
-        Index index = databaseTable.getIndex("item_type-username-index");
+    private boolean usernameInDatabase(String username, String item_type, boolean ifDevelopment) {
+        Table table = ifDevelopment ? developmentDatabaseTable : databaseTable;
+        Index index = table.getIndex("item_type-username-index");
         HashMap<String, String> nameMap = new HashMap<>();
         nameMap.put("#usr", "username");
         nameMap.put("#type", "item_type");
