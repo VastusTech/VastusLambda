@@ -44,6 +44,8 @@ public interface DatabaseItemFactory {
                 return new Invite(item);
             case Post:
                 return new Post(item);
+            case Submission:
+                return new Submission(item);
             case Group:
                 return new Group(item);
             case Comment:

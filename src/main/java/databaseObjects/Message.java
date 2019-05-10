@@ -104,13 +104,15 @@ public class Message extends DatabaseItem {
             // Then this must be a event ID or a challenge ID
             String id = ids[0];
             String itemType = ItemType.getItemType(id);
-            if (itemType.equals("Challenge")) {
-                Challenge challenge = Challenge.readChallenge(id);
-                sendIDs.addAll(challenge.members);
+            // Only send it to the owners
+            if (itemType.equals("Group")) {
+                sendIDs.addAll(Group.readGroup(id).owners);
+            }
+            else if (itemType.equals("Challenge")) {
+                sendIDs.add(Challenge.readChallenge(id).owner);
             }
             else if (itemType.equals("Event")) {
-                Event event = Event.readEvent(id);
-                sendIDs.addAll(event.members);
+                sendIDs.add(Event.readEvent(id).owner);
             }
             else {
                 throw new Exception("For a chat with only one ID, that ID must be either an event or a challenge!");
