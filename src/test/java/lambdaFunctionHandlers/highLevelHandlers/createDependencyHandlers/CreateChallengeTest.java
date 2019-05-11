@@ -291,8 +291,6 @@ public class CreateChallengeTest {
         assertTrue(post.videoPaths.isEmpty());
         assertTrue(post.likes.isEmpty());
         assertTrue(post.comments.isEmpty());
-        TestTableHelper.getInstance().saveTableToJSON(DynamoDBHandler.getInstance().client,
-                Constants.databaseTableName, "out.json");
     }
     @Test
     public void createStreakChallengeWithExtraInfo() throws Exception {

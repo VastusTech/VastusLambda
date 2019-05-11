@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
+import main.java.databaseObjects.Group;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateStreak;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateStreakRequest;
@@ -51,6 +52,12 @@ public class UserAddToChallenge {
         else {
             if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
                 throw new Exception("PERMISSIONS ERROR: Only you can add you to a challenge!");
+            }
+        }
+
+        if (challenge.group != null) {
+            if (!Group.readGroup(challenge.group).members.contains(userID)) {
+                throw new Exception("Cannot join a Group Challenge if you aren't a part of the Group!");
             }
         }
 
