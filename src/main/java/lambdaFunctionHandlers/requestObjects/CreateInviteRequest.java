@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Invite in the database.
  */
@@ -24,7 +26,7 @@ public class CreateInviteRequest extends CreateObjectRequest {
     public CreateInviteRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(from, to, inviteType, about, description);
     }
 

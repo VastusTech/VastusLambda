@@ -267,7 +267,7 @@ public class CreatePostTest {
         String id = DynamoDBHandler.getInstance().attemptTransaction(CreatePost.getCompilers(
                 Constants.adminKey, new CreatePostRequest(
                         "CL0001", "DESCRIPTION", null,
-                        null, null, null,
+                        "private", null, null,
                         new String[]{"VIDEOPATH1", "VIDEOPATH2"}, "GR0001"
                 ), 0, null
         ));
@@ -519,6 +519,17 @@ public class CreatePostTest {
     }
 
     @Test(expected = Exception.class)
+    public void failNoAccess() throws Exception {
+        DynamoDBHandler.getInstance().attemptTransaction(CreatePost.getCompilers(
+                "CL0001", new CreatePostRequest(
+                        "CL0001", null, null,
+                        null, null, null,
+                        null, null
+                ), 0, null
+        ));
+    }
+
+    @Test(expected = Exception.class)
     public void failInvalidAccess() throws Exception {
         DynamoDBHandler.getInstance().attemptTransaction(CreatePost.getCompilers(
                 "CL0001", new CreatePostRequest(
@@ -545,17 +556,6 @@ public class CreatePostTest {
         DynamoDBHandler.getInstance().attemptTransaction(CreatePost.getCompilers(
                 "CL0001", new CreatePostRequest(
                         null, "DESCRIPTION", null,
-                        "private", null, null,
-                        null, null
-                ), 0, null
-        ));
-    }
-
-    @Test(expected = Exception.class)
-    public void failNoDescription() throws Exception {
-        DynamoDBHandler.getInstance().attemptTransaction(CreatePost.getCompilers(
-                "CL0001", new CreatePostRequest(
-                        "CL0001", null, null,
                         "private", null, null,
                         null, null
                 ), 0, null

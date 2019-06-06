@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.logic.TimeHelper;
@@ -316,24 +317,28 @@ public class LambdaRequest {
         if (specifyAction == null) {
             specifyAction = "";
         }
+        if (specifyAction.length() > Constants.hardStringLengthLimit) throw new ExceedsDatabaseLimitException("Specify Action String exceeds hard string limit");
         if (identifiers == null) {
             identifiers = new String[]{};
         }
-        if (secondaryIdentifier != null && !itemType.equals("Message")) {
-            throw new Exception("You can only have a secondary identifier to identify a board!!!");
+        for (String identifier : identifiers) {
+            if (identifier.length() > Constants.hardStringLengthLimit) throw new ExceedsDatabaseLimitException("Identifier String exceeds hard string limit");
         }
-
+        if (secondaryIdentifier != null) {
+            if (!itemType.equals("Message")) throw new Exception("You can only have a secondary identifier to identify a board!!!");
+            else if (secondaryIdentifier.length() > Constants.hardStringLengthLimit) throw new ExceedsDatabaseLimitException("Secondary Identifier String exceeds hard string limit");
+        }
         if (action != null  && fromID != null && !fromID.equals("") && itemType != null) {
+            if (fromID.length() > Constants.hardStringLengthLimit) throw new ExceedsDatabaseLimitException("From ID exceeds hard string limit");
             if (attributeName != null) {
-                if (attributeName.equals("")) {
-                    throw new Exception("No fields are allowed to be empty strings!");
-                }
+                if (attributeName.equals("")) throw new Exception("Attribute name is not allowed to be an empty string!");
+                else if (attributeName.length() > Constants.hardStringLengthLimit) throw new ExceedsDatabaseLimitException("Attribute Name String exceeds hard string limit");
             }
-
             if (attributeValues != null) {
                 for (String value : attributeValues) {
-                    if (value != null && value.equals("")) {
-                        throw new Exception("No fields are allowed to be empty strings!");
+                    if (value != null) {
+                        if (value.equals("")) throw new Exception("Attribute Value string is not allowed to be an empty string!");
+                        else if (value.length() > Constants.hardStringLengthLimit) throw new ExceedsDatabaseLimitException("Attribute Value String exceeds hard limit");
                     }
                 }
             }

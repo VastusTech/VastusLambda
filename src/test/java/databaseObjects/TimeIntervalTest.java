@@ -7,21 +7,31 @@ import main.java.logic.Constants;
 import main.java.databaseObjects.TimeInterval;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 // EXPECTED (THEORETICALLY) , ACTUAL (TESTED)
 public class TimeIntervalTest {
+    private int i;
+
     @Before
     public void initConstants() {
+        i = Constants.workoutShortestTimeSectionInterval;
         Constants.workoutShortestTimeSectionInterval = 5;
+    }
+
+    @After
+    public void deinitConstants() {
+        Constants.workoutShortestTimeSectionInterval = i;
     }
 
     @Test
     public void TestConstructor1() {
         // September 20th, 2018, 17:30:00 -  September 20th, 2018, 18:30:00
         // String testisotime = new DateTime(2018, 9, 20, 18, 30).toString();
-        String isotime = "2018-09-20T17:30:00-04:00_2018-09-20T18:30:00-04:00";
+        String isotime = "2018-09-20T17:30:00Z_2018-09-20T18:30:00Z";
         TimeInterval timeInterval ;
 
         try {
@@ -32,32 +42,8 @@ public class TimeIntervalTest {
             throw new AssertionError();
         }
 
-        int fromYear = timeInterval.fromYear;
-        int fromMonth = timeInterval.fromMonth;
-        int fromDay = timeInterval.fromDay;
-        int fromHour = timeInterval.fromHour;
-        int fromMinute = timeInterval.fromMinute;
-        int toYear = timeInterval.fromYear;
-        int toMonth = timeInterval.fromMonth;
-        int toDay = timeInterval.fromDay;
-        int toHour = timeInterval.toHour;
-        int toMinute = timeInterval.toMinute;
-//        int fromTotalMinute = timeInterval.fromTotalMinute;
-//        int toTotalMinute = timeInterval.toTotalMinute;
-
-        // Check each individual component
-        assertEquals(2018, fromYear);
-        assertEquals(9, fromMonth);
-        assertEquals(20, fromDay);
-        assertEquals(2018, toYear);
-        assertEquals(9, toMonth);
-        assertEquals(20, toDay);
-        assertEquals(17, fromHour);
-        assertEquals(30, fromMinute);
-        assertEquals(18, toHour);
-        assertEquals(30, toMinute);
-//        assertEquals((17 * 60) + 30, fromTotalMinute);
-//        assertEquals((18 * 60) + 30, toTotalMinute);
+        assertEquals(new DateTime(2018, 9, 20, 17, 30, DateTimeZone.UTC), timeInterval.fromDateTime.withZone(DateTimeZone.UTC));
+        assertEquals(new DateTime(2018, 9, 20, 18, 30, DateTimeZone.UTC), timeInterval.toDateTime.withZone(DateTimeZone.UTC));
     }
 
     @Test
@@ -77,15 +63,10 @@ public class TimeIntervalTest {
                 toMinute
         };
 
-        String fromiso = "2018-10-05T12:00:00-04:00";
-        String toiso = "2018-10-05T13:00:00-04:00";
-        String isotime = fromiso + "_" + toiso;
-
         try {
             TimeInterval timeInterval = new TimeInterval(stringTimeArray);
-            assertEquals(fromiso, timeInterval.fromiso);
-            assertEquals(toiso, timeInterval.toiso);
-            assertEquals(isotime, timeInterval.isotime);
+            assertEquals(new DateTime(2018, 10, 5, 12, 0), timeInterval.fromDateTime);
+            assertEquals(new DateTime(2018, 10, 5, 13, 0), timeInterval.toDateTime);
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -3,10 +3,14 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -40,8 +44,9 @@ public class Group extends DatabaseObject {
      * @param item The {@link Item} object obtained from the database query/fetch.
      * @throws Exception If anything goes wrong with the translation.
      */
-    Group(Item item) throws Exception {
+    public Group(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Group")) throw new CorruptedItemException("Group initialized for wrong item type");
         this.title = item.getString("title");
         this.description = item.getString("description");
         this.motto = item.getString("motto");
@@ -96,5 +101,25 @@ public class Group extends DatabaseObject {
      */
     public static Group readGroup(String id) throws Exception {
         return (Group) read(getTableName(), getPrimaryKey("Group", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Group) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Group)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(owners, members, invitedMembers, memberRequests, receivedInvites,
+                events, completedEvents, challenges, completedChallenges, posts, tags, streaks));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), title, description, motto, groupImagePath, access,
+                restriction);
     }
 }

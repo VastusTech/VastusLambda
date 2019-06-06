@@ -4,9 +4,14 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import org.joda.time.DateTime;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
 /**
  * This Challenge object represents an ongoing challenge that takes in submissions in order to rank
@@ -52,7 +57,10 @@ public class Challenge extends DatabaseObject {
      */
     public Challenge(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Challenge")) throw new CorruptedItemException("Challenge initialized for wrong item type");
         this.owner = item.getString("owner");
+        if (owner == null) { throw new CorruptedItemException("Challenge needs an owner"); }
+        if (item.getString("endTime") == null) throw new CorruptedItemException("End Time cannot be null");
         this.endTime = new DateTime(item.getString("endTime"));
         this.members = item.getStringSet("members");
         if (this.members == null) { this.members = new HashSet<>(); }
@@ -62,10 +70,17 @@ public class Challenge extends DatabaseObject {
         if (this.memberRequests == null) { this.memberRequests = new HashSet<>(); }
         this.receivedInvites = item.getStringSet("receivedInvites");
         if (this.receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
-        this.capacity = Integer.parseInt(item.getString("capacity"));
+        try {
+            this.capacity = Integer.parseInt(item.getString("capacity"));
+        }
+        catch (NumberFormatException e) {
+            throw new CorruptedItemException("Capacity is malformed or null!", e);
+        }
         this.access = item.getString("access");
+        if (access == null) { throw new CorruptedItemException("Challenge access may not be null"); }
         this.restriction = item.getString("restriction");
         this.title = item.getString("title");
+        if (title == null) { throw new CorruptedItemException("Challenge title may not be null"); }
         this.description = item.getString("description");
         this.ifCompleted = Boolean.parseBoolean(item.getString("ifCompleted"));
         this.events = item.getStringSet("events");
@@ -74,6 +89,7 @@ public class Challenge extends DatabaseObject {
         if (this.completedEvents == null) { this.completedEvents = new HashSet<>(); }
         this.group = item.getString("group");
         this.goal = item.getString("goal");
+        if (goal == null) throw new CorruptedItemException("Goal cannot be null");
         this.challengeType = item.getString("challengeType");
         String difficulty = item.getString("difficulty");
         if (difficulty != null) { this.difficulty = Integer.parseInt(difficulty); }
@@ -100,8 +116,8 @@ public class Challenge extends DatabaseObject {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Challenge"));
         item.put("capacity", new AttributeValue("10"));
-        item.put("access", new AttributeValue("public"));
-        item.put("difficulty", new AttributeValue("1"));
+//        item.put("access", new AttributeValue("public"));
+        item.put("difficulty", new AttributeValue("0"));
         item.put("ifCompleted", new AttributeValue("false"));
         return item;
     }
@@ -117,5 +133,26 @@ public class Challenge extends DatabaseObject {
      */
     public static Challenge readChallenge(String id) throws Exception {
         return (Challenge) read(getTableName(), getPrimaryKey("Challenge", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Challenge) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Challenge)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(members, invitedMembers, memberRequests, receivedInvites, events,
+                completedEvents, tags, submissions, streaks));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), title, description, owner, endTime, capacity,
+                ifCompleted, access, restriction, group, goal, challengeType, difficulty, winner,
+                prize, streakUpdateSpanType, streakUpdateInterval, streakN);
     }
 }

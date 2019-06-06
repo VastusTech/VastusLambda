@@ -49,7 +49,7 @@ public interface DatabaseItemFactory {
             case Group:
                 return new Group(item);
             case Comment:
-                return new Challenge(item);
+                return new Comment(item);
             case Sponsor:
                 return new Sponsor(item);
             case Message:

@@ -1,15 +1,17 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Post in the database.
  */
 public class CreatePostRequest extends CreateObjectRequest {
     // Required
     public String by;
-    public String description;
 
     // Optional
     public String access;
+    public String description;
     public String postType;
     public String about;
     public String[] picturePaths;
@@ -31,7 +33,7 @@ public class CreatePostRequest extends CreateObjectRequest {
     public CreatePostRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(by, description, about, access, postType, group)
                 || arrayHasEmptyString(picturePaths, videoPaths);
     }

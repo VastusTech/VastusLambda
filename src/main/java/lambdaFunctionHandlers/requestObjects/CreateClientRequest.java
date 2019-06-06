@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Client in the database.
  */
@@ -33,8 +35,8 @@ public class CreateClientRequest extends CreateObjectRequest {
     public CreateClientRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
-        return hasEmptyString(name, gender, birthday, email, username, bio, stripeID, federatedID);
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
+        return hasEmptyString(name, gender, birthday, email, username, bio, stripeID, federatedID, enterpriseID);
     }
 
     public String getName() {

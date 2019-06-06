@@ -22,6 +22,13 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 public class MessageDatabaseActionBuilder {
     private static final String itemType = "Message";
 
+    /**
+     * Gets the {@link PrimaryKey} object to identify the message in the database.
+     *
+     * @param board The name of the board containing the message in the database.
+     * @param id The ID of the message to reference.
+     * @return The {@link PrimaryKey} object to identify the database item with.
+     */
     private static PrimaryKey getPrimaryKey(String board, String id) {
         return new PrimaryKey("board", board, "id", id);
     }

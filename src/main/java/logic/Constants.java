@@ -62,14 +62,23 @@ public class Constants {
     public static String adminKey = Optional.ofNullable(System.getenv("adminKey")).
             orElse("admin");
 
-    // Database Limits
+    // Database Limits TODO ENFORCE
+    public static int hardStringLengthLimit = Integer.parseInt(Optional.ofNullable(System.getenv
+            ("hardStringLengthLimit")).orElse("100000"));
     public static int userProfileImagePathsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
             ("userProfileImagePathsLimit")).orElse("10"));
+    public static int userOwnedEventsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
+            ("userOwnedEventsLimit")).orElse("100"));
+    public static int userOwnedChallengesLimit = Integer.parseInt(Optional.ofNullable(System.getenv
+            ("userOwnedChallengesLimit")).orElse("100"));
+    public static int userOwnedGroupsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
+            ("userOwnedGroupsLimit")).orElse("100"));
+    public static int userSentInvitesLimit = Integer.parseInt(Optional.ofNullable(System.getenv
+            ("userSentInvitesLimit")).orElse("1000"));
     public static int postPicturePathsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
-            ("postPicturePathsLimit")).orElse("10"));
+            ("postPicturePathsLimit")).orElse("100"));
     public static int postVideoPathsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
-            ("postVideoPathsLimit")).orElse("5"));
-
+            ("postVideoPathsLimit")).orElse("50"));
 
     public static void setIfDevelopment(boolean ifDevelopment) {
         Constants.ifDevelopment = ifDevelopment;

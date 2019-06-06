@@ -5,6 +5,8 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import java.util.*;
 
+import main.java.databaseOperations.exceptions.CorruptedItemException;
+
 /**
  * A Trainer represents a User that is a fitness expert that is curating content on our platform for
  * others to utilize. They have a portal that Users can subscribe to and they can also will be able
@@ -28,8 +30,9 @@ public class Trainer extends User {
      * @param item The {@link Item} object obtained from the database query/fetch.
      * @throws Exception If anything goes wrong with the translation.
      */
-    Trainer(Item item) throws Exception {
+    public Trainer(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Trainer")) throw new CorruptedItemException("Trainer initialized for wrong item type");
         this.gym = item.getString("gym");
         Set<String> availableTimes = item.getStringSet("availableTimes");
         if (availableTimes != null) { this.availableTimes = TimeInterval.getTimeIntervals(availableTimes); }
@@ -38,8 +41,10 @@ public class Trainer extends User {
         this.preferredIntensity = item.getString("preferredIntensity");
         String workoutCapacity = item.getString("workoutCapacity");
         if (workoutCapacity != null) { this.workoutCapacity = Integer.parseInt(workoutCapacity); }
+        else { this.workoutCapacity = -1; }
         String workoutPrice = item.getString("workoutPrice");
         if (workoutPrice != null) { this.workoutPrice = Integer.parseInt(workoutPrice); }
+        else { this.workoutPrice = -1; }
         this.followers = item.getStringSet("followers");
         if (followers == null) { this.followers = new HashSet<>(); }
         this.subscribers = item.getStringSet("subscribers");
@@ -83,7 +88,22 @@ public class Trainer extends User {
         return (Trainer) read(getTableName(), getPrimaryKey("Trainer", id));
     }
 
-//    public static Trainer queryTrainer(String username) throws Exception {
-//        return DynamoDBHandler.getInstance().usernameQuery(username, "Trainer");
-//    }
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Trainer) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Trainer)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(availableTimes, followers, subscribers, certifications));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), gym, workoutSticker, preferredIntensity,
+                workoutCapacity, workoutPrice, subscriptionPrice);
+    }
 }

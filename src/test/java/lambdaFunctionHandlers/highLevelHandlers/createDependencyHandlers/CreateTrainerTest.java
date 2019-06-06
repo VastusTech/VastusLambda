@@ -57,8 +57,8 @@ public class CreateTrainerTest {
         assertNull(trainer.gym);
         assertNull(trainer.workoutSticker);
         assertNull(trainer.preferredIntensity);
-        assertEquals(0, trainer.workoutPrice);
-        assertEquals(0, trainer.workoutCapacity);
+        assertEquals(-1, trainer.workoutPrice);
+        assertEquals(-1, trainer.workoutCapacity);
     }
 
     @Test
@@ -86,8 +86,8 @@ public class CreateTrainerTest {
         assertNull(trainer.gym);
         assertNull(trainer.workoutSticker);
         assertNull(trainer.preferredIntensity);
-        assertEquals(0, trainer.workoutPrice);
-        assertEquals(0, trainer.workoutCapacity);
+        assertEquals(-1, trainer.workoutPrice);
+        assertEquals(-1, trainer.workoutCapacity);
     }
 
     @Test

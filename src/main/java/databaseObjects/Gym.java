@@ -3,6 +3,7 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
 import java.util.*;
 
@@ -26,8 +27,9 @@ public class Gym extends User {
      * @param item The {@link Item} object obtained from the database query/fetch.
      * @throws Exception If anything goes wrong with the translation.
      */
-    Gym(Item item) throws Exception {
+    public Gym(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Gym")) throw new CorruptedItemException("Gym initialized for wrong item type");
         this.address = item.getString("address");
         this.trainers = item.getStringSet("trainers");
         if (trainers == null) { this.trainers = new HashSet<>(); }
@@ -39,9 +41,11 @@ public class Gym extends User {
         else { this.vacationTimes = new ArrayList<>(); }
         String sessionCapacity = item.getString("sessionCapacity");
         if (sessionCapacity != null) { this.sessionCapacity = Integer.parseInt(sessionCapacity); }
+        else { this.sessionCapacity = -1; }
         this.gymType = item.getString("gymType");
         String paymentSplit = item.getString("paymentSplit");
         if (paymentSplit != null) { this.paymentSplit = Float.parseFloat(paymentSplit); }
+        else { this.paymentSplit = -1; }
     }
 
     /**
@@ -75,7 +79,21 @@ public class Gym extends User {
         return (Gym) read(getTableName(), getPrimaryKey("Gym", id));
     }
 
-//    public static Gym queryGym(String username) throws Exception {
-//        return DynamoDBHandler.getInstance().usernameQuery(username, "Gym");
-//    }
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Gym) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Gym)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(trainers, weeklyHours, vacationTimes));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), address, sessionCapacity, gymType, paymentSplit);
+    }
 }

@@ -3,7 +3,11 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
 /**
  * An Enterprise Object represents a Company that is signing up their entire staff to be on the app,
@@ -19,6 +23,7 @@ public class Enterprise extends DatabaseObject {
      */
     public Enterprise(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Enterprise")) throw new CorruptedItemException("Enterprise initialized for wrong item type");
     }
 
     /**
@@ -42,5 +47,21 @@ public class Enterprise extends DatabaseObject {
      */
     public static Enterprise readEnterprise(String id) throws Exception {
         return (Enterprise) read(getTableName(), getPrimaryKey("Enterprise", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Enterprise) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Enterprise)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        return super.getObjectFieldsList();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

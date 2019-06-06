@@ -21,6 +21,12 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 public class WorkoutDatabaseActionBuilder {
     final static private String itemType = "Workout";
 
+    /**
+     * Gets the {@link PrimaryKey} object to identify the object in the database.
+     *
+     * @param id The ID of the object to reference.
+     * @return The {@link PrimaryKey} object to identify the database item with.
+     */
     static private PrimaryKey getPrimaryKey(String id) {
         return new PrimaryKey("item_type", itemType, "id", id);
     }

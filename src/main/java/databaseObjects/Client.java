@@ -3,6 +3,7 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
 import java.util.*;
 
@@ -21,11 +22,12 @@ public class Client extends User {
      * @param item The {@link Item} object obtained from the database query/fetch.
      * @throws Exception If anything goes wrong with the translation.
      */
-    Client(Item item) throws Exception {
+    public Client(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Client")) throw new CorruptedItemException("Client initialized for wrong item type");
         this.trainersFollowing = item.getStringSet("trainersFollowing");
         if (trainersFollowing == null) { this.trainersFollowing = new HashSet<>(); }
-        this.subscriptions = item.getStringSet("subscription");
+        this.subscriptions = item.getStringSet("subscriptions");
         if (subscriptions == null) { this.subscriptions = new HashSet<>(); }
     }
 
@@ -51,5 +53,23 @@ public class Client extends User {
      */
     public static Client readClient(String id) throws Exception {
         return (Client) read(getTableName(), getPrimaryKey("Client", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Client) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Client)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(trainersFollowing, subscriptions));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

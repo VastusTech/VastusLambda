@@ -3,6 +3,7 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 import main.java.logic.ItemType;
 
 import org.joda.time.DateTime;
@@ -16,7 +17,7 @@ import java.util.*;
  * User. Users can do essentially anything on the platform, like create challenges, events, and
  * groups, post content, invite other Users, and message anyone on the platform.
  */
-abstract public class User extends DatabaseObject{
+public class User extends DatabaseObject {
     public String name;
     public String gender;
     public String birthday;
@@ -70,12 +71,15 @@ abstract public class User extends DatabaseObject{
     public User(Item item) throws Exception {
         super(item);
         this.name = item.getString("name");
+        if (name == null) throw new CorruptedItemException("Name cannot be null");
         this.gender = item.getString("gender");
         this.birthday = item.getString("birthday");
         this.age = getAgeFromBirthday(birthday);
         this.email = item.getString("email");
+        if (email == null) throw new CorruptedItemException("Email cannot be null");
         this.location = item.getString("location");
         this.username = item.getString("username");
+        if (username == null) throw new CorruptedItemException("Username cannot be null");
         this.federatedID = item.getString("federatedID");
         this.stripeID = item.getString("stripeID");
         this.profileImagePath = item.getString("profileImagePath");
@@ -92,9 +96,14 @@ abstract public class User extends DatabaseObject{
         if (reviewsBy == null) { this.reviewsBy = new HashSet<>(); }
         this.reviewsAbout = item.getStringSet("reviewsAbout");
         if (reviewsAbout == null) { this.reviewsAbout = new HashSet<>(); }
-        this.friendlinessRating = Float.parseFloat(item.getString("friendlinessRating"));
-        this.effectivenessRating = Float.parseFloat(item.getString("effectivenessRating"));
-        this.reliabilityRating = Float.parseFloat(item.getString("reliabilityRating"));
+        try {
+            this.friendlinessRating = Float.parseFloat(item.getString("friendlinessRating"));
+            this.effectivenessRating = Float.parseFloat(item.getString("effectivenessRating"));
+            this.reliabilityRating = Float.parseFloat(item.getString("reliabilityRating"));
+        }
+        catch (NullPointerException | NumberFormatException e) {
+            throw new CorruptedItemException("Rating Field is null or bad", e);
+        }
         this.overallRating = (friendlinessRating + effectivenessRating + reliabilityRating) / 3.0f;
         this.bio = item.getString("bio");
         this.friends = item.getStringSet("friends");
@@ -185,5 +194,30 @@ abstract public class User extends DatabaseObject{
         else {
             throw new Exception("Item type of non-user found! Type: " + itemType);
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof User) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((User)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(profileImagePaths, scheduledWorkouts, completedWorkouts,
+                scheduledTimes, reviewsBy, reviewsAbout, friends, friendRequests, challenges,
+                completedChallenges, ownedChallenges, invitedChallenges, challengesWon,
+                scheduledEvents, completedEvents, ownedEvents, invitedEvents, sentInvites,
+                receivedInvites, posts, submissions, liked, comments, groups, ownedGroups,
+                invitedGroups, messageBoards, streaks));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, gender, birthday, email, location, username, federatedID,
+                stripeID, profileImagePath, friendlinessRating, effectivenessRating,
+                reliabilityRating, bio);
     }
 }

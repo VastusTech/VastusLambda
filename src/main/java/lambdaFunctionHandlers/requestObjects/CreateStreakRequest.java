@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Streak in the database.
  */
@@ -27,8 +29,8 @@ public class CreateStreakRequest extends CreateObjectRequest {
     public CreateStreakRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
-        return hasEmptyString(owner, about, streakType, updateInterval, streakN);
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
+        return hasEmptyString(owner, about, streakType, updateInterval, updateSpanType, streakN);
     }
 
     public String getOwner() {

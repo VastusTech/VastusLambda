@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Message in the database.
  */
@@ -26,7 +28,7 @@ public class CreateMessageRequest extends CreateObjectRequest {
     public CreateMessageRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(board, from, message, name, type, profileImagePath);
     }
 

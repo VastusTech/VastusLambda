@@ -44,4 +44,14 @@ public class DeleteDatabaseAction extends DatabaseAction {
         this.passoverIdentifiers = new HashMap<>();
         this.checkHandler = checkHandler;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof DeleteDatabaseAction) && obj.hashCode() == hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

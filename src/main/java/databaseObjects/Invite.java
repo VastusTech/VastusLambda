@@ -3,9 +3,13 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * An Invite is whenever someone is requesting something from someone else, be that to join a
@@ -25,8 +29,9 @@ public class Invite extends DatabaseObject {
      * @param item The {@link Item} object obtained from the database query/fetch.
      * @throws Exception If anything goes wrong with the translation.
      */
-    Invite(Item item) throws Exception {
+    public Invite(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Invite")) throw new CorruptedItemException("Invite initialized for wrong item type");
         this.from = item.getString("from");
         this.to = item.getString("to");
         this.inviteType = item.getString("inviteType");
@@ -56,6 +61,22 @@ public class Invite extends DatabaseObject {
      */
     public static Invite readInvite(String id) throws Exception {
         return (Invite) read(getTableName(), getPrimaryKey("Invite", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Invite) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Invite)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        return super.getObjectFieldsList();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), from, to, inviteType, about, description);
     }
 
     public enum InviteType {

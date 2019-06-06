@@ -8,6 +8,7 @@ import main.java.logic.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A DatabaseAction represents any request to the database to alter anything. Can Create, Update,
@@ -76,5 +77,21 @@ public abstract class DatabaseAction {
             item.put(keyAttribute.getName(), new AttributeValue((String) keyAttribute.getValue()));
         }
         return item;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof DatabaseAction) {
+            DatabaseAction other = (DatabaseAction) obj;
+            return other.hashCode() == hashCode() && Objects.equals(item, other.item)
+                    && Objects.equals(passoverIdentifiers, other.passoverIdentifiers)
+                    && Objects.equals(updateItem, other.updateItem);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(action, primaryKey, id, itemType, idIdentifier, ifWithCreate);
     }
 }

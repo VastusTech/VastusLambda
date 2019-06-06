@@ -61,7 +61,7 @@ public class CreateChallengeTest {
         assertNull(challenge.group);
         assertNull(challenge.description);
         assertNull(challenge.restriction);
-        assertEquals(1, challenge.difficulty);
+        assertEquals(0, challenge.difficulty);
         assertNull(challenge.prize);
         assertNull(challenge.streakN);
         assertNull(challenge.streakUpdateInterval);
@@ -161,7 +161,7 @@ public class CreateChallengeTest {
         assertEquals("GR0001", challenge.group);
         assertNull(challenge.description);
         assertNull(challenge.restriction);
-        assertEquals(1, challenge.difficulty);
+        assertEquals(0, challenge.difficulty);
         assertNull(challenge.prize);
         assertNull(challenge.streakN);
         assertNull(challenge.streakUpdateInterval);
@@ -267,7 +267,7 @@ public class CreateChallengeTest {
         assertNull(challenge.group);
         assertNull(challenge.description);
         assertNull(challenge.restriction);
-        assertEquals(1, challenge.difficulty);
+        assertEquals(0, challenge.difficulty);
         assertNull(challenge.prize);
         assertEquals("1", challenge.streakN);
         assertEquals("1", challenge.streakUpdateInterval);
@@ -366,7 +366,7 @@ public class CreateChallengeTest {
         assertNull(challenge.group);
         assertNull(challenge.description);
         assertEquals("invite", challenge.restriction);
-        assertEquals(1, challenge.difficulty);
+        assertEquals(0, challenge.difficulty);
         assertNull(challenge.prize);
         assertNull(challenge.streakN);
         assertNull(challenge.streakUpdateInterval);
@@ -466,7 +466,7 @@ public class CreateChallengeTest {
         assertNull(challenge.group);
         assertNull(challenge.description);
         assertNull(challenge.restriction);
-        assertEquals(1, challenge.difficulty);
+        assertEquals(0, challenge.difficulty);
         assertNull(challenge.prize);
         assertNull(challenge.streakN);
         assertNull(challenge.streakUpdateInterval);
@@ -516,7 +516,7 @@ public class CreateChallengeTest {
         assertNull(challenge.group);
         assertNull(challenge.description);
         assertNull(challenge.restriction);
-        assertEquals(1, challenge.difficulty);
+        assertEquals(0, challenge.difficulty);
         assertNull(challenge.prize);
         assertNull(challenge.streakN);
         assertNull(challenge.streakUpdateInterval);
@@ -564,7 +564,7 @@ public class CreateChallengeTest {
         assertNull(challenge.group);
         assertNull(challenge.description);
         assertNull(challenge.restriction);
-        assertEquals(1, challenge.difficulty);
+        assertEquals(0, challenge.difficulty);
         assertNull(challenge.prize);
         assertNull(challenge.streakN);
         assertNull(challenge.streakUpdateInterval);

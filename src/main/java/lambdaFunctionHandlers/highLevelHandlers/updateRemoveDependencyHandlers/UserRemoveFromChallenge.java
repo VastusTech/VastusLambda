@@ -51,7 +51,7 @@ public class UserRemoveFromChallenge {
             }
         }
 
-        if (challenge.challengeType.equals("streak")) {
+        if (challenge.challengeType != null && challenge.challengeType.equals("streak")) {
             // Then we also delete this user's streak!
             Set<String> intersection = new HashSet<>(challenge.streaks);
             intersection.retainAll(user.streaks);

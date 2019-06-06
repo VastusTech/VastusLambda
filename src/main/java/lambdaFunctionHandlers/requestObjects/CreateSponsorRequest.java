@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Sponsor in the database.
  */
@@ -29,7 +31,7 @@ public class CreateSponsorRequest extends CreateObjectRequest {
     public CreateSponsorRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(name, birthday, email, username, stripeID, federatedID, bio);
     }
 

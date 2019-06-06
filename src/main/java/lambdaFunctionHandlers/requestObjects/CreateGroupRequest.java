@@ -1,15 +1,17 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Group in the database.
  */
 public class CreateGroupRequest extends CreateObjectRequest {
     // Required
     public String title;
-    public String description;
     public String access;
 
     // Optional
+    public String description;
     public String motto;
     public String groupImagePath;
     public String[] owners;
@@ -33,7 +35,7 @@ public class CreateGroupRequest extends CreateObjectRequest {
     public CreateGroupRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(title, description, access, motto, groupImagePath, restriction)
                 || arrayHasEmptyString(owners, members, tags);
     }

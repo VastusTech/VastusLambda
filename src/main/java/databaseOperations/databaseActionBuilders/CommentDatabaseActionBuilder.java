@@ -17,6 +17,12 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 public class CommentDatabaseActionBuilder {
     final static private String itemType = "Comment";
 
+    /**
+     * Gets the {@link PrimaryKey} object to identify the object in the database.
+     *
+     * @param id The ID of the object to reference.
+     * @return The {@link PrimaryKey} object to identify the database item with.
+     */
     private static PrimaryKey getPrimaryKey(String id) {
         return new PrimaryKey("item_type", itemType, "id", id);
     }

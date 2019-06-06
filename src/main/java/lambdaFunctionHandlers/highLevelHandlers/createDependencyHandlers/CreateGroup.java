@@ -19,8 +19,7 @@ public class CreateGroup {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateGroupRequest createGroupRequest, int depth) throws Exception {
         if (createGroupRequest != null) {
             // Create client
-            if (createGroupRequest.title != null && createGroupRequest.description != null
-                    && createGroupRequest.access != null) {
+            if (createGroupRequest.title != null && createGroupRequest.access != null) {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 

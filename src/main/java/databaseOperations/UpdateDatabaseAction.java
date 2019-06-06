@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 
@@ -236,5 +237,15 @@ public class UpdateDatabaseAction extends DatabaseAction {
         PUT,
         ADD,
         DELETE,
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof UpdateDatabaseAction) && obj.hashCode() == hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

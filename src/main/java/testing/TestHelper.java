@@ -1,5 +1,8 @@
 package main.java.testing;
 
+import java.util.Map;
+import java.util.Set;
+
 import main.java.databaseOperations.DynamoDBHandler;
 
 /**
@@ -26,6 +29,10 @@ public class TestHelper {
                 reinitTestMessagesTable(DynamoDBHandler.getInstance().client,
                         "src/test/resources/messagesTestTables/" + messagesTableJsonName));
     }
+
+    // Helpful Methods across project
+
+    // Getters and Setters
 
     public static boolean getIfTesting() {
         return TestHelper.ifTesting;

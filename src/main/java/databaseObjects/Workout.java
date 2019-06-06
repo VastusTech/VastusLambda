@@ -5,6 +5,8 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import java.util.*;
 
+import main.java.databaseOperations.exceptions.CorruptedItemException;
+
 /**
  * A Workout represents a single/group personal training session with a single Trainer in a Gym.
  */
@@ -26,8 +28,9 @@ public class Workout extends DatabaseObject {
      * @param item The {@link Item} object obtained from the database query/fetch.
      * @throws Exception If anything goes wrong with the translation.
      */
-    Workout(Item item) throws Exception {
+    public Workout(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Workout")) throw new CorruptedItemException("Workout initialized for wrong item type");
         this.time = new TimeInterval(item.getString("time"));
         this.ifCompleted = Boolean.parseBoolean(item.getString("ifCompleted"));
         this.trainer = item.getString("trainer");
@@ -67,5 +70,24 @@ public class Workout extends DatabaseObject {
      */
     public static Workout readWorkout(String id) throws Exception {
         return (Workout) read(getTableName(), getPrimaryKey("Workout", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Workout) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Workout)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(time, clients, missingReviews));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), ifCompleted, trainer, capacity, gym, sticker,
+                intensity, price);
     }
 }

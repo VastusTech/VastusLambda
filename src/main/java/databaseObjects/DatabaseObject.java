@@ -2,21 +2,29 @@ package main.java.databaseObjects;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
+
+import main.java.databaseOperations.exceptions.BadIDException;
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 import main.java.logic.Constants;
+import main.java.logic.ItemType;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * DatabaseObject class represents any object that is in the "Classics" table for the Vastus app
  * tech stack. Specifies the essential fields that every item will have, including the fields that
  * make up the primary key: id and item_type.
  */
-abstract public class DatabaseObject extends DatabaseItem {
+public class DatabaseObject extends DatabaseItem {
     public String id;
     public String itemType;
     public int marker;
@@ -31,9 +39,16 @@ abstract public class DatabaseObject extends DatabaseItem {
     public DatabaseObject(Item item) throws Exception {
         // Set the rest of the object
         this.id = item.getString("id");
+        if (id == null) throw new CorruptedItemException("ID cannot be null");
         this.itemType = item.getString("item_type");
+        if (itemType == null) throw new CorruptedItemException("Item Type cannot be null");
+        try { ItemType.valueOf(itemType); } catch (IllegalArgumentException e) { throw new CorruptedItemException("Bad Item Type: " + itemType); }
+        if (!ItemType.getItemType(id).equals(itemType)) throw new CorruptedItemException("Item Type does not match ID");
+        if (item.getNumber("marker") == null) throw new CorruptedItemException("Marker cannot be null");
         this.marker = item.getNumber("marker").intValueExact();
+        if (marker < 0) throw new CorruptedItemException("Marker should not be less than 0");
         this.timeCreated = new DateTime(item.getString("time_created"));
+        if (item.getString("time_created") == null) throw new CorruptedItemException("Time Created cannot be null");
     }
 
     /**
@@ -41,7 +56,7 @@ abstract public class DatabaseObject extends DatabaseItem {
      *
      * @return The map of attribute values for the item.
      */
-    static Map<String, AttributeValue> getEmptyItem() {
+    public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = new HashMap<>();
         item.put("id", null);
         item.put("item_type", null);
@@ -84,5 +99,20 @@ abstract public class DatabaseObject extends DatabaseItem {
             return Constants.developmentDatabaseTableName;
         }
         return Constants.databaseTableName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof DatabaseObject) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((DatabaseObject)obj).getObjectFieldsList());
+    }
+
+    protected List<Object> getObjectFieldsList() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, itemType, marker, timeCreated);
     }
 }

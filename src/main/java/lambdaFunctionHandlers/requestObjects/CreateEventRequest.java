@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Event in the database.
  */
@@ -40,7 +42,7 @@ public class CreateEventRequest extends CreateObjectRequest {
     public CreateEventRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(owner, time, capacity, address, title, description, access, restriction,
                 challenge, group)
                 || arrayHasEmptyString(tags, members);

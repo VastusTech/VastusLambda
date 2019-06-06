@@ -1,6 +1,8 @@
 package main.java.databaseObjects;
 
 import main.java.logic.Constants;
+import main.java.logic.TimeHelper;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
@@ -210,7 +212,7 @@ public class TimeInterval {
     }
 
     /**
-     *  TODO Revisit
+     *  TODO Revisit ALSO THIS SHOULD GO IN WORKOUT.java
      *
      * @param timeInterval
      * @param potentialWorkoutLengths
@@ -344,7 +346,7 @@ public class TimeInterval {
      * @return Whether the time interval has already started
      */
     public Boolean hasAlreadyStarted() {
-        return !fromDateTime.isAfterNow();
+        return TimeHelper.timeHasPassed(fromDateTime);
     }
 
     /**
@@ -352,16 +354,7 @@ public class TimeInterval {
      * @return Whether the time interval has already started
      */
     public Boolean hasAlreadyFinished() {
-        return !toDateTime.isAfterNow();
-    }
-
-    /**
-     *
-     * @param time
-     * @return
-     */
-    public static Boolean timeHasPassed(DateTime time) {
-        return !time.isAfterNow();
+        return TimeHelper.timeHasPassed(toDateTime);
     }
 
 //    static public String[] getFromToHourMinute(int fromTotalMinute, int toTotalMinute) {
@@ -391,7 +384,9 @@ public class TimeInterval {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof TimeInterval) {
-            return ((TimeInterval) obj).isotime.equals(isotime);
+            TimeInterval other = ((TimeInterval) obj);
+            return other.fromDateTime.withZone(DateTimeZone.UTC).equals(fromDateTime.withZone(DateTimeZone.UTC))
+                    && other.toDateTime.withZone(DateTimeZone.UTC).equals(toDateTime.withZone(DateTimeZone.UTC));
         }
         else {
             return false;

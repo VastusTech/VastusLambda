@@ -7,4 +7,8 @@ public class ItemNotFoundException extends Exception {
     public ItemNotFoundException(String s) {
         super(s);
     }
+
+    public ItemNotFoundException(String s, Throwable t) {
+        super(s, t);
+    }
 }

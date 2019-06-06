@@ -5,8 +5,12 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import org.joda.time.DateTime;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 import main.java.logic.TimeHelper;
 
 /**
@@ -33,8 +37,9 @@ public class Streak extends DatabaseObject {
      * @param item The {@link Item} object obtained from the database query/fetch.
      * @throws Exception If anything goes wrong with the translation.
      */
-    Streak(Item item) throws Exception {
+    public Streak(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Streak")) throw new CorruptedItemException("Streak initialized for wrong item type");
         this.owner = item.getString("owner");
         this.about = item.getString("about");
         this.N = item.getNumber("N").intValueExact();
@@ -75,6 +80,24 @@ public class Streak extends DatabaseObject {
      */
     public static Streak readStreak(String id) throws Exception {
         return (Streak) read(getTableName(), getPrimaryKey("Streak", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Streak) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Streak)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(lastUpdated, lastAttemptStarted));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), owner, about, N, bestN, currentN, streakType, updateSpanType, updateInterval, streakN);
     }
 
     /**

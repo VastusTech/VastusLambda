@@ -8,6 +8,8 @@ import main.java.logic.ItemType;
 import main.java.databaseObjects.*;
 import main.java.databaseOperations.*;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateChallengeRequest;
+import main.java.logic.TimeHelper;
+
 import org.joda.time.DateTime;
 
 import java.util.Arrays;
@@ -22,6 +24,12 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 public class ChallengeDatabaseActionBuilder {
     private static final String itemType = "Challenge";
 
+    /**
+     * Gets the {@link PrimaryKey} object to identify the object in the database.
+     *
+     * @param id The ID of the object to reference.
+     * @return The {@link PrimaryKey} object to identify the database item with.
+     */
     private static PrimaryKey getPrimaryKey(String id) {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
@@ -239,7 +247,7 @@ public class ChallengeDatabaseActionBuilder {
                 Challenge challenge = (Challenge) newItem;
                 if (challenge.members.contains(winner)) {
                     // TODO This might be dangerous, given that this could be running in any part of the country.....
-                    if (TimeInterval.timeHasPassed(new DateTime(challenge.endTime))) {
+                    if (TimeHelper.timeHasPassed(new DateTime(challenge.endTime))) {
                         if (challenge.members.size() < 2) {
                             return "The challenge must have at least 2 members to be viable for winning!";
                         }

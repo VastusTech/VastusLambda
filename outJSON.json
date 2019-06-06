@@ -1,5 +1,6 @@
 [ {
   "owner" : "CL0001",
+  "access" : "private",
   "goal" : "To win as much as possible",
   "item_type" : "Challenge",
   "marker" : 1,
@@ -14,9 +15,12 @@
   "item_type" : "Trainer",
   "marker" : 1,
   "reliabilityRating" : 0,
+  "name" : "NAME",
   "time_created" : "2019-05-01T03:09:35+0000",
   "id" : "TR0001",
+  "email" : "EMAIL",
   "friends" : [ "CL0001", "TR0002", "TR0003" ],
+  "username" : "YB",
   "friendlinessRating" : 0,
   "effectivenessRating" : 0
 }, {
@@ -26,25 +30,33 @@
   "name" : "Leonid",
   "time_created" : "2019-05-01T03:09:35+0000",
   "id" : "CL0001",
+  "email" : "EMAIL",
   "friends" : [ "CL0002" ],
+  "username" : "LB",
   "friendlinessRating" : 0,
   "effectivenessRating" : 0
 }, {
   "item_type" : "Client",
   "marker" : 1,
   "reliabilityRating" : 0,
+  "name" : "NAME",
   "time_created" : "2019-05-01T03:09:35+0000",
   "id" : "CL0002",
+  "email" : "EMAIL",
   "friends" : [ "CL0002", "CL0003", "CL0004" ],
+  "username" : "FB",
   "friendlinessRating" : 0,
   "effectivenessRating" : 0
 }, {
   "item_type" : "Client",
   "marker" : 1,
   "reliabilityRating" : 0,
+  "name" : "NAME",
   "time_created" : "2019-05-01T03:09:35+0000",
   "id" : "CL0003",
+  "email" : "EMAIL",
   "friends" : [ "CL0002", "CL0003", "CL0004" ],
+  "username" : "BB",
   "friendlinessRating" : 0,
   "effectivenessRating" : 0
 }, {

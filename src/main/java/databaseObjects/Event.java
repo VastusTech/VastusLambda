@@ -3,10 +3,14 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -40,6 +44,7 @@ public class Event extends DatabaseObject {
      */
     public Event(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Event")) throw new CorruptedItemException("Event initialized for wrong item type");
         this.owner = item.getString("owner");
         this.time = new TimeInterval(item.getString("time"));
         this.members = item.getStringSet("members");
@@ -87,5 +92,25 @@ public class Event extends DatabaseObject {
      */
     public static Event readEvent(String id) throws Exception {
         return (Event) read(getTableName(), getPrimaryKey("Event", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Event) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Event)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(time, members, invitedMembers, memberRequests, receivedInvites,
+                tags));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), title, description, owner, address, capacity,
+                ifCompleted, access, restriction, challenge, group);
     }
 }

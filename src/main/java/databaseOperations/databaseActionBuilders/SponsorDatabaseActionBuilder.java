@@ -15,6 +15,12 @@ import java.util.Map;
 public class SponsorDatabaseActionBuilder {
     final static private String itemType = "Sponsor";
 
+    /**
+     * Gets the {@link PrimaryKey} object to identify the object in the database.
+     *
+     * @param id The ID of the object to reference.
+     * @return The {@link PrimaryKey} object to identify the database item with.
+     */
     private static PrimaryKey getPrimaryKey(String id) {
         return new PrimaryKey("item_type", itemType, "id", id);
     }

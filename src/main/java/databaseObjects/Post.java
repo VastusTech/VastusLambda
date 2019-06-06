@@ -3,11 +3,15 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -32,9 +36,11 @@ public class Post extends DatabaseObject {
      * @param item The {@link Item} object obtained from the database query/fetch.
      * @throws Exception If anything goes wrong with the translation.
      */
-    Post(Item item) throws Exception {
+    public Post(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Post")) throw new CorruptedItemException("Post initialized for wrong item type");
         this.by = item.getString("by");
+        if (by == null) throw new CorruptedItemException("By cannot be null");
         this.description = item.getString("description");
         this.about = item.getString("about");
         this.access = item.getString("access");
@@ -58,7 +64,6 @@ public class Post extends DatabaseObject {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Post"));
-        item.put("access", new AttributeValue("private"));
         return item;
     }
 
@@ -73,5 +78,23 @@ public class Post extends DatabaseObject {
      */
     public static Post readPost(String id) throws Exception {
         return (Post) read(getTableName(), getPrimaryKey("Post", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Post) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Post)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(picturePaths, videoPaths, likes, comments));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), by, description, about, access, postType, group);
     }
 }

@@ -229,4 +229,13 @@ public class TimeHelper {
     public static DateTime hoursFromNow(int hours) {
         return hoursFrom(now(), hours);
     }
+
+    /**
+     *
+     * @param time
+     * @return
+     */
+    public static Boolean timeHasPassed(DateTime time) {
+        return !time.isAfterNow();
+    }
 }

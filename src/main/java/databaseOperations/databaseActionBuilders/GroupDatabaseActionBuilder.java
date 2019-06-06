@@ -21,6 +21,12 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 public class GroupDatabaseActionBuilder {
     final static private String itemType = "Group";
 
+    /**
+     * Gets the {@link PrimaryKey} object to identify the object in the database.
+     *
+     * @param id The ID of the object to reference.
+     * @return The {@link PrimaryKey} object to identify the database item with.
+     */
     private static PrimaryKey getPrimaryKey(String id) {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
@@ -29,39 +35,45 @@ public class GroupDatabaseActionBuilder {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Group.getEmptyItem();
         item.put("title", new AttributeValue(createGroupRequest.title));
-        item.put("description", new AttributeValue(createGroupRequest.description));
         item.put("access", new AttributeValue(createGroupRequest.access));
-        if (createGroupRequest.motto != null) { item.put("motto", new AttributeValue(createGroupRequest
-                .motto)); }
-        if (createGroupRequest.groupImagePath != null) { item.put("groupImagePath", new AttributeValue(createGroupRequest
-                .groupImagePath)); }
-        if (createGroupRequest.restriction != null) { item.put("restriction", new AttributeValue(createGroupRequest
-                .restriction)); }
-        if (createGroupRequest.members != null) { item.put("members", new AttributeValue(Arrays.asList(createGroupRequest
-                .members))); }
-        if (createGroupRequest.owners != null) { item.put("owners", new AttributeValue(Arrays.asList(createGroupRequest
-                .owners))); }
-        if (createGroupRequest.tags != null) { item.put("tags", new AttributeValue(Arrays.asList(createGroupRequest
-                .tags))); }
+        if (createGroupRequest.description != null) { item.put("description", new AttributeValue(
+                createGroupRequest.description)); }
+        if (createGroupRequest.motto != null) { item.put("motto", new AttributeValue(
+                createGroupRequest .motto)); }
+        if (createGroupRequest.groupImagePath != null) { item.put("groupImagePath", new
+                AttributeValue(createGroupRequest .groupImagePath)); }
+        if (createGroupRequest.restriction != null) { item.put("restriction", new AttributeValue(
+                createGroupRequest .restriction)); }
+        if (createGroupRequest.members != null) { item.put("members", new AttributeValue(
+                Arrays.asList(createGroupRequest .members))); }
+        if (createGroupRequest.owners != null) { item.put("owners", new AttributeValue(
+                Arrays.asList(createGroupRequest .owners))); }
+        if (createGroupRequest.tags != null) { item.put("tags", new AttributeValue(
+                Arrays.asList(createGroupRequest .tags))); }
         return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
             (Map<String, AttributeValue> createdItem, String id) -> {
                 if (createGroupRequest.groupImagePath != null) {
-                    createdItem.put("groupImagePath", new AttributeValue(id + "/" + createGroupRequest.groupImagePath));
+                    createdItem.put("groupImagePath", new AttributeValue(
+                            id + "/" + createGroupRequest.groupImagePath
+                    ));
                 }
             }
         );
     }
 
     public static DatabaseAction updateTitle(String id, String title) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "title", new AttributeValue(title), false, PUT);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "title",
+                new AttributeValue(title), false, PUT);
     }
 
     public static DatabaseAction updateDescription(String id, String description) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "description", new AttributeValue(description), false, PUT);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "description",
+                new AttributeValue(description), false, PUT);
     }
 
     public static DatabaseAction updateMotto(String id, String motto) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "motto", new AttributeValue(motto), false, PUT);
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "motto",
+                new AttributeValue(motto), false, PUT);
     }
 
     public static DatabaseAction updateGroupImagePath(String id, String groupImagePath) throws Exception {

@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Review in the database.
  */
@@ -24,7 +26,7 @@ public class CreateReviewRequest extends CreateObjectRequest {
     public CreateReviewRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(by, about, friendlinessRating, effectivenessRating, reliabilityRating, description);
     }
 

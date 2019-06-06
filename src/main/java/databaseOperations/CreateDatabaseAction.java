@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A CreateDatabaseAction represents a request to the database to create a new item. This also gives
@@ -52,5 +53,16 @@ public class CreateDatabaseAction extends DatabaseAction {
             }
         }
         this.updateWithIDHandler = updateWithIDHandler;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof CreateDatabaseAction) && obj.hashCode() == hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+//        return Objects.hash(super.hashCode(), updateWithIDHandler);
     }
 }

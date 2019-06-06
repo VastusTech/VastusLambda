@@ -3,14 +3,19 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -21,9 +26,9 @@ import java.util.Set;
 public class Message extends DatabaseItem {
     public String id;
     public String board;
-    public String item_type;
+    public String itemType;
     public int marker;
-    public String time_created;
+    public String timeCreated;
     public String from;
     public String type;
     public String name;
@@ -40,9 +45,11 @@ public class Message extends DatabaseItem {
     public Message(Item item) throws Exception {
         id = item.getString("id");
         board = item.getString("board");
-        item_type = item.getString("item_type");
+        itemType = item.getString("item_type");
+        if (!ItemType.getItemType(id).equals("Message")) throw new CorruptedItemException("Mismatched item type for Message");
+        if (!itemType.equals("Message")) throw new CorruptedItemException("Message initialized for wrong item type");
         marker = item.getNumber("marker").intValueExact();
-        time_created = item.getString("time_created");
+        timeCreated = item.getString("time_created");
         type = item.getString("type");
         from = item.getString("from");
         name = item.getString("name");
@@ -142,6 +149,22 @@ public class Message extends DatabaseItem {
             return Constants.developmentMessageTableName;
         }
         return Constants.messageTableName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Message) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Message)obj).getObjectFieldsList());
+    }
+
+    protected List<Object> getObjectFieldsList() {
+        return Collections.singletonList(lastSeenFor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, board, itemType, marker, timeCreated, from, type, name,
+                profileImagePath, message);
     }
 
     /**

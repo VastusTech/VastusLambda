@@ -17,6 +17,12 @@ import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.*;
 public class PostDatabaseActionBuilder {
     final static private String itemType = "Post";
 
+    /**
+     * Gets the {@link PrimaryKey} object to identify the object in the database.
+     *
+     * @param id The ID of the object to reference.
+     * @return The {@link PrimaryKey} object to identify the database item with.
+     */
     private static PrimaryKey getPrimaryKey(String id) {
         return new PrimaryKey("item_type", itemType, "id", id);
     }
@@ -25,8 +31,8 @@ public class PostDatabaseActionBuilder {
         // Handle the setting of the items
         Map<String, AttributeValue> item = Post.getEmptyItem();
         item.put("by", new AttributeValue(createPostRequest.by));
-        item.put("description", new AttributeValue(createPostRequest.description));
-        if (createPostRequest.access != null) { item.put("access", new AttributeValue(createPostRequest.access)); }
+        item.put("access", new AttributeValue(createPostRequest.access));
+        if (createPostRequest.description != null) { item.put("description", new AttributeValue(createPostRequest.description)); }
         if (createPostRequest.postType != null) { item.put("postType", new AttributeValue(createPostRequest.postType)); }
         if (createPostRequest.about != null) { item.put("about", new AttributeValue(createPostRequest.about)); }
         if (createPostRequest.picturePaths != null) { item.put("picturePaths", new AttributeValue(Arrays.asList

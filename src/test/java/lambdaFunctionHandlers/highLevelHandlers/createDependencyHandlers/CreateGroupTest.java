@@ -363,15 +363,6 @@ public class CreateGroupTest {
         ));
     }
     @Test(expected = Exception.class)
-    public void failNoDescription() throws Exception {
-        DynamoDBHandler.getInstance().attemptTransaction(CreateGroup.getCompilers(
-                "CL0001", new CreateGroupRequest(
-                        "TITLE", null, "private", null,
-                        null, new String[]{"CL0001"}, null, null, null
-                ), 0
-        ));
-    }
-    @Test(expected = Exception.class)
     public void failNoAccess() throws Exception {
         DynamoDBHandler.getInstance().attemptTransaction(CreateGroup.getCompilers(
                 "CL0001", new CreateGroupRequest(

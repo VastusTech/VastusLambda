@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Gym in the database.
  */
@@ -40,7 +42,7 @@ public class CreateGymRequest extends CreateObjectRequest {
     public CreateGymRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(name, email, username, foundingDay, bio, stripeID, federatedID, address,
                 sessionCapacity, gymType, paymentSplit)
                 || arrayHasEmptyString(weeklyHours);

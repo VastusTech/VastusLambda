@@ -62,7 +62,7 @@ public enum ItemType {
         try {
             ItemType.valueOf(itemType);
         }
-        catch (IllegalArgumentException e) {
+        catch (NullPointerException | IllegalArgumentException e) {
             return false;
         }
         return true;

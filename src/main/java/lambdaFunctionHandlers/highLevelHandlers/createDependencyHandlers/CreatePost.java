@@ -23,12 +23,12 @@ public class CreatePost {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreatePostRequest createPostRequest, int depth, String aboutIdentifier) throws Exception {
         if (createPostRequest != null) {
             // Check required fields
-            if (createPostRequest.by != null && createPostRequest.description != null) {
+            if (createPostRequest.by != null) {
                 // Create the database action list for the transaction to complete
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!(fromID.equals(createPostRequest.by)) && !fromID.equals(Constants.adminKey)) {
+                if (fromID == null || (!(fromID.equals(createPostRequest.by)) && !fromID.equals(Constants.adminKey))) {
                     throw new Exception("PERMISSIONS ERROR: You can only create posts as yourself!");
                 }
 

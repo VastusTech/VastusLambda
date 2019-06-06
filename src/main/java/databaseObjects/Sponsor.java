@@ -3,10 +3,13 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import main.java.databaseOperations.DynamoDBHandler;
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -21,8 +24,9 @@ public class Sponsor extends User {
      * @param item The {@link Item} object obtained from the database query/fetch.
      * @throws Exception If anything goes wrong with the translation.
      */
-    Sponsor(Item item) throws Exception {
+    public Sponsor(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Sponsor")) throw new CorruptedItemException("Sponsor initialized for wrong item type");
     }
 
     /**
@@ -49,7 +53,19 @@ public class Sponsor extends User {
         return (Sponsor) read(getTableName(), getPrimaryKey("Sponsor", id));
     }
 
-//    public static Client querySponsor(String username) throws Exception {
-//        return DynamoDBHandler.getInstance().usernameQuery(username, "Sponsor");
-//    }
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Sponsor) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Sponsor)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        return super.getObjectFieldsList();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers.requestObjects;
 
+import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
+
 /**
  * The POJO for the request if the Lambda caller wants to create a Challenge in the database.
  */
@@ -51,7 +53,7 @@ public class CreateChallengeRequest extends CreateObjectRequest {
     public CreateChallengeRequest() {}
 
     @Override
-    public boolean ifHasEmptyString() {
+    public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(owner, endTime, capacity, title, goal, challengeType, group,
                 description, access, restriction, difficulty, prize, streakUpdateSpanType,
                 streakUpdateInterval, streakN)

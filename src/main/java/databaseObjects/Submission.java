@@ -3,9 +3,14 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+
+import main.java.databaseOperations.exceptions.CorruptedItemException;
 
 /**
  * A Submission represents a specific posting to a Challenge that represents an attempt to win the
@@ -28,9 +33,12 @@ public class Submission extends DatabaseObject {
      */
     public Submission(Item item) throws Exception {
         super(item);
+        if (!itemType.equals("Submission")) throw new CorruptedItemException("Submission initialized for wrong item type");
         this.by = item.getString("by");
+        if (by == null) throw new CorruptedItemException("by cannot be null");
         this.description = item.getString("description");
         this.about = item.getString("about");
+        if (about == null) throw new CorruptedItemException("about cannot be null");
         this.picturePaths = item.getStringSet("picturePaths");
         if (picturePaths == null) { this.picturePaths = new HashSet<>(); }
         this.videoPaths = item.getStringSet("videoPaths");
@@ -63,5 +71,23 @@ public class Submission extends DatabaseObject {
      */
     public static Submission readSubmission(String id) throws Exception {
         return (Submission) read(getTableName(), getPrimaryKey("Submission", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Submission) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Submission)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(picturePaths, videoPaths, likes, comments));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), by, about, description);
     }
 }
