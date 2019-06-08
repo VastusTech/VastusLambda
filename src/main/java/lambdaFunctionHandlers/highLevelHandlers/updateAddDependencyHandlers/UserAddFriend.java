@@ -37,7 +37,7 @@ public class UserAddFriend {
             throw new Exception("Need to have a friend request to add a friend directly!");
         }
 
-        if (!invite.inviteType.equals("friendRequest")) {
+        if (invite.inviteType != Invite.InviteType.friendRequest) {
             throw new Exception("Cannot accept a invite as a friendRequest that isn't one, clearly...");
         }
 

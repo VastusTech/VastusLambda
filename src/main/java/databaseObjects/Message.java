@@ -44,14 +44,21 @@ public class Message extends DatabaseItem {
      */
     public Message(Item item) throws Exception {
         id = item.getString("id");
+        if (id == null) throw new CorruptedItemException("ID cannot be null");
         board = item.getString("board");
+        if (board == null) throw new CorruptedItemException("Board cannot be null");
         itemType = item.getString("item_type");
+        if (itemType == null) throw new CorruptedItemException("Item Type cannot be null");
         if (!ItemType.getItemType(id).equals("Message")) throw new CorruptedItemException("Mismatched item type for Message");
         if (!itemType.equals("Message")) throw new CorruptedItemException("Message initialized for wrong item type");
+        if (item.getNumber("marker") == null) throw new CorruptedItemException("Marker cannot be null");
         marker = item.getNumber("marker").intValueExact();
+        if (marker < 0) throw new CorruptedItemException("Marker should not be less than 0");
         timeCreated = item.getString("time_created");
-        type = item.getString("type");
+        if (item.getString("time_created") == null) throw new CorruptedItemException("Time Created cannot be null");
         from = item.getString("from");
+        if (from == null) throw new CorruptedItemException("From cannot be null");
+        type = item.getString("type");
         name = item.getString("name");
         profileImagePath = item.getString("profileImagePath");
         message = item.getString("message");

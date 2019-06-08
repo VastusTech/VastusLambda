@@ -21,7 +21,6 @@ public class DeleteInvite {
     public static List<DatabaseAction> getActions(String fromID, String inviteID) throws Exception {
         DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
         Invite invite = Invite.readInvite(inviteID);
-        Invite.InviteType inviteType = Invite.InviteType.valueOf(invite.inviteType);
 
 //        public String from;
 //        public String to;
@@ -29,7 +28,7 @@ public class DeleteInvite {
 //        public String about;
 
         // TODO Check permissions
-        switch (Invite.InviteType.valueOf(invite.inviteType)) {
+        switch (invite.inviteType) {
             case friendRequest: {
                 if (!fromID.equals(invite.to) && !fromID.equals(invite.from) && !fromID.equals(Constants.adminKey)) {
                     throw new Exception("PERMISSIONS ERROR: You can only delete a friend request you are a part of!");
@@ -71,7 +70,7 @@ public class DeleteInvite {
         String fromItemType = ItemType.getItemType(invite.from);
         String toItemType = ItemType.getItemType(invite.to);
 
-        switch (Invite.InviteType.valueOf(invite.inviteType)) {
+        switch (invite.inviteType) {
             case friendRequest:
                 // Remove from from's sentInvites field
                 databaseActionCompiler.add(UserDatabaseActionBuilder.updateRemoveSentInvite(invite.from, fromItemType, inviteID));

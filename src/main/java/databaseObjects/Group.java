@@ -48,6 +48,7 @@ public class Group extends DatabaseObject {
         super(item);
         if (!itemType.equals("Group")) throw new CorruptedItemException("Group initialized for wrong item type");
         this.title = item.getString("title");
+        if (title == null) throw new CorruptedItemException("Title cannot be null");
         this.description = item.getString("description");
         this.motto = item.getString("motto");
         this.groupImagePath = item.getString("groupImagePath");
@@ -62,6 +63,7 @@ public class Group extends DatabaseObject {
         this.receivedInvites = item.getStringSet("receivedInvites");
         if (this.receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
         this.access = item.getString("access");
+        if (access == null) throw new CorruptedItemException("Access cannot be null");
         this.restriction = item.getString("restriction");
         this.events = item.getStringSet("events");
         if (this.events == null) { this.events = new HashSet<>(); }

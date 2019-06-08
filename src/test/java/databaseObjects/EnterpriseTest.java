@@ -11,7 +11,6 @@ public class EnterpriseTest {
                 .withString("item_type", "Enterprise")
                 .withString("id", "EN0001")
                 .withNumber("marker", 1)
-                .withString("time_created", TimeHelper.nowString())
-                ;
+                .withString("time_created", TimeHelper.nowString()) ;
     }
 }

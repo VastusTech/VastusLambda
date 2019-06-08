@@ -46,7 +46,11 @@ public class Event extends DatabaseObject {
         super(item);
         if (!itemType.equals("Event")) throw new CorruptedItemException("Event initialized for wrong item type");
         this.owner = item.getString("owner");
-        this.time = new TimeInterval(item.getString("time"));
+        if (owner == null) throw new CorruptedItemException("Owner may not be null");
+        try { this.time = new TimeInterval(item.getString("time")); }
+        catch (NullPointerException e) {
+            throw new CorruptedItemException("Time cannot be null", e);
+        }
         this.members = item.getStringSet("members");
         if (this.members == null) { this.members = new HashSet<>(); }
         this.invitedMembers = item.getStringSet("invitedMembers");
@@ -55,16 +59,25 @@ public class Event extends DatabaseObject {
         if (this.memberRequests == null) { this.memberRequests = new HashSet<>(); }
         this.receivedInvites = item.getStringSet("receivedInvites");
         if (this.receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
-        this.capacity = Integer.parseInt(item.getString("capacity"));
+        try { this.capacity = Integer.parseInt(item.getString("capacity")); }
+        catch (NumberFormatException e) {
+            throw new CorruptedItemException("Capacity is malformed or null", e);
+        }
+        if (capacity <= 0) throw new CorruptedItemException("Capacity cannot be less than or equal to 0");
         this.access = item.getString("access");
+        if (access == null) throw new CorruptedItemException("Access may not be null");
         this.restriction = item.getString("restriction");
         this.title = item.getString("title");
+        if (title == null) throw new CorruptedItemException("Title may not be null");
         this.description = item.getString("description");
         this.address = item.getString("address");
+        if (address == null) throw new CorruptedItemException("Address may not be null");
         this.challenge = item.getString("challenge");
         this.group = item.getString("group");
+        if (item.getString("ifCompleted") == null) throw new CorruptedItemException("If Completed cannot be null");
         this.ifCompleted = Boolean.parseBoolean(item.getString("ifCompleted"));
         this.tags = item.getStringSet("tags");
+        if (tags == null) { tags = new HashSet<>(); }
     }
 
     /**
@@ -75,8 +88,8 @@ public class Event extends DatabaseObject {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Event"));
-        item.put("capacity", new AttributeValue("10"));
-        item.put("access", new AttributeValue("private"));
+//        item.put("capacity", new AttributeValue("10"));
+//        item.put("access", new AttributeValue("private"));
         item.put("ifCompleted", new AttributeValue("false"));
         return item;
     }

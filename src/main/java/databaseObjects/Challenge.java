@@ -70,9 +70,7 @@ public class Challenge extends DatabaseObject {
         if (this.memberRequests == null) { this.memberRequests = new HashSet<>(); }
         this.receivedInvites = item.getStringSet("receivedInvites");
         if (this.receivedInvites == null) { this.receivedInvites = new HashSet<>(); }
-        try {
-            this.capacity = Integer.parseInt(item.getString("capacity"));
-        }
+        try { this.capacity = Integer.parseInt(item.getString("capacity")); }
         catch (NumberFormatException e) {
             throw new CorruptedItemException("Capacity is malformed or null!", e);
         }

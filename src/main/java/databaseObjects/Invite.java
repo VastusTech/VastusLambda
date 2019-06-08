@@ -19,7 +19,7 @@ import java.util.Objects;
 public class Invite extends DatabaseObject {
     public String from;
     public String to;
-    public String inviteType;
+    public InviteType inviteType;
     public String about;
     public String description;
 
@@ -33,9 +33,16 @@ public class Invite extends DatabaseObject {
         super(item);
         if (!itemType.equals("Invite")) throw new CorruptedItemException("Invite initialized for wrong item type");
         this.from = item.getString("from");
+        if (from == null) throw new CorruptedItemException("From may not be null");
         this.to = item.getString("to");
-        this.inviteType = item.getString("inviteType");
+        if (to == null) throw new CorruptedItemException("To may not be null");
+        if (item.getString("inviteType") == null) throw new CorruptedItemException("Invite Type may not be null");
+        try { this.inviteType = InviteType.valueOf(item.getString("inviteType")); }
+        catch (IllegalArgumentException e) {
+            throw new CorruptedItemException("Unrecognized Invite Type", e);
+        }
         this.about = item.getString("about");
+        if (about == null) throw new CorruptedItemException("About may not be null");
         this.description = item.getString("description");
     }
 

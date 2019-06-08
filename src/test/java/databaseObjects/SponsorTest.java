@@ -10,6 +10,7 @@ import main.java.databaseObjects.Sponsor;
 import main.java.databaseObjects.TimeInterval;
 import main.java.logic.TimeHelper;
 
+// TODO REVISIT ONCE IMPLEMENTED BETTER
 public class SponsorTest {
     static Item getSponsorTestItem() throws Exception {
         return new Item()

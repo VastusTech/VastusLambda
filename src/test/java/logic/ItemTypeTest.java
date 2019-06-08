@@ -2,7 +2,11 @@ package test.java.logic;
 
 import org.junit.Test;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import main.java.databaseOperations.exceptions.BadIDException;
+import main.java.logic.Constants;
 import main.java.logic.ItemType;
 
 import static junit.framework.TestCase.assertFalse;
@@ -13,6 +17,19 @@ public class ItemTypeTest {
     // ===========================================================================================
     // ==                            EXPECTED SUCCESS TESTS                                     ==
     // ===========================================================================================
+
+    @Test
+    public void testNoOverlappingPrefixes() throws AssertionError {
+        Set<String> prefixes = new HashSet<>();
+        for (ItemType itemType : ItemType.values()) {
+            String typeName = itemType.name();
+            String prefix = typeName.toUpperCase().substring(0, Constants.numPrefix);
+            if (prefixes.contains(prefix)) {
+                throw new AssertionError("Item type prefix overlaps with another item type! Item Type: " + typeName);
+            }
+            prefixes.add(prefix);
+        }
+    }
 
     @Test
     public void testGetItemTypeFromID() throws BadIDException {

@@ -7,6 +7,7 @@ import main.java.databaseOperations.exceptions.CorruptedItemException;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,7 +37,9 @@ public class Comment extends DatabaseObject {
         this.to = item.getString("to");
         this.comment = item.getString("comment");
         this.likes = item.getStringSet("likes");
+        if (likes == null) { likes = new HashSet<>(); }
         this.comments = item.getStringSet("comments");
+        if (comments == null) { comments = new HashSet<>(); }
     }
 
     /**
