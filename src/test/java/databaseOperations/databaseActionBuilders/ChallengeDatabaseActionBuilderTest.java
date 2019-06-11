@@ -25,7 +25,7 @@ public class ChallengeDatabaseActionBuilderTest {
 
     // Create ------------------------------------------------------------------------------------
     @Test
-    public void testCreateChallengeAction() throws Exception {
+    public void testCreateChallengeAction() {
         Map<String, AttributeValue> item = new HashMap<>();
         item.put("item_type", new AttributeValue("Challenge"));
         item.put("marker", new AttributeValue().withN("0"));
@@ -52,7 +52,7 @@ public class ChallengeDatabaseActionBuilderTest {
                 "OWNER", "ENDTIME", "CAPACITY", "TITLE", "GOAL",
                 "CHALLENGETYPE", "GROUP", "DESCRIPTION",
                 new String[]{"TAG"}, new String[]{"MEMBER"}, "ACCESS", "RESTRICTION",
-                "DIFFICULTY", "PRIZE", "STREAKUPDATESPANTYPE",
+                "DIFFICULTY", "PRIZE", null, "STREAKUPDATESPANTYPE",
                 "STREAKUPDATEINTERVAL", "STREAKN"
         ), new HashMap<>());
         assertEquals(expectedAction, actualAction);
@@ -61,6 +61,10 @@ public class ChallengeDatabaseActionBuilderTest {
     // Update ------------------------------------------------------------------------------------
 
     // TODO
+    @Test
+    public void testUpdateTitle() throws Exception {
+        DatabaseAction actualAction = ChallengeDatabaseActionBuilder.updateTitle("CL0001", "TITLE");
+    }
 //    public static DatabaseAction updateTitle(String id, String title) throws Exception {
 //    public static DatabaseAction updateDescription(String id, String description) throws Exception {
 //    public static DatabaseAction updateAddress(String id, String address) throws Exception {

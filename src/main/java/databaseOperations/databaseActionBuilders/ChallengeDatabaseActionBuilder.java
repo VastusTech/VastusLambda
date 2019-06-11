@@ -48,6 +48,8 @@ public class ChallengeDatabaseActionBuilder {
                 .group)); }
         if (createChallengeRequest.prize != null) { item.put("prize", new AttributeValue(createChallengeRequest
                 .prize)); }
+        if (createChallengeRequest.prizeImagePath != null) { item.put("prizeImagePath", new
+                AttributeValue(createChallengeRequest.prizeImagePath)); }
         if (createChallengeRequest.description != null) { item.put("description", new AttributeValue(createChallengeRequest
                 .description)); }
         if (createChallengeRequest.difficulty != null) { item.put("difficulty", new AttributeValue
@@ -67,9 +69,11 @@ public class ChallengeDatabaseActionBuilder {
         if (createChallengeRequest.streakUpdateSpanType != null) { item.put("streakUpdateSpanType",
                 new AttributeValue(createChallengeRequest.streakUpdateSpanType)); }
         return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
-            (Map<String, AttributeValue> createdItem, String id) -> {
-                return;
-            }
+                (Map<String, AttributeValue> createdItem, String id) -> {
+                    if (createdItem.containsKey("prizeImagePath")) {
+                        createdItem.put("prizeImagePath", new AttributeValue(id + "/" + createdItem.get("prizeImagePath").getS()));
+                    }
+                }
         );
     }
 
@@ -103,6 +107,10 @@ public class ChallengeDatabaseActionBuilder {
 
     public static DatabaseAction updatePrize(String id, String prize) throws Exception {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "prize", new AttributeValue(prize), false, PUT);
+    }
+
+    public static DatabaseAction updatePrizeImagePath(String id, String prizeImagePath) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "prizeImagePath", new AttributeValue(prizeImagePath), false, PUT);
     }
 
     public static DatabaseAction updateAccess(String id, String access) throws Exception {

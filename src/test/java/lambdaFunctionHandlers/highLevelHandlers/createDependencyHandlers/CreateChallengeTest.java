@@ -47,7 +47,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
         Challenge challenge = Challenge.readChallenge(id);
@@ -95,7 +95,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, "DESCRIPTION",
                         new String[]{"Endurance", "HIIT"}, new String[]{"CL0001"}, "private",
-                        null, "1", "PRIZE",
+                        null, "1", "PRIZE", null,
                         null, null, null
                 ), 0
         ));
@@ -147,7 +147,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, "GR0001", null,
                         null, null, null, null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
         Challenge challenge = Challenge.readChallenge(id);
@@ -198,7 +198,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, "GR0001", "DESCRIPTION",
                         new String[]{"Endurance", "HIIT"}, new String[]{"CL0001"}, null,
-                        null, "1", "PRIZE",
+                        null, "1", "PRIZE", null,
                         null, null, null
                 ), 0
         ));
@@ -252,7 +252,7 @@ public class CreateChallengeTest {
                 Constants.adminKey, new CreateChallengeRequest(
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", "streak", null, null,
-                        null, null, "private", null, null,
+                        null, null, "private", null, null, null,
                         null, "daily", "1", "1"
                 ), 0
         ));
@@ -300,7 +300,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", "streak", null, "DESCRIPTION",
                         new String[]{"Endurance", "HIIT"}, new String[]{"CL0001"}, "private",
-                        null, "1", "PRIZE",
+                        null, "1", "PRIZE", null,
                         "daily", "1", "1"
                 ), 0
         ));
@@ -352,7 +352,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", "invite", null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
         Challenge challenge = Challenge.readChallenge(id);
@@ -400,7 +400,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, "DESCRIPTION",
                         new String[]{"Endurance", "HIIT"}, new String[]{"CL0001"}, "private",
-                        "invite", "1", "PRIZE",
+                        "invite", "1", "PRIZE", null,
                         null, null, null
                 ), 0
         ));
@@ -452,7 +452,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
         Challenge challenge = Challenge.readChallenge(id);
@@ -502,7 +502,7 @@ public class CreateChallengeTest {
                         "GOAL", null, null, null,
                         null, new String[]{"CL0001", "CL0002"}, "private",
                         null, null, null, null,
-                        null, null
+                        null, null, null
                 ), 0
         ));
         Challenge challenge = Challenge.readChallenge(id);
@@ -550,7 +550,7 @@ public class CreateChallengeTest {
                         "TR0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "public", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
         Challenge challenge = Challenge.readChallenge(id);
@@ -604,7 +604,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "public", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -617,7 +617,7 @@ public class CreateChallengeTest {
                         "CL0002", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -629,7 +629,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -641,7 +641,7 @@ public class CreateChallengeTest {
                         null, "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -653,7 +653,7 @@ public class CreateChallengeTest {
                         "CL0001", null, "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -665,7 +665,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", null, "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -677,7 +677,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", null,
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -689,7 +689,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         null, null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -701,7 +701,7 @@ public class CreateChallengeTest {
                         "OWNER", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -713,7 +713,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, new String[]{"CL0003"}, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -725,7 +725,7 @@ public class CreateChallengeTest {
                         "CL0001", "NOT-A-GOOD-ENDTIME", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -736,7 +736,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "CAPACITY", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -747,7 +747,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, "BAD-GROUP", null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -758,7 +758,7 @@ public class CreateChallengeTest {
                         "CL0002", "1998-09-05", "100", "TITLE",
                         "GOAL", null, "GR0001", null,
                         null, null, "private", null, null,
-                        null, null, null, null
+                        null, null, null, null, null
                 ), 0
         ));
     }
@@ -770,7 +770,7 @@ public class CreateChallengeTest {
                         "GOAL", null, null, null,
                         null, null, "private", null,
                         "DIFFICULTY", null, null,
-                        null, null
+                        null, null, null
                 ), 0
         ));
     }
@@ -781,7 +781,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null,
-                        "5", null, null,
+                        "5", null, null, null,
                         null, null
                 ), 0
         ));
@@ -793,7 +793,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", null, null, null,
                         null, null, "private", null,
-                        "5", null, "daily",
+                        "5", null, null, "daily",
                         "1", "1"
                 ), 0
         ));
@@ -805,7 +805,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", "streak", null, null,
                         null, null, "private", null,
-                        "5", null, "daily",
+                        "5", null, null, "daily",
                         "1", "STREAKN"
                 ), 0
         ));
@@ -817,7 +817,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", "streak", null, null,
                         null, null, "private", null,
-                        "5", null, "daily",
+                        "5", null, null, "daily",
                         "INTERVAL", "1"
                 ), 0
         ));
@@ -829,7 +829,7 @@ public class CreateChallengeTest {
                         "CL0001", "1998-09-05", "100", "TITLE",
                         "GOAL", "streak", null, null,
                         null, null, "private", null,
-                        "5", null, "TYPE",
+                        "5", null, null, "TYPE",
                         "1", "1"
                 ), 0
         ));

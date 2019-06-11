@@ -22,6 +22,7 @@ public class CreateChallengeRequest extends CreateObjectRequest {
     public String restriction;
     public String difficulty;
     public String prize;
+    public String prizeImagePath;
     public String challengeType;
     public String streakUpdateSpanType;
     public String streakUpdateInterval;
@@ -29,7 +30,7 @@ public class CreateChallengeRequest extends CreateObjectRequest {
 
     public CreateChallengeRequest(String owner, String endTime, String capacity, String title, String goal, String
             challengeType, String group, String description, String[] tags, String[] members, String access, String
-            restriction, String difficulty, String prize, String streakUpdateSpanType, String streakUpdateInterval,
+            restriction, String difficulty, String prize, String prizeImagePath, String streakUpdateSpanType, String streakUpdateInterval,
                                   String streakN) {
         this.owner = owner;
         this.endTime = endTime;
@@ -45,6 +46,7 @@ public class CreateChallengeRequest extends CreateObjectRequest {
         this.restriction = restriction;
         this.difficulty = difficulty;
         this.prize = prize;
+        this.prizeImagePath = prizeImagePath;
         this.streakUpdateSpanType = streakUpdateSpanType;
         this.streakUpdateInterval = streakUpdateInterval;
         this.streakN = streakN;
@@ -55,7 +57,7 @@ public class CreateChallengeRequest extends CreateObjectRequest {
     @Override
     public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(owner, endTime, capacity, title, goal, challengeType, group,
-                description, access, restriction, difficulty, prize, streakUpdateSpanType,
+                description, access, restriction, difficulty, prize, prizeImagePath, streakUpdateSpanType,
                 streakUpdateInterval, streakN)
                 || arrayHasEmptyString(tags, members);
     }
@@ -170,6 +172,14 @@ public class CreateChallengeRequest extends CreateObjectRequest {
 
     public void setPrize(String prize) {
         this.prize = prize;
+    }
+
+    public String getPrizeImagePath() {
+        return prizeImagePath;
+    }
+
+    public void setPrizeImagePath(String prizeImagePath) {
+        this.prizeImagePath = prizeImagePath;
     }
 
     public String getStreakUpdateSpanType() {

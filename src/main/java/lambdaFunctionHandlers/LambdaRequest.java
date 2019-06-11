@@ -143,6 +143,7 @@ public class LambdaRequest {
         difficulty,
         endTime,
         prize,
+        prizeImagePath,
         // Invite ==========================
         // Post   ==========================
         picturePaths,
@@ -859,6 +860,14 @@ public class LambdaRequest {
                 case prize:
                     if (itemType.equals("Challenge")) {
                         databaseActionCompiler.addAll(ChallengeUpdatePrize.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case prizeImagePath:
+                    if (itemType.equals("Challenge")) {
+                        databaseActionCompiler.addAll(ChallengeUpdatePrizeImagePath.getActions(fromID, id, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");

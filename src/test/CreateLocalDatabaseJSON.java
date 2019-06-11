@@ -66,21 +66,21 @@ public class CreateLocalDatabaseJSON {
                         TimeHelper.hoursFromNow(240)), "10", "Test 1 Current N Streak",
                         "To do 1 thing per interval", "streak", null,
                         null, null, null, "private", null,
-                        null, null, "daily", "1",
+                        null, null, null, "daily", "1",
                         "1"), 0));
         DynamoDBHandler.getInstance().attemptTransaction(CreateChallenge.getCompilers(
                 userID, new CreateChallengeRequest(userID, TimeHelper.isoString(
                         TimeHelper.hoursFromNow(240)), "10", "Test 2 Current N Streak",
                         "To do 2 things per interval", "streak", null,
                         null, null, null, "private", null,
-                        null, null, "daily", "1",
+                        null, null, null, "daily", "1",
                         "2"), 0));
         DynamoDBHandler.getInstance().attemptTransaction(CreateChallenge.getCompilers(
                 userID, new CreateChallengeRequest(userID, TimeHelper.isoString(
                         TimeHelper.hoursFromNow(240)), "10", "Test 2 Current N 2 " +
                         "update interval Streak", "To do 2 things per 2 intervals",
                         "streak", null, null, null, null,
-                        "private", null, null, null,
+                        "private", null, null, null, null,
                         "daily", "2", "2"), 0));
     }
 

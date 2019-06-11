@@ -42,6 +42,7 @@ public class Challenge extends DatabaseObject {
     public int difficulty;
     public String winner;
     public String prize;
+    public String prizeImagePath;
     public Set<String> tags;
     public Set<String> submissions;
     public Set<String> streaks;
@@ -96,6 +97,7 @@ public class Challenge extends DatabaseObject {
         if (this.tags == null) { this.tags = new HashSet<>(); }
         this.winner = item.getString("winner");
         this.prize = item.getString("prize");
+        this.prizeImagePath = item.getString("prizeImagePath");
         this.submissions = item.getStringSet("submissions");
         if (this.submissions == null) { this.submissions = new HashSet<>(); }
         this.streaks = item.getStringSet("streaks");
