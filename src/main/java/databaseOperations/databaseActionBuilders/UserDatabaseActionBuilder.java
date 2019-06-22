@@ -582,4 +582,24 @@ public class UserDatabaseActionBuilder {
         throwErrorIfWrongItemType(itemType);
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "streaks", new AttributeValue(streak), false, DELETE);
     }
+
+    public static DatabaseAction updateAddCredit(String id, String itemType, int credit) throws Exception {
+        throwErrorIfWrongItemType(itemType);
+        if (credit < 0) { throw new Exception("Adding credit must be greater than or equal to 0!"); }
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "credit",
+                new AttributeValue().withN(Integer.toString(credit)), false, ADD);
+    }
+
+    public static DatabaseAction updateRemoveCredit(String id, String itemType, int credit) throws Exception {
+        throwErrorIfWrongItemType(itemType);
+        if (credit < 0) { throw new Exception("Removing credit must be greater than or equal to 0!"); }
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "credit",
+                new AttributeValue().withN(Integer.toString(-credit)), false, ADD, (newItem -> {
+                    if ((((User)newItem).credit - credit) < 0) {
+                        return "User does not have enough credit to complete the transaction!";
+                    }
+                    return null;
+                }
+        ));
+    }
 }

@@ -58,6 +58,8 @@ public interface DatabaseItemFactory {
                 return new Streak(item);
             case Enterprise:
                 return new Enterprise(item);
+            case Deal:
+                return new Deal(item);
             default:
                 throw new ItemTypeNotRecognizedException("Item type = " + itemType + " not implemented in DatabaseItemBuilder");
         }

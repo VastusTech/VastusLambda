@@ -49,6 +49,7 @@ public class ItemTypeTest {
         assertEquals("Message", ItemType.getItemType("ME0001"));
         assertEquals("Streak", ItemType.getItemType("ST0001"));
         assertEquals("Enterprise", ItemType.getItemType("EN0001"));
+        assertEquals("Deal", ItemType.getItemType("DE0001"));
     }
 
     @Test

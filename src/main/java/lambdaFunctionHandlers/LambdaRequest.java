@@ -48,6 +48,7 @@ public class LambdaRequest {
     private CreateMessageRequest createMessageRequest;
     private CreateStreakRequest createStreakRequest;
     private CreateEnterpriseRequest createEnterpriseRequest;
+    private CreateDealRequest createDealRequest;
 
     /**
      * The values for an action to do for a single Lambda request.
@@ -453,7 +454,14 @@ public class LambdaRequest {
                 numCreateRequest++;
                 Constants.debugLog("Has a create enterprise request!\n");
                 if (createEnterpriseRequest.ifHasEmptyString()) {
-                    throw new Exception("No field inside Create Streak Request can be empty string!");
+                    throw new Exception("No field inside Create Enterprise Request can be empty string!");
+                }
+            }
+            if (createDealRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create deal request!\n");
+                if (createDealRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Deal Request can be empty string!");
                 }
             }
             if (numCreateRequest > 1) {
@@ -525,6 +533,9 @@ public class LambdaRequest {
                     break;
                 case Enterprise:
                     compilers = CreateEnterprise.getCompilers(fromID, createEnterpriseRequest, 0);
+                    break;
+                case Deal:
+                    compilers = CreateDeal.getCompilers(fromID, createDealRequest, 0);
                     break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
@@ -1323,6 +1334,9 @@ public class LambdaRequest {
                 case Streak:
                     databaseActionCompiler.addAll(DeleteStreak.getActions(fromID, id));
                     break;
+                case Deal:
+                    databaseActionCompiler.addAll(DeleteDeal.getActions(fromID, id));
+                    break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -1348,7 +1362,8 @@ public class LambdaRequest {
                          CreatePostRequest createPostRequest, CreateSubmissionRequest createSubmissionRequest,
                          CreateGroupRequest createGroupRequest, CreateCommentRequest createCommentRequest,
                          CreateSponsorRequest createSponsorRequest, CreateMessageRequest createMessageRequest,
-                         CreateStreakRequest createStreakRequest, CreateEnterpriseRequest createEnterpriseRequest) {
+                         CreateStreakRequest createStreakRequest, CreateEnterpriseRequest createEnterpriseRequest,
+                         CreateDealRequest createDealRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -1374,6 +1389,7 @@ public class LambdaRequest {
         this.createMessageRequest = createMessageRequest;
         this.createStreakRequest = createStreakRequest;
         this.createEnterpriseRequest = createEnterpriseRequest;
+        this.createDealRequest = createDealRequest;
     }
 
     public LambdaRequest() {}
@@ -1576,5 +1592,13 @@ public class LambdaRequest {
 
     public void setCreateEnterpriseRequest(CreateEnterpriseRequest createEnterpriseRequest) {
         this.createEnterpriseRequest = createEnterpriseRequest;
+    }
+
+    public CreateDealRequest getCreateDealRequest() {
+        return createDealRequest;
+    }
+
+    public void setCreateDealRequest(CreateDealRequest createDealRequest) {
+        this.createDealRequest = createDealRequest;
     }
 }

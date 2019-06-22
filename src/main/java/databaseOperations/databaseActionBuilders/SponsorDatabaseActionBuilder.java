@@ -8,6 +8,9 @@ import main.java.lambdaFunctionHandlers.requestObjects.CreateSponsorRequest;
 
 import java.util.Map;
 
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.ADD;
+import static main.java.databaseOperations.UpdateDatabaseAction.UpdateAction.DELETE;
+
 /**
  * The Database Action Builder for the {@link Sponsor} object, getting the {@link DatabaseAction} objects
  * that dictate the individual actions to do in the database for Sponsors.
@@ -43,6 +46,19 @@ public class SponsorDatabaseActionBuilder {
                 return;
             }
         );
+    }
+
+    public static DatabaseAction updateAddDeal(String id, String deal, boolean ifWithCreate) throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "deals", null, true, ADD);
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "deals", new AttributeValue(deal), false, ADD);
+        }
+    }
+
+    public static DatabaseAction updateRemoveDeal(String id, String deal) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "deals", new AttributeValue(deal), false, DELETE);
     }
 
     public static DatabaseAction delete(String id) {

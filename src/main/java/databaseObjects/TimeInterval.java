@@ -17,6 +17,8 @@ import java.util.List;
  * date. This class also provides a bunch helpful methods to do calculations with relation to time.
  *
  * TODO Revisit once/if we reimplement Gym / Workout logic.
+ *
+ * TODO Clean the god damned shit out of this heckin' class..................
  */
 public class TimeInterval {
 
@@ -340,6 +342,11 @@ public class TimeInterval {
 //        }
 //        return false;
 //    }
+
+    public boolean nowIsWithin() {
+        // TODO make sure this is fine
+        return hasAlreadyStarted() && !hasAlreadyFinished();
+    }
 
     /**
      * This calculates if start time has already passed.

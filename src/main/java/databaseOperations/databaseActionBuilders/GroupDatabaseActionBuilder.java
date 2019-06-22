@@ -291,7 +291,6 @@ public class GroupDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "streaks", new AttributeValue(streak), false, DELETE);
     }
 
-
     public static DatabaseAction delete(String id) {
         return new DeleteDatabaseAction(id, itemType, getPrimaryKey(id));
     }

@@ -61,6 +61,7 @@ public class User extends DatabaseObject {
     public Set<String> invitedGroups;
     public Set<String> messageBoards;
     public Set<String> streaks;
+    public int credit;
 
     /**
      * The main constructor for the User class, instantiating the object from the database.
@@ -150,6 +151,8 @@ public class User extends DatabaseObject {
         if (messageBoards == null) { this.messageBoards = new HashSet<>(); }
         this.streaks = item.getStringSet("streaks");
         if (streaks == null) { this.streaks = new HashSet<>(); }
+        if (item.getNumber("credit") == null) { credit = 0; }
+        else { this.credit = item.getNumber("credit").intValueExact(); }
     }
 
     private int getAgeFromBirthday(String birthday) {
@@ -168,6 +171,7 @@ public class User extends DatabaseObject {
         item.put("friendlinessRating", new AttributeValue("0.0"));
         item.put("effectivenessRating", new AttributeValue("0.0"));
         item.put("reliabilityRating", new AttributeValue("0.0"));
+        item.put("credit", new AttributeValue().withN("0"));
         return item;
     }
 

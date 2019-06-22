@@ -1,0 +1,89 @@
+package main.java.databaseObjects;
+
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
+import main.java.databaseOperations.exceptions.CorruptedItemException;
+
+public class Deal extends DatabaseObject {
+    public String sponsor;
+    public String productName;
+    public String productImagePath;
+    public Set<String> productImagePaths;
+    public int productCreditPrice;
+    public TimeInterval validTime;
+    public String productStoreLink;
+    public int quantity;
+
+    /**
+     * The main constructor for the Deal class, instantiating the object from the database.
+     *
+     * @param item The {@link Item} object obtained from the database query/fetch.
+     * @throws Exception If anything goes wrong with the translation.
+     */
+    public Deal(Item item) throws Exception {
+        super(item);
+        if (!itemType.equals("Deal")) throw new CorruptedItemException("Deal initialized for wrong item type");
+        this.sponsor = item.getString("sponsor");
+        this.productName = item.getString("productName");
+        this.productImagePath = item.getString("productImagePath");
+        this.productImagePaths = item.getStringSet("productImagePaths");
+        if (productImagePaths == null) { productImagePaths = new HashSet<>(); }
+        this.productCreditPrice = Integer.parseInt(item.getString("productCreditPrice"));
+        if (item.get("validTime") == null) { validTime = null; }
+        else { validTime = new TimeInterval(item.getString("validTime")); }
+        this.productStoreLink = item.getString("productStoreLink");
+        if (item.get("quantity") == null) { quantity = -1; }
+        else { quantity = Integer.parseInt(item.getString("quantity")); }
+    }
+
+    /**
+     * Gets the empty item with the default values for the Deal object.
+     *
+     * @return The map of attribute values for the item.
+     */
+    public static Map<String, AttributeValue> getEmptyItem() {
+        Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
+        item.put("item_type", new AttributeValue("Deal"));
+        return item;
+    }
+
+    /**
+     * Reads a Deal from the database using the given ID.
+     *
+     * TODO Implement cache system here again?
+     *
+     * @param id The ID to read from the database.
+     * @return The Deal object to read in the database.
+     * @throws Exception If anything goes wrong in the fetch.
+     */
+    public static Deal readDeal(String id) throws Exception {
+        return (Deal) read(getTableName(), getPrimaryKey("Deal", id));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Deal) && obj.hashCode() == hashCode()
+                && getObjectFieldsList().equals(((Deal)obj).getObjectFieldsList());
+    }
+
+    @Override
+    protected List<Object> getObjectFieldsList() {
+        List<Object> list = super.getObjectFieldsList();
+        list.addAll(Arrays.asList(productImagePaths, validTime));
+        return list;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), sponsor, productName, productImagePath,
+                productCreditPrice, productStoreLink, quantity);
+    }
+}

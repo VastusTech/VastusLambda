@@ -17,6 +17,7 @@ import java.util.Set;
  * that will be advertised on our platform. TODO A lot of details still to figure out here.
  */
 public class Sponsor extends User {
+    public Set<String> deals;
 
     /**
      * The main constructor for the Sponsor class, instantiating the object from the database.
@@ -27,6 +28,8 @@ public class Sponsor extends User {
     public Sponsor(Item item) throws Exception {
         super(item);
         if (!itemType.equals("Sponsor")) throw new CorruptedItemException("Sponsor initialized for wrong item type");
+        this.deals = item.getStringSet("deals");
+        if (deals == null) { deals = new HashSet<>(); }
     }
 
     /**
@@ -61,7 +64,9 @@ public class Sponsor extends User {
 
     @Override
     protected List<Object> getObjectFieldsList() {
-        return super.getObjectFieldsList();
+        List<Object> list = super.getObjectFieldsList();
+        list.add(deals);
+        return list;
     }
 
     @Override

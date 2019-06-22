@@ -25,7 +25,8 @@ public enum ItemType {
     Sponsor,
     Message,
     Streak,
-    Enterprise,;
+    Enterprise,
+    Deal,;
 
     private static Map<String, String> prefixes = new HashMap<String, String>(){{
         for (ItemType itemType : ItemType.values()) {
