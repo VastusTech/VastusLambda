@@ -19,13 +19,16 @@ public class CreateDeal {
         if (createDealRequest != null) {
             // Create client
             if (createDealRequest.sponsor == null || createDealRequest.productName == null ||
-                    createDealRequest.productCreditPrice == null || createDealRequest.quantity == null) {
+                    createDealRequest.productCreditPrice == null) {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!fromID.equals(createDealRequest.sponsor) && !fromID.equals(Constants.adminKey)) {
                     throw new Exception("PERMISSIONS ERROR: You can only create deals you will own!");
                 }
+
+                // TODO Check that the quantity is not less than zero and also the other integer things now that I think about it lol
+                // TODO quantity can also be null
 
                 // Create the object
                 if (depth == 0) {

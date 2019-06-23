@@ -59,7 +59,8 @@ public class LambdaRequest {
         UPDATESET,
         UPDATEADD,
         UPDATEREMOVE,
-        DELETE
+        DELETE,
+        PROCESS,
     }
 
     /**
@@ -158,7 +159,15 @@ public class LambdaRequest {
         // Message =========================
         lastSeenFor,
         // Streak =========================
-        N
+        N,
+        // Deal ============================
+        productName,
+        productCreditPrice,
+        productImagePath,
+        productImagePaths,
+        validTime,
+        productStoreLink,
+        quantity,
     }
 
     /**
@@ -202,23 +211,6 @@ public class LambdaRequest {
                     }
                 case READ:
                     throw new Exception("Reading with Lambda no longer supported! Just use GraphQL!");
-//                    if (specifyAction.equals("ByID") || specifyAction.equals("")) {
-//                        // Read using the ID number provided
-//                        return handleIDRead(identifiers);
-//                    }
-//                    else if (specifyAction.equals("ByUsername")) {
-//                        // Read using the username provided
-//                        return handleUsernameRead(identifiers);
-//                    }
-//                    else if (specifyAction.equals("GetAll") && itemType.equals("Gym")) {
-//                        // Read all of the gyms
-//                        return handleGetAll();
-//                    }
-//                    else {
-//                        // Unacceptable action series
-//                        throw new Exception("Specify Action: \"" + specifyAction + "\" not recognized for action \"" +
-//                                action + "\" on itemType \"" + itemType + "\" !");
-//                    }
                 case UPDATESET:
                     if (specifyAction.equals("")) {
                         // Update the attribute: SET it.
@@ -275,6 +267,22 @@ public class LambdaRequest {
                         }
                         else {
                             throw new Exception("There should only be one identifier in an UPDATEREMOVE statement!");
+                        }
+                    }
+                    else {
+                        // Unacceptable action series
+                        throw new Exception("Specify Action: \"" + specifyAction + "\" not recognized for action \"" +
+                                action + "\" on itemType \"" + itemType + "\" !");
+                    }
+                case PROCESS:
+                    if (specifyAction.equals("")) {
+                        // Process the item
+                        if (identifiers.length == 1) {
+                            handleProcess(identifiers[0]);
+                            return null;
+                        }
+                        else {
+                            throw new Exception("There should only be one identifier in a PROCESS statement!");
                         }
                     }
                     else {
@@ -900,6 +908,54 @@ public class LambdaRequest {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
+                case productName:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateProductName.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case productImagePath:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateProductImagePath.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case productCreditPrice:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateProductCreditPrice.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case productStoreLink:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateProductStoreLink.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case validTime:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateValidTime.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case quantity:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateQuantity.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATESET operation on " + attributeName + "!");
             }
@@ -1102,6 +1158,22 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case productImagePaths:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateAddProductImagePath.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case quantity:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateAddQuantity.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEADD operation on " + attributeName + "!");
             }
@@ -1265,6 +1337,22 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case productImagePaths:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateRemoveProductImagePath.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case quantity:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateRemoveQuantity.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEREMOVE operation on " + attributeName + "!");
             }
@@ -1273,6 +1361,26 @@ public class LambdaRequest {
             throw new Exception("AttributeName: " + attributeName + " not recognized! Error: " + e.getLocalizedMessage());
         }
 
+        compilers.add(databaseActionCompiler);
+        DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
+    }
+
+    /**
+     * Handles a PROCESS action for the given item and configurations.
+     *
+     * @throws Exception If anything goes wrong in process.
+     */
+    private void handleProcess(String id) throws Exception {
+        SingletonTimer.get().endAndPushCheckpoint("Init compiler for Process");
+        List<DatabaseActionCompiler> compilers = new ArrayList<>();
+        DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
+        switch (specifyAction) {
+            case "buy":
+                databaseActionCompiler.addAll(UserBuyDeal.getActions(fromID, id, itemType, secondaryIdentifier));
+                break;
+            default:
+                throw new Exception("Specify Action: " + specifyAction + " not recognized!");
+        }
         compilers.add(databaseActionCompiler);
         DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
     }

@@ -7,13 +7,13 @@ public class CreateDealRequest extends CreateObjectRequest {
     public String sponsor;
     public String productName;
     public String productCreditPrice;
-    public String quantity;
 
     // Optional
     public String productImagePath;
     public String[] productImagePaths;
     public String validTime;
     public String productStoreLink;
+    public String quantity;
 
     public CreateDealRequest(String sponsor, String productName, String productCreditPrice, String
             quantity, String productImagePath, String[] productImagePaths, String validTime,

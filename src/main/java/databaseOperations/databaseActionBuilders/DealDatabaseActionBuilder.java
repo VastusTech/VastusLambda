@@ -41,7 +41,8 @@ public class DealDatabaseActionBuilder {
         item.put("sponsor", new AttributeValue(createDealRequest.sponsor));
         item.put("productName", new AttributeValue(createDealRequest.productName));
         item.put("productCreditPrice", new AttributeValue(createDealRequest.productCreditPrice));
-        item.put("quantity", new AttributeValue(createDealRequest.quantity));
+        if (createDealRequest.quantity != null) { item.put("quantity",
+                new AttributeValue(createDealRequest.quantity)); }
         if (createDealRequest.productImagePath != null) { item.put("productImagePath", new
                 AttributeValue(createDealRequest.productImagePath)); }
         if (createDealRequest.productImagePaths != null) { item.put("productImagePaths",
