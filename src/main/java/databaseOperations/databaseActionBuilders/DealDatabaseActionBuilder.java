@@ -41,6 +41,7 @@ public class DealDatabaseActionBuilder {
         item.put("sponsor", new AttributeValue(createDealRequest.sponsor));
         item.put("productName", new AttributeValue(createDealRequest.productName));
         item.put("productCreditPrice", new AttributeValue(createDealRequest.productCreditPrice));
+        item.put("productType", new AttributeValue(createDealRequest.productType));
         if (createDealRequest.quantity != null) { item.put("quantity",
                 new AttributeValue(createDealRequest.quantity)); }
         if (createDealRequest.productImagePath != null) { item.put("productImagePath", new
@@ -110,6 +111,19 @@ public class DealDatabaseActionBuilder {
             }
             return null;
         }));
+    }
+
+    public static DatabaseAction updateAddProductSold(String id, String product, boolean ifWithCreate) throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "productsSold", null, true, ADD);
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "productsSold", new AttributeValue(product), false, ADD);
+        }
+    }
+
+    public static DatabaseAction updateRemoveProductSold(String id, String product) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "productsSold", new AttributeValue(product), false, DELETE);
     }
 
     public static DatabaseAction delete(String id) {

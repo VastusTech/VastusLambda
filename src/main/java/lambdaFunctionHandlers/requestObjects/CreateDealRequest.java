@@ -2,11 +2,15 @@ package main.java.lambdaFunctionHandlers.requestObjects;
 
 import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
 
+/**
+ * The POJO for the request if the Lambda caller wants to create a {@link main.java.databaseObjects.Deal} in the database.
+ */
 public class CreateDealRequest extends CreateObjectRequest {
     // Required
     public String sponsor;
     public String productName;
     public String productCreditPrice;
+    public String productType;
 
     // Optional
     public String productImagePath;
@@ -15,12 +19,13 @@ public class CreateDealRequest extends CreateObjectRequest {
     public String productStoreLink;
     public String quantity;
 
-    public CreateDealRequest(String sponsor, String productName, String productCreditPrice, String
-            quantity, String productImagePath, String[] productImagePaths, String validTime,
-                             String productStoreLink) {
+    public CreateDealRequest(String sponsor, String productName, String productCreditPrice,
+                             String productType, String quantity, String productImagePath,
+                             String[] productImagePaths, String validTime, String productStoreLink) {
         this.sponsor = sponsor;
         this.productName = productName;
         this.productCreditPrice = productCreditPrice;
+        this.productType = productType;
         this.quantity = quantity;
         this.productImagePath = productImagePath;
         this.productImagePaths = productImagePaths;
@@ -32,8 +37,8 @@ public class CreateDealRequest extends CreateObjectRequest {
 
     @Override
     public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
-        return CreateObjectRequest.hasEmptyString(sponsor, productName, productCreditPrice, quantity,
-                productImagePath, validTime, productStoreLink) && CreateObjectRequest.arrayHasEmptyString(
+        return hasEmptyString(sponsor, productName, productCreditPrice, quantity,
+                productImagePath, validTime, productStoreLink, productType) || arrayHasEmptyString(
                         productImagePaths);
     }
 

@@ -62,6 +62,7 @@ public class User extends DatabaseObject {
     public Set<String> messageBoards;
     public Set<String> streaks;
     public int credit;
+    public Set<String> productsOwned;
 
     /**
      * The main constructor for the User class, instantiating the object from the database.
@@ -153,6 +154,8 @@ public class User extends DatabaseObject {
         if (streaks == null) { this.streaks = new HashSet<>(); }
         if (item.getNumber("credit") == null) { credit = 0; }
         else { this.credit = item.getNumber("credit").intValueExact(); }
+        this.productsOwned = item.getStringSet("productsOwned");
+        if (productsOwned == null) { productsOwned = new HashSet<>(); }
     }
 
     private int getAgeFromBirthday(String birthday) {
@@ -214,7 +217,7 @@ public class User extends DatabaseObject {
                 completedChallenges, ownedChallenges, invitedChallenges, challengesWon,
                 scheduledEvents, completedEvents, ownedEvents, invitedEvents, sentInvites,
                 receivedInvites, posts, submissions, liked, comments, groups, ownedGroups,
-                invitedGroups, messageBoards, streaks));
+                invitedGroups, messageBoards, streaks, productsOwned));
         return list;
     }
 
@@ -222,6 +225,6 @@ public class User extends DatabaseObject {
     public int hashCode() {
         return Objects.hash(name, gender, birthday, email, location, username, federatedID,
                 stripeID, profileImagePath, friendlinessRating, effectivenessRating,
-                reliabilityRating, bio);
+                reliabilityRating, bio, credit);
     }
 }

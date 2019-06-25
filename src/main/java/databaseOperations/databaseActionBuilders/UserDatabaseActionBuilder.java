@@ -602,4 +602,17 @@ public class UserDatabaseActionBuilder {
                 }
         ));
     }
+
+    public static DatabaseAction updateAddProductOwned(String id, String itemType, String product, boolean ifWithCreate) throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "productsOwned", null, true, ADD);
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "productsOwned", new AttributeValue(product), false, ADD);
+        }
+    }
+
+    public static DatabaseAction updateRemoveProductOwned(String id, String itemType, String product) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(itemType, id), "productsOwned", new AttributeValue(product), false, DELETE);
+    }
 }

@@ -60,6 +60,8 @@ public interface DatabaseItemFactory {
                 return new Enterprise(item);
             case Deal:
                 return new Deal(item);
+            case Product:
+                return new Product(item);
             default:
                 throw new ItemTypeNotRecognizedException("Item type = " + itemType + " not implemented in DatabaseItemBuilder");
         }

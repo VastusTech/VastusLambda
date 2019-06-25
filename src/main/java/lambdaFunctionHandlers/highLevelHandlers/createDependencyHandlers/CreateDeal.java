@@ -19,7 +19,7 @@ public class CreateDeal {
         if (createDealRequest != null) {
             // Create client
             if (createDealRequest.sponsor == null || createDealRequest.productName == null ||
-                    createDealRequest.productCreditPrice == null) {
+                    createDealRequest.productCreditPrice == null || createDealRequest.productType == null) {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 

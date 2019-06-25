@@ -12,6 +12,9 @@ import java.util.Set;
 
 import main.java.databaseOperations.exceptions.CorruptedItemException;
 
+/**
+ * TODO
+ */
 public class Deal extends DatabaseObject {
     public String sponsor;
     public String productName;
@@ -21,6 +24,8 @@ public class Deal extends DatabaseObject {
     public TimeInterval validTime;
     public String productStoreLink;
     public int quantity;
+    public ProductType productType;
+    public Set<String> productsSold;
 
     /**
      * The main constructor for the Deal class, instantiating the object from the database.
@@ -42,6 +47,9 @@ public class Deal extends DatabaseObject {
         this.productStoreLink = item.getString("productStoreLink");
         if (item.get("quantity") == null) { quantity = -1; }
         else { quantity = Integer.parseInt(item.getString("quantity")); }
+        this.productType = ProductType.valueOf(item.getString("productType"));
+        this.productsSold = item.getStringSet("productsSold");
+        if (productsSold == null) { productsSold = new HashSet<>(); }
     }
 
     /**
@@ -77,13 +85,19 @@ public class Deal extends DatabaseObject {
     @Override
     protected List<Object> getObjectFieldsList() {
         List<Object> list = super.getObjectFieldsList();
-        list.addAll(Arrays.asList(productImagePaths, validTime));
+        list.addAll(Arrays.asList(productImagePaths, validTime, productsSold));
         return list;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), sponsor, productName, productImagePath,
-                productCreditPrice, productStoreLink, quantity);
+                productCreditPrice, productStoreLink, quantity, productType);
+    }
+
+    public enum ProductType {
+        coupon,
+        electronic,
+        physical,
     }
 }

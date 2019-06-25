@@ -49,6 +49,7 @@ public class LambdaRequest {
     private CreateStreakRequest createStreakRequest;
     private CreateEnterpriseRequest createEnterpriseRequest;
     private CreateDealRequest createDealRequest;
+    private CreateProductRequest createProductRequest;
 
     /**
      * The values for an action to do for a single Lambda request.
@@ -472,6 +473,13 @@ public class LambdaRequest {
                     throw new Exception("No field inside Create Deal Request can be empty string!");
                 }
             }
+            if (createProductRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create product request!\n");
+                if (createProductRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Product Request can be empty string!");
+                }
+            }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
@@ -544,6 +552,9 @@ public class LambdaRequest {
                     break;
                 case Deal:
                     compilers = CreateDeal.getCompilers(fromID, createDealRequest, 0);
+                    break;
+                case Product:
+                    compilers = CreateProduct.getCompilers(fromID, createProductRequest, 0);
                     break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
@@ -1368,21 +1379,22 @@ public class LambdaRequest {
     /**
      * Handles a PROCESS action for the given item and configurations.
      *
+     * TODO Delete this if I can't think of anything else to use it for...
+     *
      * @throws Exception If anything goes wrong in process.
      */
     private void handleProcess(String id) throws Exception {
         SingletonTimer.get().endAndPushCheckpoint("Init compiler for Process");
-        List<DatabaseActionCompiler> compilers = new ArrayList<>();
-        DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
+//        List<DatabaseActionCompiler> compilers = new ArrayList<>();
+//        DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
         switch (specifyAction) {
             case "buy":
-                databaseActionCompiler.addAll(UserBuyDeal.getActions(fromID, id, itemType, secondaryIdentifier));
-                break;
+                throw new Exception("Create a Product to buy a Deal!");
             default:
                 throw new Exception("Specify Action: " + specifyAction + " not recognized!");
         }
-        compilers.add(databaseActionCompiler);
-        DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
+//        compilers.add(databaseActionCompiler);
+//        DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
     }
 
     /**
@@ -1445,6 +1457,9 @@ public class LambdaRequest {
                 case Deal:
                     databaseActionCompiler.addAll(DeleteDeal.getActions(fromID, id));
                     break;
+                case Product:
+                    databaseActionCompiler.addAll(DeleteProduct.getActions(fromID, id));
+                    break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -1471,7 +1486,7 @@ public class LambdaRequest {
                          CreateGroupRequest createGroupRequest, CreateCommentRequest createCommentRequest,
                          CreateSponsorRequest createSponsorRequest, CreateMessageRequest createMessageRequest,
                          CreateStreakRequest createStreakRequest, CreateEnterpriseRequest createEnterpriseRequest,
-                         CreateDealRequest createDealRequest) {
+                         CreateDealRequest createDealRequest, CreateProductRequest createProductRequest) {
         this.fromID = fromID;
         this.action = action;
         this.specifyAction = specifyAction;
@@ -1498,6 +1513,7 @@ public class LambdaRequest {
         this.createStreakRequest = createStreakRequest;
         this.createEnterpriseRequest = createEnterpriseRequest;
         this.createDealRequest = createDealRequest;
+        this.createProductRequest = createProductRequest;
     }
 
     public LambdaRequest() {}
@@ -1708,5 +1724,13 @@ public class LambdaRequest {
 
     public void setCreateDealRequest(CreateDealRequest createDealRequest) {
         this.createDealRequest = createDealRequest;
+    }
+
+    public CreateProductRequest getCreateProductRequest() {
+        return createProductRequest;
+    }
+
+    public void setCreateProductRequest(CreateProductRequest createProductRequest) {
+        this.createProductRequest = createProductRequest;
     }
 }
