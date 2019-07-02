@@ -15,13 +15,13 @@ public class CreateDealRequest extends CreateObjectRequest {
     // Optional
     public String productImagePath;
     public String[] productImagePaths;
-    public String validTime;
+    public String validUntil;
     public String productStoreLink;
     public String quantity;
 
     public CreateDealRequest(String sponsor, String productName, String productCreditPrice,
                              String productType, String quantity, String productImagePath,
-                             String[] productImagePaths, String validTime, String productStoreLink) {
+                             String[] productImagePaths, String validUntil, String productStoreLink) {
         this.sponsor = sponsor;
         this.productName = productName;
         this.productCreditPrice = productCreditPrice;
@@ -29,7 +29,7 @@ public class CreateDealRequest extends CreateObjectRequest {
         this.quantity = quantity;
         this.productImagePath = productImagePath;
         this.productImagePaths = productImagePaths;
-        this.validTime = validTime;
+        this.validUntil = validUntil;
         this.productStoreLink = productStoreLink;
     }
 
@@ -38,7 +38,7 @@ public class CreateDealRequest extends CreateObjectRequest {
     @Override
     public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
         return hasEmptyString(sponsor, productName, productCreditPrice, quantity,
-                productImagePath, validTime, productStoreLink, productType) || arrayHasEmptyString(
+                productImagePath, validUntil, productStoreLink, productType) || arrayHasEmptyString(
                         productImagePaths);
     }
 
@@ -90,12 +90,12 @@ public class CreateDealRequest extends CreateObjectRequest {
         this.productImagePaths = productImagePaths;
     }
 
-    public String getValidTime() {
-        return validTime;
+    public String getValidUntil() {
+        return validUntil;
     }
 
-    public void setValidTime(String validTime) {
-        this.validTime = validTime;
+    public void setValidUntil(String validUntil) {
+        this.validUntil = validUntil;
     }
 
     public String getProductStoreLink() {

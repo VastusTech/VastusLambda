@@ -7,6 +7,7 @@ import main.java.databaseObjects.Deal;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.DealDatabaseActionBuilder;
 import main.java.logic.Constants;
+import main.java.logic.TimeHelper;
 
 /**
  * Buys a Deal from a Sponsor to a User and handles all credit payments involved.
@@ -22,7 +23,7 @@ public class UserBuyDeal {
 
         Deal deal = Deal.readDeal(dealID);
 
-        if (deal.validTime != null && !deal.validTime.nowIsWithin()) {
+        if (deal.validUntil == null || TimeHelper.timeHasPassed(deal.validUntil)) {
             throw new Exception("Time to buy the deal has already passed or has not started yet!");
         }
 

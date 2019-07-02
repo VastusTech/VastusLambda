@@ -270,8 +270,8 @@ public class ChallengeDatabaseActionBuilder {
                     }
                     else {
                         return "The challenge due date must have passed before declaring a winner!!!\n" +
-                                "Challenge endTime = " + challenge.endTime.toString() + ". Now time = " +
-                                (new DateTime()).toString() + ".";
+                                "Challenge endTime = " + TimeHelper.isoString(challenge.endTime) + ". Now time = " +
+                                TimeHelper.nowString() + ".";
                     }
                 }
                 else {

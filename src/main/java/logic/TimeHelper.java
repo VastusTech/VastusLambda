@@ -1,6 +1,7 @@
 package main.java.logic;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 import org.joda.time.Hours;
 import org.joda.time.Months;
@@ -206,7 +207,7 @@ public class TimeHelper {
      * @return The properly formatted ISO 8601 time string.
      */
     public static String isoString(DateTime dateTime) {
-        return dateTime.toString();
+        return dateTime.withZone(DateTimeZone.UTC).toString();
     }
 
     /**

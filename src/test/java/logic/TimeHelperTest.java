@@ -1,6 +1,7 @@
 package test.java.logic;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Test;
 
 import main.java.logic.TimeHelper;
@@ -76,5 +77,16 @@ public class TimeHelperTest {
         DateTime from = new DateTime(2019, 12, 31, 23, 59);
         DateTime to = new DateTime(2020, 1, 1, 0, 0);
         assertEquals(1, TimeHelper.firstDatesOfYearBetween(from, to));
+    }
+
+    // =============================================================================================
+    // ==                                  ISO String Methods                                     ==
+    // =============================================================================================
+
+    @Test
+    public void testIsoString() {
+        assertEquals("2019-10-05T23:00:00.000Z", TimeHelper.isoString(new DateTime(
+                2019, 10, 5, 23, 0, 0, DateTimeZone.UTC
+        )));
     }
 }

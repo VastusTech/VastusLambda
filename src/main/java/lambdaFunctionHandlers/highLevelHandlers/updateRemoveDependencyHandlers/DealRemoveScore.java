@@ -1,4 +1,4 @@
-package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
+package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.DealDatabaseActionBuilder;
 import main.java.logic.Constants;
 
-public class DealUpdateValidTime {
-    public static List<DatabaseAction> getActions(String fromID, String dealID, String validTime) throws
+public class DealRemoveScore {
+    public static List<DatabaseAction> getActions(String fromID, String dealID, String score) throws
             Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
@@ -17,11 +17,10 @@ public class DealUpdateValidTime {
             throw new Exception("PERMISSIONS ERROR: You can only update a deal that you own!");
         }
 
-
-        // TODO Check that the time is also bueno
+        // TODO CHECK ECH KECH quantity
 
         // Get all the actions for this process
-        databaseActions.add(DealDatabaseActionBuilder.updateValidTime(dealID, validTime));
+        databaseActions.add(DealDatabaseActionBuilder.updateRemoveScore(dealID, Integer.parseInt(score)));
 
         return databaseActions;
     }

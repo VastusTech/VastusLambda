@@ -152,6 +152,8 @@ public class LambdaRequest {
         picturePaths,
         videoPaths,
         likes,
+        // Submission ======================
+        approved,
         // Group ===========================
         owners,
         // Comment =========================
@@ -166,9 +168,10 @@ public class LambdaRequest {
         productCreditPrice,
         productImagePath,
         productImagePaths,
-        validTime,
+        validUntil,
         productStoreLink,
         quantity,
+        score,
     }
 
     /**
@@ -911,6 +914,14 @@ public class LambdaRequest {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
+                case approved:
+                    if (itemType.equals("Submission")) {
+                        databaseActionCompiler.addAll(SubmissionApprove.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
                 case comment:
                     if (itemType.equals("Comment")) {
                         databaseActionCompiler.addAll(CommentUpdateComment.getActions(fromID, id, attributeValue));
@@ -951,9 +962,9 @@ public class LambdaRequest {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
-                case validTime:
+                case validUntil:
                     if (itemType.equals("Deal")) {
-                        databaseActionCompiler.addAll(DealUpdateValidTime.getActions(fromID, id, attributeValue));
+                        databaseActionCompiler.addAll(DealUpdateValidUntil.getActions(fromID, id, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
@@ -962,6 +973,14 @@ public class LambdaRequest {
                 case quantity:
                     if (itemType.equals("Deal")) {
                         databaseActionCompiler.addAll(DealUpdateQuantity.getActions(fromID, id, attributeValue));
+                    }
+                    else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
+                    }
+                    break;
+                case score:
+                    if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateScore.getActions(fromID, id, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");

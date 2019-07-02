@@ -48,8 +48,8 @@ public class DealDatabaseActionBuilder {
                 AttributeValue(createDealRequest.productImagePath)); }
         if (createDealRequest.productImagePaths != null) { item.put("productImagePaths",
                 new AttributeValue(Arrays.asList(createDealRequest.productImagePaths))); }
-        if (createDealRequest.validTime != null) { item.put("validTime", new AttributeValue(
-                createDealRequest.validTime)); }
+        if (createDealRequest.validUntil != null) { item.put("validUntil", new AttributeValue(
+                createDealRequest.validUntil)); }
         return new CreateDatabaseAction(itemType, item, passoverIdentifiers,
                 (Map<String, AttributeValue> createdItem, String id) -> {
                     if (createDealRequest.productImagePath != null) {
@@ -88,8 +88,8 @@ public class DealDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "productCreditPrice", new AttributeValue(Integer.toString(productCreditPrice)), false, PUT);
     }
 
-    public static DatabaseAction updateValidTime(String id, String validTime) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "validTime", new AttributeValue(validTime), false, PUT);
+    public static DatabaseAction updateValidUntil(String id, String validUntil) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "validUntil", new AttributeValue(validUntil), false, PUT);
     }
 
     public static DatabaseAction updateProductStoreLink(String id, String productStoreLink) throws Exception {
@@ -124,6 +124,18 @@ public class DealDatabaseActionBuilder {
 
     public static DatabaseAction updateRemoveProductSold(String id, String product) throws Exception {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "productsSold", new AttributeValue(product), false, DELETE);
+    }
+
+    public static DatabaseAction updateSetScore(String id, int score) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "score", new AttributeValue().withN(Integer.toString(score)), false, PUT);
+    }
+
+    public static DatabaseAction updateAddScore(String id, int score) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "score", new AttributeValue().withN(Integer.toString(score)), false, ADD);
+    }
+
+    public static DatabaseAction updateRemoveScore(String id, int score) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "score", new AttributeValue().withN(Integer.toString(-score)), false, ADD);
     }
 
     public static DatabaseAction delete(String id) {

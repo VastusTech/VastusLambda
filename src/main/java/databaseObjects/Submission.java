@@ -24,6 +24,7 @@ public class Submission extends DatabaseObject {
     public Set<String> videoPaths;
     public Set<String> likes;
     public Set<String> comments;
+    public boolean approved;
 
     /**
      * The main constructor for the Submission class, instantiating the object from the database.
@@ -47,6 +48,8 @@ public class Submission extends DatabaseObject {
         if (likes == null) { this.likes = new HashSet<>(); }
         this.comments = item.getStringSet("comments");
         if (comments == null) { this.comments = new HashSet<>(); }
+        if (item.get("approved") == null) { approved = false; }
+        else { approved = Boolean.parseBoolean(item.getString("approved")); }
     }
 
     /**
@@ -57,6 +60,7 @@ public class Submission extends DatabaseObject {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Submission"));
+        item.put("approved", new AttributeValue("false"));
         return item;
     }
 
@@ -88,6 +92,6 @@ public class Submission extends DatabaseObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), by, about, description);
+        return Objects.hash(super.hashCode(), by, about, description, approved);
     }
 }

@@ -12,6 +12,9 @@ public class Constants {
     // THIS GETS IT FROM THE ENVIRONMENTAL VARIABLES FROM AWS LAMBDA (with encryption ;))
     public static boolean ifTesting = false;
 
+    public static int tokenCreditValue = Integer.parseInt(Optional.ofNullable(System.getenv(
+            "tokenCreditValue")).orElse("1000"));
+
     private static LambdaLogger logger = null;
     public static boolean ifDebug = Boolean.parseBoolean(Optional.ofNullable(
             System.getenv("ifDebug")).orElse("false"));

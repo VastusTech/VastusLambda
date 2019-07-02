@@ -105,6 +105,10 @@ public class SubmissionDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "comments", new AttributeValue(comment), false, DELETE);
     }
 
+    public static DatabaseAction updateApproved(String id, boolean approved) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "approved", new AttributeValue(Boolean.toString(approved)), false, PUT);
+    }
+
     public static DatabaseAction delete(String id) {
         return new DeleteDatabaseAction(id, itemType, getPrimaryKey(id));
     }

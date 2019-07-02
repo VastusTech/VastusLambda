@@ -3,6 +3,8 @@ package main.java.databaseObjects;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
+import org.joda.time.DateTime;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.Set;
 import main.java.databaseOperations.exceptions.CorruptedItemException;
 
 /**
- * TODO
+ * Represents a Deal that a Sponsor is offering in exchange for credits.
  */
 public class Deal extends DatabaseObject {
     public String sponsor;
@@ -21,11 +23,12 @@ public class Deal extends DatabaseObject {
     public String productImagePath;
     public Set<String> productImagePaths;
     public int productCreditPrice;
-    public TimeInterval validTime;
+    public DateTime validUntil;
     public String productStoreLink;
     public int quantity;
     public ProductType productType;
     public Set<String> productsSold;
+    public int score;
 
     /**
      * The main constructor for the Deal class, instantiating the object from the database.
@@ -42,14 +45,16 @@ public class Deal extends DatabaseObject {
         this.productImagePaths = item.getStringSet("productImagePaths");
         if (productImagePaths == null) { productImagePaths = new HashSet<>(); }
         this.productCreditPrice = Integer.parseInt(item.getString("productCreditPrice"));
-        if (item.get("validTime") == null) { validTime = null; }
-        else { validTime = new TimeInterval(item.getString("validTime")); }
+        if (item.get("validUntil") == null) { validUntil = null; }
+        else { validUntil = new DateTime(item.getString("validUntil")); }
         this.productStoreLink = item.getString("productStoreLink");
-        if (item.get("quantity") == null) { quantity = -1; }
+        if (item.getNumber("quantity") == null) { quantity = -1; }
         else { quantity = Integer.parseInt(item.getString("quantity")); }
         this.productType = ProductType.valueOf(item.getString("productType"));
         this.productsSold = item.getStringSet("productsSold");
         if (productsSold == null) { productsSold = new HashSet<>(); }
+        if (item.getNumber("score") == null) { score = -1; }
+        else { this.score = item.getNumber("score").intValueExact(); }
     }
 
     /**
@@ -85,14 +90,14 @@ public class Deal extends DatabaseObject {
     @Override
     protected List<Object> getObjectFieldsList() {
         List<Object> list = super.getObjectFieldsList();
-        list.addAll(Arrays.asList(productImagePaths, validTime, productsSold));
+        list.addAll(Arrays.asList(productImagePaths, validUntil, productsSold));
         return list;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), sponsor, productName, productImagePath,
-                productCreditPrice, productStoreLink, quantity, productType);
+                productCreditPrice, productStoreLink, quantity, productType, score);
     }
 
     public enum ProductType {

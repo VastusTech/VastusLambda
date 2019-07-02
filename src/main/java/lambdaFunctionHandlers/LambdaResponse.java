@@ -4,6 +4,8 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
+import main.java.logic.TimeHelper;
+
 /**
  * The POJO for the response from the Lambda invocation.
  */
@@ -19,7 +21,7 @@ public class LambdaResponse {
      * @param data The data to return to the client.
      */
     public LambdaResponse(Object data) {
-        timestamp = new DateTime().toString(DateTimeFormat.fullDateTime());
+        timestamp = TimeHelper.nowString();
         this.data = data;
     }
 

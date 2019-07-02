@@ -38,8 +38,8 @@ public class DeleteWorkout {
         // remove from trainer's scheduled and completed workout times
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledWorkout(workout.trainer, "Trainer",
                 workoutID));
-        databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledTime(workout.trainer, "Trainer", workout
-                .time.toString()));
+        databaseActions.add(UserDatabaseActionBuilder.updateRemoveScheduledTime(workout.trainer,
+                "Trainer", workout.time.toString()));
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveCompletedWorkout(workout.trainer, "Trainer",
                 workoutID));
 
