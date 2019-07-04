@@ -13,6 +13,7 @@ public class CreateDealRequest extends CreateObjectRequest {
     public String productType;
 
     // Optional
+    public String description;
     public String productImagePath;
     public String[] productImagePaths;
     public String validUntil;
@@ -20,13 +21,15 @@ public class CreateDealRequest extends CreateObjectRequest {
     public String quantity;
 
     public CreateDealRequest(String sponsor, String productName, String productCreditPrice,
-                             String productType, String quantity, String productImagePath,
-                             String[] productImagePaths, String validUntil, String productStoreLink) {
+                             String productType, String quantity, String description,
+                             String productImagePath, String[] productImagePaths, String validUntil,
+                             String productStoreLink) {
         this.sponsor = sponsor;
         this.productName = productName;
         this.productCreditPrice = productCreditPrice;
         this.productType = productType;
         this.quantity = quantity;
+        this.description = description;
         this.productImagePath = productImagePath;
         this.productImagePaths = productImagePaths;
         this.validUntil = validUntil;
@@ -37,7 +40,7 @@ public class CreateDealRequest extends CreateObjectRequest {
 
     @Override
     public boolean ifHasEmptyString() throws ExceedsDatabaseLimitException {
-        return hasEmptyString(sponsor, productName, productCreditPrice, quantity,
+        return hasEmptyString(sponsor, productName, productCreditPrice, quantity, description,
                 productImagePath, validUntil, productStoreLink, productType) || arrayHasEmptyString(
                         productImagePaths);
     }
@@ -64,6 +67,22 @@ public class CreateDealRequest extends CreateObjectRequest {
 
     public void setProductCreditPrice(String productCreditPrice) {
         this.productCreditPrice = productCreditPrice;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getProductImagePath() {

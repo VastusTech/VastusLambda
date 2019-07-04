@@ -42,6 +42,8 @@ public class DealDatabaseActionBuilder {
         item.put("productName", new AttributeValue(createDealRequest.productName));
         item.put("productCreditPrice", new AttributeValue(createDealRequest.productCreditPrice));
         item.put("productType", new AttributeValue(createDealRequest.productType));
+        if (createDealRequest.description != null) { item.put("description",
+                new AttributeValue(createDealRequest.description)); }
         if (createDealRequest.quantity != null) { item.put("quantity",
                 new AttributeValue(createDealRequest.quantity)); }
         if (createDealRequest.productImagePath != null) { item.put("productImagePath", new
@@ -86,6 +88,10 @@ public class DealDatabaseActionBuilder {
 
     public static DatabaseAction updateSetProductCreditPrice(String id, int productCreditPrice) throws Exception {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "productCreditPrice", new AttributeValue(Integer.toString(productCreditPrice)), false, PUT);
+    }
+
+    public static DatabaseAction updateDescription(String id, String description) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "description", new AttributeValue(description), false, PUT);
     }
 
     public static DatabaseAction updateValidUntil(String id, String validUntil) throws Exception {

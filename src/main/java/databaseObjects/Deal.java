@@ -23,6 +23,7 @@ public class Deal extends DatabaseObject {
     public String productImagePath;
     public Set<String> productImagePaths;
     public int productCreditPrice;
+    public String description;
     public DateTime validUntil;
     public String productStoreLink;
     public int quantity;
@@ -45,6 +46,7 @@ public class Deal extends DatabaseObject {
         this.productImagePaths = item.getStringSet("productImagePaths");
         if (productImagePaths == null) { productImagePaths = new HashSet<>(); }
         this.productCreditPrice = Integer.parseInt(item.getString("productCreditPrice"));
+        this.description = item.getString("description");
         if (item.get("validUntil") == null) { validUntil = null; }
         else { validUntil = new DateTime(item.getString("validUntil")); }
         this.productStoreLink = item.getString("productStoreLink");
@@ -97,7 +99,7 @@ public class Deal extends DatabaseObject {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), sponsor, productName, productImagePath,
-                productCreditPrice, productStoreLink, quantity, productType, score);
+                productCreditPrice, description, productStoreLink, quantity, productType, score);
     }
 
     public enum ProductType {

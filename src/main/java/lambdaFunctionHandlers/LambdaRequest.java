@@ -804,6 +804,9 @@ public class LambdaRequest {
                     else if (itemType.equals("Group")) {
                         databaseActionCompiler.addAll(GroupUpdateDescription.getActions(fromID, id, attributeValue));
                     }
+                    else if (itemType.equals("Deal")) {
+                        databaseActionCompiler.addAll(DealUpdateDescription.getActions(fromID, id, attributeValue));
+                    }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
