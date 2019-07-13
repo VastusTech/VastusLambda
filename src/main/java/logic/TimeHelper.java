@@ -25,6 +25,16 @@ public class TimeHelper {
     }
 
     /**
+     * Returns the now {@link DateTime} object for the specified time zone.
+     *
+     * @param zone The time zone to receive the now time for.
+     * @return The {@link DateTime} representing right now in the specified time zone.
+     */
+    public static DateTime now(DateTimeZone zone) {
+        return now().withZone(zone);
+    }
+
+    /**
      * Finds how many 0 minute marks are in the "from" and the "to" variable interval.
      *
      * @param from The {@link DateTime} object indicating the beginning of the interval.

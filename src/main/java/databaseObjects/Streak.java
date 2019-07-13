@@ -99,6 +99,85 @@ public class Streak extends DatabaseObject {
         return (Streak) read(getTableName(), getPrimaryKey("Streak", id));
     }
 
+    // Streak logic Helper methods
+
+    /**
+     * If the Streak has been started yet and has been contributed to yet.
+     *
+     * @return Whether this Streak has been started yet.
+     */
+    public boolean hasStarted() {
+        return currentN != 0;
+    }
+
+    public boolean hasExpired(DateTime now) throws Exception {
+        return hasExpired(updateSpansPassed(now));
+    }
+
+    public boolean hasExpired(int updateSpansPassed) {
+        // If the update spans have passed or the previous attempt had failed, then it is expired.
+        return updateSpansPassed >= 2 * updateInterval
+                || (updateSpansPassed >= updateInterval && currentN < streakN);
+    }
+
+    public boolean isInNewSpan(DateTime now) throws Exception {
+        return isInNewSpan(updateSpansPassed(now));
+    }
+
+    public boolean isInNewSpan(int updateSpansPassed) {
+        return updateSpansPassed >= updateInterval;
+    }
+
+    /**
+     * Returns the number of full update spans (which define cycles of the Streak) between the
+     * last attempt started and now.
+     *
+     * @param now The {@link DateTime} object which indicates what the method considers now.
+     * @return The number of full update spans that have passed.
+     * @throws Exception If the Streak's span type is unhandled.
+     */
+    public int updateSpansPassed(DateTime now) throws Exception {
+        if (!hasStarted()) {
+            // Freshly started so it is expired from the gecko
+            return 2 * updateInterval;
+        }
+        switch (updateSpanType) {
+            case hourly:
+                return TimeHelper.hourStartsBetween(lastAttemptStarted, now);
+            case daily:
+                return TimeHelper.midnightsBetween(lastAttemptStarted, now);
+            case weekly:
+                return TimeHelper.mondaysBetween(lastAttemptStarted, now);
+            case monthly:
+                return TimeHelper.firstDatesOfMonthBetween(lastAttemptStarted, now);
+            case yearly:
+                return TimeHelper.firstDatesOfYearBetween(lastAttemptStarted, now);
+            default:
+                throw new Exception("Unhandled streak span type!");
+        }
+    }
+
+    public DateTime getNextAttemptStarted() throws Exception {
+        // We need to spoof the next attempt started so that it actually indicates the
+        // beginning of the time interval that it is started in. This is for multiple
+        // spanned Streaks and for multiple sub task Streaks. This way, someone cannot
+        // complete the first task late and give themselves extra time.
+        switch (updateSpanType) {
+            case hourly:
+                return TimeHelper.hoursAfter(lastAttemptStarted, updateInterval);
+            case daily:
+                return TimeHelper.daysAfter(lastAttemptStarted, updateInterval);
+            case weekly:
+                return TimeHelper.weeksAfter(lastAttemptStarted, updateInterval);
+            case monthly:
+                return TimeHelper.monthsAfter(lastAttemptStarted, updateInterval);
+            case yearly:
+                return TimeHelper.yearsAfter(lastAttemptStarted, updateInterval);
+            default:
+                throw new Exception("Unhandled streak span type!");
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Streak) && obj.hashCode() == hashCode()
@@ -118,10 +197,23 @@ public class Streak extends DatabaseObject {
     }
 
     /**
+     * The values that indicate at what state the Streak object is currently at. Depends on the
+     * current time and when the User updated it.
+     */
+    public enum StreakState {
+        notStarted,
+        completed,
+        stillCompleting,
+        notCompleted,
+        expired,
+    }
+
+    /**
      * The values that indicate what kind of a Streak a specific Streak object is.
      */
     public enum StreakType {
-        submission
+        submission,
+        coinage,
     }
 
     /**

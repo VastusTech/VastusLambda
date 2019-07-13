@@ -25,81 +25,28 @@ public class StreakAddN {
             throw new Exception("PERMISSIONS ERROR: You can only update a streak as yourself!");
         }
 
-        // Update the streak
-        // If you still have a streak and it is still valid, update the N and the
-
-        int currentN = streak.currentN;
+        // Get the information for how long has passed since the User contributed to the Streak.
+        int numSpansPassed = streak.updateSpansPassed(now);
         int streakN = streak.streakN;
-        int numSpansPassed;
-        if (currentN == 0) {
-            // Freshly started so it is expired from the gecko
-            numSpansPassed = 2 * streak.updateInterval;
-        }
-        else {
-            switch (streak.updateSpanType) {
-                case hourly:
-                    numSpansPassed = TimeHelper.hourStartsBetween(streak.lastAttemptStarted, now);
-                    break;
-                case daily:
-                    numSpansPassed = TimeHelper.midnightsBetween(streak.lastAttemptStarted, now);
-                    break;
-                case weekly:
-                    numSpansPassed = TimeHelper.mondaysBetween(streak.lastAttemptStarted, now);
-                    break;
-                case monthly:
-                    numSpansPassed = TimeHelper.firstDatesOfMonthBetween(streak.lastAttemptStarted, now);
-                    break;
-                case yearly:
-                    numSpansPassed = TimeHelper.firstDatesOfYearBetween(streak.lastAttemptStarted, now);
-                    break;
-                default:
-                    throw new Exception("Unhandled streak span type!");
-            }
-        }
+        int currentN = streak.currentN;
 
         // We update the last updated, to show that we've just updated it now.
         databaseActions.add(StreakDatabaseActionBuilder.updateLastUpdated(streakID,
                 TimeHelper.isoString(now)));
 
-        // If either the streak update interval has passed or the last attempt failed, it can't update
-        if (numSpansPassed < 2 * streak.updateInterval && !(numSpansPassed >= streak.updateInterval && currentN < streak.streakN)) {
+        // If the Streak has expired, then it can't update
+        if (!streak.hasExpired(numSpansPassed)) {
             // Then the current streak is still viable
-            if (numSpansPassed >= streak.updateInterval) {
+            if (streak.isInNewSpan(numSpansPassed)) {
                 // Then this is also in a new span, so we reset currentN
                 currentN = 0;
 
-                // We need to spoof the next attempt started so that it actually indicates the
-                // beginning of the time interval that it is started in. This is for multiple
-                // spanned Streaks and for multiple sub task Streaks. This way, someone cannot
-                // complete the first task late and give themselves extra time.
-                DateTime attemptStarted = streak.lastAttemptStarted;
-                DateTime spoofNextAttemptStarted;
-                int interval = streak.updateInterval;
-                switch (streak.updateSpanType) {
-                    case hourly:
-                        spoofNextAttemptStarted = TimeHelper.hoursAfter(attemptStarted, interval);
-                        break;
-                    case daily:
-                        spoofNextAttemptStarted = TimeHelper.daysAfter(attemptStarted, interval);
-                        break;
-                    case weekly:
-                        spoofNextAttemptStarted = TimeHelper.weeksAfter(attemptStarted, interval);
-                        break;
-                    case monthly:
-                        spoofNextAttemptStarted = TimeHelper.monthsAfter(attemptStarted, interval);
-                        break;
-                    case yearly:
-                        spoofNextAttemptStarted = TimeHelper.yearsAfter(attemptStarted, interval);
-                        break;
-                    default:
-                        throw new Exception("Unhandled streak span type!");
-                }
-
                 // The new attempt was started, so update the last attempt started value
                 databaseActions.add(StreakDatabaseActionBuilder.updateLastAttemptStarted(streakID,
-                        TimeHelper.isoString(spoofNextAttemptStarted)));
+                        TimeHelper.isoString(streak.getNextAttemptStarted())));
             }
-            // Then we check to see if the currentN is where it needs to be to update the N.
+
+            // Check to see if the currentN is where it needs to be to update the N.
             if (currentN + 1 == streak.streakN) {
                 // Then, we know that the streak has been accomplished and can be updated.
                 databaseActions.add(StreakDatabaseActionBuilder.updateAddN(streakID));

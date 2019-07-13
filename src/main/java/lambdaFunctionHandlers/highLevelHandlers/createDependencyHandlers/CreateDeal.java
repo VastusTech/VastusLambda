@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.java.databaseObjects.Deal;
+import main.java.databaseObjects.Sponsor;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.databaseActionBuilders.DealDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.SponsorDatabaseActionBuilder;
@@ -18,8 +19,8 @@ public class CreateDeal {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateDealRequest createDealRequest, int depth) throws Exception {
         if (createDealRequest != null) {
             // Create client
-            if (createDealRequest.sponsor == null || createDealRequest.productName == null ||
-                    createDealRequest.productCreditPrice == null || createDealRequest.productType == null) {
+            if (createDealRequest.sponsor != null && createDealRequest.productName != null &&
+                    createDealRequest.productCreditPrice != null && createDealRequest.productType != null) {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
@@ -29,6 +30,7 @@ public class CreateDeal {
 
                 // TODO Check that the quantity is not less than zero and also the other integer things now that I think about it lol
                 // TODO quantity can also be null
+                Sponsor.readSponsor(createDealRequest.sponsor);
 
                 // Create the object
                 if (depth == 0) {

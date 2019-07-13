@@ -23,6 +23,8 @@ public class UserAddNewCredit {
         // TODO Come up with an algorithm in which more people in the challenge will increase the
         // TODO amount of credit given?
 
+
+
         databaseActions.add(UserDatabaseActionBuilder.updateAddCredit(userID, itemType, creditAmount));
 
         return databaseActions;

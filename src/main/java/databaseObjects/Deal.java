@@ -26,8 +26,8 @@ public class Deal extends DatabaseObject {
     public String description;
     public DateTime validUntil;
     public String productStoreLink;
-    public int quantity;
     public ProductType productType;
+    public Set<String> products;
     public Set<String> productsSold;
     public int score;
 
@@ -50,9 +50,9 @@ public class Deal extends DatabaseObject {
         if (item.get("validUntil") == null) { validUntil = null; }
         else { validUntil = new DateTime(item.getString("validUntil")); }
         this.productStoreLink = item.getString("productStoreLink");
-        if (item.getNumber("quantity") == null) { quantity = -1; }
-        else { quantity = Integer.parseInt(item.getString("quantity")); }
         this.productType = ProductType.valueOf(item.getString("productType"));
+        this.products = item.getStringSet("products");
+        if (products == null) { products = new HashSet<>(); }
         this.productsSold = item.getStringSet("productsSold");
         if (productsSold == null) { productsSold = new HashSet<>(); }
         if (item.getNumber("score") == null) { score = -1; }
@@ -67,6 +67,7 @@ public class Deal extends DatabaseObject {
     public static Map<String, AttributeValue> getEmptyItem() {
         Map<String, AttributeValue> item = DatabaseObject.getEmptyItem();
         item.put("item_type", new AttributeValue("Deal"));
+        item.put("quantity", new AttributeValue().withN("-1"));
         return item;
     }
 
@@ -92,14 +93,14 @@ public class Deal extends DatabaseObject {
     @Override
     protected List<Object> getObjectFieldsList() {
         List<Object> list = super.getObjectFieldsList();
-        list.addAll(Arrays.asList(productImagePaths, validUntil, productsSold));
+        list.addAll(Arrays.asList(productImagePaths, validUntil, products, productsSold));
         return list;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), sponsor, productName, productImagePath,
-                productCreditPrice, description, productStoreLink, quantity, productType, score);
+                productCreditPrice, description, productStoreLink, productType, score);
     }
 
     public enum ProductType {

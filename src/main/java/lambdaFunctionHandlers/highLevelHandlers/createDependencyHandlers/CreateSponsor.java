@@ -16,8 +16,8 @@ public class CreateSponsor {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateSponsorRequest createSponsorRequest, int depth) throws Exception {
         if (createSponsorRequest != null) {
             // Create sponsor
-            if (createSponsorRequest.name != null && createSponsorRequest.birthday != null &&
-                    createSponsorRequest.email != null && createSponsorRequest.username != null) {
+            if (createSponsorRequest.name != null && createSponsorRequest.email != null
+                    && createSponsorRequest.username != null) {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 

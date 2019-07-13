@@ -102,21 +102,17 @@ public class DealDatabaseActionBuilder {
         return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "productStoreLink", new AttributeValue(productStoreLink), false, PUT);
     }
 
-    public static DatabaseAction updateSetQuantity(String id, int quantity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "quantity", new AttributeValue().withN(Integer.toString(quantity)), false, PUT);
+    public static DatabaseAction updateAddProduct(String id, String product, boolean ifWithCreate) throws Exception {
+        if (ifWithCreate) {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "products", null, true, ADD);
+        }
+        else {
+            return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "products", new AttributeValue(product), false, ADD);
+        }
     }
 
-    public static DatabaseAction updateAddQuantity(String id, int addQuantity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "quantity", new AttributeValue().withN(Integer.toString(addQuantity)), false, ADD);
-    }
-
-    public static DatabaseAction updateRemoveQuantity(String id, int subtractQuantity) throws Exception {
-        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "quantity", new AttributeValue().withN(Integer.toString(-subtractQuantity)), false, ADD, (newItem -> {
-            if ((((Deal)newItem).quantity - subtractQuantity) < 0) {
-                return "Not enough quantity in the Deal to perform the transaction!";
-            }
-            return null;
-        }));
+    public static DatabaseAction updateRemoveProduct(String id, String product) throws Exception {
+        return new UpdateDatabaseAction(id, itemType, getPrimaryKey(id), "products", new AttributeValue(product), false, DELETE);
     }
 
     public static DatabaseAction updateAddProductSold(String id, String product, boolean ifWithCreate) throws Exception {

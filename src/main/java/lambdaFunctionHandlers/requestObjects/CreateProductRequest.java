@@ -8,10 +8,10 @@ import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
  */
 public class CreateProductRequest extends CreateObjectRequest {
     // Required
-    public String owner;
     public String deal;
 
     // Optional
+    public String owner;
     public String expirationDate;
     public String[] codes;
     public String[] links;

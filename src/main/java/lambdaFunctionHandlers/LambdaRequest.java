@@ -1,5 +1,7 @@
 package main.java.lambdaFunctionHandlers;
 
+import org.joda.time.DateTimeZone;
+
 import main.java.databaseOperations.exceptions.ExceedsDatabaseLimitException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
@@ -16,6 +18,7 @@ import main.java.lambdaFunctionHandlers.requestObjects.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * This is the main POJO that is called from the lambda. Essentially this becomes the "payload"
@@ -23,6 +26,7 @@ import java.util.List;
  */
 public class LambdaRequest {
     private String fromID;
+    private String fromTimeZone;
     private String action;
     private String specifyAction;
     private String itemType;
@@ -61,7 +65,7 @@ public class LambdaRequest {
         UPDATEADD,
         UPDATEREMOVE,
         DELETE,
-        PROCESS,
+//        PROCESS,
     }
 
     /**
@@ -99,6 +103,7 @@ public class LambdaRequest {
         groups,
         ownedGroups,
         messageBoards,
+        productsOwned,
         // Client ==========================
         trainersFollowing,
         // Trainer =========================
@@ -170,7 +175,7 @@ public class LambdaRequest {
         productImagePaths,
         validUntil,
         productStoreLink,
-        quantity,
+        products,
         score,
     }
 
@@ -278,22 +283,6 @@ public class LambdaRequest {
                         throw new Exception("Specify Action: \"" + specifyAction + "\" not recognized for action \"" +
                                 action + "\" on itemType \"" + itemType + "\" !");
                     }
-                case PROCESS:
-                    if (specifyAction.equals("")) {
-                        // Process the item
-                        if (identifiers.length == 1) {
-                            handleProcess(identifiers[0]);
-                            return null;
-                        }
-                        else {
-                            throw new Exception("There should only be one identifier in a PROCESS statement!");
-                        }
-                    }
-                    else {
-                        // Unacceptable action series
-                        throw new Exception("Specify Action: \"" + specifyAction + "\" not recognized for action \"" +
-                                action + "\" on itemType \"" + itemType + "\" !");
-                    }
                 case DELETE:
                     if (specifyAction.equals("")) {
                         // Delete the item from the database.
@@ -327,7 +316,13 @@ public class LambdaRequest {
      * @throws Exception If there are any problems with the inputs.
      */
     private void checkInputs() throws Exception {
-        // Action, ItemType, SpecifyAction, attributeName
+        // TimeZone, Action, ItemType, SpecifyAction, attributeName
+        try {
+            DateTimeZone.forID(fromTimeZone);
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("From Time Zone not recognized!", e);
+        }
         if (specifyAction == null) {
             specifyAction = "";
         }
@@ -973,14 +968,6 @@ public class LambdaRequest {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
-                case quantity:
-                    if (itemType.equals("Deal")) {
-                        databaseActionCompiler.addAll(DealUpdateQuantity.getActions(fromID, id, attributeValue));
-                    }
-                    else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
-                    }
-                    break;
                 case score:
                     if (itemType.equals("Deal")) {
                         databaseActionCompiler.addAll(DealUpdateScore.getActions(fromID, id, attributeValue));
@@ -1091,6 +1078,15 @@ public class LambdaRequest {
                                 itemType + "!");
                     }
                     break;
+                case productsOwned:
+                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
+                            .equals("Sponsor")) {
+                        databaseActionCompiler.addAll(UserAddProductsOwned.getActions(fromID, id, itemType, attributeValue));
+                    } else {
+                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
+                                itemType + "!");
+                    }
+                    break;
                     // TODO We should make a request system for this too
 //                case ownedGroups:
 //                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
@@ -1194,14 +1190,6 @@ public class LambdaRequest {
                 case productImagePaths:
                     if (itemType.equals("Deal")) {
                         databaseActionCompiler.addAll(DealUpdateAddProductImagePath.getActions(fromID, id, attributeValue));
-                    }
-                    else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
-                    }
-                    break;
-                case quantity:
-                    if (itemType.equals("Deal")) {
-                        databaseActionCompiler.addAll(DealUpdateAddQuantity.getActions(fromID, id, attributeValue));
                     }
                     else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
@@ -1378,14 +1366,6 @@ public class LambdaRequest {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
                     }
                     break;
-                case quantity:
-                    if (itemType.equals("Deal")) {
-                        databaseActionCompiler.addAll(DealUpdateRemoveQuantity.getActions(fromID, id, attributeValue));
-                    }
-                    else {
-                        throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " + itemType + "!");
-                    }
-                    break;
                 default:
                     throw new Exception("Can't perform an UPDATEREMOVE operation on " + attributeName + "!");
             }
@@ -1396,27 +1376,6 @@ public class LambdaRequest {
 
         compilers.add(databaseActionCompiler);
         DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
-    }
-
-    /**
-     * Handles a PROCESS action for the given item and configurations.
-     *
-     * TODO Delete this if I can't think of anything else to use it for...
-     *
-     * @throws Exception If anything goes wrong in process.
-     */
-    private void handleProcess(String id) throws Exception {
-        SingletonTimer.get().endAndPushCheckpoint("Init compiler for Process");
-//        List<DatabaseActionCompiler> compilers = new ArrayList<>();
-//        DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
-        switch (specifyAction) {
-            case "buy":
-                throw new Exception("Create a Product to buy a Deal!");
-            default:
-                throw new Exception("Specify Action: " + specifyAction + " not recognized!");
-        }
-//        compilers.add(databaseActionCompiler);
-//        DynamoDBHandler.getInstance().attemptTransaction(compilers, ifDevelopment());
     }
 
     /**
@@ -1498,18 +1457,21 @@ public class LambdaRequest {
         return (environmentType != null) && (environmentType.equals("development"));
     }
 
-    public LambdaRequest(String fromID, String action, String specifyAction, String itemType,
-                         String[] identifiers, String attributeName, String secondaryIdentifier,
-                         String[] attributeValues, String environmentType, CreateClientRequest
-                                 createClientRequest, CreateTrainerRequest createTrainerRequest, CreateGymRequest createGymRequest, CreateWorkoutRequest createWorkoutRequest,
-                         CreateReviewRequest createReviewRequest, CreateEventRequest createEventRequest,
-                         CreateChallengeRequest createChallengeRequest, CreateInviteRequest createInviteRequest,
-                         CreatePostRequest createPostRequest, CreateSubmissionRequest createSubmissionRequest,
-                         CreateGroupRequest createGroupRequest, CreateCommentRequest createCommentRequest,
-                         CreateSponsorRequest createSponsorRequest, CreateMessageRequest createMessageRequest,
-                         CreateStreakRequest createStreakRequest, CreateEnterpriseRequest createEnterpriseRequest,
-                         CreateDealRequest createDealRequest, CreateProductRequest createProductRequest) {
+    public LambdaRequest(String fromID, String fromTimeZone, String action, String specifyAction,
+                         String itemType, String[] identifiers, String attributeName,
+                         String secondaryIdentifier, String[] attributeValues,
+                         String environmentType, CreateClientRequest createClientRequest,
+                         CreateTrainerRequest createTrainerRequest, CreateGymRequest createGymRequest,
+                         CreateWorkoutRequest createWorkoutRequest, CreateReviewRequest createReviewRequest,
+                         CreateEventRequest createEventRequest, CreateChallengeRequest createChallengeRequest,
+                         CreateInviteRequest createInviteRequest, CreatePostRequest createPostRequest,
+                         CreateSubmissionRequest createSubmissionRequest, CreateGroupRequest createGroupRequest,
+                         CreateCommentRequest createCommentRequest, CreateSponsorRequest createSponsorRequest,
+                         CreateMessageRequest createMessageRequest, CreateStreakRequest createStreakRequest,
+                         CreateEnterpriseRequest createEnterpriseRequest, CreateDealRequest createDealRequest,
+                         CreateProductRequest createProductRequest) {
         this.fromID = fromID;
+        this.fromTimeZone = fromTimeZone;
         this.action = action;
         this.specifyAction = specifyAction;
         this.itemType = itemType;
@@ -1546,6 +1508,14 @@ public class LambdaRequest {
 
     public void setFromID(String fromID) {
         this.fromID = fromID;
+    }
+
+    public String getFromTimeZone() {
+        return fromTimeZone;
+    }
+
+    public void setFromTimeZone(String fromTimeZone) {
+        this.fromTimeZone = fromTimeZone;
     }
 
     public String getAction() {

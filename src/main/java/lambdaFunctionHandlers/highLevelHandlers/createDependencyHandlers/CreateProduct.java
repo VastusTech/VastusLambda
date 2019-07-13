@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.databaseObjects.Deal;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.databaseActionBuilders.DealDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.ProductDatabaseActionBuilder;
@@ -16,13 +17,16 @@ public class CreateProduct {
     public static List<DatabaseActionCompiler> getCompilers(String fromID, CreateProductRequest createProductRequest, int depth) throws Exception {
         if (createProductRequest != null) {
             // Create client
-            if (createProductRequest.owner == null || createProductRequest.deal == null) {
+            if (createProductRequest.deal != null) {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (!fromID.equals(createProductRequest.owner) && !fromID.equals(Constants.adminKey)) {
                     throw new Exception("PERMISSIONS ERROR: You can only buy Products for yourself!");
                 }
+
+                // TODO Check the attributes
+                Deal.readDeal(createProductRequest.deal);
 
                 // Create the object
                 if (depth == 0) {
@@ -34,11 +38,22 @@ public class CreateProduct {
                     databaseActionCompiler.add(ProductDatabaseActionBuilder.create(createProductRequest, null));
                 }
 
-                databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddProductOwned(createProductRequest.owner,
-                        ItemType.getItemType(createProductRequest.owner), null, true));
-                databaseActionCompiler.add(DealDatabaseActionBuilder.updateAddProductSold(createProductRequest.deal, null, true));
-                databaseActionCompiler.addAll(UserBuyDeal.getActions(fromID, createProductRequest.owner,
-                        ItemType.getItemType(createProductRequest.owner), createProductRequest.deal));
+                if (createProductRequest.owner != null) {
+                    // Then the Product is already owned
+                    String itemType = ItemType.getItemType(createProductRequest.owner);
+                    databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddProductOwned(
+                            createProductRequest.owner,
+                            itemType,
+                            null, true
+                    ));
+                    databaseActionCompiler.add(DealDatabaseActionBuilder.updateAddProductSold(createProductRequest.deal, null, true));
+                    databaseActionCompiler.addAll(UserBuyDeal.getActions(fromID, createProductRequest.owner,
+                            ItemType.getItemType(createProductRequest.owner), createProductRequest.deal));
+                }
+                else {
+                    // Otherwise it is still owned by the deal
+                    databaseActionCompiler.add(DealDatabaseActionBuilder.updateAddProduct(createProductRequest.deal, null, true));
+                }
 
                 compilers.add(databaseActionCompiler);
 

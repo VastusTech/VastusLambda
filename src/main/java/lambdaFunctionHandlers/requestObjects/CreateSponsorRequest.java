@@ -17,7 +17,7 @@ public class CreateSponsorRequest extends CreateObjectRequest {
     public String federatedID;
     public String bio;
 
-    public CreateSponsorRequest(String name, String gender, String birthday, String email, String username,
+    public CreateSponsorRequest(String name, String birthday, String email, String username,
                                 String stripeID, String federatedID, String bio) {
         this.name = name;
         this.birthday = birthday;
