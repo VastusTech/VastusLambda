@@ -62,6 +62,8 @@ public interface DatabaseItemFactory {
                 return new Deal(item);
             case Product:
                 return new Product(item);
+            case Admin:
+                return new Admin(item);
             default:
                 throw new ItemTypeNotRecognizedException("Item type = " + itemType + " not implemented in DatabaseItemBuilder");
         }

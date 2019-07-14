@@ -27,7 +27,8 @@ public enum ItemType {
     Streak,
     Enterprise,
     Deal,
-    Product,;
+    Product,
+    Admin,;
 
     private static Map<String, String> prefixes = new HashMap<String, String>(){{
         for (ItemType itemType : ItemType.values()) {
@@ -68,5 +69,26 @@ public enum ItemType {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Returns whether the given item type is a User item type or not.
+     *
+     * @param itemType The item type to figure whether is a User item type or not.
+     * @return Whether the item type is in the User category.
+     */
+    public static boolean isUser(ItemType itemType) {
+        return itemType == Client || itemType == Trainer || itemType == Gym || itemType == Sponsor
+                || itemType == Admin;
+    }
+
+    /**
+     * Helper method to parse string and figure out if parsed String is a user item type or not.
+     *
+     * @param itemType The string item type to figure whether is a User item type or not.
+     * @return Whether the item type is in the User category.
+     */
+    public static boolean isUser(String itemType) {
+        return isUser(ItemType.valueOf(itemType));
     }
 }

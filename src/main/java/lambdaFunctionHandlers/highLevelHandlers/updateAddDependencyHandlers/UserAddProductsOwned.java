@@ -22,6 +22,7 @@ public class UserAddProductsOwned {
 
         Deal deal = Deal.readDeal(dealID);
 
+        // TODO Better way to ensure that two Users don't get the same Product!!!!
         // Choose the product for the User to own!
         if (deal.products.size() == 0) {
             throw new Exception("No products remaining!");
@@ -35,9 +36,6 @@ public class UserAddProductsOwned {
         databaseActions.addAll(UserExchangeCredit.getActions(fromID, userID, userItemType, deal.sponsor, "Sponsor", deal.productCreditPrice));
         databaseActions.add(DealDatabaseActionBuilder.updateRemoveProduct(dealID, product.id));
         databaseActions.add(UserDatabaseActionBuilder.updateAddProductOwned(userID, userItemType, product.id, false));
-
-
-        // TODO Also handle any ordering of materials here? Or maybe on the client?
 
         return databaseActions;
     }

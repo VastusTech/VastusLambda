@@ -54,6 +54,7 @@ public class LambdaRequest {
     private CreateEnterpriseRequest createEnterpriseRequest;
     private CreateDealRequest createDealRequest;
     private CreateProductRequest createProductRequest;
+    private CreateAdminRequest createAdminRequest;
 
     /**
      * The values for an action to do for a single Lambda request.
@@ -478,6 +479,13 @@ public class LambdaRequest {
                     throw new Exception("No field inside Create Product Request can be empty string!");
                 }
             }
+            if (createAdminRequest != null) {
+                numCreateRequest++;
+                Constants.debugLog("Has a create admin request!\n");
+                if (createAdminRequest.ifHasEmptyString()) {
+                    throw new Exception("No field inside Create Admin Request can be empty string!");
+                }
+            }
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
@@ -554,6 +562,9 @@ public class LambdaRequest {
                 case Product:
                     compilers = CreateProduct.getCompilers(fromID, createProductRequest, 0);
                     break;
+                case Admin:
+                    compilers = CreateAdmin.getCompilers(fromID, createAdminRequest, 0);
+                    break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");
             }
@@ -614,8 +625,7 @@ public class LambdaRequest {
                     }
                     break;
                 case gender:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserUpdateGender.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -623,7 +633,7 @@ public class LambdaRequest {
                     }
                     break;
                 case birthday:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserUpdateBirthday.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -631,7 +641,7 @@ public class LambdaRequest {
                     }
                     break;
                 case location:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserUpdateLocation.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -647,8 +657,7 @@ public class LambdaRequest {
                     }
                     break;
                 case email:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserUpdateEmail.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -656,8 +665,7 @@ public class LambdaRequest {
                     }
                     break;
                 case stripeID:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserUpdateStripeID.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -665,8 +673,7 @@ public class LambdaRequest {
                     }
                     break;
                 case profileImagePath:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserUpdateProfileImagePath.getActions(fromID, id, itemType,
                                 attributeValue));
                     }
@@ -675,8 +682,7 @@ public class LambdaRequest {
                     }
                     break;
                 case bio:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserUpdateBio.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -1013,8 +1019,7 @@ public class LambdaRequest {
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case profileImagePaths:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserAddProfileImagePath.getActions(fromID, id,
                                 itemType, attributeValue));
                     }
@@ -1033,8 +1038,7 @@ public class LambdaRequest {
                     }
                     break;
                 case friends:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserAddFriend.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -1043,8 +1047,7 @@ public class LambdaRequest {
                     }
                     break;
                 case scheduledEvents:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserAddToEvent.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -1052,8 +1055,7 @@ public class LambdaRequest {
                     }
                     break;
                 case challenges:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         compilers.addAll(UserAddToChallenge.getCompilers(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -1061,8 +1063,7 @@ public class LambdaRequest {
                     }
                     break;
                 case groups:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserAddToGroup.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -1070,8 +1071,7 @@ public class LambdaRequest {
                     }
                     break;
                 case messageBoards:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserAddMessageBoard.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -1079,8 +1079,7 @@ public class LambdaRequest {
                     }
                     break;
                 case productsOwned:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserAddProductsOwned.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -1232,8 +1231,7 @@ public class LambdaRequest {
         try {
             switch (AttributeName.valueOf(attributeName)) {
                 case profileImagePaths:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserRemoveProfileImagePath.getActions(fromID, id,
                                 itemType, attributeValue));
                     }
@@ -1252,8 +1250,7 @@ public class LambdaRequest {
                     }
                     break;
                 case friends:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserRemoveFriend.getActions(fromID, id, itemType, attributeValue));
                     }
                     else {
@@ -1262,8 +1259,7 @@ public class LambdaRequest {
                     }
                     break;
                 case scheduledEvents:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserRemoveFromEvent.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -1271,7 +1267,7 @@ public class LambdaRequest {
                     }
                     break;
                 case challenges:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserRemoveFromChallenge.getActions(fromID, id, itemType,
                                 attributeValue));
                     } else {
@@ -1280,8 +1276,7 @@ public class LambdaRequest {
                     }
                     break;
                 case groups:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserRemoveFromGroup.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -1289,8 +1284,7 @@ public class LambdaRequest {
                     }
                     break;
                 case messageBoards:
-                    if (itemType.equals("Client") || itemType.equals("Trainer") || itemType.equals("Gym") || itemType
-                            .equals("Sponsor")) {
+                    if (ItemType.isUser(itemType)) {
                         databaseActionCompiler.addAll(UserRemoveMessageBoard.getActions(fromID, id, itemType, attributeValue));
                     } else {
                         throw new Exception("Unable to perform " + action + " to " + attributeName + " for a " +
@@ -1440,6 +1434,9 @@ public class LambdaRequest {
                     break;
                 case Product:
                     databaseActionCompiler.addAll(DeleteProduct.getActions(fromID, id));
+                    break;
+                case Admin:
+                    databaseActionCompiler.addAll(DeleteAdmin.getActions(fromID, id));
                     break;
                 default:
                     throw new Exception("Item Type: " + itemType + " recognized but not handled?");

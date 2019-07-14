@@ -8,7 +8,7 @@ import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.databaseActionBuilders.DealDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.ProductDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
-import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.UserBuyDeal;
+import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.UserExchangeCredit;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateProductRequest;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
@@ -26,7 +26,7 @@ public class CreateProduct {
                 }
 
                 // TODO Check the attributes
-                Deal.readDeal(createProductRequest.deal);
+                Deal deal = Deal.readDeal(createProductRequest.deal);
 
                 // Create the object
                 if (depth == 0) {
@@ -47,8 +47,8 @@ public class CreateProduct {
                             null, true
                     ));
                     databaseActionCompiler.add(DealDatabaseActionBuilder.updateAddProductSold(createProductRequest.deal, null, true));
-                    databaseActionCompiler.addAll(UserBuyDeal.getActions(fromID, createProductRequest.owner,
-                            ItemType.getItemType(createProductRequest.owner), createProductRequest.deal));
+                    databaseActionCompiler.addAll(UserExchangeCredit.getActions(fromID, createProductRequest.owner,
+                            ItemType.getItemType(createProductRequest.owner), deal.sponsor, "Sponsor", deal.productCreditPrice));
                 }
                 else {
                     // Otherwise it is still owned by the deal
