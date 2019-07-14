@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Challenge;
@@ -22,8 +23,8 @@ public class DeleteChallenge {
         List<DatabaseAction> databaseActions = new ArrayList<>();
         Challenge challenge = Challenge.readChallenge(challengeID);
 
-        if (!fromID.equals(challenge.owner) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete an challenge you own!");
+        if (fromID == null || (!fromID.equals(challenge.owner) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete an challenge you own!");
         }
 
         // remove from owner's fields

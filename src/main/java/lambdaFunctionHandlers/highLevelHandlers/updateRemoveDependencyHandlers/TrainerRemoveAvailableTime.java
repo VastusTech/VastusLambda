@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.TimeInterval;
 import main.java.databaseOperations.DatabaseAction;
@@ -15,8 +16,8 @@ public class TrainerRemoveAvailableTime {
     public static List<DatabaseAction> getActions(String fromID, String trainerID, String availableTime) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(trainerID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a trainer if that trainer is yourself!");
+        if (fromID == null || (!fromID.equals(trainerID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a trainer if that trainer is yourself!");
         }
 
         // Check the time

@@ -7,6 +7,7 @@ import main.java.databaseObjects.Deal;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.DealDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.SponsorDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 
 /**
@@ -18,8 +19,8 @@ public class DeleteDeal {
 
         Deal deal = Deal.readDeal(dealID);
 
-        if (!fromID.equals(deal.sponsor) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a deal if you own it!");
+        if (fromID == null || (!fromID.equals(deal.sponsor) && !fromID.equals(Constants.adminKey))) {
+            throw new PermissionsException("You can only delete a deal if you own it!");
         }
 
         // Delete all the products sold once you completely delete the Deal.

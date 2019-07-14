@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.TrainerDatabaseActionBuilder;
@@ -15,8 +16,8 @@ public class TrainerRemoveCertification {
             Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(trainerID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a trainer you are!");
+        if (fromID == null || (!fromID.equals(trainerID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a trainer you are!");
         }
 
         // Get all the actions for this process

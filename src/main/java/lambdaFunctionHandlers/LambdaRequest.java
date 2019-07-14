@@ -489,6 +489,9 @@ public class LambdaRequest {
             if (numCreateRequest > 1) {
                 throw new Exception("Only one create request allowed at a time!");
             }
+            if (numCreateRequest == 0) {
+                Constants.debugLog("No create requests!");
+            }
         }
         else {
             //throw new Exception("action = " + action + ", fromID = " + fromID + ", itemType = " + itemType +  "!");
@@ -1466,7 +1469,7 @@ public class LambdaRequest {
                          CreateCommentRequest createCommentRequest, CreateSponsorRequest createSponsorRequest,
                          CreateMessageRequest createMessageRequest, CreateStreakRequest createStreakRequest,
                          CreateEnterpriseRequest createEnterpriseRequest, CreateDealRequest createDealRequest,
-                         CreateProductRequest createProductRequest) {
+                         CreateProductRequest createProductRequest, CreateAdminRequest createAdminRequest) {
         this.fromID = fromID;
         this.fromTimeZone = fromTimeZone;
         this.action = action;
@@ -1495,6 +1498,7 @@ public class LambdaRequest {
         this.createEnterpriseRequest = createEnterpriseRequest;
         this.createDealRequest = createDealRequest;
         this.createProductRequest = createProductRequest;
+        this.createAdminRequest = createAdminRequest;
     }
 
     public LambdaRequest() {}
@@ -1721,5 +1725,13 @@ public class LambdaRequest {
 
     public void setCreateProductRequest(CreateProductRequest createProductRequest) {
         this.createProductRequest = createProductRequest;
+    }
+
+    public CreateAdminRequest getCreateAdminRequest() {
+        return createAdminRequest;
+    }
+
+    public void setCreateAdminRequest(CreateAdminRequest createAdminRequest) {
+        this.createAdminRequest = createAdminRequest;
     }
 }

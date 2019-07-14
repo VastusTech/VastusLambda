@@ -2,6 +2,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandl
 
 import main.java.databaseObjects.Invite;
 import main.java.databaseObjects.User;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Group;
@@ -22,8 +23,8 @@ public class DeleteGroup {
 
         Group group = Group.readGroup(groupID);
 
-        if (!group.owners.contains(fromID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a comment if you authored it!");
+        if (fromID == null || (!group.owners.contains(fromID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete a comment if you authored it!");
         }
 
         // Remove from the owners

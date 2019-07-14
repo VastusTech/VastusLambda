@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Workout;
 import main.java.databaseOperations.DatabaseAction;
@@ -19,8 +20,8 @@ public class DeleteWorkout {
 
         Workout workout = Workout.readWorkout(workoutID);
 
-        if (!fromID.equals(workout.trainer) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a workout if you're the trainer!");
+        if (fromID == null || (!fromID.equals(workout.trainer) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete a workout if you're the trainer!");
         }
 
         // TODO =======================================================================================================

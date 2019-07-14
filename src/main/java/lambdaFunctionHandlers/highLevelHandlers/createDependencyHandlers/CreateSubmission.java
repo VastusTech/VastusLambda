@@ -31,7 +31,7 @@ public class CreateSubmission {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!(fromID.equals(createSubmissionRequest.by)) && !fromID.equals(Constants.adminKey)) {
+                if (fromID == null || (!(fromID.equals(createSubmissionRequest.by)) && !Constants.isAdmin(fromID))) {
                     throw new Exception("PERMISSIONS ERROR: You can only create submissions as yourself!");
                 }
 

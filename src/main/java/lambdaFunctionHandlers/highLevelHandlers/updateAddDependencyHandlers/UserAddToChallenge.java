@@ -2,6 +2,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHa
 
 import main.java.databaseObjects.Group;
 import main.java.databaseOperations.DatabaseActionCompiler;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers.CreateStreak;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateStreakRequest;
 import main.java.logic.Constants;
@@ -41,8 +42,8 @@ public class UserAddToChallenge {
         boolean ifAcceptingRequest = false;
 
         if (challenge.memberRequests.contains(userID)) {
-            if (!fromID.equals(challenge.owner) && !fromID.equals(Constants.adminKey)) {
-                throw new Exception("PERMISSIONS ERROR: Only the owner can accept your challenge member request!");
+            if (fromID == null || (!fromID.equals(challenge.owner) && !Constants.isAdmin(fromID))) {
+                throw new PermissionsException("Only the owner can accept your challenge member request!");
             }
             else {
                 ifAcceptingRequest = true;
@@ -50,8 +51,8 @@ public class UserAddToChallenge {
             }
         }
         else {
-            if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
-                throw new Exception("PERMISSIONS ERROR: Only you can add you to a challenge!");
+            if (fromID == null || (!fromID.equals(userID) && !Constants.isAdmin(fromID))) {
+                throw new PermissionsException("Only you can add you to a challenge!");
             }
         }
 

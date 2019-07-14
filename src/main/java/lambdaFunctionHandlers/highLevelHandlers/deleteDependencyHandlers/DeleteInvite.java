@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Challenge;
@@ -30,38 +31,41 @@ public class DeleteInvite {
         // TODO Check permissions
         switch (invite.inviteType) {
             case friendRequest: {
-                if (!fromID.equals(invite.to) && !fromID.equals(invite.from) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only delete a friend request you are a part of!");
+                if (fromID == null || (!fromID.equals(invite.to) && !fromID.equals(invite.from)
+                        && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only delete a friend request you are a part of!");
                 }
                 break;
             }
             case eventInvite: {
                 Event event = Event.readEvent(invite.about);
-                if (!fromID.equals(invite.to) && !fromID.equals(invite.from) && !fromID.equals(event.owner) && !fromID.equals
-                        (Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only delete an event invite you are a part of!");
+                if (fromID == null || (!fromID.equals(invite.to) && !fromID.equals(invite.from)
+                        && !fromID.equals(event.owner) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only delete an event invite you are a part of!");
                 }
                 break;
             }
             case challengeInvite: {
                 Challenge challenge = Challenge.readChallenge(invite.about);
-                if (!fromID.equals(invite.to) && !fromID.equals(invite.from) && !fromID.equals(challenge.owner) && !fromID
-                        .equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only delete an challenge invite you are a part of!");
+                if (fromID == null || (!fromID.equals(invite.to) && !fromID.equals(invite.from)
+                        && !fromID.equals(challenge.owner) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only delete an challenge invite you are a part of!");
                 }
                 break;
             }
             case eventRequest: {
                 Event event = Event.readEvent(invite.to);
-                if (!fromID.equals(event.owner) && !fromID.equals(invite.from) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only delete an event request you are a part of!");
+                if (fromID == null || (!fromID.equals(event.owner) && !fromID.equals(invite.from)
+                        && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only delete an event request you are a part of!");
                 }
                 break;
             }
             case challengeRequest: {
                 Challenge challenge = Challenge.readChallenge(invite.to);
-                if (!fromID.equals(challenge.owner) && !fromID.equals(invite.from) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only delete an challenge request you are a part of!");
+                if (fromID == null || (!fromID.equals(challenge.owner) && !fromID.equals(invite.from)
+                        && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only delete an challenge request you are a part of!");
                 }
                 break;
             }

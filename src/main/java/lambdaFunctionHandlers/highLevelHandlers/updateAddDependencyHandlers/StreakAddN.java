@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.java.databaseOperations.databaseActionBuilders.StreakDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Streak;
 import main.java.databaseOperations.DatabaseAction;
@@ -21,8 +22,8 @@ public class StreakAddN {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
         Streak streak = Streak.readStreak(streakID);
-        if (!fromID.equals(streak.owner) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a streak as yourself!");
+        if (fromID == null || (!fromID.equals(streak.owner) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a streak as yourself!");
         }
 
         // Get the information for how long has passed since the User contributed to the Streak.

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.GymDatabaseActionBuilder;
@@ -14,8 +15,8 @@ public class GymUpdatePaymentSplit {
     public static List<DatabaseAction> getActions(String fromID, String gymID, String paymentSplit) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(gymID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a gym you own!");
+        if (fromID == null || (!fromID.equals(gymID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a gym you own!");
         }
         // Check to see if float is well formed
         Double.parseDouble(paymentSplit);

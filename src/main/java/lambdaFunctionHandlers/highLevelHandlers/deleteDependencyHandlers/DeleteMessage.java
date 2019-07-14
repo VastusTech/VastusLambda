@@ -6,6 +6,7 @@ import java.util.List;
 import main.java.databaseObjects.Message;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.MessageDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 
 /**
@@ -17,8 +18,8 @@ public class DeleteMessage {
 
         Message message = Message.readMessage(board, messageID);
 
-        if (!message.from.equals(fromID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a message if you made it!");
+        if (fromID == null || (!message.from.equals(fromID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete a message if you made it!");
         }
 
         // Delete the Message

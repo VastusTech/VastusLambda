@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Event;
 import main.java.databaseOperations.DatabaseAction;
@@ -16,8 +17,8 @@ public class EventUpdateRestriction {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
         Event event = Event.readEvent(eventID);
-        if (!fromID.equals(event.owner) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update an challenge that you own!");
+        if (fromID == null || (!fromID.equals(event.owner) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update an challenge that you own!");
         }
 
         if (restriction != null && !restriction.equals("invite")) {

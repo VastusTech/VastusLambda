@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandl
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -25,8 +26,8 @@ public class CreateComment {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!fromID.equals(createCommentRequest.by) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only create comments you author!");
+                if (fromID == null || (!fromID.equals(createCommentRequest.by) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only create comments you author!");
                 }
 
                 // Create the object

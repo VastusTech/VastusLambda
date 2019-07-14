@@ -8,6 +8,7 @@ import main.java.databaseObjects.Product;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.DealDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.TimeHelper;
 
@@ -16,8 +17,8 @@ public class UserAddProductsOwned {
                                                   String dealID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only buy a deal as yourself!");
+        if (fromID == null || (!fromID.equals(userID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only buy a deal as yourself!");
         }
 
         Deal deal = Deal.readDeal(dealID);

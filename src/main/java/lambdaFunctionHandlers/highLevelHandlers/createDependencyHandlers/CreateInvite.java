@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Challenge;
@@ -26,8 +27,8 @@ public class CreateInvite {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!(fromID.equals(createInviteRequest.from)) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only send invites you have created!");
+                if (fromID == null || (!(fromID.equals(createInviteRequest.from)) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only send invites you have created!");
                 }
 
                 Invite.InviteType inviteType;

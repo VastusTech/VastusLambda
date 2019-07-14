@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Challenge;
 import main.java.databaseObjects.Group;
@@ -23,9 +24,9 @@ public class ChallengeUpdateGroup {
             group = Group.readGroup(groupID);
         }
 
-        if (!fromID.equals(challenge.owner) && (group == null || !group.owners.contains(fromID)) && !fromID.equals(Constants
-                .adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a challenge that you own!");
+        if (fromID == null || (!fromID.equals(challenge.owner) && (group == null
+                || !group.owners.contains(fromID)) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a challenge that you own!");
         }
 
         // TODO Is this sufficient?

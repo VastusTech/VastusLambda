@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Event;
 import main.java.databaseOperations.DatabaseAction;
@@ -17,8 +18,8 @@ public class EventRemoveTag {
 
         Event event = Event.readEvent(eventID);
 
-        if (!fromID.equals(event.owner) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a gym you own!");
+        if (fromID == null || (!fromID.equals(event.owner) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a gym you own!");
         }
 
         databaseActions.add(EventDatabaseActionBuilder.updateRemoveTag(eventID, tag));

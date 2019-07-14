@@ -29,8 +29,8 @@ public class UserAddToGroupOwners {
             throw new Exception("That user is already in the group!");
         }
 
-        if (!group.owners.contains(fromID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: Only an existing owner can make you an owner!");
+        if (fromID == null || (!group.owners.contains(fromID) && !Constants.isAdmin(fromID))) {
+            throw new Exception("Only an existing owner can make you an owner!");
         }
 
         // Add to user's owned groups

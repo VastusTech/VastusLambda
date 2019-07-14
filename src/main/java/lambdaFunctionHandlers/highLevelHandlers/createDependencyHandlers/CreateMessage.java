@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Message;
@@ -26,8 +27,8 @@ public class CreateMessage {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!(fromID.equals(createMessageRequest.from)) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only send messages as yourself!");
+                if (fromID == null || (!(fromID.equals(createMessageRequest.from)) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only send messages as yourself!");
                 }
 
                 String type = createMessageRequest.type;

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Client;
 import main.java.databaseOperations.DatabaseAction;
@@ -17,8 +18,8 @@ public class DeleteClient {
     public static List<DatabaseAction> getActions(String fromID, String clientID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(clientID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a client if it's yourself!");
+        if (fromID == null || (!fromID.equals(clientID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete a client if it's yourself!");
         }
 
         Client client = Client.readClient(clientID);

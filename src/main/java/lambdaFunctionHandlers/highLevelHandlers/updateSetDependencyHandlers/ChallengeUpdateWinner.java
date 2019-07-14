@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteStreak;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
@@ -22,8 +23,8 @@ public class ChallengeUpdateWinner {
         // Get all the actions for this process
         Challenge challenge = Challenge.readChallenge(challengeID);
 
-        if (!challenge.owner.equals(fromID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: In order to update an challenge, you need to be the owner!");
+        if (fromID == null || (!challenge.owner.equals(fromID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("In order to update an challenge, you need to be the owner!");
         }
 
         String winnerItemType = ItemType.getItemType(winner);

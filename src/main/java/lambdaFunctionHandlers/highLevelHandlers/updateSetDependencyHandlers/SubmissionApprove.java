@@ -6,6 +6,7 @@ import java.util.List;
 import main.java.databaseObjects.Submission;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers.UserAddNewCredit;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
@@ -16,8 +17,8 @@ public class SubmissionApprove {
 
         Submission submission = Submission.readSubmission(submissionID);
 
-        if (!fromID.equals(submission.by) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a submission you own!");
+        if (fromID == null || (!fromID.equals(submission.by) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a submission you own!");
         }
 
         // Get all the actions for this process

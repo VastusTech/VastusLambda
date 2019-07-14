@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependenc
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
@@ -15,8 +16,8 @@ public class UserRemoveMessageBoard {
               messageBoard) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a user you are!");
+        if (fromID == null || (!fromID.equals(userID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a user you are!");
         }
 
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveMessageBoard(userID, itemType, messageBoard));

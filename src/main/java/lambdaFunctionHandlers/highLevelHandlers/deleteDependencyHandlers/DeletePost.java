@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Post;
@@ -20,8 +21,8 @@ public class DeletePost {
         List<DatabaseAction> databaseActions = new ArrayList<>();
         Post post = Post.readPost(postID);
 
-        if (!fromID.equals(post.by) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a post you authored!");
+        if (fromID == null || (!fromID.equals(post.by) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete a post you authored!");
         }
 
         // Remove from posts by field

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Post;
 import main.java.databaseOperations.DatabaseAction;
@@ -18,8 +19,8 @@ public class PostAddVideoPath {
 
         Post post = Post.readPost(postID);
 
-        if (!fromID.equals(post.by) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a post you own!");
+        if (fromID == null || (!fromID.equals(post.by) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a post you own!");
         }
 
         if (post.videoPaths != null && post.videoPaths.size() >= Constants.postVideoPathsLimit) {

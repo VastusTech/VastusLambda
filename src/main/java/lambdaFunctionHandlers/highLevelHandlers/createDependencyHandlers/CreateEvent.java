@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Challenge;
@@ -27,8 +28,8 @@ public class CreateEvent {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!fromID.equals(createEventRequest.owner) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only create events you're going to own!");
+                if (fromID == null || (!fromID.equals(createEventRequest.owner) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only create events you're going to own!");
                 }
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)

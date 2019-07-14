@@ -9,6 +9,7 @@ import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.DealDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.ProductDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 
@@ -22,8 +23,9 @@ public class DeleteProduct {
         Product product = Product.readProduct(productID);
         Deal deal = Deal.readDeal(product.deal);
 
-        if (!fromID.equals(product.owner) && !fromID.equals(deal.sponsor) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a product if you own it or the sponsor owns it!");
+        if (fromID == null || (!fromID.equals(product.owner) && !fromID.equals(deal.sponsor)
+                && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete a product if you own it or the sponsor owns it!");
         }
 
         // Remove the product from the owner

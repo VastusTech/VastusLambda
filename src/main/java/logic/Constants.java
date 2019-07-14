@@ -4,6 +4,8 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.util.Optional;
 
+import main.java.databaseOperations.exceptions.BadIDException;
+
 /**
  * This handles all of the Constants that are retrieved from the Lambda invocation environment
  * variables. Also stores the logger in order to do debugging statements.
@@ -82,6 +84,11 @@ public class Constants {
             ("postPicturePathsLimit")).orElse("100"));
     public static int postVideoPathsLimit = Integer.parseInt(Optional.ofNullable(System.getenv
             ("postVideoPathsLimit")).orElse("50"));
+
+    public static boolean isAdmin(String fromID) throws BadIDException {
+        return fromID != null && (fromID.equals(Constants.adminKey)
+                || (ItemType.getItemType(fromID).equals("Admin")));
+    }
 
     public static void setIfDevelopment(boolean ifDevelopment) {
         Constants.ifDevelopment = ifDevelopment;

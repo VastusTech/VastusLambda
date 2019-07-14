@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import main.java.databaseObjects.DatabaseObject;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Group;
@@ -28,8 +29,8 @@ public class CreatePost {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (fromID == null || (!(fromID.equals(createPostRequest.by)) && !fromID.equals(Constants.adminKey))) {
-                    throw new Exception("PERMISSIONS ERROR: You can only create posts as yourself!");
+                if (fromID == null || (!(fromID.equals(createPostRequest.by)) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only create posts as yourself!");
                 }
 
                 if (createPostRequest.access != null) {

@@ -1,6 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import main.java.databaseObjects.User;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Group;
@@ -51,8 +52,8 @@ public class CreateChallenge {
                 // TODO identifier
                 databaseActionCompiler.setPassoverIdentifier("Challenge" + Integer.toString(depth));
 
-                if (!fromID.equals(createChallengeRequest.owner) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only create challenges you're going to own!");
+                if (fromID == null || (!fromID.equals(createChallengeRequest.owner) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only create challenges you're going to own!");
                 }
 
                 // Check to see if the request features are well formed (i.e not empty string or invalid date)

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Group;
 import main.java.databaseObjects.Invite;
@@ -22,8 +23,8 @@ public class UserRemoveFromGroup {
 
         Group group = Group.readGroup(groupID);
 
-        if (!fromID.equals(userID) && !group.owners.contains(fromID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only remove someone if you're the owner or that someone " +
+        if (fromID == null || (!fromID.equals(userID) && !group.owners.contains(fromID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only remove someone if you're the owner or that someone " +
                     "is you!");
         }
 

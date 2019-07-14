@@ -8,6 +8,7 @@ import main.java.databaseObjects.Sponsor;
 import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.databaseActionBuilders.DealDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.SponsorDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateDealRequest;
 import main.java.logic.Constants;
 
@@ -24,8 +25,8 @@ public class CreateDeal {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!fromID.equals(createDealRequest.sponsor) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only create deals you will own!");
+                if (fromID == null || (!fromID.equals(createDealRequest.sponsor) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only create deals you will own!");
                 }
 
                 // TODO Check that the quantity is not less than zero and also the other integer things now that I think about it lol

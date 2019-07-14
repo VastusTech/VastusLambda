@@ -1,6 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.createDependencyHandlers;
 
 import main.java.databaseObjects.User;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseOperations.DatabaseActionCompiler;
@@ -24,7 +25,7 @@ public class CreateGroup {
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
                 if (createGroupRequest.owners == null) {
-                    if (fromID.equals(Constants.adminKey)) {
+                    if (Constants.isAdmin(fromID)) {
                         throw new Exception("Admin cannot create a owner-less group!");
                     }
                     createGroupRequest.owners = new String[]{fromID};
@@ -49,16 +50,16 @@ public class CreateGroup {
                     createGroupRequest.members = members.toArray(new String[]{});
                 }
 
-                if (!fromID.equals(Constants.adminKey)) {
+                if (!Constants.isAdmin(fromID)) {
                     User from = User.readUser(fromID);
                     for (String owner : createGroupRequest.owners) {
                         if (!owner.equals(fromID) && !from.friends.contains(owner)) {
-                            throw new Exception("Cannot make a Group with an owner who is not your friend!");
+                            throw new PermissionsException("Cannot make a Group with an owner who is not your friend!");
                         }
                     }
                     for (String member : createGroupRequest.members) {
                         if (!member.equals(fromID) && !from.friends.contains(member)) {
-                            throw new Exception("Cannot make a Group with a member who is not your friend!");
+                            throw new PermissionsException("Cannot make a Group with a member who is not your friend!");
                         }
                     }
                 }
@@ -82,8 +83,9 @@ public class CreateGroup {
                 for (String ownerID : createGroupRequest.owners) {
                     String ownerItemType = ItemType.getItemType(ownerID);
 
+                    // TODO Edit
                     if (ownerItemType.equals("Client") && createGroupRequest.access.equals("public")) {
-                        throw new Exception("No owners of a public group can be Clients!");
+                        throw new PermissionsException("No owners of a public group can be Clients!");
                     }
 
                     databaseActionCompiler.add(UserDatabaseActionBuilder.updateAddOwnedGroup(ownerID, ownerItemType,

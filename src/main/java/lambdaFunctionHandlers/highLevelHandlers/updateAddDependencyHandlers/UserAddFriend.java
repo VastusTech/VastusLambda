@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Invite;
@@ -41,8 +42,8 @@ public class UserAddFriend {
             throw new Exception("Cannot accept a invite as a friendRequest that isn't one, clearly...");
         }
 
-        if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only accept friend requests for yourself!");
+        if (fromID == null || (!fromID.equals(userID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only accept friend requests for yourself!");
         }
 
         // Add the friend to your own friends list

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 // import main.java.databaseObjects.Client;
 import main.java.databaseObjects.Event;
@@ -37,8 +38,8 @@ public class UserAddToEvent {
         boolean ifAcceptingRequest = false;
 
         if (event.memberRequests.contains(userID)) {
-            if (!fromID.equals(event.owner) && !fromID.equals(Constants.adminKey)) {
-                throw new Exception("PERMISSIONS ERROR: Only the owner can accept your event member request!");
+            if (fromID == null || (!fromID.equals(event.owner) && !Constants.isAdmin(fromID))) {
+                throw new PermissionsException("Only the owner can accept your event member request!");
             }
             else {
                 ifAcceptingRequest = true;
@@ -46,8 +47,8 @@ public class UserAddToEvent {
             }
         }
         else {
-            if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
-                throw new Exception("PERMISSIONS ERROR: Only you can add you to an event!");
+            if (fromID == null || (!fromID.equals(userID) && !Constants.isAdmin(fromID))) {
+                throw new PermissionsException("Only you can add you to an event!");
             }
         }
 

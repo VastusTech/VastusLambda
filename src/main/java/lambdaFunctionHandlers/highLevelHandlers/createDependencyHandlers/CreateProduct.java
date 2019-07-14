@@ -21,7 +21,7 @@ public class CreateProduct {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!fromID.equals(createProductRequest.owner) && !fromID.equals(Constants.adminKey)) {
+                if (fromID == null || (!fromID.equals(createProductRequest.owner) && !Constants.isAdmin(fromID))) {
                     throw new Exception("PERMISSIONS ERROR: You can only buy Products for yourself!");
                 }
 

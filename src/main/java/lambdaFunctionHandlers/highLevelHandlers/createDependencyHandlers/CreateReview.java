@@ -24,7 +24,7 @@ public class CreateReview {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!fromID.equals(createReviewRequest.by) && !fromID.equals(Constants.adminKey)) {
+                if (fromID == null || (!fromID.equals(createReviewRequest.by) && !Constants.isAdmin(fromID))) {
                     throw new Exception("PERMISSIONS ERROR: You can only create reviews you have authored!");
                 }
 

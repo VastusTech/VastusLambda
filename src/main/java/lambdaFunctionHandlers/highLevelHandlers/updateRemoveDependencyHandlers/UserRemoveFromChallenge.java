@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers.DeleteStreak;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Challenge;
@@ -26,8 +27,8 @@ public class UserRemoveFromChallenge {
 
         Challenge challenge = Challenge.readChallenge(challengeID);
 
-        if (!fromID.equals(userID) && !fromID.equals(challenge.owner) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only remove someone if you're the owner or that someone " +
+        if (fromID == null || (!fromID.equals(userID) && !fromID.equals(challenge.owner) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only remove someone if you're the owner or that someone " +
                     "is you!");
         }
 

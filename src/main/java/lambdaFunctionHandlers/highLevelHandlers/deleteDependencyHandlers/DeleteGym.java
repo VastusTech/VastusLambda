@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Gym;
 import main.java.databaseOperations.DatabaseAction;
@@ -17,8 +18,8 @@ public class DeleteGym {
         List<DatabaseAction> databaseActions = new ArrayList<>();
         Gym gym = Gym.readGym(gymID);
 
-        if (!fromID.equals(gymID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a gym you own!");
+        if (fromID == null || (!fromID.equals(gymID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete a gym you own!");
         }
 
         databaseActions.addAll(DeleteUser.getActions(fromID, gym));

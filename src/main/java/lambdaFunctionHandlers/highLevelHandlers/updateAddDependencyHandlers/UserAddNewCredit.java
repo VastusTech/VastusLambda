@@ -5,6 +5,7 @@ import java.util.List;
 
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 
 /**
@@ -15,8 +16,8 @@ public class UserAddNewCredit {
             Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only receive credit as yourself!");
+        if (fromID == null || (!fromID.equals(userID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only receive credit as yourself!");
         }
 
         // TODO This should only really be called from a Challenge win or other automated event.

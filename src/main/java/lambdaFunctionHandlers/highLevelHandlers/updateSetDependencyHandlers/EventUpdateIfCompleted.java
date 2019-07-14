@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHa
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Event;
@@ -21,8 +22,8 @@ public class EventUpdateIfCompleted {
         // Get all the actions for this process
         Event event = Event.readEvent(eventID);
 
-        if (!event.owner.equals(fromID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: In order to update an challenge, you need to be the owner!");
+        if (fromID == null || (!event.owner.equals(fromID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("In order to update an challenge, you need to be the owner!");
         }
 
         if (!ifCompleted.equals("true")) {

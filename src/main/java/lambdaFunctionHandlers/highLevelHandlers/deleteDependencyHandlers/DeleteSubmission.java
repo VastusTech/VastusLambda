@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandl
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Submission;
@@ -20,8 +21,8 @@ public class DeleteSubmission {
         List<DatabaseAction> databaseActions = new ArrayList<>();
         Submission submission = Submission.readSubmission(submissionID);
 
-        if (!fromID.equals(submission.by) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a submission you created!");
+        if (fromID == null || (!fromID.equals(submission.by) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete a submission you created!");
         }
 
         // Remove from posts by field

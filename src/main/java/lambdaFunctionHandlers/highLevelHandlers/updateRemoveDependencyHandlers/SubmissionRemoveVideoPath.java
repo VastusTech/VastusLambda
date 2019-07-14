@@ -3,6 +3,7 @@ package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependenc
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Submission;
 import main.java.databaseOperations.DatabaseAction;
@@ -17,8 +18,8 @@ public class SubmissionRemoveVideoPath {
 
         Submission submission = Submission.readSubmission(submissionID);
 
-        if (!fromID.equals(submission.by) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a submission you own!");
+        if (fromID == null || (!fromID.equals(submission.by) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a submission you own!");
         }
 
         // Get all the actions for this process

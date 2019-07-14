@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateRemoveDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
@@ -15,8 +16,8 @@ public class UserRemoveFriend {
             throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(userID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only unfriend people for yourself!");
+        if (fromID == null || (!fromID.equals(userID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only unfriend people for yourself!");
         }
 
         // Get all the actions for this process

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Workout;
 import main.java.databaseOperations.DatabaseAction;
@@ -17,8 +18,8 @@ public class ClientAddToWorkout {
     public static List<DatabaseAction> getActions(String fromID, String clientID, String workoutID) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(clientID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only add yourself to a workout!");
+        if (fromID == null || (!fromID.equals(clientID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only add yourself to a workout!");
         }
 
         // Get all the actions for this process

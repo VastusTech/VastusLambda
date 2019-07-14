@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Comment;
 import main.java.databaseOperations.DatabaseAction;
@@ -16,8 +17,8 @@ public class CommentUpdateComment {
             Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!(fromID.equals(Comment.readComment(commentID).by)) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a comment that you own!");
+        if (fromID == null || (!(fromID.equals(Comment.readComment(commentID).by)) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a comment that you own!");
         }
 
         // Get all the actions for this process

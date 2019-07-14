@@ -1,6 +1,7 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.deleteDependencyHandlers;
 
 import main.java.databaseOperations.databaseActionBuilders.SubmissionDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 import main.java.databaseObjects.Comment;
@@ -21,8 +22,8 @@ public class DeleteComment {
 
         Comment comment = Comment.readComment(commentID);
 
-        if (!fromID.equals(comment.by) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only delete a comment if you authored it!");
+        if (fromID == null || (!fromID.equals(comment.by) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only delete a comment if you authored it!");
         }
 
         // Remove from the by's comments

@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateSetDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseObjects.Event;
 import main.java.databaseOperations.DatabaseAction;
@@ -15,8 +16,8 @@ public class EventUpdateTitle {
     public static List<DatabaseAction> getActions(String fromID, String eventID, String title) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(Event.readEvent(eventID).owner) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update an event that you own!");
+        if (fromID == null || (!fromID.equals(Event.readEvent(eventID).owner) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update an event that you own!");
         }
 
         // Get all the actions for this process

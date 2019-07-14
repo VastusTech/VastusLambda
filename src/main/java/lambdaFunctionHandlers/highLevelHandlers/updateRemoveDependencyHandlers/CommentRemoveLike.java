@@ -6,6 +6,7 @@ import java.util.List;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.CommentDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
 
@@ -16,8 +17,8 @@ public class CommentRemoveLike {
     public static List<DatabaseAction> getActions(String fromID, String commentID, String like) throws Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(like) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only remove a like as yourself!");
+        if (fromID == null || (!fromID.equals(like) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only remove a like as yourself!");
         }
 
         // Add to the post

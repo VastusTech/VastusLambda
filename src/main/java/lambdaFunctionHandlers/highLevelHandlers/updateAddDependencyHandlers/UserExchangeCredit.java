@@ -5,6 +5,7 @@ import java.util.List;
 
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 
 /**
@@ -16,8 +17,8 @@ public class UserExchangeCredit {
             Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(fromUserID) && !fromID.equals(toUserID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only send/receive credit as yourself!");
+        if (fromID == null || (!fromID.equals(fromUserID) && !fromID.equals(toUserID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only send/receive credit as yourself!");
         }
 
         databaseActions.add(UserDatabaseActionBuilder.updateRemoveCredit(fromUserID, fromItemType, creditAmount));

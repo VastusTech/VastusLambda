@@ -1,5 +1,6 @@
 package main.java.lambdaFunctionHandlers.highLevelHandlers.updateAddDependencyHandlers;
 
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.logic.Constants;
 import main.java.databaseOperations.DatabaseAction;
 import main.java.databaseOperations.databaseActionBuilders.ClientDatabaseActionBuilder;
@@ -16,8 +17,8 @@ public class ClientAddSubscription {
             Exception {
         List<DatabaseAction> databaseActions = new ArrayList<>();
 
-        if (!fromID.equals(clientID) && !fromID.equals(Constants.adminKey)) {
-            throw new Exception("PERMISSIONS ERROR: You can only update a client you are!");
+        if (fromID == null || (!fromID.equals(clientID) && !Constants.isAdmin(fromID))) {
+            throw new PermissionsException("You can only update a client you are!");
         }
 
         // Mutual adding

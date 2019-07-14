@@ -10,6 +10,7 @@ import main.java.databaseOperations.DatabaseActionCompiler;
 import main.java.databaseOperations.databaseActionBuilders.ChallengeDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.StreakDatabaseActionBuilder;
 import main.java.databaseOperations.databaseActionBuilders.UserDatabaseActionBuilder;
+import main.java.databaseOperations.exceptions.PermissionsException;
 import main.java.lambdaFunctionHandlers.requestObjects.CreateStreakRequest;
 import main.java.logic.Constants;
 import main.java.logic.ItemType;
@@ -29,8 +30,8 @@ public class CreateStreak {
                 List<DatabaseActionCompiler> compilers = new ArrayList<>();
                 DatabaseActionCompiler databaseActionCompiler = new DatabaseActionCompiler();
 
-                if (!fromID.equals(createStreakRequest.owner) && !fromID.equals(Constants.adminKey)) {
-                    throw new Exception("PERMISSIONS ERROR: You can only create streaks you're going to own!");
+                if (fromID == null || (!fromID.equals(createStreakRequest.owner) && !Constants.isAdmin(fromID))) {
+                    throw new PermissionsException("You can only create streaks you're going to own!");
                 }
 
                 // Check to see if the request features are well formed (i.e not invalid date or time)
