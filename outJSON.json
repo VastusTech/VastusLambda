@@ -1,0 +1,72 @@
+[ {
+  "owner" : "CL0001",
+  "access" : "private",
+  "goal" : "To win as much as possible",
+  "item_type" : "Challenge",
+  "marker" : 1,
+  "members" : [ "CL0001" ],
+  "time_created" : "2019-05-01T03:09:35+0000",
+  "description" : "Test Description",
+  "id" : "CH0001",
+  "endTime" : "2019-05-05T03:00:00+0000",
+  "title" : "Leo's First Challenge",
+  "capacity" : "10"
+}, {
+  "item_type" : "Trainer",
+  "marker" : 1,
+  "reliabilityRating" : 0,
+  "name" : "NAME",
+  "time_created" : "2019-05-01T03:09:35+0000",
+  "id" : "TR0001",
+  "email" : "EMAIL",
+  "friends" : [ "CL0001", "TR0002", "TR0003" ],
+  "username" : "YB",
+  "friendlinessRating" : 0,
+  "effectivenessRating" : 0
+}, {
+  "item_type" : "Client",
+  "marker" : 2,
+  "reliabilityRating" : 0,
+  "name" : "Leonid",
+  "time_created" : "2019-05-01T03:09:35+0000",
+  "id" : "CL0001",
+  "email" : "EMAIL",
+  "friends" : [ "CL0002" ],
+  "username" : "LB",
+  "friendlinessRating" : 0,
+  "effectivenessRating" : 0
+}, {
+  "item_type" : "Client",
+  "marker" : 1,
+  "reliabilityRating" : 0,
+  "name" : "NAME",
+  "time_created" : "2019-05-01T03:09:35+0000",
+  "id" : "CL0002",
+  "email" : "EMAIL",
+  "friends" : [ "CL0002", "CL0003", "CL0004" ],
+  "username" : "FB",
+  "friendlinessRating" : 0,
+  "effectivenessRating" : 0
+}, {
+  "item_type" : "Client",
+  "marker" : 1,
+  "reliabilityRating" : 0,
+  "name" : "NAME",
+  "time_created" : "2019-05-01T03:09:35+0000",
+  "id" : "CL0003",
+  "email" : "EMAIL",
+  "friends" : [ "CL0002", "CL0003", "CL0004" ],
+  "username" : "BB",
+  "friendlinessRating" : 0,
+  "effectivenessRating" : 0
+}, {
+  "access" : "private",
+  "item_type" : "Group",
+  "marker" : 1,
+  "members" : [ "CL0001", "CL0002" ],
+  "time_created" : "2019-05-01T03:09:35+0000",
+  "description" : "This Group is a test Group",
+  "owners" : [ "CL0001" ],
+  "id" : "GR0001",
+  "title" : "Leo's First Group"
+} ]
